@@ -4,6 +4,15 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
 
+
+function cleanPhone(p) {
+  if (!p) return '';
+  let digits = String(p).replace(/\D/g, '');
+  if (digits.startsWith('20')) digits = digits.substring(2);
+  if (digits.startsWith('0')) digits = digits.substring(1);
+  return digits;
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, 'data', 'db.json');
@@ -29,6 +38,22 @@ const getDB = dbLayer.getDB;
 const saveDB = dbLayer.saveDB;
 
 // Arabic Day Names mapping
+
+// Arabic string normalization helper
+function normalizeArabic(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/[\u064B-\u065F\u0670]/g, '')
+    .replace(/[أإآٱ]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/ى/g, 'ي')
+    .replace(/ؤ/g, 'و')
+    .replace(/ئ/g, 'ي')
+    .replace(/[\s\-_]+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
 const dayNamesAr = {
   0: 'الأحد',
   1: 'الإثنين',
@@ -376,7 +401,9 @@ app.put('/api/candidates/:id/evaluation', async (req, res) => {
     englishScore,
     notes,
     decision, // 'accepted' | 'reserve' | 'rejected' | 'transferred' | 'pending'
-    interviewerName
+    interviewerName,
+    roleType, // 'delegate' | 'member'
+    subDepartment // 'hr' | 'media' | 'academic'
   } = req.body;
 
   cand.evaluation = {
@@ -393,6 +420,21 @@ app.put('/api/candidates/:id/evaluation', async (req, res) => {
     evaluatedAt: new Date().toISOString()
   };
 
+  if (decision === 'accepted') {
+    cand.roleType = roleType || cand.roleType || 'delegate';
+    if (cand.roleType === 'member') {
+      cand.subDepartment = subDepartment || cand.subDepartment || 'academic';
+    } else {
+      cand.subDepartment = null;
+    }
+    if (!cand.delegatePassword) {
+      cand.delegatePassword = '1234';
+    }
+  } else if (decision === 'rejected') {
+    cand.roleType = null;
+    cand.subDepartment = null;
+  }
+
   if (attendanceStatus === 'attended') {
     cand.interviewStatus = 'completed';
     cand.bookingStatus = 'completed';
@@ -406,6 +448,77 @@ app.put('/api/candidates/:id/evaluation', async (req, res) => {
 
   await saveDB(db);
   res.json({ success: true, message: 'تم حفظ التقييم بنجاح', candidate: cand });
+});
+
+// Update member/delegate role, sub-department, or continuous evaluation
+// PUT /api/candidates/:id (Update Candidate / Delegate / Member Details by Sector Head)
+app.put('/api/candidates/:id', async (req, res) => {
+  const db = getDB();
+  const cand = (db.candidates || []).find(c => c.id === req.params.id);
+  if (!cand) return res.status(404).json({ success: false, message: 'المرشح أو العضو غير موجود' });
+
+  const { email, phone, faculty, university } = req.body;
+
+  // Name is strictly constant and protected (never overwritten)
+  if (email && email.trim()) {
+    cand.email = email.trim();
+  }
+  if (phone && phone.trim()) {
+    cand.phone = phone.trim();
+  }
+  if (faculty !== undefined) {
+    cand.faculty = faculty;
+  }
+  if (university !== undefined) {
+    cand.university = university;
+  }
+
+  // Update corresponding quizSubmissions candidateEmail & candidatePhone
+  if (db.quizSubmissions) {
+    db.quizSubmissions.forEach(sub => {
+      if (sub.candidateId === cand.id) {
+        if (cand.email) sub.candidateEmail = cand.email;
+        if (cand.phone) sub.candidatePhone = cand.phone;
+      }
+    });
+  }
+
+  await saveDB(db);
+  res.json({ success: true, message: 'تم تحديث البريد الإلكتروني وبيانات الاتصال بنجاح مع ثبات الاسم والسجلات', candidate: cand });
+});
+
+app.put('/api/candidates/:id/role', async (req, res) => {
+  const db = getDB();
+  const cand = db.candidates.find(c => c.id === req.params.id);
+  if (!cand) {
+    return res.status(404).json({ success: false, message: 'المرشح غير موجود' });
+  }
+
+  const { roleType, subDepartment, memberScore, memberNotes } = req.body;
+  if (roleType) {
+    cand.roleType = roleType;
+    if (roleType === 'delegate') {
+      cand.subDepartment = null;
+    } else if (roleType === 'member') {
+      cand.subDepartment = subDepartment || cand.subDepartment || 'academic';
+    }
+  } else if (subDepartment !== undefined) {
+    cand.subDepartment = subDepartment;
+  }
+
+  if (memberScore !== undefined || memberNotes !== undefined) {
+    if (!cand.memberEvaluation) cand.memberEvaluation = {};
+    if (memberScore !== undefined && memberScore !== '') {
+      cand.memberEvaluation.score = parseFloat(memberScore);
+    }
+    if (memberNotes !== undefined) {
+      cand.memberEvaluation.notes = memberNotes;
+    }
+    cand.memberEvaluation.updatedAt = new Date().toISOString();
+  }
+
+  await saveDB(db);
+  res.json({ success: true, message: 'تم تحديث بيانات العضو بنجاح', candidate: cand });
 });
 
 // Transfer candidate to another committee
@@ -428,14 +541,24 @@ app.post('/api/candidates/:id/transfer', async (req, res) => {
     return res.status(400).json({ success: false, message: 'اللجنة المحول إليها غير صالحة' });
   }
 
-  // Free up previous slot if booked
+  // Free up previous slot only if it is in the future
   if (cand.slotId) {
     const slot = db.slots.find(s => s.id === cand.slotId);
     if (slot) {
-      slot.status = 'available';
-      slot.candidateId = null;
-      slot.candidateName = null;
-      slot.candidatePhone = null;
+      let isFuture = true;
+      if (slot.date) {
+        const timePart = slot.startTime24 || '00:00';
+        const slotDate = new Date(`${slot.date}T${timePart}:00`);
+        if (!isNaN(slotDate.getTime()) && slotDate < new Date()) {
+          isFuture = false;
+        }
+      }
+      if (isFuture) {
+        slot.status = 'available';
+        slot.candidateId = null;
+        slot.candidateName = null;
+        slot.candidatePhone = null;
+      }
     }
   }
 
@@ -545,6 +668,16 @@ app.delete('/api/candidates/:id/booking', async (req, res) => {
   if (cand.slotId) {
     const slot = db.slots.find(s => s.id === cand.slotId);
     if (slot) {
+      if (slot.date) {
+        const timePart = slot.startTime24 || '00:00';
+        const slotDate = new Date(`${slot.date}T${timePart}:00`);
+        if (!isNaN(slotDate.getTime()) && slotDate < new Date()) {
+          return res.status(400).json({
+            success: false,
+            message: 'عذراً، لقد انقضى موعد هذه المقابلة بالفعل ولا يمكن تعديله أو إلغاؤه ذاتياً. يرجى مراجعة إدارة القطاع.'
+          });
+        }
+      }
       slot.status = 'available';
       slot.candidateId = null;
       slot.candidateName = null;
@@ -755,19 +888,45 @@ app.get('/api/public/committee/:slug', (req, res) => {
   // Get candidates in this committee who haven't booked or are booked
   const candidates = db.candidates
     .filter(c => c.assignedCommitteeId === comm.id)
-    .map(c => ({
-      id: c.id,
-      num: c.num,
-      arabicName: c.arabicName,
-      fullName: c.fullName,
-      university: c.university,
-      faculty: c.faculty,
-      grade: c.grade,
-      phone: c.phone,
-      bookingStatus: c.bookingStatus,
-      slotId: c.slotId,
-      slotInfo: c.slotInfo
-    }));
+    .map(c => {
+      let sInfo = c.slotInfo;
+      let isPast = false;
+      if (c.slotId) {
+        const s = db.slots.find(slot => slot.id === c.slotId);
+        if (s) {
+          sInfo = {
+            date: s.date,
+            dayNameAr: s.dayNameAr,
+            dateDisplay: s.dateDisplay,
+            timeDisplay: s.timeDisplay,
+            startTime24: s.startTime24,
+            endTime24: s.endTime24,
+            type: s.type,
+            locationOrLink: s.locationOrLink
+          };
+          if (s.date) {
+            const timePart = s.startTime24 || '00:00';
+            const sDate = new Date(`${s.date}T${timePart}:00`);
+            if (!isNaN(sDate.getTime()) && sDate < new Date()) {
+              isPast = true;
+            }
+          }
+        }
+      }
+      return {
+        id: c.id,
+        num: c.num,
+        arabicName: c.arabicName,
+        fullName: c.fullName,
+        university: c.university,
+        faculty: c.faculty,
+        grade: c.grade,
+        phone: c.phone,
+        bookingStatus: c.bookingStatus,
+        slotId: c.slotId,
+        slotInfo: sInfo ? { ...sInfo, isPast } : null
+      };
+    });
 
   res.json({
     success: true,
@@ -870,14 +1029,53 @@ app.post('/api/public/book', async (req, res) => {
     return res.status(404).json({ success: false, message: 'الموعد المحدد غير موجود' });
   }
 
+  // Ensure candidate can only book slots within their assigned committee
+  if (slot.committeeId !== cand.assignedCommitteeId) {
+    return res.status(400).json({ success: false, message: 'هذا الموعد يتبع قطاعاً آخر غير المسجل به المرشح' });
+  }
+
   if (slot.status !== 'available' && slot.candidateId !== cand.id) {
     return res.status(400).json({ success: false, message: 'عذراً، هذا الموعد تم حجزه للتو من قِبل مرشح آخر. يرجى اختيار موعد آخر' });
+  }
+
+  // Already booked in this exact slot
+  if (cand.slotId === slotId) {
+    const comm = db.committees.find(c => c.id === cand.assignedCommitteeId);
+    return res.json({
+      success: true,
+      message: 'أنت مسجل بالفعل في هذا الموعد المحدد',
+      bookingDetails: {
+        candidateName: cand.arabicName,
+        committeeName: comm ? comm.name : cand.firstPreference,
+        dateDisplay: slot.dateDisplay,
+        timeDisplay: slot.timeDisplay,
+        type: slot.type === 'online' ? 'أونلاين (Online)' : 'أوفلاين (حضوري)',
+        locationOrLink: slot.locationOrLink,
+        notes: slot.notes
+      }
+    });
   }
 
   // Free candidate's prior slot if rescheduling
   if (cand.slotId && cand.slotId !== slotId) {
     const oldSlot = db.slots.find(s => s.id === cand.slotId);
     if (oldSlot) {
+      // Check if previous slot time has already passed
+      let isPast = false;
+      if (oldSlot.date) {
+        const timePart = oldSlot.startTime24 || '00:00';
+        const oldSlotDateTime = new Date(`${oldSlot.date}T${timePart}:00`);
+        if (!isNaN(oldSlotDateTime.getTime()) && oldSlotDateTime < new Date()) {
+          isPast = true;
+        }
+      }
+      if (isPast) {
+        return res.status(400).json({
+          success: false,
+          message: 'عذراً، لقد انقضى موعد مقابلتك السابق بالفعل ولا يمكن تعديله ذاتياً. يرجى مراجعة إدارة القطاع.'
+        });
+      }
+
       oldSlot.status = 'available';
       oldSlot.candidateId = null;
       oldSlot.candidateName = null;
@@ -899,6 +1097,8 @@ app.post('/api/public/book', async (req, res) => {
     dayNameAr: slot.dayNameAr,
     dateDisplay: slot.dateDisplay,
     timeDisplay: slot.timeDisplay,
+    startTime24: slot.startTime24,
+    endTime24: slot.endTime24,
     type: slot.type,
     locationOrLink: slot.locationOrLink
   };
@@ -931,7 +1131,9 @@ app.get('/api/public/search-candidate', (req, res) => {
     return res.json({ success: true, candidates: [] });
   }
 
-  const q = query.trim().toLowerCase();
+  const rawQ = query.trim();
+  const q = normalizeArabic(rawQ);
+  const cleanPhoneQ = rawQ.replace(/\D/g, '');
   let list = db.candidates;
 
   if (committeeSlug && committeeSlug !== 'all') {
@@ -941,11 +1143,11 @@ app.get('/api/public/search-candidate', (req, res) => {
     }
   }
 
-  const matches = list.filter(c => 
-    c.arabicName.toLowerCase().includes(q) ||
-    c.fullName.toLowerCase().includes(q) ||
-    c.phone.includes(q)
-  ).slice(0, 10).map(c => {
+  const matches = list.filter(c => {
+    const nameMatch = normalizeArabic(c.arabicName).includes(q) || normalizeArabic(c.fullName).includes(q);
+    const phoneMatch = cleanPhoneQ.length >= 3 && c.phone && c.phone.replace(/\D/g, '').includes(cleanPhoneQ);
+    return nameMatch || phoneMatch;
+  }).slice(0, 15).map(c => {
     const comm = db.committees.find(cm => cm.id === c.assignedCommitteeId);
     return {
       id: c.id,
@@ -1059,6 +1261,591 @@ app.get('/api/export/committee/:slug/csv', (req, res) => {
   res.send(csv);
 });
 
+
+
+// ==========================================
+// QUIZZES, ATTENDANCE & GRADEBOOK APIs
+// ==========================================
+
+// Get quizzes (filtered by committeeId, or all for General Admin)
+app.get('/api/quizzes', (req, res) => {
+  const db = getDB();
+  let quizzes = db.quizzes || [];
+  const { committeeId } = req.query;
+  if (committeeId && committeeId !== 'all') {
+    quizzes = quizzes.filter(q => q.committeeId === committeeId || q.committeeId === 'all');
+  }
+  const submissions = db.quizSubmissions || [];
+  const enriched = quizzes.map(q => {
+    const subs = submissions.filter(s => s.quizId === q.id);
+    const avgScore = subs.length > 0 ? (subs.reduce((acc, s) => acc + (s.score || 0), 0) / subs.length).toFixed(1) : 0;
+    return {
+      ...q,
+      submissionsCount: subs.length,
+      averageScore: parseFloat(avgScore)
+    };
+  });
+  res.json({ success: true, quizzes: enriched });
+});
+
+// Create Quiz
+app.post('/api/quizzes', async (req, res) => {
+  const db = getDB();
+  if (!db.quizzes) db.quizzes = [];
+  const {
+    title,
+    lectureNumber,
+    committeeId,
+    durationMinutes,
+    description,
+    questions
+  } = req.body;
+
+  if (!title || !committeeId || !questions || !questions.length) {
+    return res.status(400).json({ success: false, message: 'يرجى إدخال عنوان الاختبار والأسئلة واللجنة' });
+  }
+
+  const committee = db.committees.find(c => c.id === committeeId);
+  const totalPoints = questions.reduce((sum, q) => sum + (parseFloat(q.points) || 1), 0);
+
+  const newQuiz = {
+    id: 'quiz_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+    committeeId,
+    committeeName: committee ? committee.name : 'عام لجميع القطاعات',
+    title: title.trim(),
+    lectureNumber: parseInt(lectureNumber) || (db.quizzes.filter(q => q.committeeId === committeeId).length + 1),
+    durationMinutes: parseInt(durationMinutes) || 10,
+    description: description || '',
+    isOpen: true,
+    createdAt: new Date().toISOString(),
+    totalPoints,
+    questions: questions.map((q, idx) => ({
+      id: q.id || 'q_' + (idx + 1),
+      type: q.type || 'mcq', // 'mcq' | 'true_false'
+      prompt: (q.prompt || '').trim(),
+      options: q.type === 'true_false' ? ['صح', 'خطأ'] : (q.options || []),
+      correctAnswer: parseInt(q.correctAnswer) || 0,
+      points: parseFloat(q.points) || 1
+    }))
+  };
+
+  db.quizzes.unshift(newQuiz);
+  await saveDB(db);
+  res.json({ success: true, message: 'تم إنشاء الاختبار بنجاح', quiz: newQuiz });
+});
+
+// Update / Toggle Quiz
+app.put('/api/quizzes/:id', async (req, res) => {
+  const db = getDB();
+  if (!db.quizzes) db.quizzes = [];
+  const quiz = db.quizzes.find(q => q.id === req.params.id);
+  if (!quiz) return res.status(404).json({ success: false, message: 'الاختبار غير موجود' });
+
+  const { title, lectureNumber, durationMinutes, description, isOpen, questions } = req.body;
+  if (title !== undefined) quiz.title = title;
+  if (lectureNumber !== undefined) quiz.lectureNumber = parseInt(lectureNumber);
+  if (durationMinutes !== undefined) quiz.durationMinutes = parseInt(durationMinutes);
+  if (description !== undefined) quiz.description = description;
+  if (isOpen !== undefined) quiz.isOpen = !!isOpen;
+  if (questions && questions.length) {
+    quiz.questions = questions.map((q, idx) => ({
+      id: q.id || 'q_' + (idx + 1),
+      type: q.type || 'mcq',
+      prompt: (q.prompt || '').trim(),
+      options: q.type === 'true_false' ? ['صح', 'خطأ'] : (q.options || []),
+      correctAnswer: parseInt(q.correctAnswer) || 0,
+      points: parseFloat(q.points) || 1
+    }));
+    quiz.totalPoints = quiz.questions.reduce((sum, q) => sum + (parseFloat(q.points) || 1), 0);
+  }
+
+  await saveDB(db);
+  res.json({ success: true, message: 'تم تحديث الاختبار بنجاح', quiz });
+});
+
+// Delete Quiz
+app.delete('/api/quizzes/:id', async (req, res) => {
+  const db = getDB();
+  if (!db.quizzes) db.quizzes = [];
+  const idx = db.quizzes.findIndex(q => q.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ success: false, message: 'الاختبار غير موجود' });
+
+  db.quizzes.splice(idx, 1);
+  if (db.quizSubmissions) {
+    db.quizSubmissions = db.quizSubmissions.filter(s => s.quizId !== req.params.id);
+  }
+  await saveDB(db);
+  res.json({ success: true, message: 'تم حذف الاختبار' });
+});
+
+// Get Quiz Submissions for Head/Admin
+app.get('/api/quizzes/:id/submissions', (req, res) => {
+  const db = getDB();
+  const quiz = (db.quizzes || []).find(q => q.id === req.params.id);
+  if (!quiz) return res.status(404).json({ success: false, message: 'الاختبار غير موجود' });
+  const rawSubmissions = (db.quizSubmissions || []).filter(s => s.quizId === req.params.id);
+
+  // Enrich submissions with candidate details and lecture evaluations
+  const submissions = rawSubmissions.map(s => {
+    const cand = (db.candidates || []).find(c => c.id === s.candidateId || c.email === s.candidateEmail);
+    const roleType = cand ? (cand.roleType || 'delegate') : 'delegate';
+    const subDepartment = cand ? (cand.subDepartment || null) : null;
+    const arabicName = cand ? (cand.arabicName || s.candidateName) : s.candidateName;
+    const lectureEval = (cand && cand.lectureEvaluations) ? cand.lectureEvaluations[quiz.id] : null;
+
+    return {
+      ...s,
+      candidateId: cand ? cand.id : s.candidateId,
+      candidateName: arabicName,
+      roleType,
+      subDepartment,
+      assignmentStatus: lectureEval ? lectureEval.assignmentStatus : (s.assignmentStatus || 'pending'),
+      assignmentScore: lectureEval ? lectureEval.assignmentScore : (s.assignmentScore !== undefined ? s.assignmentScore : null),
+      bonusScore: lectureEval ? (lectureEval.bonusScore || 0) : (s.bonusScore || 0),
+      bonusReason: lectureEval ? lectureEval.bonusReason : (s.bonusReason || ''),
+      assignmentNotes: lectureEval ? lectureEval.notes : (s.assignmentNotes || ''),
+      taskDescription: lectureEval ? lectureEval.taskDescription : (s.taskDescription || ''),
+      evaluatedAt: lectureEval ? lectureEval.evaluatedAt : (s.evaluatedAt || null)
+    };
+  });
+
+  res.json({ success: true, quiz, submissions });
+});
+
+// PUT /api/candidates/:id/lecture-eval (Evaluate delegate/member lecture assignment & weekly performance)
+app.put('/api/candidates/:id/lecture-eval', async (req, res) => {
+  const db = getDB();
+  const cand = (db.candidates || []).find(c => c.id === req.params.id);
+  if (!cand) return res.status(404).json({ success: false, message: 'المرشح غير موجود' });
+
+  const { quizId, lectureNumber, assignmentStatus, assignmentScore, bonusScore, bonusReason, notes, taskDescription } = req.body;
+  if (!quizId) return res.status(400).json({ success: false, message: 'معرف الاختبار مطلوب' });
+
+  if (!cand.lectureEvaluations) cand.lectureEvaluations = {};
+  const parsedScore = (assignmentScore !== undefined && assignmentScore !== '' && assignmentScore !== null) ? parseFloat(assignmentScore) : null;
+  const parsedBonus = (bonusScore !== undefined && bonusScore !== '' && bonusScore !== null) ? parseFloat(bonusScore) : 0;
+  const lectNum = parseInt(lectureNumber) || 1;
+
+  cand.lectureEvaluations[quizId] = {
+    quizId,
+    lectureNumber: lectNum,
+    assignmentStatus: assignmentStatus || 'submitted',
+    assignmentScore: parsedScore,
+    bonusScore: parsedBonus,
+    bonusReason: bonusReason || '',
+    notes: notes || '',
+    taskDescription: taskDescription || '',
+    evaluatedAt: new Date().toISOString()
+  };
+
+  // If candidate is a committee member, record weekly evaluation & compute monthly cumulative score
+  if (cand.roleType === 'member') {
+    if (!cand.weeklyEvaluations) cand.weeklyEvaluations = {};
+    const weekKey = `week_${lectNum}`;
+    cand.weeklyEvaluations[weekKey] = {
+      weekKey,
+      lectureNumber: lectNum,
+      quizId,
+      score: parsedScore,
+      assignmentStatus: assignmentStatus || 'submitted',
+      taskDescription: taskDescription || '',
+      notes: notes || '',
+      evaluatedAt: new Date().toISOString()
+    };
+
+    // Calculate updated cumulative member evaluation score
+    const scores = Object.values(cand.weeklyEvaluations)
+      .map(w => w.score)
+      .filter(s => typeof s === 'number' && !isNaN(s));
+    if (scores.length > 0) {
+      if (!cand.memberEvaluation) cand.memberEvaluation = {};
+      cand.memberEvaluation.score = +(scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1);
+      cand.memberEvaluation.updatedAt = new Date().toISOString();
+      if (notes) cand.memberEvaluation.notes = notes;
+    }
+  }
+
+  // Also update corresponding quizSubmission in db.quizSubmissions
+  if (db.quizSubmissions) {
+    const sub = db.quizSubmissions.find(s => s.quizId === quizId && (s.candidateId === cand.id || s.candidateEmail === cand.email));
+    if (sub) {
+      sub.assignmentStatus = assignmentStatus || 'submitted';
+      sub.assignmentScore = parsedScore;
+      sub.bonusScore = parsedBonus;
+      sub.bonusReason = bonusReason || '';
+      sub.assignmentNotes = notes || '';
+      sub.taskDescription = taskDescription || '';
+      sub.evaluatedAt = new Date().toISOString();
+    }
+  }
+
+  await saveDB(db);
+  res.json({ success: true, message: 'تم حفظ تقييم المحاضرة والأسينمنت بنجاح', candidate: cand });
+});
+
+// GET /api/members/monthly-evaluations
+app.get('/api/members/monthly-evaluations', (req, res) => {
+  const db = getDB();
+  const { committeeId } = req.query;
+
+  let members = (db.candidates || []).filter(c => c.evaluation && c.evaluation.decision === 'accepted' && c.roleType === 'member');
+  if (committeeId && committeeId !== 'all') {
+    members = members.filter(c => c.assignedCommitteeId === committeeId);
+  }
+
+  const result = members.map(m => {
+    const weekly = m.weeklyEvaluations || {};
+    
+    // Month 1: Weeks 1, 2, 3, 4
+    const m1Weeks = [1, 2, 3, 4].map(w => weekly[`week_${w}`] || null);
+    const m1Scores = m1Weeks.filter(w => w && typeof w.score === 'number').map(w => w.score);
+    const m1Avg = m1Scores.length > 0 ? +(m1Scores.reduce((a, b) => a + b, 0) / m1Scores.length).toFixed(1) : null;
+    
+    // Month 2: Weeks 5, 6, 7, 8
+    const m2Weeks = [5, 6, 7, 8].map(w => weekly[`week_${w}`] || null);
+    const m2Scores = m2Weeks.filter(w => w && typeof w.score === 'number').map(w => w.score);
+    const m2Avg = m2Scores.length > 0 ? +(m2Scores.reduce((a, b) => a + b, 0) / m2Scores.length).toFixed(1) : null;
+
+    return {
+      id: m.id,
+      fullName: m.fullName,
+      arabicName: m.arabicName || m.fullName,
+      email: m.email,
+      phone: m.phone,
+      subDepartment: m.subDepartment || 'academic',
+      faculty: m.faculty,
+      weeklyEvaluations: weekly,
+      overallScore: (m.memberEvaluation && typeof m.memberEvaluation.score === 'number') ? m.memberEvaluation.score : null,
+      month1Average: m1Avg,
+      month2Average: m2Avg,
+      month1: {
+        weeks: m1Weeks,
+        evaluatedCount: m1Scores.length,
+        avgScore: m1Avg
+      },
+      month2: {
+        weeks: m2Weeks,
+        evaluatedCount: m2Scores.length,
+        avgScore: m2Avg
+      }
+    };
+  });
+
+  res.json({ success: true, members: result });
+});
+
+// Public: Get Quiz for Taking (WITHOUT correct answers to prevent inspection cheating)
+app.get('/api/public/quiz/:id', (req, res) => {
+  const db = getDB();
+  const quiz = (db.quizzes || []).find(q => q.id === req.params.id);
+  if (!quiz) return res.status(404).json({ success: false, message: 'عذراً، هذا الاختبار غير متاح' });
+
+  const safeQuestions = quiz.questions.map(q => ({
+    id: q.id,
+    type: q.type,
+    prompt: q.prompt,
+    options: q.options,
+    points: q.points
+  }));
+
+  res.json({
+    success: true,
+    quiz: {
+      id: quiz.id,
+      committeeId: quiz.committeeId,
+      committeeName: quiz.committeeName,
+      title: quiz.title,
+      lectureNumber: quiz.lectureNumber,
+      description: quiz.description,
+      durationMinutes: quiz.durationMinutes,
+      isOpen: quiz.isOpen,
+      totalPoints: quiz.totalPoints,
+      questionsCount: safeQuestions.length,
+      questions: safeQuestions
+    }
+  });
+});
+
+// Public: Check Delegate Login before Quiz
+// Public: Check Delegate Login before Quiz (Supports Email OR Phone login, blocks committee members)
+app.post('/api/public/quiz/:id/check-delegate', (req, res) => {
+  const db = getDB();
+  const quiz = (db.quizzes || []).find(q => q.id === req.params.id);
+  if (!quiz) return res.status(404).json({ success: false, message: 'الاختبار غير موجود' });
+  if (!quiz.isOpen) return res.status(400).json({ success: false, message: 'الاختبار مغلق حالياً من قِبل إدارة القطاع' });
+
+  const inputEmailOrPhone = (req.body.email || req.body.emailOrPhone || '').trim();
+  const password = req.body.password;
+  if (!inputEmailOrPhone || !password) {
+    return res.status(400).json({ success: false, message: 'البريد الإلكتروني (أو رقم الهاتف) وكلمة المرور مطلوبان' });
+  }
+
+  const inputRaw = inputEmailOrPhone;
+  const inputLower = inputRaw.toLowerCase();
+  const inputPhone = cleanPhone(inputRaw);
+
+  const cand = (db.candidates || []).find(c => {
+    const cEmail = (c.email || '').toLowerCase().trim();
+    const cPhone = cleanPhone(c.phone);
+    return cEmail === inputLower || (inputPhone && cPhone === inputPhone);
+  });
+
+  if (!cand) {
+    return res.status(404).json({ success: false, message: 'البريد أو رقم الهاتف غير مسجل في المنظومة' });
+  }
+
+  // Quizzes are specifically for DELEGATES, not committee members
+  if (cand.roleType === 'member') {
+    return res.status(403).json({
+      success: false,
+      message: 'عذراً، هذا الاختبار مخصص للمناديب الأكاديميين فقط. بصفتك عضواً في الهيكل التنظيمي للجنة ليس لديك اختبار.'
+    });
+  }
+
+  const validPassword = cand.delegatePassword || '1234';
+  if (password.trim() !== validPassword && password.trim() !== '1234') {
+    return res.status(401).json({ success: false, message: 'كلمة المرور غير صحيحة (كلمة المرور الموحدة هي 1234)' });
+  }
+
+  // Check if already submitted
+  const prevSub = (db.quizSubmissions || []).find(s => s.quizId === quiz.id && s.candidateId === cand.id);
+
+  res.json({
+    success: true,
+    candidate: {
+      id: cand.id,
+      arabicName: cand.arabicName || cand.fullName,
+      fullName: cand.fullName,
+      email: cand.email,
+      faculty: cand.faculty,
+      committeeId: cand.assignedCommitteeId
+    },
+    alreadySubmitted: !!prevSub,
+    previousResult: prevSub ? {
+      score: prevSub.score,
+      totalPoints: prevSub.totalPoints,
+      percentage: prevSub.percentage,
+      submittedAt: prevSub.submittedAt
+    } : null
+  });
+});
+
+// Public: Submit Quiz & Record Attendance
+app.post('/api/public/quiz/:id/submit', async (req, res) => {
+  const db = getDB();
+  const quiz = (db.quizzes || []).find(q => q.id === req.params.id);
+  if (!quiz) return res.status(404).json({ success: false, message: 'الاختبار غير متاح' });
+
+  const { candidateId, email, password, answers, timeTakenSeconds } = req.body;
+  const cleanEmail = (email || '').toLowerCase().trim();
+  const cand = db.candidates.find(c => c.id === candidateId || (c.email || '').toLowerCase().trim() === cleanEmail);
+
+  if (!cand) {
+    return res.status(404).json({ success: false, message: 'المندوب غير مسجل' });
+  }
+
+  if (!db.quizSubmissions) db.quizSubmissions = [];
+  const existingSub = db.quizSubmissions.find(s => s.quizId === quiz.id && s.candidateId === cand.id);
+  if (existingSub) {
+    return res.json({
+      success: true,
+      alreadySubmitted: true,
+      score: existingSub.score,
+      totalPoints: existingSub.totalPoints,
+      percentage: existingSub.percentage,
+      submittedAt: existingSub.submittedAt,
+      message: 'تم تسجيل حضورك وإجابتك مسبقاً!'
+    });
+  }
+
+  let totalScore = 0;
+  const review = quiz.questions.map(q => {
+    const selected = answers ? answers[q.id] : undefined;
+    const isCorrect = selected !== undefined && parseInt(selected) === parseInt(q.correctAnswer);
+    const pointsAwarded = isCorrect ? (parseFloat(q.points) || 1) : 0;
+    totalScore += pointsAwarded;
+    return {
+      id: q.id,
+      prompt: q.prompt,
+      type: q.type,
+      options: q.options,
+      selectedAnswer: selected !== undefined ? parseInt(selected) : null,
+      correctAnswer: q.correctAnswer,
+      isCorrect,
+      points: q.points,
+      pointsAwarded
+    };
+  });
+
+  const percentage = quiz.totalPoints > 0 ? Math.round((totalScore / quiz.totalPoints) * 100) : 100;
+  const now = new Date().toISOString();
+
+  const submission = {
+    id: 'sub_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+    quizId: quiz.id,
+    lectureNumber: quiz.lectureNumber,
+    quizTitle: quiz.title,
+    committeeId: quiz.committeeId,
+    candidateId: cand.id,
+    candidateName: cand.arabicName || cand.fullName,
+    candidateEmail: cand.email,
+    candidatePhone: cand.phone,
+    candidateFaculty: cand.faculty,
+    answers: answers || {},
+    score: totalScore,
+    totalPoints: quiz.totalPoints,
+    percentage,
+    timeTakenSeconds: timeTakenSeconds || 0,
+    attendance: true,
+    submittedAt: now
+  };
+
+  db.quizSubmissions.push(submission);
+  await saveDB(db);
+
+  res.json({
+    success: true,
+    score: totalScore,
+    totalPoints: quiz.totalPoints,
+    percentage,
+    passed: percentage >= 50,
+    submittedAt: now,
+    timeTakenSeconds,
+    review,
+    message: 'تهانينا! تم تسليم الاختبار وتسجيل حضورك في المحاضرة بنجاح'
+  });
+});
+
+// Gradebook Matrix & Attendance Sheet API
+app.get('/api/gradebook', (req, res) => {
+  const db = getDB();
+  const { committeeId } = req.query;
+
+  let candidates = db.candidates.filter(c => c.evaluation && c.evaluation.decision === 'accepted');
+  if (committeeId && committeeId !== 'all') {
+    candidates = candidates.filter(c => c.assignedCommitteeId === committeeId);
+  }
+
+  let quizzes = db.quizzes || [];
+  if (committeeId && committeeId !== 'all') {
+    quizzes = quizzes.filter(q => q.committeeId === committeeId || q.committeeId === 'all');
+  }
+  quizzes.sort((a, b) => (a.lectureNumber || 0) - (b.lectureNumber || 0));
+
+  const submissions = db.quizSubmissions || [];
+
+  const rows = candidates.map(cand => {
+    const candSubs = submissions.filter(s => s.candidateId === cand.id);
+    const quizGrades = {};
+    let attendedQuizzesCount = 0;
+    let totalScoreSum = 0;
+    let totalMaxSum = 0;
+
+    quizzes.forEach(q => {
+      const sub = candSubs.find(s => s.quizId === q.id);
+      if (sub) {
+        quizGrades[q.id] = {
+          attended: true,
+          score: sub.score,
+          totalPoints: sub.totalPoints,
+          percentage: sub.percentage,
+          submittedAt: sub.submittedAt
+        };
+        attendedQuizzesCount++;
+        totalScoreSum += sub.score;
+        totalMaxSum += sub.totalPoints;
+      } else {
+        quizGrades[q.id] = {
+          attended: false,
+          score: 0,
+          totalPoints: q.totalPoints,
+          percentage: 0
+        };
+      }
+    });
+
+    const attendanceRate = quizzes.length > 0 ? Math.round((attendedQuizzesCount / quizzes.length) * 100) : 100;
+    const averageScore = totalMaxSum > 0 ? Math.round((totalScoreSum / totalMaxSum) * 100) : 0;
+
+    return {
+      id: cand.id,
+      candidateId: cand.id,
+      arabicName: cand.arabicName || cand.fullName,
+      fullName: cand.fullName,
+      email: cand.email,
+      phone: cand.phone,
+      university: cand.university,
+      faculty: cand.faculty,
+      grade: cand.grade,
+      assignedCommitteeId: cand.assignedCommitteeId,
+      roleType: cand.roleType || 'delegate',
+      subDepartment: cand.subDepartment || null,
+      memberEvaluation: cand.memberEvaluation || { score: null, notes: '' },
+      interviewScore: cand.evaluation ? cand.evaluation.score : null,
+      quizGrades,
+      attendedQuizzesCount,
+      totalQuizzesCount: quizzes.length,
+      attendanceRate,
+      averageScore
+    };
+  });
+
+  res.json({
+    success: true,
+    quizzes: quizzes.map(q => ({ id: q.id, title: q.title, lectureNumber: q.lectureNumber, totalPoints: q.totalPoints })),
+    rows
+  });
+});
+
+// General Administration Performance Across All 9 Committees
+app.get('/api/admin/all-committees-performance', (req, res) => {
+  const db = getDB();
+  const committees = db.committees || [];
+  const candidates = db.candidates || [];
+  const quizzes = db.quizzes || [];
+  const submissions = db.quizSubmissions || [];
+
+  const summary = committees.map(comm => {
+    const commCands = candidates.filter(c => c.assignedCommitteeId === comm.id);
+    const accepted = commCands.filter(c => c.evaluation && c.evaluation.decision === 'accepted');
+    const delegates = accepted.filter(c => (c.roleType || 'delegate') === 'delegate');
+    const members = accepted.filter(c => c.roleType === 'member');
+    const hrMembers = members.filter(c => c.subDepartment === 'hr');
+    const mediaMembers = members.filter(c => c.subDepartment === 'media');
+    const academicMembers = members.filter(c => c.subDepartment === 'academic');
+
+    const commQuizzes = quizzes.filter(q => q.committeeId === comm.id);
+    const commSubs = submissions.filter(s => s.committeeId === comm.id);
+
+    const potentialAttendances = delegates.length * commQuizzes.length;
+    const actualAttendances = commSubs.length;
+    const attendanceRate = potentialAttendances > 0 ? Math.round((actualAttendances / potentialAttendances) * 100) : (commQuizzes.length === 0 ? 100 : 0);
+
+    const averageScore = commSubs.length > 0 ? Math.round(commSubs.reduce((acc, s) => acc + (s.percentage || 0), 0) / commSubs.length) : 0;
+
+    return {
+      committeeId: comm.id,
+      committeeName: comm.name,
+      slug: comm.slug,
+      color: comm.color,
+      icon: comm.icon,
+      totalCandidates: commCands.length,
+      acceptedCount: accepted.length,
+      delegatesCount: delegates.length,
+      membersCount: members.length,
+      hrCount: hrMembers.length,
+      mediaCount: mediaMembers.length,
+      academicCount: academicMembers.length,
+      quizzesCount: commQuizzes.length,
+      submissionsCount: commSubs.length,
+      attendanceRate,
+      averageScore
+    };
+  });
+
+  res.json({ success: true, summary });
+});
+
 const PUBLIC_DIR = path.resolve(__dirname, 'public');
 
 // Root redirects directly to login (user requested no landing page)
@@ -1081,6 +1868,14 @@ app.get('/book/:slug', (req, res) => {
 
 app.get('/book', (req, res) => {
   res.sendFile('book.html', { root: PUBLIC_DIR });
+});
+
+app.get('/quiz/:id', (req, res) => {
+  res.sendFile('quiz.html', { root: PUBLIC_DIR });
+});
+
+app.get('/quiz', (req, res) => {
+  res.sendFile('quiz.html', { root: PUBLIC_DIR });
 });
 
 // Catch-all fallback

@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>بوابة حجز موعد المقابلة | نموذج محاكاة وزارة الخارجية</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,32 +12,55 @@
   <!-- Vue 3 CDN for reactive UI -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <style>
-    body { font-family: 'Cairo', sans-serif; }
+    body { 
+      font-family: 'Cairo', sans-serif;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
     .hero-navy {
       background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
     }
     [v-cloak] { display: none; }
+    
+    /* Prevent auto-zoom on iOS when tapping inputs */
+    @media (max-width: 640px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+    
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-amber-100 selection:text-amber-900">
 
   <div id="app" v-cloak class="flex flex-col min-h-screen">
     
     <!-- Top Header -->
-    <header class="hero-navy text-white border-b border-slate-800 shadow-md">
-      <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-3 group">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black shadow-md">
-            <i data-lucide="landmark" class="w-6 h-6 text-white"></i>
+    <header class="hero-navy text-white border-b border-slate-800 shadow-md sticky top-0 z-40">
+      <div class="max-w-5xl mx-auto px-3 sm:px-4 py-2.5 sm:py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2.5 sm:gap-3 group min-w-0">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black shadow-md flex-shrink-0">
+            <i data-lucide="landmark" class="w-5 h-5 sm:w-6 sm:h-6 text-white"></i>
           </div>
-          <div>
-            <h1 class="font-black text-sm sm:text-base text-white group-hover:text-amber-400 transition">نموذج محاكاة وزارة الخارجية</h1>
-            <p class="text-[11px] text-amber-400 font-semibold">بوابة حجز المقابلات الشخصية 2026</p>
+          <div class="min-w-0">
+            <h1 class="font-black text-xs sm:text-base text-white group-hover:text-amber-400 transition truncate">
+              نموذج محاكاة وزارة الخارجية
+            </h1>
+            <p class="text-[10px] sm:text-[11px] text-amber-400 font-semibold truncate">
+              بوابة حجز المقابلات الشخصية 2026
+            </p>
           </div>
         </a>
 
-        <div class="flex items-center gap-2">
-          <a href="/login" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition">
+        <div class="flex items-center gap-2 flex-shrink-0 mr-2">
+          <a href="/login" class="px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] sm:text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition">
             <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i>
             <span>دخول الإدارة</span>
           </a>
@@ -46,100 +69,130 @@
     </header>
 
     <!-- Main Container -->
-    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
+    <main class="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-8">
       
       <!-- Committee Banner Card -->
-      <div v-if="committee" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm mb-8 relative overflow-hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div class="flex items-center gap-4">
-            <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg text-2xl font-bold flex-shrink-0" :style="{ backgroundColor: committee.color }">
-              <i data-lucide="calendar" class="w-8 h-8"></i>
+      <div v-if="committee" class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-slate-200/80 shadow-sm mb-5 sm:mb-8 relative overflow-hidden">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center text-white shadow-lg text-xl sm:text-2xl font-bold flex-shrink-0" :style="{ backgroundColor: committee.color }">
+              <i data-lucide="calendar" class="w-6 h-6 sm:w-8 sm:h-8"></i>
             </div>
-            <div>
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-1" :class="committee.badge">
+            <div class="min-w-0">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold mb-1" :class="committee.badge">
                 قطاع المقابلة
               </div>
-              <h2 class="text-xl sm:text-2xl font-black text-slate-900 leading-snug">{{ committee.name }}</h2>
-              <p class="text-xs sm:text-sm text-slate-500 mt-1">{{ committee.description }}</p>
+              <h2 class="text-base sm:text-2xl font-black text-slate-900 leading-snug">
+                {{ committee.name }}
+              </h2>
+              <p class="text-[11px] sm:text-sm text-slate-500 mt-0.5 line-clamp-2 sm:line-clamp-none">
+                {{ committee.description }}
+              </p>
             </div>
           </div>
 
           <!-- Committee Selector Dropdown if user wants to switch -->
-          <div class="flex-shrink-0">
-            <label class="block text-[11px] font-bold text-slate-500 mb-1">تغيير القطاع:</label>
+          <div class="w-full sm:w-auto flex-shrink-0 pt-2 sm:pt-0 border-t border-slate-100 sm:border-0">
+            <label class="block text-[10px] sm:text-[11px] font-bold text-slate-500 mb-1">تغيير القطاع:</label>
             <select 
               v-model="selectedCommitteeSlug" 
               @change="changeCommittee"
-              class="text-xs font-bold bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-amber-500"
+              class="w-full sm:w-auto text-xs font-bold bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 sm:py-2 text-slate-700 outline-none focus:border-amber-500 shadow-sm"
             >
-              <option v-for="c in allCommittees" :key="c.slug" :value="c.slug">{{ c.shortName || c.name }}</option>
+              <option v-for="c in allCommittees" :key="c.slug" :value="c.slug">{{ c.shortName || c.name }} ({{ c.stats ? c.stats.total + ' مرشح' : '' }})</option>
             </select>
           </div>
         </div>
       </div>
 
       <!-- STEP 1: Select Candidate -->
-      <section class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm mb-8">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-sm">1</div>
-          <h3 class="text-lg font-black text-slate-900">الخطوة الأولى: ابحث عن اسمك في قائمة مرشحي القطاع</h3>
+      <section class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-slate-200/80 shadow-sm mb-5 sm:mb-8">
+        <div class="flex items-center gap-2.5 sm:gap-3 mb-2 sm:mb-3">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs sm:text-sm flex-shrink-0">1</div>
+          <h3 class="text-sm sm:text-lg font-black text-slate-900">الخطوة الأولى: ابحث عن اسمك في قائمة مرشحي القطاع</h3>
         </div>
-        <p class="text-xs sm:text-sm text-slate-500 mb-6 mr-11">
+        <p class="text-[11px] sm:text-sm text-slate-500 mb-4 sm:mb-6 sm:mr-11 leading-relaxed">
           اختر اسمك من القائمة أدناه أو ابدأ بكتابة اسمك أو رقم هاتفك لتأكيد هويتك والاطلاع على المواعيد المتاحة لك.
         </p>
 
-        <!-- Search Input -->
-        <div class="relative max-w-xl mb-4">
+        <!-- Search Input with Clear Button -->
+        <div class="relative max-w-xl mb-3 sm:mb-4">
           <input 
             type="text" 
             v-model="candidateSearch" 
             @input="onSearchInput"
-            placeholder="ابحث بالاسم أو رقم الهاتف المسجل..." 
-            class="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-300 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 text-sm outline-none transition text-slate-800 font-medium"
+            placeholder="اكتب اسمك الثلاثي/الرباعي أو رقم هاتفك..." 
+            class="w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl border-2 border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 text-base sm:text-sm outline-none transition text-slate-900 font-bold shadow-sm"
           >
-          <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+          <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
             <i data-lucide="search" class="w-4 h-4"></i>
           </div>
+          <button 
+            v-if="candidateSearch" 
+            @click="candidateSearch = ''; onSearchInput();" 
+            class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-700 transition"
+            title="مسح البحث وعرض كافة المرشحين"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
         </div>
 
         <!-- Filtered Candidates Dropdown / List -->
-        <div v-if="!selectedCandidate" class="max-h-60 overflow-y-auto border border-slate-200 rounded-2xl divide-y divide-slate-100 bg-slate-50">
+        <div v-if="!selectedCandidate" class="mb-2.5 sm:mb-3 bg-slate-100 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 flex flex-col sm:flex-row sm:items-center justify-between text-[11px] sm:text-xs font-bold text-slate-700 gap-1">
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <i data-lucide="users" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>
+            <span>كشف مرشحي القطاع (المعروض: <b class="text-amber-700">{{ filteredCandidates.length }}</b> من <b class="text-slate-900">{{ candidates.length }}</b>)</span>
+          </div>
+          <span class="text-slate-500 font-normal text-[10px] sm:text-xs">انقر على اسمك لتحديد أو تعديل موعدك</span>
+        </div>
+        
+        <div v-if="!selectedCandidate" class="max-h-[360px] sm:max-h-[460px] overflow-y-auto border-2 border-slate-200 rounded-xl sm:rounded-2xl divide-y divide-slate-100 bg-white shadow-sm" style="scrollbar-width: thin; scrollbar-color: #f59e0b #f1f5f9;">
           <div 
-            v-for="cand in filteredCandidates" 
+            v-for="(cand, idx) in filteredCandidates" 
             :key="cand.id"
             @click="selectCandidate(cand)"
-            class="p-3.5 hover:bg-amber-50 cursor-pointer flex items-center justify-between transition-colors text-xs sm:text-sm"
+            class="p-3 sm:p-3.5 hover:bg-amber-50/80 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-2 transition-colors text-xs sm:text-sm group"
           >
-            <div>
-              <span class="font-bold text-slate-900">{{ cand.arabicName }}</span>
-              <span class="text-xs text-slate-500 mr-2">({{ cand.university }} - {{ cand.faculty }})</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span v-if="cand.bookingStatus === 'booked' || cand.bookingStatus === 'completed'" class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold">
-                حاجز موعد بالفعل
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-100 text-slate-500 font-mono text-[11px] sm:text-xs flex items-center justify-center font-bold flex-shrink-0 group-hover:bg-amber-200 group-hover:text-amber-950 transition">
+                {{ idx + 1 }}
               </span>
-              <span v-else class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+              <div class="min-w-0">
+                <div class="font-bold text-slate-900 group-hover:text-amber-950 truncate">{{ cand.arabicName }}</div>
+                <div class="text-[11px] sm:text-xs text-slate-500 truncate">{{ cand.university }} - {{ cand.faculty }}</div>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-between sm:justify-end gap-2 pr-8 sm:pr-0 flex-shrink-0">
+              <span v-if="cand.slotInfo && isSlotPast(cand.slotInfo)" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-slate-200 text-slate-700 text-[10px] sm:text-xs font-bold whitespace-nowrap">
+                انقضى الموعد
+              </span>
+              <span v-else-if="cand.bookingStatus === 'booked' || cand.bookingStatus === 'completed'" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-blue-100 text-blue-800 text-[10px] sm:text-xs font-bold whitespace-nowrap">
+                حاجز موعد (متاح للتعديل)
+              </span>
+              <span v-else class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] sm:text-xs font-bold whitespace-nowrap">
                 لم يحجز بعد
               </span>
               <i data-lucide="chevron-left" class="w-4 h-4 text-slate-400"></i>
             </div>
           </div>
+          
           <div v-if="filteredCandidates.length === 0 && !crossCommitteeCandidate" class="p-6 text-center text-xs text-slate-500">
             لم يتم العثور على اسم مطابق في هذا القطاع. تأكد من كتابة الاسم صحيحاً أو ابحث برقم هاتفك.
           </div>
 
           <!-- Cross-committee helpful detection -->
-          <div v-if="crossCommitteeCandidate" class="p-5 bg-purple-50 border border-purple-200 rounded-xl text-center">
-            <i data-lucide="info" class="w-6 h-6 text-purple-600 mx-auto mb-2"></i>
-            <h5 class="font-bold text-sm text-purple-900 mb-1">
+          <div v-if="crossCommitteeCandidate" class="p-4 sm:p-5 bg-purple-50 border border-purple-200 rounded-xl text-center m-2">
+            <i data-lucide="info" class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 mx-auto mb-2"></i>
+            <h5 class="font-bold text-xs sm:text-sm text-purple-900 mb-1">
               وجدنا بياناتك يا {{ crossCommitteeCandidate.arabicName }} مسجلة في لجنة:
             </h5>
-            <div class="text-base font-black text-purple-800 mb-3">
+            <div class="text-sm sm:text-base font-black text-purple-800 mb-3">
               {{ crossCommitteeCandidate.assignedCommitteeName }}
             </div>
             <button 
               @click="goToCrossCommittee(crossCommitteeCandidate)" 
-              class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition"
             >
               الانتقال إلى لجنة {{ crossCommitteeCandidate.assignedCommitteeName }} لحجز الموعد ↗
             </button>
@@ -147,123 +200,169 @@
         </div>
 
         <!-- Selected Candidate Confirmation Card -->
-        <div v-if="selectedCandidate" class="bg-amber-50/70 border border-amber-200 rounded-2xl p-5 mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-900 font-black flex items-center justify-center text-xl">
-              <i data-lucide="user-check" class="w-6 h-6 text-amber-700"></i>
+        <div v-if="selectedCandidate" class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 sm:p-5 mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/20 text-amber-900 font-black flex items-center justify-center text-lg sm:text-xl flex-shrink-0">
+              <i data-lucide="user-check" class="w-5 h-5 sm:w-6 sm:h-6 text-amber-700"></i>
             </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h4 class="font-bold text-slate-900 text-base">{{ selectedCandidate.arabicName }}</h4>
-                <span class="text-xs text-slate-500 font-normal">({{ selectedCandidate.fullName }})</span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <h4 class="font-bold text-slate-900 text-sm sm:text-base">{{ selectedCandidate.arabicName }}</h4>
+                <span class="text-[11px] sm:text-xs text-slate-500 font-normal">({{ selectedCandidate.fullName }})</span>
               </div>
-              <p class="text-xs text-slate-600 mt-0.5">
-                {{ selectedCandidate.university }} • {{ selectedCandidate.faculty }} • {{ selectedCandidate.grade }} • هاتف: {{ selectedCandidate.phone }}
+              <p class="text-[11px] sm:text-xs text-slate-600 mt-0.5 line-clamp-2">
+                {{ selectedCandidate.university }} • {{ selectedCandidate.faculty }} • هاتف: {{ selectedCandidate.phone }}
               </p>
             </div>
           </div>
 
           <button 
             @click="clearCandidate" 
-            class="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 transition"
+            class="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 transition text-center shadow-sm"
           >
             تغيير الاسم
           </button>
         </div>
 
         <!-- If candidate already has a booking -->
-        <div v-if="selectedCandidate && selectedCandidate.slotInfo" class="mt-4 p-5 rounded-2xl bg-blue-50 border border-blue-200 text-blue-950">
-          <div class="flex items-start justify-between gap-3">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-blue-200 flex items-center justify-center text-blue-900 font-bold">
-                <i data-lucide="calendar-check" class="w-5 h-5"></i>
+        <div v-if="selectedCandidate && selectedCandidate.slotInfo" class="mt-4">
+          <!-- Case 1: Slot time has passed -->
+          <div v-if="isSlotPast(selectedCandidate.slotInfo)" class="p-4 sm:p-5 rounded-2xl bg-slate-100 border border-slate-300 text-slate-800">
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center font-bold shrink-0">
+                <i data-lucide="clock" class="w-5 h-5"></i>
               </div>
               <div>
-                <h5 class="font-bold text-sm text-blue-900">لديك موعد مقابلة محجوز بالفعل:</h5>
-                <p class="text-xs text-blue-800 mt-1">
-                  📅 <b>{{ selectedCandidate.slotInfo.dateDisplay }}</b> في تمام الساعة <b>{{ selectedCandidate.slotInfo.timeDisplay }}</b>
-                  <span class="mx-1">•</span>
-                  {{ selectedCandidate.slotInfo.type === 'online' ? '🌐 أونلاين (Online)' : '📍 أوفلاين (حضوري بالكلية)' }}
+                <h5 class="font-bold text-xs sm:text-sm text-slate-900">انقضى موعد مقابلتك السابق</h5>
+                <p class="text-[11px] sm:text-xs text-slate-600 mt-1">
+                  كان موعدك المحدد بتاريخ <b>{{ selectedCandidate.slotInfo.dateDisplay }}</b> الساعة <b>{{ selectedCandidate.slotInfo.timeDisplay }}</b>.
                 </p>
-                <p v-if="selectedCandidate.slotInfo.locationOrLink" class="text-xs text-blue-700 mt-1">
-                  المقر / الرابط: {{ selectedCandidate.slotInfo.locationOrLink }}
+                <p class="text-[11px] sm:text-xs text-rose-700 font-bold mt-2">
+                  تنبيه: نظراً لمرور توقيت المقابلة، لا يمكن تعديل الموعد ذاتياً من خلال المنصة. يرجى مراجعة إدارة القطاع مباشرة.
                 </p>
               </div>
             </div>
-            <button 
-              @click="cancelExistingBooking" 
-              class="px-3 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold transition flex items-center gap-1"
-            >
-              <i data-lucide="x" class="w-3.5 h-3.5"></i>
-              <span>إلغاء الموعد</span>
-            </button>
+          </div>
+
+          <!-- Case 2: Slot is upcoming (Allow Rescheduling) -->
+          <div v-else class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50/60 border border-blue-200 text-blue-950 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow flex-shrink-0">
+                  <i data-lucide="calendar-check" class="w-5 h-5"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h5 class="font-black text-xs sm:text-sm text-blue-950">لديك موعد مقابلة مؤكد</h5>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">حجز ساري</span>
+                  </div>
+                  <p class="text-[11px] sm:text-xs text-blue-900 mt-1 font-semibold leading-relaxed">
+                    <b>{{ selectedCandidate.slotInfo.dateDisplay }}</b> في تمام الساعة <b>{{ selectedCandidate.slotInfo.timeDisplay }}</b>
+                    <span class="mx-1">•</span>
+                    {{ selectedCandidate.slotInfo.type === 'online' ? 'أونلاين (Online)' : 'أوفلاين (حضوري بالكلية)' }}
+                  </p>
+                  <p v-if="selectedCandidate.slotInfo.locationOrLink" class="text-[10px] sm:text-xs text-blue-700 mt-0.5 truncate">
+                    المقر / الرابط: {{ selectedCandidate.slotInfo.locationOrLink }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Action buttons: Reschedule or Cancel -->
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-shrink-0 w-full sm:w-auto pt-2 sm:pt-0 border-t border-blue-200 sm:border-0">
+                <button 
+                  @click="startRescheduling" 
+                  class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black shadow transition flex items-center justify-center gap-1.5"
+                >
+                  <i data-lucide="calendar" class="w-4 h-4"></i>
+                  <span>تعديل الموعد / اختيار موعد بديل</span>
+                </button>
+                <button 
+                  @click="cancelExistingBooking" 
+                  class="w-full sm:w-auto px-3 py-2.5 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold transition flex items-center justify-center gap-1"
+                  title="إلغاء الموعد بالكامل"
+                >
+                  <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                  <span>إلغاء</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Rescheduling notice banner -->
+            <div v-if="isRescheduling" class="mt-3 pt-3 border-t border-blue-200/70 text-[11px] sm:text-xs text-blue-900 flex items-start gap-2 bg-amber-50/80 p-3 rounded-xl border border-amber-200">
+              <i data-lucide="info" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
+              <span>أنت الآن في وضع تعديل الموعد: اختر موعداً بديلاً من المواعيد المتاحة أدناه. وفور تأكيدك سيتم حجز الموعد الجديد وتحرير موعدك الحالي تلقائياً ليصبح متاحاً لمرشح آخر.</span>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- STEP 2: Choose Slot -->
-      <section v-if="selectedCandidate" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm mb-8">
-        <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white font-black flex items-center justify-center text-sm">2</div>
+      <section v-if="selectedCandidate && (!selectedCandidate.slotInfo || !isSlotPast(selectedCandidate.slotInfo))" id="slotsSection" class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-slate-200/80 shadow-sm mb-5 sm:mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div class="flex items-center gap-2.5 sm:gap-3">
+            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-500 text-white font-black flex items-center justify-center text-xs sm:text-sm flex-shrink-0">2</div>
             <div>
-              <h3 class="text-lg font-black text-slate-900">الخطوة الثانية: اختر الموعد المناسب لك</h3>
-              <p class="text-xs text-slate-500">اختر من المواعيد المتاحة أدناه لحجز المقابلة باسمك</p>
+              <h3 class="text-sm sm:text-lg font-black text-slate-900 leading-tight">
+                {{ selectedCandidate.slotInfo ? 'الخطوة الثانية: اختر الموعد البديل المناسب لك' : 'الخطوة الثانية: اختر الموعد المناسب لك' }}
+              </h3>
+              <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                {{ selectedCandidate.slotInfo ? 'اختر من المواعيد المتاحة أدناه لنقل حجزك وتحرير موعدك السابق' : 'اختر من المواعيد المتاحة أدناه لحجز المقابلة باسمك' }}
+              </p>
             </div>
           </div>
 
-          <!-- Type Filter Tabs -->
-          <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-bold">
+          <!-- Type Filter Tabs (Mobile Full-width Segmented) -->
+          <div class="w-full sm:w-auto grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl sm:rounded-2xl border border-slate-200 text-xs font-bold">
             <button 
               @click="typeFilter = 'all'" 
               :class="typeFilter === 'all' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'"
-              class="px-3 py-1.5 rounded-xl transition"
+              class="px-2 sm:px-3 py-1.5 rounded-lg sm:rounded-xl transition text-center text-[11px] sm:text-xs"
             >
               الكل ({{ totalSlotsCount }})
             </button>
             <button 
               @click="typeFilter = 'online'" 
               :class="typeFilter === 'online' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'"
-              class="px-3 py-1.5 rounded-xl transition flex items-center gap-1"
+              class="px-2 sm:px-3 py-1.5 rounded-lg sm:rounded-xl transition text-center text-[11px] sm:text-xs"
             >
-              🌐 أونلاين
+              أونلاين
             </button>
             <button 
               @click="typeFilter = 'offline'" 
               :class="typeFilter === 'offline' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'"
-              class="px-3 py-1.5 rounded-xl transition flex items-center gap-1"
+              class="px-2 sm:px-3 py-1.5 rounded-lg sm:rounded-xl transition text-center text-[11px] sm:text-xs"
             >
-              📍 حضوري (أوفلاين)
+              حضوري
             </button>
           </div>
         </div>
 
         <!-- No slots notice -->
-        <div v-if="daysList.length === 0" class="p-12 text-center border-2 border-dashed border-slate-200 rounded-3xl">
-          <i data-lucide="calendar-x" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
-          <h4 class="font-bold text-slate-700 text-base mb-1">لا توجد مواعيد متاحة حالياً</h4>
+        <div v-if="daysList.length === 0" class="p-8 sm:p-12 text-center border-2 border-dashed border-slate-200 rounded-2xl sm:rounded-3xl">
+          <i data-lucide="calendar-x" class="w-10 h-10 sm:w-12 sm:h-12 text-slate-300 mx-auto mb-3"></i>
+          <h4 class="font-bold text-slate-700 text-sm sm:text-base mb-1">لا توجد مواعيد متاحة حالياً</h4>
           <p class="text-xs text-slate-500">يقوم مدير القطاع حالياً بجدولة المواعيد وسيتم فتح الحجز قريباً جداً.</p>
         </div>
 
         <!-- Days & Slots Accordion / Sections -->
-        <div class="space-y-6">
+        <div class="space-y-4 sm:space-y-6">
           <div 
             v-for="day in filteredDays" 
             :key="day.date" 
-            class="bg-slate-50 rounded-2xl p-5 border border-slate-200"
+            class="bg-slate-50 rounded-2xl p-3.5 sm:p-5 border border-slate-200"
           >
-            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200">
+            <div class="flex items-center justify-between mb-3 pb-2.5 sm:mb-4 sm:pb-3 border-b border-slate-200">
               <div class="flex items-center gap-2">
-                <i data-lucide="calendar" class="w-5 h-5 text-amber-500"></i>
-                <h4 class="font-black text-slate-900 text-base">{{ day.dateDisplay }}</h4>
+                <i data-lucide="calendar" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-500"></i>
+                <h4 class="font-black text-slate-900 text-xs sm:text-base">{{ day.dateDisplay }}</h4>
               </div>
-              <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-700">
+              <span class="text-[10px] sm:text-xs font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-slate-200 text-slate-700">
                 {{ day.availableCount }} موعد متاح
               </span>
             </div>
 
             <!-- Slots Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-3">
               <div 
                 v-for="slot in day.slots" 
                 :key="slot.id"
@@ -274,7 +373,7 @@
                     : 'bg-slate-100 border-slate-200 opacity-60 cursor-not-allowed',
                   selectedSlot && selectedSlot.id === slot.id ? 'ring-2 ring-emerald-500 border-emerald-500 bg-emerald-50/40' : ''
                 ]"
-                class="rounded-xl p-3.5 border transition-all flex flex-col justify-between"
+                class="rounded-xl p-3 sm:p-3.5 border transition-all flex flex-col justify-between"
               >
                 <div class="flex items-center justify-between mb-2">
                   <span class="text-xs font-black text-slate-900 flex items-center gap-1">
@@ -283,22 +382,22 @@
                   </span>
                   <span 
                     :class="slot.type === 'online' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'"
-                    class="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                    class="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full"
                   >
                     {{ slot.type === 'online' ? 'أونلاين' : 'حضوري' }}
                   </span>
                 </div>
 
-                <div class="text-[11px] text-slate-500 truncate mb-3">
+                <div class="text-[11px] text-slate-500 truncate mb-2.5">
                   {{ slot.locationOrLink }}
                 </div>
 
                 <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
-                  <span v-if="slot.isAvailable" class="text-emerald-700 font-bold flex items-center gap-1">
+                  <span v-if="slot.isAvailable" class="text-emerald-700 font-bold flex items-center gap-1 text-[11px] sm:text-xs">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     متاح للحجز
                   </span>
-                  <span v-else class="text-slate-400 font-semibold">
+                  <span v-else class="text-slate-400 font-semibold text-[11px]">
                     محجوز ({{ slot.candidateName || 'مرشح' }})
                   </span>
                   <button 
@@ -315,31 +414,31 @@
       </section>
 
       <!-- Confirmation / Success Modal -->
-      <div v-if="bookingSuccessData" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 shadow-2xl relative text-center">
+      <div v-if="bookingSuccessData" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-8 border border-slate-200 shadow-2xl relative text-center max-h-[92vh] overflow-y-auto">
           
-          <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4 text-3xl">
-            <i data-lucide="check-circle" class="w-10 h-10"></i>
+          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 sm:mb-4 text-2xl sm:text-3xl">
+            <i data-lucide="check-circle" class="w-8 h-8 sm:w-10 sm:h-10"></i>
           </div>
 
-          <h3 class="text-2xl font-black text-slate-900 mb-2">تم تأكيد حجز موعدك بنجاح!</h3>
-          <p class="text-xs sm:text-sm text-slate-500 mb-6">
+          <h3 class="text-lg sm:text-2xl font-black text-slate-900 mb-1.5 sm:mb-2">تم تأكيد حجز موعدك بنجاح!</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mb-4 sm:mb-6">
             تم تسجيل موعد مقابلتك الشخصية في كشوفات لجنة {{ bookingSuccessData.committeeName }}.
           </p>
 
           <!-- Appointment Ticket -->
-          <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-6 text-right mb-6 shadow-inner relative overflow-hidden">
+          <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-4 sm:p-6 text-right mb-4 sm:mb-6 shadow-inner relative overflow-hidden">
             <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-amber-500/10 rounded-full blur-xl"></div>
             
-            <div class="flex items-center justify-between border-b border-slate-700/80 pb-3 mb-3">
+            <div class="flex items-center justify-between border-b border-slate-700/80 pb-2.5 mb-2.5">
               <span class="text-xs text-amber-400 font-bold">بطاقة حضور المقابلة الشخصية</span>
-              <span class="text-[11px] text-slate-400 font-mono">2026-MOFA</span>
+              <span class="text-[10px] sm:text-[11px] text-slate-400 font-mono">2026-MOFA</span>
             </div>
 
-            <div class="space-y-2 text-xs">
+            <div class="space-y-1.5 sm:space-y-2 text-xs">
               <div class="flex justify-between">
                 <span class="text-slate-400">المرشح:</span>
-                <span class="font-bold text-white text-sm">{{ bookingSuccessData.candidateName }}</span>
+                <span class="font-bold text-white text-xs sm:text-sm">{{ bookingSuccessData.candidateName }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-slate-400">اللجنة:</span>
@@ -351,13 +450,13 @@
               </div>
               <div class="flex justify-between">
                 <span class="text-slate-400">توقيت المقابلة:</span>
-                <span class="font-bold text-emerald-400 text-sm">{{ bookingSuccessData.timeDisplay }}</span>
+                <span class="font-bold text-emerald-400 text-xs sm:text-sm">{{ bookingSuccessData.timeDisplay }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-slate-400">نوع المقابلة:</span>
                 <span class="font-bold text-white">{{ bookingSuccessData.type }}</span>
               </div>
-              <div class="pt-2 border-t border-slate-700/80 text-[11px] text-slate-300">
+              <div class="pt-2 border-t border-slate-700/80 text-[10px] sm:text-[11px] text-slate-300 leading-relaxed">
                 <b>المقر / الرابط:</b> {{ bookingSuccessData.locationOrLink }}
               </div>
             </div>
@@ -368,7 +467,7 @@
             <a 
               :href="whatsappShareLink" 
               target="_blank"
-              class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+              class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md"
             >
               <i data-lucide="message-circle" class="w-4 h-4"></i>
               <span>إرسال تفاصيل الموعد لنفسي عبر واتساب</span>
@@ -376,7 +475,7 @@
             
             <button 
               @click="closeSuccessModal"
-              class="w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+              class="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
             >
               تم، العودة للصفحة
             </button>
@@ -385,19 +484,38 @@
       </div>
 
       <!-- Booking Confirmation Dialog Modal -->
-      <div v-if="slotToBook" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 border border-slate-200 shadow-2xl text-right">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+      <div v-if="slotToBook" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-5 sm:p-7 border border-slate-200 shadow-2xl text-right max-h-[92vh] overflow-y-auto">
+          <div class="flex items-center gap-3 mb-3 sm:mb-4">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl" :class="selectedCandidate.slotInfo ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'" class="flex items-center justify-center font-bold flex-shrink-0">
               <i data-lucide="calendar" class="w-5 h-5"></i>
             </div>
             <div>
-              <h4 class="font-black text-slate-900 text-base">تأكيد حجز المقابلة</h4>
-              <p class="text-xs text-slate-500">راجع تفاصيل الموعد قبل التأكيد</p>
+              <h4 class="font-black text-slate-900 text-sm sm:text-base">
+                {{ selectedCandidate.slotInfo ? 'تأكيد تعديل موعد المقابلة' : 'تأكيد حجز المقابلة' }}
+              </h4>
+              <p class="text-[11px] sm:text-xs text-slate-500">
+                {{ selectedCandidate.slotInfo ? 'راجع تفاصيل الموعد البديل قبل إتمام التعديل' : 'راجع تفاصيل الموعد قبل التأكيد' }}
+              </p>
             </div>
           </div>
 
-          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-xs space-y-2 mb-6">
+          <!-- If rescheduling: Show comparison notice -->
+          <div v-if="selectedCandidate.slotInfo" class="mb-3 sm:mb-4 p-3 rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-200 text-xs space-y-1.5">
+            <div class="flex justify-between items-center text-slate-600 text-[11px] sm:text-xs">
+              <span class="font-bold">الموعد الحالي:</span>
+              <span class="text-rose-700 font-semibold line-through">{{ selectedCandidate.slotInfo.dateDisplay }} ({{ selectedCandidate.slotInfo.timeDisplay }})</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-900 pt-1 border-t border-amber-200 font-bold text-[11px] sm:text-xs">
+              <span>الموعد الجديد:</span>
+              <span class="text-emerald-700 font-black">{{ slotToBook.dateDisplay }} ({{ slotToBook.timeDisplay }})</span>
+            </div>
+            <p class="text-[10px] sm:text-[11px] text-amber-900 mt-1 leading-relaxed">
+              تنبيه: فور التأكيد، سيتم نقل حجزك للموعد الجديد، ويصبح موعدك الحالي متاحاً لمرشح آخر فوراً.
+            </p>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 border border-slate-200 text-xs space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
             <div class="flex justify-between">
               <span class="text-slate-500">المرشح:</span>
               <span class="font-bold text-slate-900">{{ selectedCandidate.arabicName }}</span>
@@ -408,29 +526,30 @@
             </div>
             <div class="flex justify-between">
               <span class="text-slate-500">الساعة:</span>
-              <span class="font-bold text-emerald-700 text-sm">{{ slotToBook.timeDisplay }}</span>
+              <span class="font-bold text-emerald-700 text-xs sm:text-sm">{{ slotToBook.timeDisplay }}</span>
             </div>
             <div class="flex justify-between">
               <span class="text-slate-500">النوع:</span>
               <span class="font-bold text-slate-900">{{ slotToBook.type === 'online' ? 'أونلاين (Online)' : 'أوفلاين (حضوري)' }}</span>
             </div>
-            <div class="text-[11px] text-slate-600 pt-2 border-t border-slate-200">
+            <div class="text-[10px] sm:text-[11px] text-slate-600 pt-1.5 border-t border-slate-200 leading-relaxed">
               <b>المقر / الرابط:</b> {{ slotToBook.locationOrLink }}
             </div>
           </div>
 
-          <div class="flex items-center gap-3">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
             <button 
               @click="confirmBooking" 
               :disabled="isSubmitting"
-              class="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition disabled:opacity-50"
+              class="w-full sm:flex-1 py-3 px-4 rounded-xl text-white font-bold text-xs shadow-md transition disabled:opacity-50 text-center"
+              :class="selectedCandidate.slotInfo ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'"
             >
               <span v-if="isSubmitting">جاري التأكيد...</span>
-              <span v-else>تأكيد الحجز الآن</span>
+              <span v-else>{{ selectedCandidate.slotInfo ? 'تأكيد تغيير الموعد إلى الموعد الجديد' : 'تأكيد الحجز الآن' }}</span>
             </button>
             <button 
               @click="slotToBook = null"
-              class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+              class="w-full sm:w-auto px-4 py-2.5 sm:py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition text-center"
             >
               إلغاء
             </button>
@@ -441,10 +560,10 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 text-center py-6 text-xs text-slate-500 mt-auto">
-      <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span>نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس • نظام المقابلات 2026</span>
-        <div class="flex items-center gap-3">
+    <footer class="bg-white border-t border-slate-200 text-center py-4 sm:py-6 text-xs text-slate-500 mt-auto">
+      <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
+        <span class="text-[11px] sm:text-xs">نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس • نظام المقابلات 2026</span>
+        <div class="flex items-center gap-3 text-[11px] sm:text-xs">
           <a href="/" class="hover:text-slate-900">الرئيسية</a>
           <span>•</span>
           <a href="/login" class="hover:text-slate-900">دخول الإدارة</a>
@@ -478,10 +597,11 @@
         function onSearchInput() {
           clearTimeout(searchDebounce);
           crossCommitteeCandidate.value = null;
-          if (candidateSearch.value.trim().length >= 3 && filteredCandidates.value.length === 0) {
+          const q = candidateSearch.value.trim();
+          if (q.length >= 2 && filteredCandidates.value.length === 0) {
             searchDebounce = setTimeout(async () => {
               try {
-                const res = await fetch(`/api/public/search-candidate?query=${encodeURIComponent(candidateSearch.value.trim())}`).then(r => r.json());
+                const res = await fetch(`/api/public/search-candidate?query=${encodeURIComponent(q)}`).then(r => r.json());
                 if (res.success && res.candidates.length > 0) {
                   const match = res.candidates.find(c => c.assignedCommitteeId !== (committee.value ? committee.value.id : ''));
                   if (match) {
@@ -492,7 +612,7 @@
               } catch (e) {
                 console.error(e);
               }
-            }, 300);
+            }, 150);
           }
         }
 
@@ -510,8 +630,6 @@
         const querySlug = urlParams.get('sector') || urlParams.get('comm');
         const pathSegments = window.location.pathname.split('/').filter(Boolean);
         let slug = querySlug || pathSegments[1] || 'crises';
-
-        const globalCandidateFound = ref(null);
 
         async function init() {
           try {
@@ -564,21 +682,49 @@
           loadCommitteeData(selectedCommitteeSlug.value);
         }
 
+        const isRescheduling = ref(false);
+
+        function normalizeArabic(str) {
+          if (!str) return '';
+          return String(str)
+            .replace(/[\u064B-\u065F\u0670]/g, '')
+            .replace(/[أإآٱ]/g, 'ا')
+            .replace(/ة/g, 'ه')
+            .replace(/ى/g, 'ي')
+            .replace(/ؤ/g, 'و')
+            .replace(/ئ/g, 'ي')
+            .replace(/[\s\-_]+/g, ' ')
+            .trim()
+            .toLowerCase();
+        }
+
+        function isSlotPast(slotInfo) {
+          if (!slotInfo) return false;
+          if (slotInfo.isPast !== undefined) return Boolean(slotInfo.isPast);
+          if (!slotInfo.date) return false;
+          const timeStr = slotInfo.startTime24 || '00:00';
+          const dt = new Date(`${slotInfo.date}T${timeStr}:00`);
+          if (isNaN(dt.getTime())) return false;
+          return dt < new Date();
+        }
+
         const filteredCandidates = computed(() => {
           if (!candidateSearch.value.trim()) {
-            return candidates.value.slice(0, 15);
+            return candidates.value;
           }
-          const q = candidateSearch.value.trim().toLowerCase();
+          const rawQ = candidateSearch.value.trim();
+          const q = normalizeArabic(rawQ);
           return candidates.value.filter(c => 
-            c.arabicName.toLowerCase().includes(q) ||
-            c.fullName.toLowerCase().includes(q) ||
-            c.phone.includes(q)
+            normalizeArabic(c.arabicName).includes(q) ||
+            normalizeArabic(c.fullName).includes(q) ||
+            c.phone.includes(rawQ)
           );
         });
 
         function selectCandidate(cand) {
           selectedCandidate.value = cand;
           candidateSearch.value = cand.arabicName;
+          isRescheduling.value = false;
           nextTick(() => {
             lucide.createIcons();
           });
@@ -587,7 +733,19 @@
         function clearCandidate() {
           selectedCandidate.value = null;
           candidateSearch.value = '';
+          isRescheduling.value = false;
           nextTick(() => {
+            lucide.createIcons();
+          });
+        }
+
+        function startRescheduling() {
+          isRescheduling.value = true;
+          nextTick(() => {
+            const el = document.getElementById('slotsSection');
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth' });
+            }
             lucide.createIcons();
           });
         }
@@ -639,16 +797,17 @@
             const data = await res.json();
             if (data.success) {
               bookingSuccessData.value = data.bookingDetails;
+              isRescheduling.value = false;
               slotToBook.value = null;
-              // Refresh data
               await loadCommitteeData(selectedCommitteeSlug.value);
-              // Update selected candidate's booking status
               selectedCandidate.value.bookingStatus = 'booked';
+              selectedCandidate.value.slotId = data.bookingDetails.slotId || null;
               selectedCandidate.value.slotInfo = {
                 dateDisplay: data.bookingDetails.dateDisplay,
                 timeDisplay: data.bookingDetails.timeDisplay,
                 type: data.bookingDetails.type.includes('أونلاين') ? 'online' : 'offline',
-                locationOrLink: data.bookingDetails.locationOrLink
+                locationOrLink: data.bookingDetails.locationOrLink,
+                isPast: false
               };
             } else {
               alert(data.message || 'حدث خطأ أثناء حجز الموعد');
@@ -733,6 +892,9 @@
           openBookingModal,
           confirmBooking,
           cancelExistingBooking,
+          isRescheduling,
+          isSlotPast,
+          startRescheduling,
           whatsappShareLink,
           closeSuccessModal
         };
