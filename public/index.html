@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=/login">
+  <script>window.location.href = '/login';</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوابة المقابلات الشخصية | نموذج محاكاة وزارة الخارجية</title>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#16a34a',
+              600: '#15803d',
+              700: '#166534',
+              800: '#14532d',
+              900: '#052e16',
+            },
+            mofa: {
+              gold: '#c5a059',
+              darkgold: '#9b7b38',
+              navy: '#0f172a',
+              dark: '#090d16'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e293b 100%);
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fef08a 0%, #c5a059 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Top Navbar -->
+  <header class="bg-mofa-navy border-b border-slate-700/60 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-900 shadow-lg shadow-amber-500/20 font-black text-xl">
+          <i data-lucide="landmark" class="w-7 h-7 text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-white font-black text-lg tracking-wide leading-tight">نموذج محاكاة وزارة الخارجية</h1>
+          <p class="text-xs text-amber-400 font-medium">جامعة السويس • نظام إدارة المقابلات الشخصية 2026</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="/book" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-sm font-semibold transition-all">
+          <i data-lucide="calendar-check" class="w-4 h-4"></i>
+          <span>حجز موعد مقابلة</span>
+        </a>
+        <a href="/login" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-sm font-bold shadow-md shadow-amber-500/20 transition-all">
+          <i data-lucide="lock" class="w-4 h-4"></i>
+          <span>دخول مديري اللجان</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-gradient text-white py-16 px-4 relative overflow-hidden border-b border-slate-800">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#c5a059_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold mb-6">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        منصة تنظيم ومتابعة المقابلات الشخصية الرسمية
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-black mb-6 leading-tight">
+        مرحباً بكم في منصة مقابلات <br>
+        <span class="gold-gradient-text">نموذج محاكاة وزارة الخارجية المصرية</span>
+      </h2>
+      <p class="text-slate-300 text-base sm:text-lg max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
+        نظام متكامل يتيح لمرشحي اللجان اختيار مواعيد المقابلات (أونلاين وحضورياً)، ويمكن مديري القطاعات من جدولة المواعيد وتقسيمها آلياً، ومتابعة الحضور، وتسجيل التقييمات والتحويل بين اللجان بكل سهولة.
+      </p>
+
+      <!-- Key Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/book" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold text-lg shadow-xl shadow-emerald-500/25 transition-all transform hover:-translate-y-0.5">
+          <i data-lucide="calendar" class="w-6 h-6"></i>
+          <span>حجز موعد المقابلة الآن (للمتقدمين)</span>
+        </a>
+        <a href="/dashboard" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-lg transition-all">
+          <i data-lucide="layout-dashboard" class="w-6 h-6 text-amber-400"></i>
+          <span>لوحة تحكم مديري القطاعات</span>
+        </a>
+      </div>
+
+      <!-- Quick Metrics Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto mt-14 text-right">
+        <div class="bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-400 text-xs font-semibold">إجمالي المتقدمين</span>
+            <i data-lucide="users" class="w-5 h-5 text-amber-400"></i>
+          </div>
+          <div class="text-3xl font-black text-white" id="stat-total-candidates">438</div>
+          <p class="text-xs text-slate-400 mt-1">مرشح مسجل بالنموذج</p>
+        </div>
+
+        <div class="bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-400 text-xs font-semibold">عدد اللجان والقطاعات</span>
+            <i data-lucide="layers" class="w-5 h-5 text-blue-400"></i>
+          </div>
+          <div class="text-3xl font-black text-white" id="stat-total-committees">9</div>
+          <p class="text-xs text-slate-400 mt-1">قطاعات تخصصية</p>
+        </div>
+
+        <div class="bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-400 text-xs font-semibold">المواعيد المتاحة</span>
+            <i data-lucide="clock" class="w-5 h-5 text-emerald-400"></i>
+          </div>
+          <div class="text-3xl font-black text-emerald-400" id="stat-total-slots">--</div>
+          <p class="text-xs text-slate-400 mt-1">مقسمة أونلاين وحضورياً</p>
+        </div>
+
+        <div class="bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-400 text-xs font-semibold">المقابلات المنجزة</span>
+            <i data-lucide="award" class="w-5 h-5 text-purple-400"></i>
+          </div>
+          <div class="text-3xl font-black text-purple-400" id="stat-completed-interviews">--</div>
+          <p class="text-xs text-slate-400 mt-1">تم تقييمهم حتى الآن</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Committees Section -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mb-3">قطاعات ولجان نموذج وزارة الخارجية</h3>
+      <p class="text-slate-600 text-sm sm:text-base">
+        يمكن للمرشحين اختيار لجنتهم أدناه لحجز موعد المقابلة مباشرة، كما يمكن لرؤساء اللجان تسجيل الدخول لإدارة مواعيدهم.
+      </p>
+    </div>
+
+    <!-- Committees Grid -->
+    <div id="committees-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Loading skeletons -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm animate-pulse h-64"></div>
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm animate-pulse h-64"></div>
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm animate-pulse h-64"></div>
+    </div>
+
+    <!-- Instructions & Flow Card -->
+    <section class="mt-16 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+      <h4 class="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
+        <i data-lucide="help-circle" class="w-6 h-6 text-amber-500"></i>
+        <span>كيف تتم عملية حجز وإجراء المقابلات؟</span>
+      </h4>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-slate-700 text-sm leading-relaxed">
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-700 font-black flex items-center justify-center text-lg mb-3">1</div>
+          <h5 class="font-bold text-slate-900 mb-2 text-base">اختيار اللجنة والبحث عن اسمك</h5>
+          <p class="text-slate-600">
+            يدخل المتقدم على رابط حجز القطاع الخاص به، ثم يختار اسمه ورقم هاتفه المسجل للتأكد من بياناته في قاعدة بيانات المقابلات.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-700 font-black flex items-center justify-center text-lg mb-3">2</div>
+          <h5 class="font-bold text-slate-900 mb-2 text-base">تحديد اليوم والموعد المناسب</h5>
+          <p class="text-slate-600">
+            يختار المتقدم بين المواعيد المتاحة (أونلاين عبر Google Meet أو حضورياً بالكلية)، ويحدد اليوم والساعة المناسبة لظروفه.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-700 font-black flex items-center justify-center text-lg mb-3">3</div>
+          <h5 class="font-bold text-slate-900 mb-2 text-base">إجراء المقابلة والتقييم</h5>
+          <p class="text-slate-600">
+            يتم حجز الموعد باسم المرشح، ويقوم رئيس القطاع بإجراء المقابلة ورصد التقييم والملاحظات والقرار النهائي أو تحويل المرشح للجنة أنسب.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-mofa-dark text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <i data-lucide="shield-check" class="w-4 h-4 text-amber-500"></i>
+        <span>نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس • جميع الحقوق محفوظة 2026</span>
+      </div>
+      <div class="flex items-center gap-4 text-slate-400">
+        <a href="/login" class="hover:text-amber-400 transition-colors">بوابة مديري اللجان</a>
+        <span>•</span>
+        <a href="/book" class="hover:text-amber-400 transition-colors">بوابة حجز الطلاب</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize icons
+    lucide.createIcons();
+
+    // Fetch live committees data & stats
+    async function loadData() {
+      try {
+        const [commRes, statsRes] = await Promise.all([
+          fetch('/api/committees').then(r => r.json()),
+          fetch('/api/stats/overview').then(r => r.json())
+        ]);
+
+        if (statsRes.success) {
+          const s = statsRes.stats;
+          document.getElementById('stat-total-candidates').innerText = s.totalCandidates || 438;
+          document.getElementById('stat-total-slots').innerText = s.availableSlots || 0;
+          document.getElementById('stat-completed-interviews').innerText = s.completedInterviews || 0;
+        }
+
+        if (commRes.success) {
+          renderCommittees(commRes.committees);
+        }
+      } catch (err) {
+        console.error('Error loading data:', err);
+      }
+    }
+
+    function renderCommittees(committees) {
+      const container = document.getElementById('committees-grid');
+      container.innerHTML = '';
+
+      committees.forEach(comm => {
+        const st = comm.stats || {};
+        const bookedPercent = st.total > 0 ? Math.round((st.booked / st.total) * 100) : 0;
+        const completedPercent = st.total > 0 ? Math.round((st.completed / st.total) * 100) : 0;
+
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-slate-300';
+        
+        card.innerHTML = `
+          <div>
+            <!-- Header -->
+            <div class="flex items-start justify-between gap-3 mb-4">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-md shadow-slate-200" style="background-color: ${comm.color}">
+                <i data-lucide="${comm.icon || 'landmark'}" class="w-6 h-6"></i>
+              </div>
+              <span class="text-xs font-bold px-3 py-1 rounded-full ${comm.badge}">
+                ${st.total} مرشح
+              </span>
+            </div>
+
+            <h4 class="text-lg font-black text-slate-900 mb-2 leading-snug group-hover:text-amber-600 transition-colors">
+              ${comm.name}
+            </h4>
+            <p class="text-xs text-slate-500 mb-5 leading-relaxed line-clamp-2">
+              ${comm.description}
+            </p>
+
+            <!-- Progress Bar -->
+            <div class="bg-slate-100 rounded-xl p-3 mb-5 border border-slate-100">
+              <div class="flex justify-between items-center text-xs mb-1.5 font-bold">
+                <span class="text-slate-600">نسبة الحجز</span>
+                <span class="text-slate-900">${st.booked} من ${st.total} (${bookedPercent}%)</span>
+              </div>
+              <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-500" style="width: ${bookedPercent}%; background-color: ${comm.color}"></div>
+              </div>
+              <div class="flex justify-between items-center text-[11px] text-slate-500 mt-2 font-medium">
+                <span>المواعيد المتاحة: <b class="text-emerald-600">${st.availableSlots}</b></span>
+                <span>المقابلات المنجزة: <b class="text-blue-600">${st.completed}</b></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100">
+            <a href="/book/${comm.slug}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition-all">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              <span>حجز موعد</span>
+            </a>
+            <a href="/login?comm=${comm.slug}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all">
+              <i data-lucide="log-in" class="w-4 h-4 text-slate-500"></i>
+              <span>دخول الإدارة</span>
+            </a>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>

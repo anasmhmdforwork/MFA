@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوابة حجز موعد المقابلة | نموذج محاكاة وزارة الخارجية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Vue 3 CDN for reactive UI -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    body { font-family: 'Cairo', sans-serif; }
+    .hero-navy {
+      background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+    }
+    [v-cloak] { display: none; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <div id="app" v-cloak class="flex flex-col min-h-screen">
+    
+    <!-- Top Header -->
+    <header class="hero-navy text-white border-b border-slate-800 shadow-md">
+      <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black shadow-md">
+            <i data-lucide="landmark" class="w-6 h-6 text-white"></i>
+          </div>
+          <div>
+            <h1 class="font-black text-sm sm:text-base text-white group-hover:text-amber-400 transition">نموذج محاكاة وزارة الخارجية</h1>
+            <p class="text-[11px] text-amber-400 font-semibold">بوابة حجز المقابلات الشخصية 2026</p>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-2">
+          <a href="/login" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>دخول الإدارة</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
+      
+      <!-- Committee Banner Card -->
+      <div v-if="committee" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm mb-8 relative overflow-hidden">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg text-2xl font-bold flex-shrink-0" :style="{ backgroundColor: committee.color }">
+              <i data-lucide="calendar" class="w-8 h-8"></i>
+            </div>
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-1" :class="committee.badge">
+                قطاع المقابلة
+              </div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900 leading-snug">{{ committee.name }}</h2>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1">{{ committee.description }}</p>
+            </div>
+          </div>
+
+          <!-- Committee Selector Dropdown if user wants to switch -->
+          <div class="flex-shrink-0">
+            <label class="block text-[11px] font-bold text-slate-500 mb-1">تغيير القطاع:</label>
+            <select 
+              v-model="selectedCommitteeSlug" 
+              @change="changeCommittee"
+              class="text-xs font-bold bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none focus:border-amber-500"
+            >
+              <option v-for="c in allCommittees" :key="c.slug" :value="c.slug">{{ c.shortName || c.name }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1: Select Candidate -->
+      <section class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-sm">1</div>
+          <h3 class="text-lg font-black text-slate-900">الخطوة الأولى: ابحث عن اسمك في قائمة مرشحي القطاع</h3>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-500 mb-6 mr-11">
+          اختر اسمك من القائمة أدناه أو ابدأ بكتابة اسمك أو رقم هاتفك لتأكيد هويتك والاطلاع على المواعيد المتاحة لك.
+        </p>
+
+        <!-- Search Input -->
+        <div class="relative max-w-xl mb-4">
+          <input 
+            type="text" 
+            v-model="candidateSearch" 
+            @input="onSearchInput"
+            placeholder="ابحث بالاسم أو رقم الهاتف المسجل..." 
+            class="w-full pl-4 pr-11 py-3.5 rounded-2xl border border-slate-300 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 text-sm outline-none transition text-slate-800 font-medium"
+          >
+          <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </div>
+        </div>
+
+        <!-- Filtered Candidates Dropdown / List -->
+        <div v-if="!selectedCandidate" class="max-h-60 overflow-y-auto border border-slate-200 rounded-2xl divide-y divide-slate-100 bg-slate-50">
+          <div 
+            v-for="cand in filteredCandidates" 
+            :key="cand.id"
+            @click="selectCandidate(cand)"
+            class="p-3.5 hover:bg-amber-50 cursor-pointer flex items-center justify-between transition-colors text-xs sm:text-sm"
+          >
+            <div>
+              <span class="font-bold text-slate-900">{{ cand.arabicName }}</span>
+              <span class="text-xs text-slate-500 mr-2">({{ cand.university }} - {{ cand.faculty }})</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span v-if="cand.bookingStatus === 'booked' || cand.bookingStatus === 'completed'" class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold">
+                حاجز موعد بالفعل
+              </span>
+              <span v-else class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+                لم يحجز بعد
+              </span>
+              <i data-lucide="chevron-left" class="w-4 h-4 text-slate-400"></i>
+            </div>
+          </div>
+          <div v-if="filteredCandidates.length === 0 && !crossCommitteeCandidate" class="p-6 text-center text-xs text-slate-500">
+            لم يتم العثور على اسم مطابق في هذا القطاع. تأكد من كتابة الاسم صحيحاً أو ابحث برقم هاتفك.
+          </div>
+
+          <!-- Cross-committee helpful detection -->
+          <div v-if="crossCommitteeCandidate" class="p-5 bg-purple-50 border border-purple-200 rounded-xl text-center">
+            <i data-lucide="info" class="w-6 h-6 text-purple-600 mx-auto mb-2"></i>
+            <h5 class="font-bold text-sm text-purple-900 mb-1">
+              وجدنا بياناتك يا {{ crossCommitteeCandidate.arabicName }} مسجلة في لجنة:
+            </h5>
+            <div class="text-base font-black text-purple-800 mb-3">
+              {{ crossCommitteeCandidate.assignedCommitteeName }}
+            </div>
+            <button 
+              @click="goToCrossCommittee(crossCommitteeCandidate)" 
+              class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition"
+            >
+              الانتقال إلى لجنة {{ crossCommitteeCandidate.assignedCommitteeName }} لحجز الموعد ↗
+            </button>
+          </div>
+        </div>
+
+        <!-- Selected Candidate Confirmation Card -->
+        <div v-if="selectedCandidate" class="bg-amber-50/70 border border-amber-200 rounded-2xl p-5 mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-900 font-black flex items-center justify-center text-xl">
+              <i data-lucide="user-check" class="w-6 h-6 text-amber-700"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="font-bold text-slate-900 text-base">{{ selectedCandidate.arabicName }}</h4>
+                <span class="text-xs text-slate-500 font-normal">({{ selectedCandidate.fullName }})</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-0.5">
+                {{ selectedCandidate.university }} • {{ selectedCandidate.faculty }} • {{ selectedCandidate.grade }} • هاتف: {{ selectedCandidate.phone }}
+              </p>
+            </div>
+          </div>
+
+          <button 
+            @click="clearCandidate" 
+            class="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 transition"
+          >
+            تغيير الاسم
+          </button>
+        </div>
+
+        <!-- If candidate already has a booking -->
+        <div v-if="selectedCandidate && selectedCandidate.slotInfo" class="mt-4 p-5 rounded-2xl bg-blue-50 border border-blue-200 text-blue-950">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-200 flex items-center justify-center text-blue-900 font-bold">
+                <i data-lucide="calendar-check" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h5 class="font-bold text-sm text-blue-900">لديك موعد مقابلة محجوز بالفعل:</h5>
+                <p class="text-xs text-blue-800 mt-1">
+                  📅 <b>{{ selectedCandidate.slotInfo.dateDisplay }}</b> في تمام الساعة <b>{{ selectedCandidate.slotInfo.timeDisplay }}</b>
+                  <span class="mx-1">•</span>
+                  {{ selectedCandidate.slotInfo.type === 'online' ? '🌐 أونلاين (Online)' : '📍 أوفلاين (حضوري بالكلية)' }}
+                </p>
+                <p v-if="selectedCandidate.slotInfo.locationOrLink" class="text-xs text-blue-700 mt-1">
+                  المقر / الرابط: {{ selectedCandidate.slotInfo.locationOrLink }}
+                </p>
+              </div>
+            </div>
+            <button 
+              @click="cancelExistingBooking" 
+              class="px-3 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold transition flex items-center gap-1"
+            >
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+              <span>إلغاء الموعد</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 2: Choose Slot -->
+      <section v-if="selectedCandidate" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm mb-8">
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white font-black flex items-center justify-center text-sm">2</div>
+            <div>
+              <h3 class="text-lg font-black text-slate-900">الخطوة الثانية: اختر الموعد المناسب لك</h3>
+              <p class="text-xs text-slate-500">اختر من المواعيد المتاحة أدناه لحجز المقابلة باسمك</p>
+            </div>
+          </div>
+
+          <!-- Type Filter Tabs -->
+          <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-bold">
+            <button 
+              @click="typeFilter = 'all'" 
+              :class="typeFilter === 'all' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'"
+              class="px-3 py-1.5 rounded-xl transition"
+            >
+              الكل ({{ totalSlotsCount }})
+            </button>
+            <button 
+              @click="typeFilter = 'online'" 
+              :class="typeFilter === 'online' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'"
+              class="px-3 py-1.5 rounded-xl transition flex items-center gap-1"
+            >
+              🌐 أونلاين
+            </button>
+            <button 
+              @click="typeFilter = 'offline'" 
+              :class="typeFilter === 'offline' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'"
+              class="px-3 py-1.5 rounded-xl transition flex items-center gap-1"
+            >
+              📍 حضوري (أوفلاين)
+            </button>
+          </div>
+        </div>
+
+        <!-- No slots notice -->
+        <div v-if="daysList.length === 0" class="p-12 text-center border-2 border-dashed border-slate-200 rounded-3xl">
+          <i data-lucide="calendar-x" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
+          <h4 class="font-bold text-slate-700 text-base mb-1">لا توجد مواعيد متاحة حالياً</h4>
+          <p class="text-xs text-slate-500">يقوم مدير القطاع حالياً بجدولة المواعيد وسيتم فتح الحجز قريباً جداً.</p>
+        </div>
+
+        <!-- Days & Slots Accordion / Sections -->
+        <div class="space-y-6">
+          <div 
+            v-for="day in filteredDays" 
+            :key="day.date" 
+            class="bg-slate-50 rounded-2xl p-5 border border-slate-200"
+          >
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200">
+              <div class="flex items-center gap-2">
+                <i data-lucide="calendar" class="w-5 h-5 text-amber-500"></i>
+                <h4 class="font-black text-slate-900 text-base">{{ day.dateDisplay }}</h4>
+              </div>
+              <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-700">
+                {{ day.availableCount }} موعد متاح
+              </span>
+            </div>
+
+            <!-- Slots Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <div 
+                v-for="slot in day.slots" 
+                :key="slot.id"
+                @click="openBookingModal(slot)"
+                :class="[
+                  slot.isAvailable 
+                    ? 'hover:border-emerald-500 hover:shadow-md cursor-pointer bg-white border-slate-200' 
+                    : 'bg-slate-100 border-slate-200 opacity-60 cursor-not-allowed',
+                  selectedSlot && selectedSlot.id === slot.id ? 'ring-2 ring-emerald-500 border-emerald-500 bg-emerald-50/40' : ''
+                ]"
+                class="rounded-xl p-3.5 border transition-all flex flex-col justify-between"
+              >
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-black text-slate-900 flex items-center gap-1">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-500"></i>
+                    <span>{{ slot.timeDisplay }}</span>
+                  </span>
+                  <span 
+                    :class="slot.type === 'online' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'"
+                    class="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                  >
+                    {{ slot.type === 'online' ? 'أونلاين' : 'حضوري' }}
+                  </span>
+                </div>
+
+                <div class="text-[11px] text-slate-500 truncate mb-3">
+                  {{ slot.locationOrLink }}
+                </div>
+
+                <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
+                  <span v-if="slot.isAvailable" class="text-emerald-700 font-bold flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    متاح للحجز
+                  </span>
+                  <span v-else class="text-slate-400 font-semibold">
+                    محجوز ({{ slot.candidateName || 'مرشح' }})
+                  </span>
+                  <button 
+                    v-if="slot.isAvailable" 
+                    class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-700 transition"
+                  >
+                    حجز الموعد
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Confirmation / Success Modal -->
+      <div v-if="bookingSuccessData" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 shadow-2xl relative text-center">
+          
+          <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4 text-3xl">
+            <i data-lucide="check-circle" class="w-10 h-10"></i>
+          </div>
+
+          <h3 class="text-2xl font-black text-slate-900 mb-2">تم تأكيد حجز موعدك بنجاح!</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mb-6">
+            تم تسجيل موعد مقابلتك الشخصية في كشوفات لجنة {{ bookingSuccessData.committeeName }}.
+          </p>
+
+          <!-- Appointment Ticket -->
+          <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-6 text-right mb-6 shadow-inner relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-amber-500/10 rounded-full blur-xl"></div>
+            
+            <div class="flex items-center justify-between border-b border-slate-700/80 pb-3 mb-3">
+              <span class="text-xs text-amber-400 font-bold">بطاقة حضور المقابلة الشخصية</span>
+              <span class="text-[11px] text-slate-400 font-mono">2026-MOFA</span>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-400">المرشح:</span>
+                <span class="font-bold text-white text-sm">{{ bookingSuccessData.candidateName }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">اللجنة:</span>
+                <span class="font-bold text-amber-300">{{ bookingSuccessData.committeeName }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">اليوم والتاريخ:</span>
+                <span class="font-bold text-white">{{ bookingSuccessData.dateDisplay }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">توقيت المقابلة:</span>
+                <span class="font-bold text-emerald-400 text-sm">{{ bookingSuccessData.timeDisplay }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">نوع المقابلة:</span>
+                <span class="font-bold text-white">{{ bookingSuccessData.type }}</span>
+              </div>
+              <div class="pt-2 border-t border-slate-700/80 text-[11px] text-slate-300">
+                <b>المقر / الرابط:</b> {{ bookingSuccessData.locationOrLink }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="space-y-2">
+            <a 
+              :href="whatsappShareLink" 
+              target="_blank"
+              class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+            >
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>إرسال تفاصيل الموعد لنفسي عبر واتساب</span>
+            </a>
+            
+            <button 
+              @click="closeSuccessModal"
+              class="w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+            >
+              تم، العودة للصفحة
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Confirmation Dialog Modal -->
+      <div v-if="slotToBook" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 border border-slate-200 shadow-2xl text-right">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+              <i data-lucide="calendar" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-slate-900 text-base">تأكيد حجز المقابلة</h4>
+              <p class="text-xs text-slate-500">راجع تفاصيل الموعد قبل التأكيد</p>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-xs space-y-2 mb-6">
+            <div class="flex justify-between">
+              <span class="text-slate-500">المرشح:</span>
+              <span class="font-bold text-slate-900">{{ selectedCandidate.arabicName }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">اليوم:</span>
+              <span class="font-bold text-slate-900">{{ slotToBook.dateDisplay }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">الساعة:</span>
+              <span class="font-bold text-emerald-700 text-sm">{{ slotToBook.timeDisplay }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">النوع:</span>
+              <span class="font-bold text-slate-900">{{ slotToBook.type === 'online' ? 'أونلاين (Online)' : 'أوفلاين (حضوري)' }}</span>
+            </div>
+            <div class="text-[11px] text-slate-600 pt-2 border-t border-slate-200">
+              <b>المقر / الرابط:</b> {{ slotToBook.locationOrLink }}
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button 
+              @click="confirmBooking" 
+              :disabled="isSubmitting"
+              class="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition disabled:opacity-50"
+            >
+              <span v-if="isSubmitting">جاري التأكيد...</span>
+              <span v-else>تأكيد الحجز الآن</span>
+            </button>
+            <button 
+              @click="slotToBook = null"
+              class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+            >
+              إلغاء
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 text-center py-6 text-xs text-slate-500 mt-auto">
+      <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span>نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس • نظام المقابلات 2026</span>
+        <div class="flex items-center gap-3">
+          <a href="/" class="hover:text-slate-900">الرئيسية</a>
+          <span>•</span>
+          <a href="/login" class="hover:text-slate-900">دخول الإدارة</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const { createApp, ref, computed, onMounted, nextTick } = Vue;
+
+    createApp({
+      setup() {
+        const allCommittees = ref([]);
+        const committee = ref(null);
+        const selectedCommitteeSlug = ref('');
+        const candidates = ref([]);
+        const candidateSearch = ref('');
+        const selectedCandidate = ref(null);
+        const daysList = ref([]);
+        const allSlots = ref([]);
+        const typeFilter = ref('all');
+        const slotToBook = ref(null);
+        const isSubmitting = ref(false);
+        const bookingSuccessData = ref(null);
+        const crossCommitteeCandidate = ref(null);
+
+        // Watch search to find across other committees if not in current
+        let searchDebounce = null;
+        function onSearchInput() {
+          clearTimeout(searchDebounce);
+          crossCommitteeCandidate.value = null;
+          if (candidateSearch.value.trim().length >= 3 && filteredCandidates.value.length === 0) {
+            searchDebounce = setTimeout(async () => {
+              try {
+                const res = await fetch(`/api/public/search-candidate?query=${encodeURIComponent(candidateSearch.value.trim())}`).then(r => r.json());
+                if (res.success && res.candidates.length > 0) {
+                  const match = res.candidates.find(c => c.assignedCommitteeId !== (committee.value ? committee.value.id : ''));
+                  if (match) {
+                    crossCommitteeCandidate.value = match;
+                    nextTick(() => lucide.createIcons());
+                  }
+                }
+              } catch (e) {
+                console.error(e);
+              }
+            }, 300);
+          }
+        }
+
+        function goToCrossCommittee(match) {
+          const comm = allCommittees.value.find(c => c.id === match.assignedCommitteeId);
+          if (comm) {
+            selectedCommitteeSlug.value = comm.slug;
+            crossCommitteeCandidate.value = null;
+            changeCommittee();
+          }
+        }
+
+        // Extract committee slug from URL or query param
+        const urlParams = new URLSearchParams(window.location.search);
+        const querySlug = urlParams.get('sector') || urlParams.get('comm');
+        const pathSegments = window.location.pathname.split('/').filter(Boolean);
+        let slug = querySlug || pathSegments[1] || 'crises';
+
+        const globalCandidateFound = ref(null);
+
+        async function init() {
+          try {
+            // Load all committees
+            const commRes = await fetch('/api/committees').then(r => r.json());
+            if (commRes.success) {
+              allCommittees.value = commRes.committees;
+              
+              // Validate slug
+              const exists = allCommittees.value.find(c => c.slug === slug || c.id === slug);
+              if (!exists) {
+                slug = allCommittees.value[0].slug;
+              }
+              selectedCommitteeSlug.value = slug;
+              await loadCommitteeData(slug);
+            }
+          } catch (err) {
+            console.error('Init error:', err);
+          }
+        }
+
+        async function loadCommitteeData(targetSlug) {
+          try {
+            // Fetch committee details and its candidates
+            const commData = await fetch(`/api/public/committee/${targetSlug}`).then(r => r.json());
+            if (commData.success) {
+              committee.value = commData.committee;
+              candidates.value = commData.candidates;
+            }
+
+            // Fetch slots
+            const slotsData = await fetch(`/api/public/slots/${targetSlug}`).then(r => r.json());
+            if (slotsData.success) {
+              daysList.value = slotsData.days;
+              allSlots.value = slotsData.allSlots;
+            }
+
+            nextTick(() => {
+              lucide.createIcons();
+            });
+          } catch (err) {
+            console.error('Error loading committee data:', err);
+          }
+        }
+
+        function changeCommittee() {
+          selectedCandidate.value = null;
+          candidateSearch.value = '';
+          window.history.pushState({}, '', `/book/${selectedCommitteeSlug.value}`);
+          loadCommitteeData(selectedCommitteeSlug.value);
+        }
+
+        const filteredCandidates = computed(() => {
+          if (!candidateSearch.value.trim()) {
+            return candidates.value.slice(0, 15);
+          }
+          const q = candidateSearch.value.trim().toLowerCase();
+          return candidates.value.filter(c => 
+            c.arabicName.toLowerCase().includes(q) ||
+            c.fullName.toLowerCase().includes(q) ||
+            c.phone.includes(q)
+          );
+        });
+
+        function selectCandidate(cand) {
+          selectedCandidate.value = cand;
+          candidateSearch.value = cand.arabicName;
+          nextTick(() => {
+            lucide.createIcons();
+          });
+        }
+
+        function clearCandidate() {
+          selectedCandidate.value = null;
+          candidateSearch.value = '';
+          nextTick(() => {
+            lucide.createIcons();
+          });
+        }
+
+        const totalSlotsCount = computed(() => {
+          return allSlots.value.length;
+        });
+
+        const filteredDays = computed(() => {
+          if (typeFilter.value === 'all') {
+            return daysList.value;
+          }
+          return daysList.value.map(d => {
+            const filteredSlots = d.slots.filter(s => s.type === typeFilter.value);
+            return {
+              ...d,
+              slots: filteredSlots,
+              availableCount: filteredSlots.filter(s => s.isAvailable).length
+            };
+          }).filter(d => d.slots.length > 0);
+        });
+
+        function openBookingModal(slot) {
+          if (!slot.isAvailable) return;
+          if (!selectedCandidate.value) {
+            alert('يرجى تحديد اسمك أولاً في الخطوة الأولى');
+            return;
+          }
+          slotToBook.value = slot;
+          nextTick(() => {
+            lucide.createIcons();
+          });
+        }
+
+        async function confirmBooking() {
+          if (!selectedCandidate.value || !slotToBook.value) return;
+
+          isSubmitting.value = true;
+          try {
+            const res = await fetch('/api/public/book', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                candidateId: selectedCandidate.value.id,
+                slotId: slotToBook.value.id
+              })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+              bookingSuccessData.value = data.bookingDetails;
+              slotToBook.value = null;
+              // Refresh data
+              await loadCommitteeData(selectedCommitteeSlug.value);
+              // Update selected candidate's booking status
+              selectedCandidate.value.bookingStatus = 'booked';
+              selectedCandidate.value.slotInfo = {
+                dateDisplay: data.bookingDetails.dateDisplay,
+                timeDisplay: data.bookingDetails.timeDisplay,
+                type: data.bookingDetails.type.includes('أونلاين') ? 'online' : 'offline',
+                locationOrLink: data.bookingDetails.locationOrLink
+              };
+            } else {
+              alert(data.message || 'حدث خطأ أثناء حجز الموعد');
+            }
+          } catch (err) {
+            console.error('Booking error:', err);
+            alert('حدث خطأ في الاتصال بالخادم');
+          } finally {
+            isSubmitting.value = false;
+            nextTick(() => {
+              lucide.createIcons();
+            });
+          }
+        }
+
+        async function cancelExistingBooking() {
+          if (!confirm('هل أنت متأكد من رغبتك في إلغاء موعد مقابلتك الحالي لاختيار موعد جديد؟')) return;
+
+          try {
+            const res = await fetch(`/api/candidates/${selectedCandidate.value.id}/booking`, {
+              method: 'DELETE'
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert('تم إلغاء الموعد بنجاح، يمكنك الآن اختيار موعد آخر أدناه.');
+              selectedCandidate.value.slotId = null;
+              selectedCandidate.value.slotInfo = null;
+              selectedCandidate.value.bookingStatus = 'pending';
+              await loadCommitteeData(selectedCommitteeSlug.value);
+            }
+          } catch (err) {
+            console.error('Cancel booking error:', err);
+          }
+        }
+
+        const whatsappShareLink = computed(() => {
+          if (!bookingSuccessData.value) return '#';
+          const b = bookingSuccessData.value;
+          const msg = encodeURIComponent(
+            `*تأكيد موعد مقابلة نموذج محاكاة وزارة الخارجية المصرية*\n\n` +
+            `• المرشح: ${b.candidateName}\n` +
+            `• اللجنة: ${b.committeeName}\n` +
+            `• اليوم والتاريخ: ${b.dateDisplay}\n` +
+            `• التوقيت: ${b.timeDisplay}\n` +
+            `• النوع: ${b.type}\n` +
+            `• المكان/الرابط: ${b.locationOrLink}\n\n` +
+            `نتمنى لك كل التوفيق!`
+          );
+          return `https://wa.me/?text=${msg}`;
+        });
+
+        function closeSuccessModal() {
+          bookingSuccessData.value = null;
+        }
+
+        onMounted(() => {
+          init();
+        });
+
+        return {
+          allCommittees,
+          committee,
+          selectedCommitteeSlug,
+          candidates,
+          candidateSearch,
+          selectedCandidate,
+          filteredCandidates,
+          daysList,
+          allSlots,
+          typeFilter,
+          slotToBook,
+          isSubmitting,
+          bookingSuccessData,
+          crossCommitteeCandidate,
+          onSearchInput,
+          goToCrossCommittee,
+          totalSlotsCount,
+          filteredDays,
+          selectCandidate,
+          clearCandidate,
+          changeCommittee,
+          openBookingModal,
+          confirmBooking,
+          cancelExistingBooking,
+          whatsappShareLink,
+          closeSuccessModal
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

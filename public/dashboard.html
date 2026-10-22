@@ -1,0 +1,2347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم مدير القطاع | نموذج محاكاة وزارة الخارجية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    body { font-family: 'Cairo', sans-serif; }
+    .hero-navy {
+      background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+    }
+    [v-cloak] { display: none; }
+    @media print {
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <div id="app" v-cloak class="flex flex-col min-h-screen">
+    
+    <!-- Top Header -->
+    <header class="hero-navy text-white border-b border-slate-800 shadow-lg sticky top-0 z-40 no-print">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        
+        <!-- Logo & Committee Identity -->
+        <div class="flex items-center gap-3.5">
+          <div 
+            class="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-md"
+            :style="{ backgroundColor: currentCommittee ? currentCommittee.color : '#c5a059' }"
+          >
+            <i data-lucide="landmark" class="w-7 h-7 text-white"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-black text-base sm:text-lg text-white leading-tight">
+                {{ currentCommittee ? currentCommittee.name : 'الإدارة العامة - جميع اللجان' }}
+              </h1>
+              <span v-if="currentUser && currentUser.role === 'admin'" class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold border border-amber-500/30">
+                👑 رئيس النموذج
+              </span>
+            </div>
+            <p class="text-xs text-amber-400 font-medium mt-0.5">
+              {{ currentUser ? currentUser.name : 'مدير اللجنة' }} • لوحة إدارة وتقييم المقابلات
+            </p>
+          </div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="flex items-center gap-2.5">
+          
+          <!-- Copy Student Booking Link Button -->
+          <button 
+            @click="copyBookingLink"
+            class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition shadow-sm"
+            title="نسخ رابط صفحة الحجز لإرساله للطلاب"
+          >
+            <i data-lucide="link" class="w-3.5 h-3.5"></i>
+            <span>{{ copySuccess ? 'تم نسخ الرابط! ✓' : 'نسخ رابط الحجز للمرشحين' }}</span>
+          </button>
+
+          <!-- Committee Switcher (for Admin or Demo) -->
+          <div v-if="currentUser && currentUser.role === 'admin'" class="flex items-center">
+            <select 
+              v-model="selectedCommitteeId" 
+              @change="onCommitteeChange"
+              class="text-xs font-bold bg-slate-800 text-amber-300 border border-slate-700 rounded-xl px-3 py-2 outline-none focus:border-amber-500"
+            >
+              <option value="all">🌐 جميع اللجان (عرض موحد)</option>
+              <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.shortName || c.name }}</option>
+            </select>
+          </div>
+
+          <!-- Logout Button -->
+          <button 
+            @click="logout"
+            class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-rose-900/60 hover:text-rose-200 text-slate-300 border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition"
+          >
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            <span class="hidden md:inline">خروج</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+      
+      <!-- Top Action Bar & Metrics -->
+      <div class="no-print mb-8">
+        
+        <!-- Live Stat Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+          
+          <!-- Total Candidates -->
+          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-slate-500 text-xs font-bold mb-1.5">
+              <span>إجمالي المرشحين</span>
+              <i data-lucide="users" class="w-4 h-4 text-slate-400"></i>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-slate-900">{{ currentStats.total || 0 }}</div>
+            <p class="text-[11px] text-slate-400 mt-1">مسجلين بالقطاع</p>
+          </div>
+
+          <!-- Booked Slots -->
+          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-blue-600 text-xs font-bold mb-1.5">
+              <span>حجزوا الموعد</span>
+              <i data-lucide="calendar-check" class="w-4 h-4 text-blue-500"></i>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-blue-600">{{ currentStats.booked || 0 }}</div>
+            <p class="text-[11px] text-slate-400 mt-1">بانتظار إجراء المقابلة</p>
+          </div>
+
+          <!-- Pending Booking -->
+          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-amber-600 text-xs font-bold mb-1.5">
+              <span>لم يحجزوا بعد</span>
+              <i data-lucide="clock" class="w-4 h-4 text-amber-500"></i>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-amber-600">{{ currentStats.pendingBooking || 0 }}</div>
+            <p class="text-[11px] text-slate-400 mt-1">يحتاجون إرسال الرابط</p>
+          </div>
+
+          <!-- Completed Interviews -->
+          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-emerald-600 text-xs font-bold mb-1.5">
+              <span>تمت المقابلة</span>
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-emerald-600">{{ currentStats.completed || 0 }}</div>
+            <p class="text-[11px] text-slate-400 mt-1">تم رصد درجاتهم</p>
+          </div>
+
+          <!-- Average Rating -->
+          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-purple-600 text-xs font-bold mb-1.5">
+              <span>متوسط التقييم</span>
+              <i data-lucide="star" class="w-4 h-4 text-purple-500"></i>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-purple-600">
+              {{ currentStats.avgScore ? currentStats.avgScore + ' / 10' : '--' }}
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1">
+              تم تقييم {{ currentStats.ratedCount || 0 }} من {{ currentStats.total || 0 }}
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Quick Toolbar -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+          
+          <div class="flex items-center gap-2">
+            <!-- Add Candidate Manually Button -->
+            <button 
+              @click="openAddCandidateModal"
+              class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition"
+            >
+              <i data-lucide="user-plus" class="w-4 h-4"></i>
+              <span>إضافة مرشح يدوياً</span>
+            </button>
+
+            <!-- Open Batch Generator Modal -->
+            <button 
+              @click="openBatchGeneratorModal"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition"
+            >
+              <i data-lucide="plus-circle" class="w-4 h-4 text-amber-400"></i>
+              <span>توليد وتقسيم مواعيد جديدة</span>
+            </button>
+
+            <!-- Export to CSV -->
+            <a 
+              :href="'/api/export/committee/' + (currentCommittee ? currentCommittee.slug : 'all') + '/csv'"
+              class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200 transition"
+              title="تصدير كشف المرشحين والتقييمات إلى Excel"
+            >
+              <i data-lucide="download" class="w-4 h-4 text-emerald-600"></i>
+              <span>تصدير Excel/CSV</span>
+            </a>
+
+            <!-- Print Sheet -->
+            <button 
+              @click="window.print()"
+              class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200 transition"
+              title="طباعة كشف الحضور الورقي"
+            >
+              <i data-lucide="printer" class="w-4 h-4 text-blue-600"></i>
+              <span>طباعة كشف الحضور</span>
+            </button>
+          </div>
+
+          <!-- Public Booking Link Display & Copy Button -->
+          <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl max-w-md w-full sm:w-auto">
+            <span class="text-xs text-slate-500 font-semibold whitespace-nowrap">رابط حجز المرشحين:</span>
+            <input 
+              type="text" 
+              readonly 
+              :value="publicBookingUrl" 
+              class="text-xs bg-transparent text-slate-700 font-mono outline-none flex-1 truncate"
+            >
+            <button 
+              @click="copyBookingLink"
+              class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-[11px] whitespace-nowrap transition"
+            >
+              {{ copySuccess ? 'تم النسخ!' : 'نسخ' }}
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="no-print mb-6 border-b border-slate-200">
+        <nav class="flex space-x-reverse space-x-2 sm:space-x-4 overflow-x-auto text-xs sm:text-sm font-bold">
+          
+          <!-- Minister Executive Dashboard Tab (Admin only) -->
+          <button 
+            v-if="currentUser && currentUser.role === 'admin'"
+            @click="activeTab = 'minister'" 
+            :class="activeTab === 'minister' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+          >
+            <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
+            <span>🏛️ أداء القطاعات (لوحة الوزير)</span>
+          </button>
+
+          <button 
+            @click="activeTab = 'candidates'" 
+            :class="activeTab === 'candidates' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+          >
+            <i data-lucide="users" class="w-4 h-4"></i>
+            <span>المرشحون والمقابلات ({{ candidates.length }})</span>
+          </button>
+
+          <button 
+            @click="activeTab = 'slots'" 
+            :class="activeTab === 'slots' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+          >
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+            <span>جدول المواعيد المتاحة ({{ slots.length }})</span>
+          </button>
+
+          <button 
+            @click="activeTab = 'analytics'" 
+            :class="activeTab === 'analytics' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+          >
+            <i data-lucide="pie-chart" class="w-4 h-4"></i>
+            <span>الإحصائيات والتحليلات</span>
+          </button>
+
+          <button 
+            @click="activeTab = 'transfers'" 
+            :class="activeTab === 'transfers' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+          >
+            <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
+            <span>سجل التحويلات ({{ transferAuditLogs.length }})</span>
+          </button>
+
+          <button 
+            v-if="currentCommittee && secondaryCandidates.length > 0"
+            @click="activeTab = 'secondary'" 
+            :class="activeTab === 'secondary' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+          >
+            <i data-lucide="bookmark" class="w-4 h-4 text-purple-600"></i>
+            <span>مرشحو الرغبة الثانية ({{ secondaryCandidates.length }})</span>
+          </button>
+
+        </nav>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 0: MINISTER / EXECUTIVE DASHBOARD -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'minister'" class="space-y-8">
+        
+        <!-- Minister Welcome Banner -->
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-8 border border-slate-700 shadow-xl relative overflow-hidden">
+          <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-black text-2xl shadow-lg">
+                <i data-lucide="shield" class="w-9 h-9"></i>
+              </div>
+              <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold mb-1 border border-amber-500/30">
+                  لوحة المتابعة التنفيذية للقيادة العامة
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-white">مرحباً معالي الوزير / رئيس النموذج</h3>
+                <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                  تقرير حي يوضح أداء كل قطاع ونسبة إنجاز المقابلات وعدد المواعيد ومستوى تقييم المرشحين عبر الـ 9 لجان.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button 
+                @click="openAddCandidateModal"
+                class="px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold text-xs shadow-lg transition flex items-center gap-2"
+              >
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span>إضافة مرشح جديد يدوياً</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9 Sectors Live Performance Grid -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h4 class="font-black text-slate-900 text-lg flex items-center gap-2">
+                <i data-lucide="layout-grid" class="w-5 h-5 text-amber-500"></i>
+                <span>أداء وإنجاز كل قطاع (مقارنة شاملة)</span>
+              </h4>
+              <p class="text-xs text-slate-500">انقر على أي قطاع للدخول والتحكم الكامل في كشوفاته ومواعيده</p>
+            </div>
+            <span class="text-xs font-bold text-slate-500">9 قطاعات تخصصية</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div 
+              v-for="comm in committees" 
+              :key="comm.id" 
+              class="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-slate-300"
+            >
+              <div>
+                <!-- Top Badge & Icon -->
+                <div class="flex items-center justify-between gap-3 mb-3">
+                  <div class="flex items-center gap-3">
+                    <div 
+                      class="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-white shadow-md"
+                      :style="{ backgroundColor: comm.color }"
+                    >
+                      <i data-lucide="landmark" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <h5 class="font-black text-slate-900 text-sm group-hover:text-amber-600 transition-colors">
+                        {{ comm.shortName || comm.name }}
+                      </h5>
+                      <span class="text-[11px] text-slate-400 block">{{ comm.headName }}</span>
+                    </div>
+                  </div>
+                  <span class="text-xs font-black px-2.5 py-1 rounded-full" :class="comm.badge">
+                    {{ comm.stats ? comm.stats.total : 0 }} مرشح
+                  </span>
+                </div>
+
+                <!-- Progress Bars (Booked & Completed) -->
+                <div class="space-y-3 my-4 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+                  <!-- Booking Progress -->
+                  <div>
+                    <div class="flex justify-between items-center text-[11px] font-bold mb-1">
+                      <span class="text-slate-600">حجزوا الموعد:</span>
+                      <span class="text-blue-700">
+                        {{ comm.stats ? comm.stats.booked : 0 }} من {{ comm.stats ? comm.stats.total : 0 }}
+                        ({{ comm.stats && comm.stats.total ? Math.round((comm.stats.booked / comm.stats.total) * 100) : 0 }}%)
+                      </span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                      <div 
+                        class="h-full bg-blue-500 rounded-full transition-all duration-500" 
+                        :style="{ width: (comm.stats && comm.stats.total ? (comm.stats.booked / comm.stats.total) * 100 : 0) + '%' }"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <!-- Completed Interviews Progress -->
+                  <div>
+                    <div class="flex justify-between items-center text-[11px] font-bold mb-1">
+                      <span class="text-slate-600">تمت مقابلتهم:</span>
+                      <span class="text-emerald-700">
+                        {{ comm.stats ? comm.stats.completed : 0 }} من {{ comm.stats ? comm.stats.total : 0 }}
+                        ({{ comm.stats && comm.stats.total ? Math.round((comm.stats.completed / comm.stats.total) * 100) : 0 }}%)
+                      </span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                      <div 
+                        class="h-full bg-emerald-500 rounded-full transition-all duration-500" 
+                        :style="{ width: (comm.stats && comm.stats.total ? (comm.stats.completed / comm.stats.total) * 100 : 0) + '%' }"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <!-- Slots Capacity Status -->
+                  <div class="flex items-center justify-between text-[11px] pt-1 text-slate-600 border-t border-slate-200/60 font-medium">
+                    <span>المواعيد المتاحة: <b class="text-emerald-700">{{ comm.stats ? comm.stats.availableSlots : 0 }}</b></span>
+                    <span>متوسط التقييم: <b class="text-purple-700">{{ comm.stats && comm.stats.avgScore ? comm.stats.avgScore + '/10' : '--' }}</b></span>
+                  </div>
+                </div>
+
+                <!-- Alert if slots are low -->
+                <div 
+                  v-if="comm.stats && (comm.stats.pendingBooking > comm.stats.availableSlots)"
+                  class="mb-3 px-3 py-1.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 text-[11px] font-bold flex items-center gap-1.5"
+                >
+                  <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-600 flex-shrink-0"></i>
+                  <span>القطاع يحتاج فتح مواعيد (متبقي {{ comm.stats.pendingBooking }} مرشح)</span>
+                </div>
+              </div>
+
+              <!-- Button to Switch into this committee -->
+              <button 
+                @click="viewSectorAsMinister(comm.id)"
+                class="w-full py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
+              >
+                <span>استعراض وإدارة كشف {{ comm.shortName }}</span>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaderboard: Top Rated Candidates Across All Sectors -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
+                <i data-lucide="star" class="w-5 h-5 text-amber-500"></i>
+                <span>أبرز الكوادر والمرشحين الأعلى تقييماً في النموذج (تقييم 8.5 فأعلى)</span>
+              </h4>
+              <p class="text-xs text-slate-500">كشف فوري لمعالي الوزير بأفضل الكوادر المتميزة عبر جميع القطاعات</p>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold">
+              {{ topRatedCandidates.length }} مرشح متميز
+            </span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
+                <tr>
+                  <th class="py-3 px-4 w-12">م</th>
+                  <th class="py-3 px-4">اسم المرشح</th>
+                  <th class="py-3 px-4">اللجنة / القطاع</th>
+                  <th class="py-3 px-4">الجامعة والكلية</th>
+                  <th class="py-3 px-4">الدرجة</th>
+                  <th class="py-3 px-4">انطباع المقيم</th>
+                  <th class="py-3 px-4 text-center">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-medium">
+                <tr v-for="(cand, idx) in topRatedCandidates" :key="cand.id" class="hover:bg-amber-50/40">
+                  <td class="py-3 px-4 text-slate-400">{{ idx + 1 }}</td>
+                  <td class="py-3 px-4 font-bold text-slate-900">{{ cand.arabicName }}</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 text-[11px] font-bold">
+                      {{ cand.firstPreference }}
+                    </span>
+                  </td>
+                  <td class="py-3 px-4 text-slate-600">{{ cand.university }} - {{ cand.faculty }}</td>
+                  <td class="py-3 px-4 font-black text-amber-600 text-sm">⭐ {{ cand.evaluation.score }}/10</td>
+                  <td class="py-3 px-4 text-slate-500 truncate max-w-xs">{{ cand.evaluation.notes || 'أداء متميز' }}</td>
+                  <td class="py-3 px-4 text-center">
+                    <button 
+                      @click="openCandidateModal(cand)" 
+                      class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    >
+                      عرض الملف
+                    </button>
+                  </td>
+                </tr>
+                <tr v-if="topRatedCandidates.length === 0">
+                  <td colspan="7" class="py-8 text-center text-slate-400">
+                    جاري إجراء المقابلات ورصد التقييمات من قِبل اللجان...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 1: CANDIDATES LIST & INTERVIEWS -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'candidates'" class="space-y-6">
+        
+        <!-- Filters Bar -->
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm no-print">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            
+            <!-- Search Input -->
+            <div class="relative">
+              <input 
+                type="text" 
+                v-model="filters.search" 
+                placeholder="ابحث بالاسم، الهاتف، الكلية..." 
+                class="w-full pl-3 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-amber-500 text-xs outline-none text-slate-800"
+              >
+              <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+                <i data-lucide="search" class="w-4 h-4"></i>
+              </div>
+            </div>
+
+            <!-- Booking & Interview Status Filter -->
+            <div>
+              <select 
+                v-model="filters.status" 
+                class="w-full py-2.5 px-3 rounded-xl border border-slate-200 focus:border-amber-500 text-xs font-semibold text-slate-700 outline-none bg-white"
+              >
+                <option value="all">كل حالات المقابلات</option>
+                <option value="pending">⏳ لم يحجز موعد بعد</option>
+                <option value="booked">📅 حجز موعد - بانتظار المقابلة</option>
+                <option value="completed">✓ تمت المقابلة ورصد التقييم</option>
+                <option value="absent">✗ غائب / لم يحضر</option>
+              </select>
+            </div>
+
+            <!-- University Filter -->
+            <div>
+              <select 
+                v-model="filters.university" 
+                class="w-full py-2.5 px-3 rounded-xl border border-slate-200 focus:border-amber-500 text-xs font-semibold text-slate-700 outline-none bg-white"
+              >
+                <option value="all">جميع الجامعات</option>
+                <option value="جامعة السويس">جامعة السويس (الأولوية 1)</option>
+                <option value="الأهلية">جامعة السويس الأهلية (الأولوية 2)</option>
+                <option value="جامعة أخرى">جامعات أخرى (الأولوية 3)</option>
+              </select>
+            </div>
+
+            <!-- Track Preference Filter -->
+            <div>
+              <select 
+                v-model="filters.track" 
+                class="w-full py-2.5 px-3 rounded-xl border border-slate-200 focus:border-amber-500 text-xs font-semibold text-slate-700 outline-none bg-white"
+              >
+                <option value="all">جميع المسارات (أكاديمي/تنظيمي/إعلامي)</option>
+                <option value="الأكاديمي">المسار الأكاديمي</option>
+                <option value="التنظيمي">المسار التنظيمي واللوجستي</option>
+                <option value="الإعلامي">المسار الإعلامي والميديا</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Quick status counter badges -->
+          <div class="flex items-center justify-between text-xs font-semibold pt-3 mt-3 border-t border-slate-100 text-slate-500">
+            <span>عرض {{ filteredCandidates.length }} من أصل {{ candidates.length }} مرشح</span>
+            <div class="flex items-center gap-3">
+              <span class="text-amber-600">لم يحجزوا: {{ countByStatus('pending') }}</span>
+              <span class="text-blue-600">محجوز: {{ countByStatus('booked') }}</span>
+              <span class="text-emerald-600">مكتمل: {{ countByStatus('completed') }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Candidates Table Card -->
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
+                <tr>
+                  <th class="py-3.5 px-4 w-12">م</th>
+                  <th class="py-3.5 px-4">اسم المرشح</th>
+                  <th class="py-3.5 px-4">الجامعة والكلية</th>
+                  <th class="py-3.5 px-4">التواصل</th>
+                  <th class="py-3.5 px-4">موعد المقابلة</th>
+                  <th class="py-3.5 px-4">حالة الحضور والتقييم</th>
+                  <th class="py-3.5 px-4 no-print text-center">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-medium">
+                <tr 
+                  v-for="(cand, idx) in filteredCandidates" 
+                  :key="cand.id" 
+                  class="hover:bg-slate-50/80 transition-colors"
+                >
+                  <td class="py-3.5 px-4 text-slate-400 font-mono text-[11px]">{{ idx + 1 }}</td>
+                  
+                  <!-- Candidate Name & Details -->
+                  <td class="py-3.5 px-4">
+                    <div class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                      <span>{{ cand.arabicName }}</span>
+                      <span v-if="cand.transferHistory && cand.transferHistory.length > 0" class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold" title="تم تحويله من قطاع آخر">
+                        محوّل
+                      </span>
+                    </div>
+                    <div class="text-[11px] text-slate-500 font-normal mt-0.5">
+                      {{ cand.fullName }}
+                      <span class="mx-1">•</span>
+                      المسار: <b class="text-slate-700">{{ cand.trackPreference }}</b>
+                    </div>
+                  </td>
+
+                  <!-- University & Faculty -->
+                  <td class="py-3.5 px-4">
+                    <div class="text-slate-800 font-semibold">{{ cand.faculty }}</div>
+                    <div class="text-[11px] text-slate-500">{{ cand.university }} ({{ cand.grade }})</div>
+                  </td>
+
+                  <!-- Contact & Direct WhatsApp -->
+                  <td class="py-3.5 px-4">
+                    <div class="flex items-center gap-1.5">
+                      <a 
+                        :href="getWhatsAppLink(cand)" 
+                        target="_blank"
+                        class="p-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition flex items-center gap-1 text-[11px] font-bold"
+                        title="محادثة واتساب مباشرة"
+                      >
+                        <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+                        <span>{{ cand.phone }}</span>
+                      </a>
+                    </div>
+                  </td>
+
+                  <!-- Interview Slot Details -->
+                  <td class="py-3.5 px-4">
+                    <div v-if="cand.slotInfo">
+                      <div class="font-bold text-slate-900 flex items-center gap-1">
+                        <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-600"></i>
+                        <span>{{ cand.slotInfo.dateDisplay }}</span>
+                      </div>
+                      <div class="text-[11px] text-slate-600 flex items-center gap-1 mt-0.5">
+                        <i data-lucide="clock" class="w-3 h-3 text-slate-400"></i>
+                        <b class="text-emerald-700">{{ cand.slotInfo.timeDisplay }}</b>
+                        <span class="mx-1">•</span>
+                        <span :class="cand.slotInfo.type === 'online' ? 'text-blue-700' : 'text-emerald-700'">
+                          {{ cand.slotInfo.type === 'online' ? '🌐 أونلاين' : '📍 حضوري' }}
+                        </span>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 text-[11px] font-bold border border-amber-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                        لم يحجز بعد
+                      </span>
+                    </div>
+                  </td>
+
+                  <!-- Attendance & Evaluation Score -->
+                  <td class="py-3.5 px-4">
+                    <div v-if="cand.evaluation && cand.evaluation.score !== null">
+                      <div class="flex items-center gap-1">
+                        <span class="text-amber-500 font-black text-sm">⭐ {{ cand.evaluation.score }}/10</span>
+                        <span 
+                          :class="getDecisionBadge(cand.evaluation.decision)"
+                          class="px-2 py-0.5 rounded-md text-[10px] font-bold"
+                        >
+                          {{ getDecisionLabel(cand.evaluation.decision) }}
+                        </span>
+                      </div>
+                      <div v-if="cand.evaluation.notes" class="text-[11px] text-slate-500 truncate max-w-xs mt-0.5">
+                        {{ cand.evaluation.notes }}
+                      </div>
+                    </div>
+                    <div v-else-if="cand.bookingStatus === 'absent'">
+                      <span class="px-2 py-0.5 rounded-md bg-rose-100 text-rose-800 text-[11px] font-bold">
+                        لم يحضر (غائب)
+                      </span>
+                    </div>
+                    <div v-else>
+                      <span class="text-slate-400 text-[11px]">بانتظار المقابلة</span>
+                    </div>
+                  </td>
+
+                  <!-- Action Buttons -->
+                  <td class="py-3.5 px-4 no-print text-center">
+                    <div class="flex items-center justify-center gap-1.5">
+                      
+                      <!-- View Dossier -->
+                      <button 
+                        @click="openCandidateModal(cand)"
+                        class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                        title="عرض كامل بيانات واستمارة المرشح"
+                      >
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                      </button>
+
+                      <!-- Schedule / Change Slot -->
+                      <button 
+                        @click="openAssignSlotModal(cand)"
+                        class="p-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 transition"
+                        title="تحديد أو تغيير موعد المقابلة يدويًا"
+                      >
+                        <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
+                      </button>
+
+                      <!-- Evaluation Button -->
+                      <button 
+                        @click="openEvaluationModal(cand)"
+                        class="px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-bold transition flex items-center gap-1 text-[11px]"
+                        title="تقييم المقابلة ورصد الدرجة والملاحظات"
+                      >
+                        <i data-lucide="star" class="w-3.5 h-3.5 text-amber-600"></i>
+                        <span>تقييم</span>
+                      </button>
+
+                      <!-- Transfer to another sector -->
+                      <button 
+                        @click="openTransferModal(cand)"
+                        class="p-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 transition"
+                        title="تحويل المرشح إلى قطاع/لجنة أخرى"
+                      >
+                        <i data-lucide="arrow-left-right" class="w-3.5 h-3.5"></i>
+                      </button>
+
+                    </div>
+                  </td>
+
+                </tr>
+                <tr v-if="filteredCandidates.length === 0">
+                  <td colspan="7" class="py-12 text-center text-slate-400">
+                    لا توجد بيانات مطابقة للبحث أو الفلتر المختار
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 2: INTERVIEW SCHEDULE & SLOTS -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'slots'" class="space-y-6">
+        
+        <!-- Slot Controls Header -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 flex flex-wrap items-center justify-between gap-4 shadow-sm">
+          <div>
+            <h3 class="font-black text-slate-900 text-base">جدول المقابلات ومواعيد القطاع</h3>
+            <p class="text-xs text-slate-500">إدارة المواعيد المتاحة، الحجوزات، وتوليد فترات مقابلات جديدة</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button 
+              @click="openBatchGeneratorModal"
+              class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition flex items-center gap-2"
+            >
+              <i data-lucide="plus" class="w-4 h-4 text-amber-400"></i>
+              <span>توليد وتقسيم مواعيد جديدة</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Slots by Day & Type -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button 
+            @click="slotFilterType = 'all'" 
+            :class="slotFilterType === 'all' ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+          >
+            جميع المواعيد ({{ slots.length }})
+          </button>
+          <button 
+            @click="slotFilterType = 'available'" 
+            :class="slotFilterType === 'available' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+          >
+            المتاحة للحجز ({{ slots.filter(s => s.status === 'available').length }})
+          </button>
+          <button 
+            @click="slotFilterType = 'booked'" 
+            :class="slotFilterType === 'booked' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+          >
+            المحجوزة ({{ slots.filter(s => s.status === 'booked').length }})
+          </button>
+          <button 
+            @click="slotFilterType = 'online'" 
+            :class="slotFilterType === 'online' ? 'bg-slate-800 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+          >
+            🌐 أونلاين فقط
+          </button>
+          <button 
+            @click="slotFilterType = 'offline'" 
+            :class="slotFilterType === 'offline' ? 'bg-slate-800 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+          >
+            📍 حضوري فقط
+          </button>
+        </div>
+
+        <!-- Slots Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div 
+            v-for="slot in filteredSlots" 
+            :key="slot.id" 
+            class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-black text-slate-900">{{ slot.dateDisplay }}</span>
+                <span 
+                  :class="slot.type === 'online' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'"
+                  class="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                >
+                  {{ slot.type === 'online' ? '🌐 أونلاين' : '📍 حضوري' }}
+                </span>
+              </div>
+
+              <div class="flex items-center gap-1.5 text-sm font-black text-slate-900 mb-2">
+                <i data-lucide="clock" class="w-4 h-4 text-amber-500"></i>
+                <span>{{ slot.timeDisplay }}</span>
+                <span class="text-xs font-normal text-slate-400">({{ slot.durationMinutes }} دقيقة)</span>
+              </div>
+
+              <div class="text-xs text-slate-500 mb-3 truncate">
+                <b>المكان/الرابط:</b> {{ slot.locationOrLink }}
+              </div>
+            </div>
+
+            <!-- Booking Status & Candidate Info -->
+            <div class="pt-3 border-t border-slate-100 text-xs">
+              <div v-if="slot.status === 'booked'" class="flex items-center justify-between">
+                <div>
+                  <div class="font-bold text-slate-900">{{ slot.candidateName }}</div>
+                  <div class="text-[11px] text-slate-500">{{ slot.candidatePhone }}</div>
+                </div>
+                <div class="flex items-center gap-1">
+                  <a 
+                    :href="'https://wa.me/20' + (slot.candidatePhone ? slot.candidatePhone.replace(/\\D/g, '').replace(/^0/, '') : '')" 
+                    target="_blank"
+                    class="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition"
+                    title="واتساب"
+                  >
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                  </a>
+                  <button 
+                    @click="cancelSlotBooking(slot)" 
+                    class="p-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 transition text-[11px] font-bold"
+                    title="إلغاء حجز هذا الموعد"
+                  >
+                    إلغاء الحجز
+                  </button>
+                </div>
+              </div>
+              <div v-else class="flex items-center justify-between">
+                <span class="text-emerald-700 font-bold flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  متاح للحجز
+                </span>
+                <button 
+                  @click="deleteSlot(slot)" 
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 transition"
+                  title="حذف هذا الموعد"
+                >
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 3: ANALYTICS & METRICS -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'analytics'" class="space-y-6">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Progress Card -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+            <h4 class="font-black text-slate-900 text-base mb-4 flex items-center gap-2">
+              <i data-lucide="trending-up" class="w-5 h-5 text-amber-500"></i>
+              <span>معدل إنجاز مقابلات القطاع</span>
+            </h4>
+
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span class="text-slate-600">نسبة حجز المواعيد</span>
+                  <span class="text-slate-900">{{ currentStats.total ? Math.round((currentStats.booked / currentStats.total) * 100) : 0 }}%</span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-blue-500 rounded-full transition-all duration-500" :style="{ width: (currentStats.total ? (currentStats.booked / currentStats.total) * 100 : 0) + '%' }"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span class="text-slate-600">نسبة المقابلات المنتهية</span>
+                  <span class="text-slate-900">{{ currentStats.total ? Math.round((currentStats.completed / currentStats.total) * 100) : 0 }}%</span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-emerald-500 rounded-full transition-all duration-500" :style="{ width: (currentStats.total ? (currentStats.completed / currentStats.total) * 100 : 0) + '%' }"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-100 grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="p-2 bg-slate-50 rounded-xl">
+                <span class="text-slate-400 block text-[11px]">مكتمل</span>
+                <b class="text-emerald-700 text-base">{{ currentStats.completed || 0 }}</b>
+              </div>
+              <div class="p-2 bg-slate-50 rounded-xl">
+                <span class="text-slate-400 block text-[11px]">محجوز</span>
+                <b class="text-blue-700 text-base">{{ currentStats.booked || 0 }}</b>
+              </div>
+              <div class="p-2 bg-slate-50 rounded-xl">
+                <span class="text-slate-400 block text-[11px]">متبقي</span>
+                <b class="text-amber-700 text-base">{{ currentStats.pendingBooking || 0 }}</b>
+              </div>
+            </div>
+          </div>
+
+          <!-- University Breakdown -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+            <h4 class="font-black text-slate-900 text-base mb-4 flex items-center gap-2">
+              <i data-lucide="school" class="w-5 h-5 text-blue-500"></i>
+              <span>توزيع المرشحين حسب الجامعة</span>
+            </h4>
+
+            <div class="space-y-3">
+              <div v-for="(count, uni) in universityCounts" :key="uni" class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                <span class="font-bold text-slate-800">{{ uni }}</span>
+                <span class="px-2.5 py-1 rounded-full bg-slate-200 text-slate-800 font-bold font-mono">{{ count }} مرشح</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 4: TRANSFER AUDIT LOGS -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'transfers'" class="space-y-6">
+        
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+          <h4 class="font-black text-slate-900 text-base mb-2 flex items-center gap-2">
+            <i data-lucide="arrow-left-right" class="w-5 h-5 text-purple-600"></i>
+            <span>سجل التحويلات بين اللجان والقطاعات</span>
+          </h4>
+          <p class="text-xs text-slate-500 mb-6">يوثق هذا السجل جميع حالات تحويل المرشحين مع الأسباب والتواريخ</p>
+
+          <div class="divide-y divide-slate-100 text-xs">
+            <div 
+              v-for="log in transferAuditLogs" 
+              :key="log.id" 
+              class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+            >
+              <div>
+                <div class="font-bold text-slate-900 text-sm mb-1">{{ log.candidateName }}</div>
+                <div class="text-slate-600 flex items-center gap-2">
+                  <span class="text-rose-700 font-semibold">من: {{ log.fromCommitteeName }}</span>
+                  <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400"></i>
+                  <span class="text-emerald-700 font-semibold">إلى: {{ log.toCommitteeName }}</span>
+                </div>
+                <div class="text-slate-500 mt-1">السبب: <i>"{{ log.reason }}"</i></div>
+              </div>
+
+              <div class="text-left text-[11px] text-slate-400">
+                <div>بواسطة: {{ log.transferredBy }}</div>
+                <div>{{ new Date(log.timestamp).toLocaleString('ar-EG') }}</div>
+              </div>
+            </div>
+
+            <div v-if="transferAuditLogs.length === 0" class="py-8 text-center text-slate-400">
+              لا توجد أي عمليات تحويل مسجلة حتى الآن.
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 5: SECONDARY PREFERENCES CANDIDATES -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'secondary'" class="space-y-6">
+        
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h4 class="font-black text-slate-900 text-base">مرشحو الرغبة الثانية للجنة</h4>
+              <p class="text-xs text-slate-500">قائمة بالمرشحين الذين اختاروا هذه اللجنة كرغبة أخرى، يمكن الاستعانة بهم إذا احتاجت اللجنة أعضاء إضافيين</p>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-800 text-xs font-bold">
+              {{ secondaryCandidates.length }} مرشح
+            </span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
+                <tr>
+                  <th class="py-3 px-3">م</th>
+                  <th class="py-3 px-3">الاسم</th>
+                  <th class="py-3 px-3">الجامعة والكلية</th>
+                  <th class="py-3 px-3">الرغبة الأولى للمتقدم</th>
+                  <th class="py-3 px-3">الهاتف</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr v-for="(sc, i) in secondaryCandidates" :key="i" class="hover:bg-slate-50">
+                  <td class="py-2.5 px-3 text-slate-400">{{ i + 1 }}</td>
+                  <td class="py-2.5 px-3 font-bold text-slate-900">{{ sc.name }}</td>
+                  <td class="py-2.5 px-3 text-slate-600">{{ sc.university }} - {{ sc.faculty }}</td>
+                  <td class="py-2.5 px-3 text-amber-700 font-semibold">{{ sc.firstPreference }}</td>
+                  <td class="py-2.5 px-3">
+                    <a :href="'https://wa.me/20' + sc.phone.replace(/\\D/g, '').replace(/^0/, '')" target="_blank" class="text-emerald-600 font-bold hover:underline">
+                      {{ sc.phone }}
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ============================================== -->
+    <!-- MODAL 1: BATCH SLOT GENERATOR -->
+    <!-- ============================================== -->
+    <div v-if="showBatchModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 border border-slate-200 shadow-2xl text-right max-h-[90vh] overflow-y-auto">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-800 flex items-center justify-center font-bold">
+              <i data-lucide="clock" class="w-5 h-5 text-amber-600"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-slate-900 text-lg">توليد وتقسيم مواعيد المقابلات آلياً</h4>
+              <p class="text-xs text-slate-500">حدد نافذة الوقت وسيقوم النظام بحساب وتقسيم عدد المقابلات تلقائياً</p>
+            </div>
+          </div>
+          <button @click="showBatchModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form @submit.prevent="generateBatchSlots" class="space-y-4">
+          
+          <!-- Committee picker (if admin) -->
+          <div v-if="currentUser && currentUser.role === 'admin'">
+            <label class="block text-xs font-bold text-slate-700 mb-1">اللجنة المستهدفة:</label>
+            <select v-model="batchForm.committeeId" class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white outline-none">
+              <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.name }}</option>
+            </select>
+          </div>
+
+          <!-- Date -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ المقابلات:</label>
+            <input 
+              type="date" 
+              v-model="batchForm.date" 
+              required
+              class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 outline-none focus:border-amber-500"
+            >
+          </div>
+
+          <!-- Type: Online or Offline -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">نوع المقابلات:</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label 
+                :class="batchForm.type === 'online' ? 'bg-blue-50 border-blue-500 text-blue-900 ring-2 ring-blue-500/20' : 'bg-slate-50 border-slate-200 text-slate-700'"
+                class="flex items-center justify-center gap-2 p-3 rounded-xl border font-bold text-xs cursor-pointer transition"
+              >
+                <input type="radio" v-model="batchForm.type" value="online" class="hidden">
+                <i data-lucide="video" class="w-4 h-4 text-blue-600"></i>
+                <span>أونلاين (Online)</span>
+              </label>
+
+              <label 
+                :class="batchForm.type === 'offline' ? 'bg-emerald-50 border-emerald-500 text-emerald-900 ring-2 ring-emerald-500/20' : 'bg-slate-50 border-slate-200 text-slate-700'"
+                class="flex items-center justify-center gap-2 p-3 rounded-xl border font-bold text-xs cursor-pointer transition"
+              >
+                <input type="radio" v-model="batchForm.type" value="offline" class="hidden">
+                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
+                <span>حضوري (Offline بالكلية)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Meeting Link or Physical Location -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              {{ batchForm.type === 'online' ? 'رابط الاجتماع (Google Meet / Zoom):' : 'مكان ومقر المقابلة في الكلية:' }}
+            </label>
+            <input 
+              type="text" 
+              v-model="batchForm.locationOrLink" 
+              :placeholder="batchForm.type === 'online' ? 'https://meet.google.com/xyz-abcd-efg' : 'مثال: قاعة السيمنار - مبنى كلية السياسة والاقتصاد'"
+              required
+              class="w-full p-3 rounded-xl border border-slate-300 text-xs font-medium text-slate-800 outline-none focus:border-amber-500"
+            >
+          </div>
+
+          <!-- Start & End Time -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">وقت البداية:</label>
+              <input 
+                type="time" 
+                v-model="batchForm.startTime" 
+                required
+                class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 outline-none"
+              >
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">وقت النهاية:</label>
+              <input 
+                type="time" 
+                v-model="batchForm.endTime" 
+                required
+                class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 outline-none"
+              >
+            </div>
+          </div>
+
+          <!-- Duration & Break -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">مدة كل مقابلة (بالدقائق):</label>
+              <select v-model="batchForm.durationMinutes" class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white outline-none">
+                <option :value="10">10 دقائق</option>
+                <option :value="15">15 دقيقة (موصى بها)</option>
+                <option :value="20">20 دقيقة</option>
+                <option :value="30">30 دقيقة</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">استراحة بين المقابلات:</label>
+              <select v-model="batchForm.breakMinutes" class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white outline-none">
+                <option :value="0">بدون استراحة (مباشر)</option>
+                <option :value="5">5 دقائق</option>
+                <option :value="10">10 دقائق</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Calculated Slots Preview -->
+          <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-950 flex items-center justify-between">
+            <div>
+              <b>التقدير الآلي:</b> سيتم إنشاء تقريباً <b class="text-amber-800 text-sm font-black">{{ calculatedSlotsEstimate }}</b> موعد مقابلة
+            </div>
+            <i data-lucide="calculator" class="w-5 h-5 text-amber-600"></i>
+          </div>
+
+          <!-- Notes -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات أو تنبيهات للمرشحين (تظهر لهم في بطاقة الحجز):</label>
+            <input 
+              type="text" 
+              v-model="batchForm.notes" 
+              placeholder="مثال: يرجى التواجد قبل الموعد بـ 5 دقائق وإحضار كارنيه الكلية"
+              class="w-full p-3 rounded-xl border border-slate-300 text-xs text-slate-800 outline-none"
+            >
+          </div>
+
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <button 
+              type="submit" 
+              :disabled="isGenerating"
+              class="flex-1 py-3.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition disabled:opacity-50"
+            >
+              <span v-if="isGenerating">جاري التقسيم والتوليد...</span>
+              <span v-else>توليد المواعيد وتقسيمها الآن</span>
+            </button>
+            <button 
+              type="button" 
+              @click="showBatchModal = false"
+              class="px-5 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+            >
+              إلغاء
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 2: CANDIDATE EVALUATION & GRADING -->
+    <!-- ============================================== -->
+    <div v-if="evalCandidate" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 border border-slate-200 shadow-2xl text-right max-h-[90vh] overflow-y-auto">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+          <div>
+            <span class="text-[11px] font-bold text-amber-600">تقييم المقابلة الشخصية</span>
+            <h4 class="font-black text-slate-900 text-lg">{{ evalCandidate.arabicName }}</h4>
+            <p class="text-xs text-slate-500">{{ evalCandidate.university }} • {{ evalCandidate.faculty }}</p>
+          </div>
+          <button @click="evalCandidate = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form @submit.prevent="saveEvaluation" class="space-y-5">
+          
+          <!-- Attendance Status -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">حالة الحضور:</label>
+            <div class="grid grid-cols-3 gap-2">
+              <label 
+                :class="evalForm.attendanceStatus === 'attended' ? 'bg-emerald-50 border-emerald-500 text-emerald-900 ring-2 ring-emerald-500/20' : 'bg-slate-50 border-slate-200 text-slate-700'"
+                class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold cursor-pointer transition"
+              >
+                <input type="radio" v-model="evalForm.attendanceStatus" value="attended" class="hidden">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                <span>حضر المقابلة</span>
+              </label>
+
+              <label 
+                :class="evalForm.attendanceStatus === 'absent' ? 'bg-rose-50 border-rose-500 text-rose-900 ring-2 ring-rose-500/20' : 'bg-slate-50 border-slate-200 text-slate-700'"
+                class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold cursor-pointer transition"
+              >
+                <input type="radio" v-model="evalForm.attendanceStatus" value="absent" class="hidden">
+                <i data-lucide="x" class="w-4 h-4 text-rose-600"></i>
+                <span>غائب / لم يحضر</span>
+              </label>
+
+              <label 
+                :class="evalForm.attendanceStatus === 'excused' ? 'bg-amber-50 border-amber-500 text-amber-900 ring-2 ring-amber-500/20' : 'bg-slate-50 border-slate-200 text-slate-700'"
+                class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold cursor-pointer transition"
+              >
+                <input type="radio" v-model="evalForm.attendanceStatus" value="excused" class="hidden">
+                <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600"></i>
+                <span>اعتذر مسبقاً</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Overall Score out of 10 -->
+          <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/80">
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-black text-slate-900">التقييم العام للمقابلة (من 10):</label>
+              <span class="text-xl font-black text-amber-700">{{ evalForm.score || 0 }} / 10</span>
+            </div>
+            <input 
+              type="range" 
+              min="1" 
+              max="10" 
+              step="0.5" 
+              v-model="evalForm.score" 
+              class="w-full accent-amber-600 cursor-pointer"
+            >
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+              <span>1 (ضعيف)</span>
+              <span>5 (متوسط)</span>
+              <span>8 (جيد جداً)</span>
+              <span>10 (ممتاز)</span>
+            </div>
+          </div>
+
+          <!-- Detailed Criteria (Optional) -->
+          <div class="space-y-2 text-xs">
+            <span class="font-bold text-slate-700 block mb-1">تفاصيل المعايير (اختياري من 10):</span>
+            
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <span class="text-[11px] text-slate-500">مهارات التواصل والإقناع:</span>
+                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.communicationScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-slate-200 text-xs text-slate-800">
+              </div>
+              <div>
+                <span class="text-[11px] text-slate-500">المعرفة بمجال اللجنة:</span>
+                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.knowledgeScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-slate-200 text-xs text-slate-800">
+              </div>
+              <div>
+                <span class="text-[11px] text-slate-500">الالتزام والشغف:</span>
+                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.commitmentScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-slate-200 text-xs text-slate-800">
+              </div>
+              <div>
+                <span class="text-[11px] text-slate-500">اللغة الإنجليزية:</span>
+                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.englishScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-slate-200 text-xs text-slate-800">
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات المقابلة وانطباع المقيم:</label>
+            <textarea 
+              v-model="evalForm.notes" 
+              rows="3" 
+              placeholder="اكتب نقاط القوة والضعف وأي توصيات بشأن المرشح..." 
+              class="w-full p-3 rounded-xl border border-slate-300 text-xs text-slate-800 outline-none focus:border-amber-500"
+            ></textarea>
+          </div>
+
+          <!-- Committee Decision -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">القرار المبدئي للجنة:</label>
+            <select v-model="evalForm.decision" class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 outline-none">
+              <option value="pending">قيد المراجعة والمفاضلة</option>
+              <option value="accepted">✓ مقبول في اللجنة</option>
+              <option value="reserve">قائمة الانتظار / احتياطي</option>
+              <option value="rejected">غير مناسب للقطاع</option>
+              <option value="transferred">تحويل لقطاع آخر (استخدم زر التحويل)</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <button 
+              type="submit" 
+              class="flex-1 py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition"
+            >
+              حفظ التقييم
+            </button>
+            <button 
+              type="button" 
+              @click="evalCandidate = null"
+              class="px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+            >
+              إلغاء
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 3: CANDIDATE DOSSIER / FULL DETAILS -->
+    <!-- ============================================== -->
+    <div v-if="dossierCandidate" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-slate-200 shadow-2xl text-right max-h-[90vh] overflow-y-auto">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+          <div>
+            <span class="text-[11px] font-bold text-amber-600">استمارة التقديم الرسمية للمرشح</span>
+            <h4 class="font-black text-slate-900 text-xl">{{ dossierCandidate.arabicName }}</h4>
+            <p class="text-xs text-slate-500">{{ dossierCandidate.fullName }} • {{ dossierCandidate.university }}</p>
+          </div>
+          <button @click="dossierCandidate = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="space-y-4 text-xs">
+          
+          <!-- Basic Info Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+            <div>
+              <span class="text-slate-400 block text-[11px]">الجامعة:</span>
+              <b class="text-slate-800">{{ dossierCandidate.university }}</b>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[11px]">الكلية:</span>
+              <b class="text-slate-800">{{ dossierCandidate.faculty }}</b>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[11px]">الفرقة:</span>
+              <b class="text-slate-800">{{ dossierCandidate.grade }}</b>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[11px]">رقم الواتساب:</span>
+              <a :href="getWhatsAppLink(dossierCandidate)" target="_blank" class="text-emerald-700 font-bold hover:underline">
+                {{ dossierCandidate.phone }} ↗
+              </a>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[11px]">البريد الإلكتروني:</span>
+              <b class="text-slate-800 break-all">{{ dossierCandidate.email }}</b>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[11px]">مستوى الإنجليزية:</span>
+              <b class="text-slate-800">{{ dossierCandidate.englishLevel }}</b>
+            </div>
+          </div>
+
+          <!-- Preferences -->
+          <div class="p-4 bg-amber-50/50 rounded-2xl border border-amber-200">
+            <div class="font-bold text-slate-900 mb-1">الرغبات والمسار:</div>
+            <div class="text-slate-700">
+              <b>الرغبة الأولى:</b> {{ dossierCandidate.firstPreference }}
+              <br>
+              <b>كل الرغبات المختارة:</b> {{ dossierCandidate.allPreferences || 'لا توجد' }}
+              <br>
+              <b>الجانب المفضل:</b> {{ dossierCandidate.trackPreference }}
+              <br>
+              <b>الالتزام بالحضور:</b> {{ dossierCandidate.attendanceCommitment }}
+            </div>
+          </div>
+
+          <!-- Motivation & Reasons -->
+          <div v-if="dossierCandidate.reasonsForSectors" class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+            <b class="text-slate-900 block mb-1">سبب اختيار القطاعات:</b>
+            <p class="text-slate-700 leading-relaxed">{{ dossierCandidate.reasonsForSectors }}</p>
+          </div>
+
+          <div v-if="dossierCandidate.motivation" class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+            <b class="text-slate-900 block mb-1">دافع التقديم للنموذج:</b>
+            <p class="text-slate-700 leading-relaxed">{{ dossierCandidate.motivation }}</p>
+          </div>
+
+          <!-- Activities -->
+          <div v-if="dossierCandidate.activitiesDetails" class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+            <b class="text-slate-900 block mb-1">تفاصيل الأنشطة والخبرات السابقة:</b>
+            <p class="text-slate-700 leading-relaxed whitespace-pre-line">{{ dossierCandidate.activitiesDetails }}</p>
+          </div>
+
+          <div v-if="dossierCandidate.skills" class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+            <b class="text-slate-900 block mb-1">المهارات والخبرات التي يمكنه تقديمها:</b>
+            <p class="text-slate-700 leading-relaxed">{{ dossierCandidate.skills }}</p>
+            <div class="mt-2 text-slate-600">
+              <b>أبرز مهارة:</b> {{ dossierCandidate.topSkill }}
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-100 flex justify-end">
+          <button @click="dossierCandidate = null" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs">
+            إغلاق
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 4: TRANSFER CANDIDATE TO ANOTHER COMMITTEE -->
+    <!-- ============================================== -->
+    <div v-if="transferCandidate" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 border border-slate-200 shadow-2xl text-right">
+        
+        <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+          <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+            <i data-lucide="arrow-left-right" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-black text-slate-900 text-base">تحويل المرشح لقطاع آخر</h4>
+            <p class="text-xs text-slate-500">{{ transferCandidate.arabicName }}</p>
+          </div>
+        </div>
+
+        <form @submit.prevent="executeTransfer" class="space-y-4">
+          
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">القطاع / اللجنة المحول إليها:</label>
+            <select v-model="transferForm.targetCommitteeId" required class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 outline-none">
+              <option value="" disabled>اختر اللجنة المناسبة للمرشح...</option>
+              <option 
+                v-for="c in committees.filter(c => c.id !== transferCandidate.assignedCommitteeId)" 
+                :key="c.id" 
+                :value="c.id"
+              >
+                {{ c.name }}
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">سبب التحويل:</label>
+            <textarea 
+              v-model="transferForm.reason" 
+              rows="3" 
+              required
+              placeholder="اكتب سبب التحويل (مثال: شغفه ومهاراته أنسب للشئون العربية بناء على المقابلة)"
+              class="w-full p-3 rounded-xl border border-slate-300 text-xs text-slate-800 outline-none"
+            ></textarea>
+          </div>
+
+          <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-900">
+            تنبيه: سيتم نقل المرشح فوراً إلى قائمة اللجنة الجديدة، وإتاحة موعد مقابلته السابق لحجز مرشحين آخرين.
+          </div>
+
+          <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
+            <button 
+              type="submit" 
+              class="flex-1 py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition"
+            >
+              تأكيد التحويل
+            </button>
+            <button 
+              type="button" 
+              @click="transferCandidate = null"
+              class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+            >
+              إلغاء
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 5: ASSIGN / CHANGE SLOT MANUALLY -->
+    <!-- ============================================== -->
+    <div v-if="assignSlotCandidate" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 border border-slate-200 shadow-2xl text-right max-h-[90vh] overflow-y-auto">
+        
+        <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+            <i data-lucide="calendar" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-black text-slate-900 text-base">تحديد أو تغيير موعد المقابلة</h4>
+            <p class="text-xs text-slate-500">{{ assignSlotCandidate.arabicName }}</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <p class="text-xs text-slate-600">
+            اختر أحد المواعيد المتاحة للجنة لتسكين المرشح فيها مباشرة:
+          </p>
+
+          <div class="max-h-60 overflow-y-auto space-y-2 border border-slate-200 rounded-2xl p-2 bg-slate-50">
+            <div 
+              v-for="s in availableSlotsForCandidate" 
+              :key="s.id"
+              @click="selectedSlotIdForAssign = s.id"
+              :class="selectedSlotIdForAssign === s.id ? 'bg-blue-100/70 border-blue-500 ring-2 ring-blue-500/20' : 'bg-white border-slate-200 hover:bg-slate-100'"
+              class="p-3 rounded-xl border cursor-pointer transition text-xs flex items-center justify-between"
+            >
+              <div>
+                <b class="text-slate-900">{{ s.dateDisplay }}</b>
+                <span class="text-slate-500 mr-2">({{ s.timeDisplay }})</span>
+              </div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full" :class="s.type === 'online' ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700'">
+                {{ s.type === 'online' ? 'أونلاين' : 'حضوري' }}
+              </span>
+            </div>
+            <div v-if="availableSlotsForCandidate.length === 0" class="p-6 text-center text-xs text-slate-500">
+              لا توجد مواعيد متاحة حالياً. قم بإنشاء مواعيد جديدة أولاً.
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
+            <button 
+              @click="confirmSlotAssignment" 
+              :disabled="!selectedSlotIdForAssign"
+              class="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition disabled:opacity-50"
+            >
+              تأكيد تسكين الموعد
+            </button>
+            <button 
+              @click="assignSlotCandidate = null"
+              class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+            >
+              إلغاء
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 6: ADD CANDIDATE MANUALLY -->
+    <!-- ============================================== -->
+    <div v-if="showAddCandidateModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 border border-slate-200 shadow-2xl text-right max-h-[90vh] overflow-y-auto">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+              <i data-lucide="user-plus" class="w-5 h-5 text-emerald-600"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-slate-900 text-lg">إضافة مرشح جديد يدوياً</h4>
+              <p class="text-xs text-slate-500">إضافة متقدم جديد خارج كشف التسجيل وتسكينه في القطاع</p>
+            </div>
+          </div>
+          <button @click="showAddCandidateModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form @submit.prevent="saveNewCandidate" class="space-y-4">
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">الاسم بالعربي (مطلوب):</label>
+              <input 
+                type="text" 
+                v-model="newCandidateForm.arabicName" 
+                required 
+                placeholder="مثال: أحمد محمد علي" 
+                class="w-full p-3 rounded-xl border border-slate-300 text-xs font-medium text-slate-800 outline-none focus:border-emerald-500"
+              >
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">الاسم بالإنجليزية (اختياري):</label>
+              <input 
+                type="text" 
+                v-model="newCandidateForm.fullName" 
+                placeholder="Ahmed Mohamed Ali" 
+                class="w-full p-3 rounded-xl border border-slate-300 text-xs font-medium text-slate-800 outline-none"
+              >
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف / الواتساب (مطلوب):</label>
+              <input 
+                type="text" 
+                v-model="newCandidateForm.phone" 
+                required 
+                placeholder="010xxxxxxxx" 
+                class="w-full p-3 rounded-xl border border-slate-300 text-xs font-medium text-slate-800 outline-none focus:border-emerald-500"
+              >
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني:</label>
+              <input 
+                type="email" 
+                v-model="newCandidateForm.email" 
+                placeholder="email@example.com" 
+                class="w-full p-3 rounded-xl border border-slate-300 text-xs font-medium text-slate-800 outline-none"
+              >
+            </div>
+          </div>
+
+          <!-- Committee Selection -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">القطاع / اللجنة المسكن عليها:</label>
+            <select 
+              v-model="newCandidateForm.committeeId" 
+              required
+              class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 outline-none focus:border-emerald-500"
+            >
+              <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.name }}</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة:</label>
+              <select v-model="newCandidateForm.university" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-medium bg-white outline-none">
+                <option value="جامعة السويس">جامعة السويس</option>
+                <option value="جامعة السويس الأهلية">جامعة السويس الأهلية</option>
+                <option value="جامعة أخرى">جامعة أخرى</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">الكلية:</label>
+              <input type="text" v-model="newCandidateForm.faculty" placeholder="مثال: سياسة واقتصاد" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">الفرقة الدراسية:</label>
+              <select v-model="newCandidateForm.grade" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-medium bg-white outline-none">
+                <option value="الفرقة الأولى">الفرقة الأولى</option>
+                <option value="الفرقة الثانية">الفرقة الثانية</option>
+                <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+                <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+                <option value="خريج / دراسات عليا">خريج / دراسات عليا</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">المسار المفضل:</label>
+              <select v-model="newCandidateForm.trackPreference" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-medium bg-white outline-none">
+                <option value="الأكاديمي">المسار الأكاديمي</option>
+                <option value="التنظيمي">المسار التنظيمي واللوجستي</option>
+                <option value="الإعلامي">المسار الإعلامي والميديا</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">مستوى الإنجليزية:</label>
+              <select v-model="newCandidateForm.englishLevel" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-medium bg-white outline-none">
+                <option value="مبتدئ">مبتدئ</option>
+                <option value="متوسط">متوسط</option>
+                <option value="فوق المتوسط">فوق المتوسط</option>
+                <option value="متقدم">متقدم</option>
+                <option value="إجادة تامة أو شبه تامة">إجادة تامة</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات إضافية عن المرشح:</label>
+            <input 
+              type="text" 
+              v-model="newCandidateForm.notes" 
+              placeholder="مثال: تم إضافته يدوياً بتوصية، أو سجل متأخراً" 
+              class="w-full p-3 rounded-xl border border-slate-300 text-xs text-slate-800 outline-none"
+            >
+          </div>
+
+          <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+            <button 
+              type="submit" 
+              :disabled="isSavingCandidate"
+              class="flex-1 py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition disabled:opacity-50"
+            >
+              <span v-if="isSavingCandidate">جاري الحفظ...</span>
+              <span v-else>حفظ وإضافة المرشح الآن</span>
+            </button>
+            <button 
+              type="button" 
+              @click="showAddCandidateModal = false"
+              class="px-5 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+            >
+              إلغاء
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const { createApp, ref, computed, onMounted, nextTick } = Vue;
+
+    createApp({
+      setup() {
+        const currentUser = ref(null);
+        const committees = ref([]);
+        const selectedCommitteeId = ref('all');
+        const candidates = ref([]);
+        const allCandidatesGlobal = ref([]);
+        const slots = ref([]);
+        const secondaryCandidates = ref([]);
+        const transferAuditLogs = ref([]);
+        const activeTab = ref('candidates');
+        const copySuccess = ref(false);
+
+        // Add Candidate State
+        const showAddCandidateModal = ref(false);
+        const isSavingCandidate = ref(false);
+        const newCandidateForm = ref({
+          arabicName: '',
+          fullName: '',
+          phone: '',
+          email: '',
+          university: 'جامعة السويس',
+          faculty: '',
+          grade: 'الفرقة الأولى',
+          committeeId: '',
+          trackPreference: 'الأكاديمي',
+          englishLevel: 'متوسط',
+          notes: ''
+        });
+
+        // Filter states
+        const filters = ref({
+          search: '',
+          status: 'all',
+          university: 'all',
+          track: 'all'
+        });
+
+        const slotFilterType = ref('all');
+
+        // Modals state
+        const showBatchModal = ref(false);
+        const isGenerating = ref(false);
+        const evalCandidate = ref(null);
+        const evalForm = ref({});
+        const dossierCandidate = ref(null);
+        const transferCandidate = ref(null);
+        const transferForm = ref({});
+        const assignSlotCandidate = ref(null);
+        const selectedSlotIdForAssign = ref(null);
+
+        // Batch Form
+        const batchForm = ref({
+          committeeId: '',
+          date: new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0],
+          startTime: '14:00',
+          endTime: '18:00',
+          durationMinutes: 15,
+          breakMinutes: 0,
+          type: 'online',
+          locationOrLink: 'https://meet.google.com/mofa-interview-2026',
+          notes: 'يرجى التواجد قبل الموعد بـ 5 دقائق'
+        });
+
+        // Initialize User Session
+        function checkAuth() {
+          const userStr = localStorage.getItem('mofa_user');
+          if (!userStr) {
+            window.location.href = '/login';
+            return;
+          }
+          currentUser.value = JSON.parse(userStr);
+          selectedCommitteeId.value = currentUser.value.committeeId || 'all';
+          batchForm.value.committeeId = currentUser.value.committeeId || 'crises';
+          if (currentUser.value.role === 'admin') {
+            activeTab.value = 'minister';
+          } else {
+            activeTab.value = 'candidates';
+          }
+        }
+
+        async function loadAllData() {
+          try {
+            // Load committees
+            const commRes = await fetch('/api/committees').then(r => r.json());
+            if (commRes.success) {
+              committees.value = commRes.committees;
+            }
+
+            // Load Candidates for active committee and global candidates
+            await fetchCandidates();
+            await fetchSlots();
+            await fetchStats();
+            await fetchCommitteeDetails();
+            await fetchGlobalCandidates();
+
+            nextTick(() => {
+              lucide.createIcons();
+            });
+          } catch (err) {
+            console.error('Data load error:', err);
+          }
+        }
+
+        async function fetchGlobalCandidates() {
+          try {
+            const res = await fetch('/api/candidates?committeeId=all').then(r => r.json());
+            if (res.success) {
+              allCandidatesGlobal.value = res.candidates;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        async function fetchCandidates() {
+          const commId = selectedCommitteeId.value;
+          const res = await fetch(`/api/candidates?committeeId=${commId}`).then(r => r.json());
+          if (res.success) {
+            candidates.value = res.candidates;
+          }
+        }
+
+        async function fetchSlots() {
+          const commId = selectedCommitteeId.value;
+          const res = await fetch(`/api/slots?committeeId=${commId}`).then(r => r.json());
+          if (res.success) {
+            slots.value = res.slots;
+          }
+        }
+
+        async function fetchStats() {
+          const res = await fetch('/api/stats/overview').then(r => r.json());
+          if (res.success) {
+            transferAuditLogs.value = res.recentTransfers || [];
+          }
+        }
+
+        async function fetchCommitteeDetails() {
+          if (!currentCommittee.value) {
+            secondaryCandidates.value = [];
+            return;
+          }
+          try {
+            const res = await fetch(`/api/committees/${currentCommittee.value.slug}`).then(r => r.json());
+            if (res.success && res.secondaryCandidates) {
+              secondaryCandidates.value = res.secondaryCandidates;
+            } else {
+              secondaryCandidates.value = [];
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        const currentCommittee = computed(() => {
+          if (selectedCommitteeId.value === 'all') return null;
+          return committees.value.find(c => c.id === selectedCommitteeId.value);
+        });
+
+        const currentStats = computed(() => {
+          if (currentCommittee.value && currentCommittee.value.stats) {
+            return currentCommittee.value.stats;
+          }
+          // Global stats calculation
+          const total = candidates.value.length;
+          const booked = candidates.value.filter(c => c.bookingStatus === 'booked' || c.bookingStatus === 'completed').length;
+          const completed = candidates.value.filter(c => c.interviewStatus === 'completed' || (c.evaluation && c.evaluation.score !== null)).length;
+          const absent = candidates.value.filter(c => c.bookingStatus === 'absent').length;
+          const pendingBooking = total - booked;
+          const rated = candidates.value.filter(c => c.evaluation && typeof c.evaluation.score === 'number');
+          const avgScore = rated.length > 0 ? (rated.reduce((sum, c) => sum + c.evaluation.score, 0) / rated.length).toFixed(1) : null;
+
+          return { total, booked, completed, absent, pendingBooking, avgScore, ratedCount: rated.length };
+        });
+
+        const publicBookingUrl = computed(() => {
+          const slug = currentCommittee.value ? currentCommittee.value.slug : 'crises';
+          return `${window.location.origin}/book/${slug}`;
+        });
+
+        function copyBookingLink() {
+          navigator.clipboard.writeText(publicBookingUrl.value);
+          copySuccess.value = true;
+          setTimeout(() => {
+            copySuccess.value = false;
+          }, 2500);
+        }
+
+        function onCommitteeChange() {
+          fetchCandidates();
+          fetchSlots();
+          fetchCommitteeDetails();
+          nextTick(() => {
+            lucide.createIcons();
+          });
+        }
+
+        const filteredCandidates = computed(() => {
+          let list = candidates.value;
+
+          if (filters.value.search.trim()) {
+            const q = filters.value.search.trim().toLowerCase();
+            list = list.filter(c => 
+              c.arabicName.toLowerCase().includes(q) ||
+              c.fullName.toLowerCase().includes(q) ||
+              c.phone.includes(q) ||
+              c.faculty.toLowerCase().includes(q) ||
+              c.university.toLowerCase().includes(q)
+            );
+          }
+
+          if (filters.value.status !== 'all') {
+            if (filters.value.status === 'pending') {
+              list = list.filter(c => c.bookingStatus === 'pending' || !c.slotId);
+            } else if (filters.value.status === 'booked') {
+              list = list.filter(c => c.bookingStatus === 'booked');
+            } else if (filters.value.status === 'completed') {
+              list = list.filter(c => c.interviewStatus === 'completed' || (c.evaluation && c.evaluation.score !== null));
+            } else if (filters.value.status === 'absent') {
+              list = list.filter(c => c.bookingStatus === 'absent' || (c.evaluation && c.evaluation.attendanceStatus === 'absent'));
+            }
+          }
+
+          if (filters.value.university !== 'all') {
+            list = list.filter(c => c.university.includes(filters.value.university));
+          }
+
+          if (filters.value.track !== 'all') {
+            list = list.filter(c => c.trackPreference.includes(filters.value.track));
+          }
+
+          return list;
+        });
+
+        function countByStatus(st) {
+          if (st === 'pending') return candidates.value.filter(c => c.bookingStatus === 'pending' || !c.slotId).length;
+          if (st === 'booked') return candidates.value.filter(c => c.bookingStatus === 'booked').length;
+          if (st === 'completed') return candidates.value.filter(c => c.interviewStatus === 'completed' || (c.evaluation && c.evaluation.score !== null)).length;
+          return 0;
+        }
+
+        const filteredSlots = computed(() => {
+          let list = slots.value;
+          if (slotFilterType.value === 'available') {
+            list = list.filter(s => s.status === 'available');
+          } else if (slotFilterType.value === 'booked') {
+            list = list.filter(s => s.status === 'booked');
+          } else if (slotFilterType.value === 'online') {
+            list = list.filter(s => s.type === 'online');
+          } else if (slotFilterType.value === 'offline') {
+            list = list.filter(s => s.type === 'offline');
+          }
+          return list;
+        });
+
+        const universityCounts = computed(() => {
+          const map = {};
+          candidates.value.forEach(c => {
+            const u = c.university || 'أخرى';
+            map[u] = (map[u] || 0) + 1;
+          });
+          return map;
+        });
+
+        // WhatsApp Helper
+        function getWhatsAppLink(cand) {
+          const raw = cand.phone.replace(/\D/g, '').replace(/^0/, '');
+          const cleanPhone = '20' + raw;
+          let msg = `مرحباً ${cand.arabicName}، بخصوص مقابلتك الشخصية في نموذج محاكاة وزارة الخارجية`;
+          if (cand.slotInfo) {
+            msg += ` (موعدك: ${cand.slotInfo.dateDisplay} الساعة ${cand.slotInfo.timeDisplay} - ${cand.slotInfo.type === 'online' ? 'أونلاين' : 'حضوري'})`;
+          } else {
+            msg += `، يرجى الدخول لحجز موعد المقابلة المناسب لك عبر الرابط: ${publicBookingUrl.value}`;
+          }
+          return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+        }
+
+        // Decision Helpers
+        function getDecisionLabel(dec) {
+          if (dec === 'accepted') return 'مقبول';
+          if (dec === 'reserve') return 'احتياطي';
+          if (dec === 'rejected') return 'غير مناسب';
+          if (dec === 'transferred') return 'محوّل';
+          return 'قيد النظر';
+        }
+
+        function getDecisionBadge(dec) {
+          if (dec === 'accepted') return 'bg-emerald-100 text-emerald-800';
+          if (dec === 'reserve') return 'bg-amber-100 text-amber-800';
+          if (dec === 'rejected') return 'bg-rose-100 text-rose-800';
+          if (dec === 'transferred') return 'bg-purple-100 text-purple-800';
+          return 'bg-slate-100 text-slate-700';
+        }
+
+        // ===================================
+        // MODALS & ACTIONS
+        // ===================================
+
+        function openCandidateModal(cand) {
+          dossierCandidate.value = cand;
+          nextTick(() => lucide.createIcons());
+        }
+
+        function openEvaluationModal(cand) {
+          evalCandidate.value = cand;
+          evalForm.value = {
+            attendanceStatus: cand.evaluation && cand.evaluation.attendanceStatus ? cand.evaluation.attendanceStatus : 'attended',
+            score: cand.evaluation && cand.evaluation.score !== null ? cand.evaluation.score : 8,
+            communicationScore: cand.evaluation ? cand.evaluation.communicationScore : '',
+            knowledgeScore: cand.evaluation ? cand.evaluation.knowledgeScore : '',
+            commitmentScore: cand.evaluation ? cand.evaluation.commitmentScore : '',
+            englishScore: cand.evaluation ? cand.evaluation.englishScore : '',
+            notes: cand.evaluation ? cand.evaluation.notes : '',
+            decision: cand.evaluation && cand.evaluation.decision ? cand.evaluation.decision : 'accepted'
+          };
+          nextTick(() => lucide.createIcons());
+        }
+
+        async function saveEvaluation() {
+          try {
+            const res = await fetch(`/api/candidates/${evalCandidate.value.id}/evaluation`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                ...evalForm.value,
+                interviewerName: currentUser.value ? currentUser.value.name : 'مدير اللجنة'
+              })
+            });
+            const data = await res.json();
+            if (data.success) {
+              evalCandidate.value = null;
+              await fetchCandidates();
+              await loadAllData();
+            } else {
+              alert(data.message || 'حدث خطأ أثناء حفظ التقييم');
+            }
+          } catch (err) {
+            console.error('Evaluation save error:', err);
+          }
+        }
+
+        function openTransferModal(cand) {
+          transferCandidate.value = cand;
+          transferForm.value = {
+            targetCommitteeId: '',
+            reason: ''
+          };
+          nextTick(() => lucide.createIcons());
+        }
+
+        async function executeTransfer() {
+          try {
+            const res = await fetch(`/api/candidates/${transferCandidate.value.id}/transfer`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                targetCommitteeId: transferForm.value.targetCommitteeId,
+                reason: transferForm.value.reason,
+                transferredBy: currentUser.value ? currentUser.value.name : 'مدير اللجنة'
+              })
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert(data.message);
+              transferCandidate.value = null;
+              await loadAllData();
+            } else {
+              alert(data.message || 'حدث خطأ في عملية التحويل');
+            }
+          } catch (err) {
+            console.error('Transfer error:', err);
+          }
+        }
+
+        const availableSlotsForCandidate = computed(() => {
+          return slots.value.filter(s => s.status === 'available');
+        });
+
+        function openAssignSlotModal(cand) {
+          assignSlotCandidate.value = cand;
+          selectedSlotIdForAssign.value = cand.slotId || null;
+          nextTick(() => lucide.createIcons());
+        }
+
+        async function confirmSlotAssignment() {
+          if (!selectedSlotIdForAssign.value) return;
+          try {
+            const res = await fetch(`/api/candidates/${assignSlotCandidate.value.id}/assign-slot`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ slotId: selectedSlotIdForAssign.value })
+            });
+            const data = await res.json();
+            if (data.success) {
+              assignSlotCandidate.value = null;
+              await loadAllData();
+            } else {
+              alert(data.message || 'تعذر تعيين الموعد');
+            }
+          } catch (err) {
+            console.error('Assign slot error:', err);
+          }
+        }
+
+        async function cancelSlotBooking(slot) {
+          if (!confirm(`هل أنت متأكد من إلغاء حجز المرشح ${slot.candidateName} لهذا الموعد؟`)) return;
+          if (!slot.candidateId) return;
+
+          try {
+            const res = await fetch(`/api/candidates/${slot.candidateId}/booking`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+              await loadAllData();
+            }
+          } catch (err) {
+            console.error('Cancel booking error:', err);
+          }
+        }
+
+        async function deleteSlot(slot) {
+          if (!confirm('هل تريد حذف هذا الموعد نهائياً؟')) return;
+          try {
+            const res = await fetch(`/api/slots/${slot.id}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+              await loadAllData();
+            } else {
+              alert(data.message);
+            }
+          } catch (err) {
+            console.error('Delete slot error:', err);
+          }
+        }
+
+        // ===================================
+        // BATCH SLOT GENERATOR
+        // ===================================
+
+        function openBatchGeneratorModal() {
+          batchForm.value.committeeId = currentCommittee.value ? currentCommittee.value.id : (committees.value[0] ? committees.value[0].id : 'crises');
+          showBatchModal.value = true;
+          nextTick(() => lucide.createIcons());
+        }
+
+        const calculatedSlotsEstimate = computed(() => {
+          try {
+            const [sH, sM] = batchForm.value.startTime.split(':').map(Number);
+            const [eH, eM] = batchForm.value.endTime.split(':').map(Number);
+            const startMins = sH * 60 + sM;
+            const endMins = eH * 60 + eM;
+            const totalMins = endMins - startMins;
+            const duration = parseInt(batchForm.value.durationMinutes) || 15;
+            const pause = parseInt(batchForm.value.breakMinutes) || 0;
+            if (totalMins <= 0 || duration <= 0) return 0;
+            return Math.floor(totalMins / (duration + pause));
+          } catch (e) {
+            return 0;
+          }
+        });
+
+        async function generateBatchSlots() {
+          isGenerating.value = true;
+          try {
+            const res = await fetch('/api/slots/batch', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(batchForm.value)
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert(data.message);
+              showBatchModal.value = false;
+              activeTab.value = 'slots';
+              await loadAllData();
+            } else {
+              alert(data.message || 'حدث خطأ في توليد المواعيد');
+            }
+          } catch (err) {
+            console.error('Batch generation error:', err);
+          } finally {
+            isGenerating.value = false;
+          }
+        }
+
+        // Minister Features
+        const topRatedCandidates = computed(() => {
+          return allCandidatesGlobal.value
+            .filter(c => c.evaluation && typeof c.evaluation.score === 'number' && c.evaluation.score >= 8.5)
+            .sort((a, b) => (b.evaluation.score || 0) - (a.evaluation.score || 0));
+        });
+
+        function viewSectorAsMinister(commId) {
+          selectedCommitteeId.value = commId;
+          onCommitteeChange();
+          activeTab.value = 'candidates';
+        }
+
+        // Add Candidate Manually Methods
+        function openAddCandidateModal() {
+          newCandidateForm.value = {
+            arabicName: '',
+            fullName: '',
+            phone: '',
+            email: '',
+            university: 'جامعة السويس',
+            faculty: '',
+            grade: 'الفرقة الأولى',
+            committeeId: currentCommittee.value ? currentCommittee.value.id : (committees.value[0] ? committees.value[0].id : 'crises'),
+            trackPreference: 'الأكاديمي',
+            englishLevel: 'متوسط',
+            notes: ''
+          };
+          showAddCandidateModal.value = true;
+          nextTick(() => lucide.createIcons());
+        }
+
+        async function saveNewCandidate() {
+          if (!newCandidateForm.value.arabicName || !newCandidateForm.value.phone || !newCandidateForm.value.committeeId) {
+            alert('يرجى إدخال اسم المرشح ورقم الهاتف وتحديد القطاع/اللجنة');
+            return;
+          }
+
+          isSavingCandidate.value = true;
+          try {
+            const res = await fetch('/api/candidates', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(newCandidateForm.value)
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert(data.message);
+              showAddCandidateModal.value = false;
+              await loadAllData();
+              if (activeTab.value !== 'minister') {
+                activeTab.value = 'candidates';
+              }
+            } else {
+              alert(data.message || 'حدث خطأ أثناء حفظ المرشح');
+            }
+          } catch (e) {
+            console.error('Save candidate error:', e);
+            alert('حدث خطأ في الاتصال بالخادم');
+          } finally {
+            isSavingCandidate.value = false;
+          }
+        }
+
+        function logout() {
+          localStorage.removeItem('mofa_user');
+          window.location.href = '/login';
+        }
+
+        onMounted(() => {
+          checkAuth();
+          loadAllData();
+        });
+
+        return {
+          currentUser,
+          committees,
+          selectedCommitteeId,
+          candidates,
+          allCandidatesGlobal,
+          slots,
+          secondaryCandidates,
+          transferAuditLogs,
+          activeTab,
+          currentCommittee,
+          currentStats,
+          publicBookingUrl,
+          copySuccess,
+          copyBookingLink,
+          onCommitteeChange,
+          filters,
+          filteredCandidates,
+          countByStatus,
+          slotFilterType,
+          filteredSlots,
+          universityCounts,
+          getWhatsAppLink,
+          getDecisionLabel,
+          getDecisionBadge,
+          openCandidateModal,
+          dossierCandidate,
+          openEvaluationModal,
+          evalCandidate,
+          evalForm,
+          saveEvaluation,
+          openTransferModal,
+          transferCandidate,
+          transferForm,
+          executeTransfer,
+          availableSlotsForCandidate,
+          openAssignSlotModal,
+          assignSlotCandidate,
+          selectedSlotIdForAssign,
+          confirmSlotAssignment,
+          cancelSlotBooking,
+          deleteSlot,
+          showBatchModal,
+          batchForm,
+          calculatedSlotsEstimate,
+          isGenerating,
+          openBatchGeneratorModal,
+          generateBatchSlots,
+          topRatedCandidates,
+          viewSectorAsMinister,
+          showAddCandidateModal,
+          isSavingCandidate,
+          newCandidateForm,
+          openAddCandidateModal,
+          saveNewCandidate,
+          logout
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
