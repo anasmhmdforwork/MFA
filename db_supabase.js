@@ -8,9 +8,22 @@ const SUPABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres.jwzsfndg
 let pool = null;
 let isConnected = false;
 let memoryCache = null;
+let lastSyncTime = 0;
+
+// Read local JSON file fallback
+function getLocalDB() {
+  try {
+    const raw = fs.readFileSync(DB_FILE, 'utf-8');
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error('Error reading local db.json:', err.message);
+    return null;
+  }
+}
 
 // Initialize Supabase Connection
 function initSupabase() {
+  if (pool) return;
   try {
     pool = new Pool({
       connectionString: SUPABASE_URL,
@@ -18,6 +31,11 @@ function initSupabase() {
       max: 10,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 10000
+    });
+
+    pool.on('error', (err) => {
+      console.warn('Supabase Pool error (fallback active):', err.message);
+      isConnected = false;
     });
 
     pool.connect((err, client, release) => {
@@ -28,7 +46,7 @@ function initSupabase() {
         isConnected = true;
         console.log('⚡ Connected to Supabase Cloud PostgreSQL successfully!');
         release();
-        syncFromSupabase();
+        syncFromSupabase(true);
       }
     });
   } catch (e) {
@@ -37,59 +55,73 @@ function initSupabase() {
   }
 }
 
-// Initial Sync from Supabase into memory cache
-async function syncFromSupabase() {
-  if (!isConnected || !pool) return;
-  try {
-    const res = await pool.query("SELECT data FROM mofa_interview_db WHERE id = 'main'");
-    if (res.rows.length > 0 && res.rows[0].data) {
-      memoryCache = res.rows[0].data;
-      // Also update local file
-      fs.writeFileSync(DB_FILE, JSON.stringify(memoryCache, null, 2), 'utf-8');
-      console.log('✓ Synced live database from Supabase cloud into local memory and disk.');
-    }
-  } catch (err) {
-    console.error('Error syncing from Supabase:', err.message);
+// Sync from Supabase into memory cache
+async function syncFromSupabase(force = false) {
+  const now = Date.now();
+  if (!force && memoryCache && (now - lastSyncTime < 3000)) {
+    return memoryCache;
   }
+
+  if (!pool) {
+    initSupabase();
+  }
+
+  if (pool) {
+    try {
+      const res = await pool.query("SELECT data FROM mofa_interview_db WHERE id = 'main'");
+      if (res.rows.length > 0 && res.rows[0].data) {
+        memoryCache = res.rows[0].data;
+        lastSyncTime = now;
+        // Try writing local file (will be ignored if read-only on Vercel)
+        try {
+          fs.writeFileSync(DB_FILE, JSON.stringify(memoryCache, null, 2), 'utf-8');
+        } catch (e) {}
+        return memoryCache;
+      }
+    } catch (err) {
+      console.error('Error syncing from Supabase:', err.message);
+    }
+  }
+
+  if (!memoryCache) {
+    memoryCache = getLocalDB();
+  }
+  return memoryCache;
 }
 
-// Read database
+// Synchronous getDB (uses memoryCache or local file)
 function getDB() {
   if (memoryCache) {
     return memoryCache;
   }
-
-  try {
-    const raw = fs.readFileSync(DB_FILE, 'utf-8');
-    memoryCache = JSON.parse(raw);
-    return memoryCache;
-  } catch (err) {
-    console.error('Error reading db.json:', err);
-    return null;
-  }
+  memoryCache = getLocalDB();
+  return memoryCache;
 }
 
-// Save database
-function saveDB(data) {
+// Save database (atomic local + awaited Supabase)
+async function saveDB(data) {
   memoryCache = data;
+  lastSyncTime = Date.now();
 
-  // 1. Save locally to file atomically
+  // 1. Save locally to file atomically (if filesystem is writable)
   try {
     const tempFile = DB_FILE + '.tmp';
     fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
     fs.renameSync(tempFile, DB_FILE);
   } catch (err) {
-    console.error('Error saving local db.json:', err.message);
+    // Read-only filesystem on Vercel serverless is normal and expected
   }
 
-  // 2. Sync to Supabase in background
-  if (isConnected && pool) {
-    pool.query(
-      "INSERT INTO mofa_interview_db (id, data, updated_at) VALUES ('main', $1, NOW()) ON CONFLICT (id) DO UPDATE SET data = $1, updated_at = NOW()",
-      [JSON.stringify(data)]
-    ).catch(err => {
-      console.error('Background Supabase save error:', err.message);
-    });
+  // 2. Await Supabase PostgreSQL write so Vercel does not terminate container early
+  if (pool) {
+    try {
+      await pool.query(
+        "INSERT INTO mofa_interview_db (id, data, updated_at) VALUES ('main', $1, NOW()) ON CONFLICT (id) DO UPDATE SET data = $1, updated_at = NOW()",
+        [JSON.stringify(data)]
+      );
+    } catch (err) {
+      console.error('Supabase write error:', err.message);
+    }
   }
 
   return true;
@@ -100,6 +132,7 @@ initSupabase();
 module.exports = {
   getDB,
   saveDB,
+  syncFromSupabase,
   isConnected: () => isConnected,
   getPool: () => pool
 };

@@ -13,6 +13,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Synchronize with Supabase Cloud for serverless environments (Vercel)
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api/')) {
+    await dbLayer.syncFromSupabase();
+  }
+  next();
+});
 app.use(express.static(path.join(__dirname, 'public'), { index: false }));
 
 // Database Layer (Supabase PostgreSQL with fallback to local db.json)
@@ -187,7 +195,7 @@ app.get('/api/committees/:slug', (req, res) => {
 // ==========================================
 
 // Add candidate manually
-app.post('/api/candidates', (req, res) => {
+app.post('/api/candidates', async (req, res) => {
   const db = getDB();
   const {
     arabicName,
@@ -260,7 +268,7 @@ app.post('/api/candidates', (req, res) => {
   };
 
   db.candidates.push(newCandidate);
-  saveDB(db);
+  await saveDB(db);
 
   res.json({
     success: true,
@@ -341,7 +349,7 @@ app.get('/api/candidates/:id', (req, res) => {
 });
 
 // Update candidate interview evaluation & notes
-app.put('/api/candidates/:id/evaluation', (req, res) => {
+app.put('/api/candidates/:id/evaluation', async (req, res) => {
   const db = getDB();
   const cand = db.candidates.find(c => c.id === req.params.id);
   if (!cand) {
@@ -385,12 +393,12 @@ app.put('/api/candidates/:id/evaluation', (req, res) => {
     cand.bookingStatus = 'pending'; // Allow rebooking
   }
 
-  saveDB(db);
+  await saveDB(db);
   res.json({ success: true, message: 'تم حفظ التقييم بنجاح', candidate: cand });
 });
 
 // Transfer candidate to another committee
-app.post('/api/candidates/:id/transfer', (req, res) => {
+app.post('/api/candidates/:id/transfer', async (req, res) => {
   const db = getDB();
   const cand = db.candidates.find(c => c.id === req.params.id);
   if (!cand) {
@@ -449,7 +457,7 @@ app.post('/api/candidates/:id/transfer', (req, res) => {
   // Audit log
   db.transferAuditLogs.push(transferRecord);
 
-  saveDB(db);
+  await saveDB(db);
   res.json({
     success: true,
     message: `تم تحويل المرشح ${cand.arabicName} إلى ${newComm.name} بنجاح`,
@@ -458,7 +466,7 @@ app.post('/api/candidates/:id/transfer', (req, res) => {
 });
 
 // Manual slot assignment or change by Committee Head
-app.post('/api/candidates/:id/assign-slot', (req, res) => {
+app.post('/api/candidates/:id/assign-slot', async (req, res) => {
   const db = getDB();
   const cand = db.candidates.find(c => c.id === req.params.id);
   if (!cand) {
@@ -506,7 +514,7 @@ app.post('/api/candidates/:id/assign-slot', (req, res) => {
     locationOrLink: targetSlot.locationOrLink
   };
 
-  saveDB(db);
+  await saveDB(db);
   res.json({
     success: true,
     message: `تم تعيين موعد المقابلة بنجاح: ${targetSlot.dateDisplay} (${targetSlot.timeDisplay})`,
@@ -516,7 +524,7 @@ app.post('/api/candidates/:id/assign-slot', (req, res) => {
 });
 
 // Cancel a candidate's booking
-app.delete('/api/candidates/:id/booking', (req, res) => {
+app.delete('/api/candidates/:id/booking', async (req, res) => {
   const db = getDB();
   const cand = db.candidates.find(c => c.id === req.params.id);
   if (!cand) {
@@ -538,7 +546,7 @@ app.delete('/api/candidates/:id/booking', (req, res) => {
   cand.bookingStatus = 'pending';
   cand.interviewStatus = 'pending';
 
-  saveDB(db);
+  await saveDB(db);
   res.json({ success: true, message: 'تم إلغاء حجز الموعد بنجاح وأصبح الموعد متاحاً مجدداً' });
 });
 
@@ -568,7 +576,7 @@ app.get('/api/slots', (req, res) => {
 });
 
 // Batch Slot Generation (The user's key requirement)
-app.post('/api/slots/batch', (req, res) => {
+app.post('/api/slots/batch', async (req, res) => {
   const db = getDB();
   const {
     committeeId,
@@ -670,7 +678,7 @@ app.post('/api/slots/batch', (req, res) => {
   db.slotBatches.push(batchMeta);
   db.slots.push(...newSlots);
 
-  saveDB(db);
+  await saveDB(db);
 
   res.json({
     success: true,
@@ -682,7 +690,7 @@ app.post('/api/slots/batch', (req, res) => {
 });
 
 // Delete an available slot
-app.delete('/api/slots/:id', (req, res) => {
+app.delete('/api/slots/:id', async (req, res) => {
   const db = getDB();
   const idx = db.slots.findIndex(s => s.id === req.params.id);
   if (idx === -1) {
@@ -695,12 +703,12 @@ app.delete('/api/slots/:id', (req, res) => {
   }
 
   db.slots.splice(idx, 1);
-  saveDB(db);
+  await saveDB(db);
   res.json({ success: true, message: 'تم حذف الموعد بنجاح' });
 });
 
 // Toggle lock slot
-app.put('/api/slots/:id/toggle-lock', (req, res) => {
+app.put('/api/slots/:id/toggle-lock', async (req, res) => {
   const db = getDB();
   const slot = db.slots.find(s => s.id === req.params.id);
   if (!slot) {
@@ -712,7 +720,7 @@ app.put('/api/slots/:id/toggle-lock', (req, res) => {
   }
 
   slot.status = slot.status === 'locked' ? 'available' : 'locked';
-  saveDB(db);
+  await saveDB(db);
 
   res.json({
     success: true,
@@ -824,7 +832,7 @@ app.get('/api/public/slots/:slug', (req, res) => {
 });
 
 // Candidate Booking Execution
-app.post('/api/public/book', (req, res) => {
+app.post('/api/public/book', async (req, res) => {
   const db = getDB();
   const { candidateId, slotId, phone } = req.body;
 
@@ -886,7 +894,7 @@ app.post('/api/public/book', (req, res) => {
 
   const comm = db.committees.find(c => c.id === cand.assignedCommitteeId);
 
-  saveDB(db);
+  await saveDB(db);
 
   res.json({
     success: true,
