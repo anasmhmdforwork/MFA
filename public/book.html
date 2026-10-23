@@ -45,25 +45,25 @@
     <!-- Top Header -->
     <header class="hero-navy text-white border-b border-slate-800 shadow-md sticky top-0 z-40">
       <div class="max-w-5xl mx-auto px-3 sm:px-4 py-2.5 sm:py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-2.5 sm:gap-3 group min-w-0">
+        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
           <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black shadow-md flex-shrink-0">
             <i data-lucide="landmark" class="w-5 h-5 sm:w-6 sm:h-6 text-white"></i>
           </div>
           <div class="min-w-0">
-            <h1 class="font-black text-xs sm:text-base text-white group-hover:text-amber-400 transition truncate">
+            <h1 class="font-black text-xs sm:text-base text-white truncate">
               نموذج محاكاة وزارة الخارجية
             </h1>
             <p class="text-[10px] sm:text-[11px] text-amber-400 font-semibold truncate">
               بوابة حجز المقابلات الشخصية 2026
             </p>
           </div>
-        </a>
+        </div>
 
         <div class="flex items-center gap-2 flex-shrink-0 mr-2">
-          <a href="/login" class="px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] sm:text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition">
-            <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span>دخول الإدارة</span>
-          </a>
+          <div class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-slate-800/90 text-amber-400 text-[10px] sm:text-xs font-bold border border-slate-700/80 flex items-center gap-1.5 shadow-inner">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>بوابة حجز معتمدة</span>
+          </div>
         </div>
       </div>
     </header>
@@ -91,16 +91,12 @@
             </div>
           </div>
 
-          <!-- Committee Selector Dropdown if user wants to switch -->
-          <div class="w-full sm:w-auto flex-shrink-0 pt-2 sm:pt-0 border-t border-slate-100 sm:border-0">
-            <label class="block text-[10px] sm:text-[11px] font-bold text-slate-500 mb-1">تغيير القطاع:</label>
-            <select 
-              v-model="selectedCommitteeSlug" 
-              @change="changeCommittee"
-              class="w-full sm:w-auto text-xs font-bold bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 sm:py-2 text-slate-700 outline-none focus:border-amber-500 shadow-sm"
-            >
-              <option v-for="c in allCommittees" :key="c.slug" :value="c.slug">{{ c.shortName || c.name }} ({{ c.stats ? c.stats.total + ' مرشح' : '' }})</option>
-            </select>
+          <!-- Committee Candidates Count Badge (No sector switching allowed) -->
+          <div class="w-full sm:w-auto flex-shrink-0 pt-2 sm:pt-0 border-t border-slate-100 sm:border-0 flex items-center sm:flex-col sm:items-end justify-between sm:justify-center gap-1">
+            <span class="text-[10px] sm:text-[11px] font-bold text-slate-400">إجمالي المرشحين باللجنة</span>
+            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 font-bold font-mono text-xs sm:text-sm border border-slate-200 shadow-inner">
+              {{ candidates.length }} مرشحاً
+            </span>
           </div>
         </div>
       </div>
@@ -177,25 +173,8 @@
             </div>
           </div>
           
-          <div v-if="filteredCandidates.length === 0 && !crossCommitteeCandidate" class="p-6 text-center text-xs text-slate-500">
-            لم يتم العثور على اسم مطابق في هذا القطاع. تأكد من كتابة الاسم صحيحاً أو ابحث برقم هاتفك.
-          </div>
-
-          <!-- Cross-committee helpful detection -->
-          <div v-if="crossCommitteeCandidate" class="p-4 sm:p-5 bg-purple-50 border border-purple-200 rounded-xl text-center m-2">
-            <i data-lucide="info" class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 mx-auto mb-2"></i>
-            <h5 class="font-bold text-xs sm:text-sm text-purple-900 mb-1">
-              وجدنا بياناتك يا {{ crossCommitteeCandidate.arabicName }} مسجلة في لجنة:
-            </h5>
-            <div class="text-sm sm:text-base font-black text-purple-800 mb-3">
-              {{ crossCommitteeCandidate.assignedCommitteeName }}
-            </div>
-            <button 
-              @click="goToCrossCommittee(crossCommitteeCandidate)" 
-              class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition"
-            >
-              الانتقال إلى لجنة {{ crossCommitteeCandidate.assignedCommitteeName }} لحجز الموعد ↗
-            </button>
+          <div v-if="filteredCandidates.length === 0" class="p-6 text-center text-xs text-slate-500">
+            لم يتم العثور على اسم مطابق في كشف هذه اللجنة. يرجى التأكد من كتابة الاسم صحيحاً أو البحث برقم الهاتف المسجل.
           </div>
         </div>
 
@@ -562,11 +541,10 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 text-center py-4 sm:py-6 text-xs text-slate-500 mt-auto">
       <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
-        <span class="text-[11px] sm:text-xs">نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس • نظام المقابلات 2026</span>
-        <div class="flex items-center gap-3 text-[11px] sm:text-xs">
-          <a href="/" class="hover:text-slate-900">الرئيسية</a>
-          <span>•</span>
-          <a href="/login" class="hover:text-slate-900">دخول الإدارة</a>
+        <span class="text-[11px] sm:text-xs">نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس • بوابة حجز المقابلات الشخصية 2026</span>
+        <div class="flex items-center gap-1.5 text-[11px] sm:text-xs text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+          <span>حجز المقابلة مؤكد وفوري بالنظام</span>
         </div>
       </div>
     </footer>
@@ -590,39 +568,9 @@
         const slotToBook = ref(null);
         const isSubmitting = ref(false);
         const bookingSuccessData = ref(null);
-        const crossCommitteeCandidate = ref(null);
 
-        // Watch search to find across other committees if not in current
-        let searchDebounce = null;
         function onSearchInput() {
-          clearTimeout(searchDebounce);
-          crossCommitteeCandidate.value = null;
-          const q = candidateSearch.value.trim();
-          if (q.length >= 2 && filteredCandidates.value.length === 0) {
-            searchDebounce = setTimeout(async () => {
-              try {
-                const res = await fetch(`/api/public/search-candidate?query=${encodeURIComponent(q)}`).then(r => r.json());
-                if (res.success && res.candidates.length > 0) {
-                  const match = res.candidates.find(c => c.assignedCommitteeId !== (committee.value ? committee.value.id : ''));
-                  if (match) {
-                    crossCommitteeCandidate.value = match;
-                    nextTick(() => lucide.createIcons());
-                  }
-                }
-              } catch (e) {
-                console.error(e);
-              }
-            }, 150);
-          }
-        }
-
-        function goToCrossCommittee(match) {
-          const comm = allCommittees.value.find(c => c.id === match.assignedCommitteeId);
-          if (comm) {
-            selectedCommitteeSlug.value = comm.slug;
-            crossCommitteeCandidate.value = null;
-            changeCommittee();
-          }
+          // Reactive local search is handled strictly within current committee candidates
         }
 
         // Extract committee slug from URL or query param
@@ -881,9 +829,7 @@
           slotToBook,
           isSubmitting,
           bookingSuccessData,
-          crossCommitteeCandidate,
           onSearchInput,
-          goToCrossCommittee,
           totalSlotsCount,
           filteredDays,
           selectCandidate,

@@ -99,31 +99,45 @@ app.post('/api/auth/login', (req, res) => {
   const { username, password, committeeId, role } = req.body;
   const db = getDB();
 
-  let user = null;
+  const cleanUser = String(username || '').trim().toLowerCase();
+  const cleanPass = String(password || '').trim();
 
-  // 1. Direct login by role (Admin / Minister)
-  if (role === 'admin' || username === 'admin') {
-    user = db.users.find(u => u.role === 'admin');
-  } 
-  // 2. Direct login by committee ID
-  else if (committeeId) {
-    user = db.users.find(u => u.committeeId === committeeId);
-  } 
-  // 3. Login by username or slug
-  else if (username) {
-    const cleanUser = String(username).trim().toLowerCase();
-    user = db.users.find(u => u.username.toLowerCase() === cleanUser);
+  if (!cleanPass) {
+    return res.status(400).json({ success: false, message: 'يرجى إدخال كلمة المرور' });
   }
 
-  // Fallback if not found
+  let user = null;
+
+  // 1. Find by explicit username if provided
+  if (cleanUser) {
+    user = (db.users || []).find(u => 
+      u.username.toLowerCase() === cleanUser || 
+      (u.committeeSlug && u.committeeSlug.toLowerCase() === cleanUser) ||
+      (u.committeeId && u.committeeId.toLowerCase() === cleanUser)
+    );
+  } 
+  // 2. Or by committeeId
+  else if (committeeId) {
+    user = (db.users || []).find(u => u.committeeId === committeeId);
+  } 
+  // 3. Or by role admin
+  else if (role === 'admin') {
+    user = (db.users || []).find(u => u.role === 'admin');
+  }
+
   if (!user) {
-    user = db.users.find(u => u.role === 'admin') || db.users[0];
+    return res.status(401).json({ success: false, message: 'اسم المستخدم غير صحيح أو غير مسجل' });
+  }
+
+  // Strict Password Verification
+  if (user.password !== cleanPass) {
+    return res.status(401).json({ success: false, message: 'كلمة المرور غير صحيحة، يرجى إعادة المحاولة' });
   }
 
   // Find committee info if committee head
   let committee = null;
   if (user.committeeId) {
-    committee = db.committees.find(c => c.id === user.committeeId);
+    committee = (db.committees || []).find(c => c.id === user.committeeId);
   }
 
   res.json({

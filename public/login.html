@@ -23,12 +23,18 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    /* Prevent iOS auto-zoom */
+    @media (max-width: 640px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen flex flex-col justify-between antialiased selection:bg-amber-100 selection:text-amber-900">
 
   <!-- Top Hero Header -->
-  <header class="hero-gradient text-white py-6 sm:py-10 px-4 border-b border-slate-800 shadow-xl relative overflow-hidden">
+  <header class="hero-gradient text-white py-6 sm:py-9 px-4 border-b border-slate-800 shadow-xl relative overflow-hidden">
     <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#c5a059_1px,transparent_1px)] [background-size:16px_16px]"></div>
     
     <div class="max-w-4xl mx-auto text-center relative z-10">
@@ -41,7 +47,7 @@
         نموذج محاكاة <span class="gold-gradient-text">وزارة الخارجية المصرية</span>
       </h1>
       <p class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
-        بوابة الإدارة المركزية ورؤساء القطاعات لتنظيم وجدولة المقابلات الشخصية وتقييم المرشحين
+        بوابة تسجيل الدخول الرسمية للإدارة المركزية ورؤساء اللجان والقطاعات التخصصية
       </p>
     </div>
   </header>
@@ -50,27 +56,72 @@
   <main class="max-w-3xl w-full mx-auto px-3 sm:px-4 -mt-4 sm:-mt-6 mb-8 sm:mb-12 relative z-20 flex-1">
     
     <div class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-slate-200/90 shadow-2xl">
-      
-      <!-- Status Notice Banner -->
-      <div id="loading-banner" class="hidden mb-4 sm:mb-6 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold flex items-center justify-center gap-2">
-        <span class="w-4 h-4 border-2 border-amber-600 border-t-transparent rounded-full animate-spin inline-block"></span>
-        <span id="loading-text">جاري تسجيل الدخول وفتح لوحة التحكم...</span>
-      </div>
 
-      <div class="text-center mb-4 sm:mb-6">
+      <div class="text-center mb-5 sm:mb-7">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-50 text-amber-600 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-2.5 shadow-sm border border-amber-200">
+          <i data-lucide="lock" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        </div>
         <h2 class="text-lg sm:text-2xl font-black text-slate-900 mb-1">
-          اختر قطاعك أو صفتك للدخول المباشر
+          اختر قطاعك للدخول
         </h2>
         <p class="text-[11px] sm:text-sm text-slate-500 font-medium">
-          الدخول فوري ومباشر بنقرة واحدة بدون الحاجة لكلمة مرور
+          حدد لجنتك أو صفتك الإدارية وأدخل اسم المستخدم وكلمة المرور للوصول إلى لوحة التحكم
         </p>
+      </div>
+
+      <!-- Quick Direct Login Form -->
+      <div class="mb-6 bg-slate-50 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 border border-slate-200">
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="key-round" class="w-4 h-4 text-amber-600"></i>
+            <span class="text-xs font-bold text-slate-800">تسجيل دخول مباشر بأي حساب</span>
+          </div>
+          <span class="text-[10px] text-slate-500">أو اختر قطاعك من القائمة أدناه</span>
+        </div>
+        <form onsubmit="handleDirectFormLogin(event)" class="grid grid-cols-1 sm:grid-cols-5 gap-2 sm:gap-2.5">
+          <div class="sm:col-span-2">
+            <input 
+              id="quick-username" 
+              type="text" 
+              placeholder="اكتب اسم المستخدم..." 
+              dir="ltr" 
+              required
+              class="w-full text-xs font-bold bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-right shadow-sm"
+            >
+          </div>
+          <div class="sm:col-span-2 relative">
+            <input 
+              id="quick-password" 
+              type="password" 
+              placeholder="كلمة المرور..." 
+              dir="ltr" 
+              required
+              class="w-full text-xs font-bold bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-left shadow-sm"
+            >
+          </div>
+          <div class="sm:col-span-1">
+            <button 
+              type="submit" 
+              id="quick-submit-btn"
+              class="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-black shadow-md hover:shadow-lg transition flex items-center justify-center gap-1.5"
+            >
+              <span>دخول</span>
+              <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </form>
+        <div id="quick-error-msg" class="hidden mt-2 p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-[11px] font-bold flex items-center gap-1.5">
+          <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-rose-600 flex-shrink-0"></i>
+          <span id="quick-error-text"></span>
+        </div>
       </div>
 
       <div class="space-y-3">
         
         <!-- 1. GENERAL ADMINISTRATION BUTTON -->
         <button 
-          onclick="directLogin('admin', null, 'الإدارة العامة')"
+          type="button"
+          onclick="openLoginModal({ role: 'admin', title: 'الإدارة المركزية (رئيس النموذج)', color: '#d97706', icon: 'shield', badge: 'فريق الإدارة المركزية', desc: 'متابعة أداء كافة القطاعات الـ 9، كشف الكوادر، والتحكم في جميع المرشحين' })"
           class="w-full text-right p-3.5 sm:p-5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 hover:from-slate-900 hover:to-slate-800 text-white border-2 border-amber-500/40 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
         >
           <div class="flex items-center gap-3 sm:gap-4 min-w-0">
@@ -80,10 +131,10 @@
             <div class="min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="font-black text-sm sm:text-lg text-white group-hover:text-amber-400 transition-colors">
-                  الإدارة العامة
+                  الإدارة المركزية (رئيس النموذج)
                 </span>
                 <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
-                  فريق الإدارة المركزية
+                  لوحة التحكم العامة
                 </span>
               </div>
               <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5 sm:mt-1 font-normal line-clamp-1 sm:line-clamp-none">
@@ -93,7 +144,7 @@
           </div>
 
           <div class="flex items-center justify-end gap-1.5 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform flex-shrink-0 w-full sm:w-auto pt-2 sm:pt-0 border-t border-slate-800 sm:border-0">
-            <span>دخول الإدارة العامة</span>
+            <span>تسجيل الدخول</span>
             <i data-lucide="chevron-left" class="w-4 h-4"></i>
           </div>
         </button>
@@ -111,7 +162,8 @@
         
         <!-- 1. Crises & Political Planning -->
         <button 
-          onclick="directLogin(null, 'crises', 'مدير لجنة التخطيط السياسي وإدارة الأزمات')"
+          type="button"
+          onclick="openLoginModal({ committeeId: 'crises', title: 'لجنة البحث والتقديرات والتخطيط السياسي وإدارة الأزمات', color: '#e11d48', icon: 'shield-alert', badge: '83 مرشحاً', desc: 'مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات' })"
           class="w-full text-right p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white hover:bg-rose-50/50 border border-slate-200 hover:border-rose-300 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-2.5 group"
         >
           <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -122,7 +174,7 @@
               <div class="font-black text-xs sm:text-base text-slate-900 group-hover:text-rose-700 transition-colors leading-tight">
                 لجنة البحث والتقديرات والتخطيط السياسي وإدارة الأزمات
               </div>
-              <p class="hidden sm:block text-xs text-slate-500 mt-0.5">مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات</p>
+              
             </div>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
@@ -135,7 +187,8 @@
 
         <!-- 2. Economic Cooperation -->
         <button 
-          onclick="directLogin(null, 'economic', 'مدير لجنة التعاون الاقتصادي')"
+          type="button"
+          onclick="openLoginModal({ committeeId: 'economic', title: 'لجنة التعاون الاقتصادي متعدد الأطراف والإقليمي', color: '#059669', icon: 'trending-up', badge: '79 مرشحاً', desc: 'مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات' })"
           class="w-full text-right p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white hover:bg-emerald-50/50 border border-slate-200 hover:border-emerald-300 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-2.5 group"
         >
           <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -146,7 +199,7 @@
               <div class="font-black text-xs sm:text-base text-slate-900 group-hover:text-emerald-700 transition-colors leading-tight">
                 لجنة التعاون الاقتصادي متعدد الأطراف والإقليمي
               </div>
-              <p class="hidden sm:block text-xs text-slate-500 mt-0.5">مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات</p>
+              
             </div>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
@@ -159,7 +212,8 @@
 
         <!-- 3. International Security & Multilateral -->
         <button 
-          onclick="directLogin(null, 'security', 'مدير لجنة الشئون متعددة الأطراف والأمن الدولي')"
+          type="button"
+          onclick="openLoginModal({ committeeId: 'security', title: 'لجنة الشئون متعددة الأطراف والأمن الدولي', color: '#2563eb', icon: 'globe', badge: '75 مرشحاً', desc: 'مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات' })"
           class="w-full text-right p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white hover:bg-blue-50/50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-2.5 group"
         >
           <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -170,7 +224,7 @@
               <div class="font-black text-xs sm:text-base text-slate-900 group-hover:text-blue-700 transition-colors leading-tight">
                 لجنة الشئون متعددة الأطراف والأمن الدولي
               </div>
-              <p class="hidden sm:block text-xs text-slate-500 mt-0.5">مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات</p>
+              
             </div>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
@@ -183,7 +237,8 @@
 
         <!-- 4. Arab Affairs -->
         <button 
-          onclick="directLogin(null, 'arab', 'مدير لجنة الشئون العربية')"
+          type="button"
+          onclick="openLoginModal({ committeeId: 'arab', title: 'لجنة الشئون العربية', color: '#0891b2', icon: 'landmark', badge: '55 مرشحاً', desc: 'مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات' })"
           class="w-full text-right p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white hover:bg-cyan-50/50 border border-slate-200 hover:border-cyan-300 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-2.5 group"
         >
           <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -194,7 +249,7 @@
               <div class="font-black text-xs sm:text-base text-slate-900 group-hover:text-cyan-700 transition-colors leading-tight">
                 لجنة الشئون العربية
               </div>
-              <p class="hidden sm:block text-xs text-slate-500 mt-0.5">مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات</p>
+              
             </div>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
@@ -207,7 +262,8 @@
 
         <!-- 5. Climate & Environment -->
         <button 
-          onclick="directLogin(null, 'climate', 'مدير لجنة المناخ والبيئة والتنمية المستدامة')"
+          type="button"
+          onclick="openLoginModal({ committeeId: 'climate', title: 'لجنة المناخ والبيئة والتنمية المستدامة', color: '#16a34a', icon: 'leaf', badge: '43 مرشحاً', desc: 'مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات' })"
           class="w-full text-right p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white hover:bg-green-50/50 border border-slate-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-2.5 group"
         >
           <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -218,7 +274,7 @@
               <div class="font-black text-xs sm:text-base text-slate-900 group-hover:text-green-700 transition-colors leading-tight">
                 لجنة المناخ والبيئة والتنمية المستدامة
               </div>
-              <p class="hidden sm:block text-xs text-slate-500 mt-0.5">مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات</p>
+              
             </div>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
@@ -231,7 +287,8 @@
 
         <!-- 6. Digital Transformation -->
         <button 
-          onclick="directLogin(null, 'digital', 'مدير لجنة الاتصالات ونظم المعلومات والتحول الرقمي')"
+          type="button"
+          onclick="openLoginModal({ committeeId: 'digital', title: 'لجنة الاتصالات ونظم المعلومات والتحول الرقمي', color: '#9333ea', icon: 'cpu', badge: '37 مرشحاً', desc: 'مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات' })"
           class="w-full text-right p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white hover:bg-purple-50/50 border border-slate-200 hover:border-purple-300 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-2.5 group"
         >
           <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -242,7 +299,7 @@
               <div class="font-black text-xs sm:text-base text-slate-900 group-hover:text-purple-700 transition-colors leading-tight">
                 لجنة الاتصالات ونظم المعلومات والتحول الرقمي
               </div>
-              <p class="hidden sm:block text-xs text-slate-500 mt-0.5">مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات</p>
+              
             </div>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
@@ -255,7 +312,8 @@
 
         <!-- 7. Palestine -->
         <button 
-          onclick="directLogin(null, 'palestine', 'مدير لجنة فلسطين')"
+          type="button"
+          onclick="openLoginModal({ committeeId: 'palestine', title: 'لجنة فلسطين', color: '#be123c', icon: 'flag', badge: '30 مرشحاً', desc: 'مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات' })"
           class="w-full text-right p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white hover:bg-rose-50/50 border border-slate-200 hover:border-rose-300 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-2.5 group"
         >
           <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -266,7 +324,7 @@
               <div class="font-black text-xs sm:text-base text-slate-900 group-hover:text-rose-800 transition-colors leading-tight">
                 لجنة فلسطين
               </div>
-              <p class="hidden sm:block text-xs text-slate-500 mt-0.5">مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات</p>
+              
             </div>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
@@ -279,7 +337,8 @@
 
         <!-- 8. American Affairs -->
         <button 
-          onclick="directLogin(null, 'american', 'مدير لجنة الشئون الأمريكية')"
+          type="button"
+          onclick="openLoginModal({ committeeId: 'american', title: 'لجنة الشئون الأمريكية', color: '#0284c7', icon: 'building-2', badge: '24 مرشحاً', desc: 'مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات' })"
           class="w-full text-right p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white hover:bg-sky-50/50 border border-slate-200 hover:border-sky-300 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-2.5 group"
         >
           <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -290,7 +349,7 @@
               <div class="font-black text-xs sm:text-base text-slate-900 group-hover:text-sky-700 transition-colors leading-tight">
                 لجنة الشئون الأمريكية
               </div>
-              <p class="hidden sm:block text-xs text-slate-500 mt-0.5">مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات</p>
+              
             </div>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
@@ -303,7 +362,8 @@
 
         <!-- 9. African Affairs -->
         <button 
-          onclick="directLogin(null, 'africa', 'مدير لجنة شئون أفريقيا')"
+          type="button"
+          onclick="openLoginModal({ committeeId: 'africa', title: 'لجنة شئون أفريقيا', color: '#d97706', icon: 'compass', badge: '12 مرشحاً', desc: 'مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات' })"
           class="w-full text-right p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white hover:bg-amber-50/50 border border-slate-200 hover:border-amber-300 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-2.5 group"
         >
           <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -314,7 +374,7 @@
               <div class="font-black text-xs sm:text-base text-slate-900 group-hover:text-amber-700 transition-colors leading-tight">
                 لجنة شئون أفريقيا
               </div>
-              <p class="hidden sm:block text-xs text-slate-500 mt-0.5">مدير اللجنة: فتح كشف المرشحين وجدولة المقابلات والتقييمات</p>
+              
             </div>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
@@ -331,28 +391,203 @@
 
   </main>
 
+  <!-- AUTHENTICATION MODAL (BOTTOM-SHEET ON MOBILE) -->
+  <div id="auth-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-200">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-slate-200 shadow-2xl p-5 sm:p-7 relative max-h-[92vh] overflow-y-auto">
+      
+      <!-- Close button -->
+      <button type="button" onclick="closeLoginModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center absolute left-4 top-4 transition">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Modal Header -->
+      <div class="text-center mb-5">
+        <div id="modal-icon-container" class="w-12 h-12 rounded-2xl text-white flex items-center justify-center mx-auto mb-3 shadow-md bg-amber-600">
+          <i id="modal-icon" data-lucide="shield" class="w-6 h-6"></i>
+        </div>
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200 mb-1.5" id="modal-badge">
+          تسجيل الدخول
+        </div>
+        <h3 id="modal-title" class="text-base sm:text-lg font-black text-slate-900 leading-snug">
+          تسجيل الدخول
+        </h3>
+        <p id="modal-desc" class="text-xs text-slate-500 mt-1">
+          أدخل اسم المستخدم وكلمة المرور للدخول
+        </p>
+      </div>
+
+      <!-- Alert Banners inside Modal -->
+      <div id="modal-error" class="hidden mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold flex items-center gap-2">
+        <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 text-rose-600"></i>
+        <span id="modal-error-text">كلمة المرور غير صحيحة، يرجى المحاولة مرة أخرى</span>
+      </div>
+
+      <div id="modal-success" class="hidden mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
+        <i data-lucide="check-circle-2" class="w-4 h-4 flex-shrink-0 text-emerald-600"></i>
+        <span>تم التحقق بنجاح! جاري فتح لوحة التحكم...</span>
+      </div>
+
+      <!-- Form -->
+      <form onsubmit="submitModalLogin(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">اسم المستخدم (Username):</label>
+          <div class="relative">
+            <input 
+              id="modal-username" 
+              type="text" 
+              required
+              placeholder="اكتب اسم المستخدم..."
+              dir="ltr"
+              class="w-full pl-3 pr-10 py-2.5 sm:py-3 rounded-xl border border-slate-300 text-sm font-bold text-slate-800 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-right shadow-sm"
+            >
+            <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5 pointer-events-none"></i>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور (Password):</label>
+          <div class="relative">
+            <input 
+              id="modal-password" 
+              type="password" 
+              required
+              placeholder="••••••••"
+              dir="ltr"
+              class="w-full pl-10 pr-10 py-2.5 sm:py-3 rounded-xl border border-slate-300 text-sm font-bold text-slate-800 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-left shadow-sm"
+            >
+            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5 pointer-events-none"></i>
+            <button 
+              type="button" 
+              onclick="toggleModalPassword()"
+              class="absolute left-3 top-3 text-slate-400 hover:text-slate-600 transition p-0.5"
+            >
+              <i id="toggle-eye-icon" data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          id="modal-submit-btn"
+          class="w-full py-3 sm:py-3.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 mt-4"
+        >
+          <span id="modal-btn-text">دخول لوحة التحكم</span>
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        </button>
+
+        <button 
+          type="button" 
+          onclick="closeLoginModal()"
+          class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition text-center"
+        >
+          إلغاء واختيار قطاع آخر
+        </button>
+      </form>
+
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="bg-slate-900 text-slate-400 py-3 sm:py-4 border-t border-slate-800 text-center text-xs">
     <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-2">
       <span class="text-[11px] sm:text-xs">نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس • 2026</span>
-      <span class="text-[10px] sm:text-xs text-slate-500">منظومة إدارية مؤمنة بنظام الدخول المباشر السريع</span>
+      <span class="text-[10px] sm:text-xs text-slate-500">منظومة مؤمنة بكلمات مرور مخصصة لكل قطاع</span>
     </div>
   </footer>
 
   <script>
     lucide.createIcons();
 
-    async function directLogin(role, committeeId, displayName) {
-      const banner = document.getElementById('loading-banner');
-      const text = document.getElementById('loading-text');
+    let currentModalTarget = null;
 
-      banner.classList.remove('hidden');
-      text.innerText = `مرحباً بك! جاري فتح لوحة تحكم (${displayName})...`;
+    function openLoginModal(data) {
+      currentModalTarget = data;
+      const modal = document.getElementById('auth-modal');
+      const title = document.getElementById('modal-title');
+      const desc = document.getElementById('modal-desc');
+      const badge = document.getElementById('modal-badge');
+      const iconContainer = document.getElementById('modal-icon-container');
+      const usernameInput = document.getElementById('modal-username');
+      const passwordInput = document.getElementById('modal-password');
+      const errorBox = document.getElementById('modal-error');
+      const successBox = document.getElementById('modal-success');
+
+      title.innerText = data.title;
+      desc.innerText = data.desc || 'أدخل بيانات الاعتماد الرسمية للوصول إلى لوحة التحكم';
+      badge.innerText = data.badge || 'تسجيل الدخول';
+      iconContainer.style.backgroundColor = data.color || '#0f172a';
+      
+      // Update icon
+      iconContainer.innerHTML = `<i data-lucide="${data.icon || 'shield'}" class="w-6 h-6 text-white"></i>`;
+      
+      usernameInput.value = '';
+      usernameInput.placeholder = 'اكتب اسم المستخدم...';
+      passwordInput.value = '';
+      errorBox.classList.add('hidden');
+      successBox.classList.add('hidden');
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+
+      setTimeout(() => {
+        usernameInput.focus();
+      }, 150);
+    }
+
+    function closeLoginModal() {
+      const modal = document.getElementById('auth-modal');
+      modal.classList.add('hidden');
+      currentModalTarget = null;
+    }
+
+    // Close on backdrop click
+    document.getElementById('auth-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeLoginModal();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeLoginModal();
+      }
+    });
+
+    function toggleModalPassword() {
+      const passInput = document.getElementById('modal-password');
+      const eyeIcon = document.getElementById('toggle-eye-icon');
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        eyeIcon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        passInput.type = 'password';
+        eyeIcon.setAttribute('data-lucide', 'eye');
+      }
+      lucide.createIcons();
+    }
+
+    async function submitModalLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('modal-username').value.trim();
+      const password = document.getElementById('modal-password').value;
+      const errorBox = document.getElementById('modal-error');
+      const errorText = document.getElementById('modal-error-text');
+      const successBox = document.getElementById('modal-success');
+      const btn = document.getElementById('modal-submit-btn');
+      const btnText = document.getElementById('modal-btn-text');
+
+      errorBox.classList.add('hidden');
+      successBox.classList.add('hidden');
+      btn.disabled = true;
+      btnText.innerText = 'جاري التحقق من بيانات الدخول...';
 
       try {
-        const payload = {};
-        if (role) payload.role = role;
-        if (committeeId) payload.committeeId = committeeId;
+        const payload = { username, password };
+        if (currentModalTarget) {
+          if (currentModalTarget.role) payload.role = currentModalTarget.role;
+          if (currentModalTarget.committeeId) payload.committeeId = currentModalTarget.committeeId;
+        }
 
         const res = await fetch('/api/auth/login', {
           method: 'POST',
@@ -362,18 +597,65 @@
 
         const data = await res.json();
         if (data.success) {
+          successBox.classList.remove('hidden');
           localStorage.setItem('mofa_user', JSON.stringify(data.user));
           setTimeout(() => {
             window.location.href = '/dashboard';
-          }, 300);
+          }, 350);
         } else {
-          alert('تعذر تسجيل الدخول');
-          banner.classList.add('hidden');
+          errorText.innerText = data.message || 'كلمة المرور غير صحيحة، يرجى المحاولة مرة أخرى';
+          errorBox.classList.remove('hidden');
+          btn.disabled = false;
+          btnText.innerText = 'دخول لوحة التحكم';
+          const passInput = document.getElementById('modal-password');
+          passInput.focus();
+          passInput.select();
         }
       } catch (err) {
         console.error('Login error:', err);
-        alert('حدث خطأ في الاتصال بالخادم');
-        banner.classList.add('hidden');
+        errorText.innerText = 'حدث خطأ في الاتصال بالخادم، يرجى المحاولة لاحقاً';
+        errorBox.classList.remove('hidden');
+        btn.disabled = false;
+        btnText.innerText = 'دخول لوحة التحكم';
+      }
+    }
+
+    async function handleDirectFormLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('quick-username').value.trim();
+      const password = document.getElementById('quick-password').value;
+      const errorBox = document.getElementById('quick-error-msg');
+      const errorText = document.getElementById('quick-error-text');
+      const btn = document.getElementById('quick-submit-btn');
+
+      errorBox.classList.add('hidden');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>`;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem('mofa_user', JSON.stringify(data.user));
+          window.location.href = '/dashboard';
+        } else {
+          errorText.innerText = data.message || 'اسم المستخدم أو كلمة المرور غير صحيحة';
+          errorBox.classList.remove('hidden');
+          btn.disabled = false;
+          btn.innerHTML = `<span>دخول</span><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>`;
+          lucide.createIcons();
+        }
+      } catch (err) {
+        errorText.innerText = 'حدث خطأ في الاتصال بالخادم';
+        errorBox.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = `<span>دخول</span><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>`;
+        lucide.createIcons();
       }
     }
   </script>
