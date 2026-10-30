@@ -8,7 +8,9 @@ const SUPABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres.jwzsfndg
 let pool = null;
 let isConnected = false;
 let memoryCache = null;
-let lastSyncTime = 0;
+let lastCheckTime = 0;
+let lastKnownUpdatedAt = null;
+const CACHE_TTL_MS = 10000; // 10 seconds check window
 
 // Read local JSON file fallback
 function getLocalDB() {
@@ -28,9 +30,9 @@ function initSupabase() {
     pool = new Pool({
       connectionString: SUPABASE_URL,
       ssl: { rejectUnauthorized: false },
-      max: 10,
+      max: 5,
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 10000
+      connectionTimeoutMillis: 8000
     });
 
     pool.on('error', (err) => {
@@ -55,11 +57,18 @@ function initSupabase() {
   }
 }
 
-// Sync from Supabase into memory cache
+// Smart lightweight sync: ONLY checks updated_at timestamp (28 bytes) instead of downloading 2MB
 async function syncFromSupabase(force = false) {
   const now = Date.now();
-  if (!force && memoryCache && (now - lastSyncTime < 3000)) {
+  
+  // 1. If within TTL window and we already have memoryCache, return immediately with ZERO network egress
+  if (!force && memoryCache && (now - lastCheckTime < CACHE_TTL_MS)) {
     return memoryCache;
+  }
+
+  // Ensure local memory cache is populated from packaged db.json
+  if (!memoryCache) {
+    memoryCache = getLocalDB();
   }
 
   if (!pool) {
@@ -68,18 +77,35 @@ async function syncFromSupabase(force = false) {
 
   if (pool) {
     try {
-      const res = await pool.query("SELECT data FROM mofa_interview_db WHERE id = 'main'");
-      if (res.rows.length > 0 && res.rows[0].data) {
-        memoryCache = res.rows[0].data;
-        lastSyncTime = now;
-        // Try writing local file (will be ignored if read-only on Vercel)
-        try {
-          fs.writeFileSync(DB_FILE, JSON.stringify(memoryCache, null, 2), 'utf-8');
-        } catch (e) {}
-        return memoryCache;
+      lastCheckTime = now;
+
+      // 2. Query ONLY the updated_at timestamp (28 bytes!)
+      const timeCheck = await pool.query("SELECT updated_at FROM mofa_interview_db WHERE id = 'main'");
+      
+      if (timeCheck.rows.length > 0) {
+        const dbUpdatedAt = timeCheck.rows[0].updated_at ? new Date(timeCheck.rows[0].updated_at).toISOString() : null;
+
+        // 3. If timestamp has NOT changed and we already have memoryCache, DO NOT download data!
+        if (!force && memoryCache && lastKnownUpdatedAt && dbUpdatedAt === lastKnownUpdatedAt) {
+          // Up-to-date! Zero data egress consumed!
+          return memoryCache;
+        }
+
+        // 4. Timestamp is newer or first load: download data
+        const res = await pool.query("SELECT data, updated_at FROM mofa_interview_db WHERE id = 'main'");
+        if (res.rows.length > 0 && res.rows[0].data) {
+          memoryCache = res.rows[0].data;
+          lastKnownUpdatedAt = res.rows[0].updated_at ? new Date(res.rows[0].updated_at).toISOString() : null;
+          
+          try {
+            fs.writeFileSync(DB_FILE, JSON.stringify(memoryCache, null, 2), 'utf-8');
+          } catch (e) {}
+          
+          return memoryCache;
+        }
       }
     } catch (err) {
-      console.error('Error syncing from Supabase:', err.message);
+      console.error('Error syncing from Supabase (using fallback):', err.message);
     }
   }
 
@@ -101,7 +127,8 @@ function getDB() {
 // Save database (atomic local + awaited Supabase)
 async function saveDB(data) {
   memoryCache = data;
-  lastSyncTime = Date.now();
+  const now = Date.now();
+  lastCheckTime = now;
 
   // 1. Save locally to file atomically (if filesystem is writable)
   try {
@@ -112,13 +139,16 @@ async function saveDB(data) {
     // Read-only filesystem on Vercel serverless is normal and expected
   }
 
-  // 2. Await Supabase PostgreSQL write so Vercel does not terminate container early
+  // 2. Await Supabase PostgreSQL write and capture the new updated_at
   if (pool) {
     try {
-      await pool.query(
-        "INSERT INTO mofa_interview_db (id, data, updated_at) VALUES ('main', $1, NOW()) ON CONFLICT (id) DO UPDATE SET data = $1, updated_at = NOW()",
+      const res = await pool.query(
+        "INSERT INTO mofa_interview_db (id, data, updated_at) VALUES ('main', $1, NOW()) ON CONFLICT (id) DO UPDATE SET data = $1, updated_at = NOW() RETURNING updated_at",
         [JSON.stringify(data)]
       );
+      if (res.rows.length > 0 && res.rows[0].updated_at) {
+        lastKnownUpdatedAt = new Date(res.rows[0].updated_at).toISOString();
+      }
     } catch (err) {
       console.error('Supabase write error:', err.message);
     }
