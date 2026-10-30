@@ -29,12 +29,30 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Health check endpoint to verify live connection & database host
-app.get('/api/health', (req, res) => {
-  const p = dbLayer.getPool();
+app.get('/api/health', async (req, res) => {
+  let dbOk = false;
+  let errorMsg = null;
+  let candidateCount = 0;
+  try {
+    const p = dbLayer.getPool();
+    if (p) {
+      const q = await p.query('SELECT COUNT(*) FROM mofa_candidates');
+      dbOk = true;
+      candidateCount = parseInt(q.rows[0].count, 10);
+      dbLayer.setConnected(true);
+    }
+  } catch (err) {
+    errorMsg = err.message;
+    dbLayer.setConnected(false);
+  }
+
   res.json({
-    status: 'ok',
-    connected: dbLayer.isConnected(),
+    status: dbOk ? 'ok' : 'degraded',
+    connected: dbOk,
+    candidatesCount: candidateCount,
+    error: errorMsg,
     database: 'aws-1-eu-central-1 (New Clean Supabase)',
+    hasCustomEnvUrl: !!process.env.DATABASE_URL,
     timestamp: new Date().toISOString()
   });
 });

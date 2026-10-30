@@ -3,7 +3,28 @@ const fs = require('fs');
 const path = require('path');
 
 const DB_FILE = path.join(__dirname, 'data', 'db.json');
-const SUPABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres.bqxpkgzaxkyxvqvljvus:jU%26p%244u%23a%3FPK2.Y@aws-1-eu-central-1.pooler.supabase.com:5432/postgres';
+
+// Helper to sanitize any database URL and encode special characters in password
+function sanitizeConnectionString(connStr) {
+  if (!connStr || typeof connStr !== 'string') return connStr;
+  const trimmed = connStr.trim();
+  const m = trimmed.match(/^(postgres(?:ql)?:\/\/)([^:]+):(.*)@([^:/]+)(?::(\d+))?\/([^?#]+)(.*)$/);
+  if (!m) return trimmed;
+  const [, protocol, user, rawPass, host, port, db, extra] = m;
+  let plain = rawPass;
+  try {
+    plain = decodeURIComponent(rawPass);
+  } catch (e) {
+    plain = rawPass;
+  }
+  const safePass = encodeURIComponent(plain);
+  const portPart = port ? `:${port}` : '';
+  const extraPart = extra || '';
+  return `${protocol}${user}:${safePass}@${host}${portPart}/${db}${extraPart}`;
+}
+
+const DEFAULT_URL = 'postgresql://postgres.bqxpkgzaxkyxvqvljvus:jU%26p%244u%23a%3FPK2.Y@aws-1-eu-central-1.pooler.supabase.com:5432/postgres';
+const SUPABASE_URL = sanitizeConnectionString(process.env.DATABASE_URL) || DEFAULT_URL;
 
 let pool = null;
 let isConnected = false;
@@ -48,7 +69,7 @@ function initSupabase() {
         isConnected = true;
         console.log('⚡ Connected to Supabase Cloud PostgreSQL successfully!');
         release();
-        syncFromSupabase(true);
+        syncFromSupabase(true).catch(() => {});
       }
     });
   } catch (e) {
@@ -83,11 +104,11 @@ async function syncFromSupabase(force = false) {
       const timeCheck = await pool.query("SELECT updated_at FROM mofa_interview_db WHERE id = 'main'");
       
       if (timeCheck.rows.length > 0) {
+        isConnected = true;
         const dbUpdatedAt = timeCheck.rows[0].updated_at ? new Date(timeCheck.rows[0].updated_at).toISOString() : null;
 
         // 3. If timestamp has NOT changed and we already have memoryCache, DO NOT download data!
         if (!force && memoryCache && lastKnownUpdatedAt && dbUpdatedAt === lastKnownUpdatedAt) {
-          // Up-to-date! Zero data egress consumed!
           return memoryCache;
         }
 
@@ -106,6 +127,7 @@ async function syncFromSupabase(force = false) {
       }
     } catch (err) {
       console.error('Error syncing from Supabase (using fallback):', err.message);
+      isConnected = false;
     }
   }
 
@@ -146,11 +168,13 @@ async function saveDB(data) {
         "INSERT INTO mofa_interview_db (id, data, updated_at) VALUES ('main', $1, NOW()) ON CONFLICT (id) DO UPDATE SET data = $1, updated_at = NOW() RETURNING updated_at",
         [JSON.stringify(data)]
       );
+      isConnected = true;
       if (res.rows.length > 0 && res.rows[0].updated_at) {
         lastKnownUpdatedAt = new Date(res.rows[0].updated_at).toISOString();
       }
     } catch (err) {
       console.error('Supabase write error:', err.message);
+      isConnected = false;
     }
   }
 
@@ -164,5 +188,6 @@ module.exports = {
   saveDB,
   syncFromSupabase,
   isConnected: () => isConnected,
+  setConnected: (val) => { isConnected = val; },
   getPool: () => pool
 };
