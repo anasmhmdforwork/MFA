@@ -2,7 +2,7 @@ const { Client } = require('pg');
 const fs = require('fs');
 const path = require('path');
 
-const SUPABASE_CONN_STR = process.env.DATABASE_URL || 'postgresql://postgres.jwzsfndgzblwkqmryvuu:jU%26p%244u%23a%3FPK2.Y@aws-0-eu-west-1.pooler.supabase.com:5432/postgres';
+const SUPABASE_CONN_STR = process.env.DATABASE_URL || 'postgresql://postgres.bqxpkgzaxkyxvqvljvus:jU%26p%244u%23a%3FPK2.Y@aws-1-eu-central-1.pooler.supabase.com:5432/postgres';
 
 const client = new Client({
   connectionString: SUPABASE_CONN_STR,

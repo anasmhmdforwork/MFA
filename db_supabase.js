@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const DB_FILE = path.join(__dirname, 'data', 'db.json');
-const SUPABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres.jwzsfndgzblwkqmryvuu:jU%26p%244u%23a%3FPK2.Y@aws-0-eu-west-1.pooler.supabase.com:5432/postgres';
+const SUPABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres.bqxpkgzaxkyxvqvljvus:jU%26p%244u%23a%3FPK2.Y@aws-1-eu-central-1.pooler.supabase.com:5432/postgres';
 
 let pool = null;
 let isConnected = false;
