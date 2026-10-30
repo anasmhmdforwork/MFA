@@ -17,25 +17,36 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, 'data', 'db.json');
 
+// Database Layer (Supabase PostgreSQL with fallback to local db.json)
+const dbLayer = require('./db_supabase');
+const getDB = dbLayer.getDB;
+const saveDB = dbLayer.saveDB;
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Health check endpoint to verify live connection & database host
+app.get('/api/health', (req, res) => {
+  const p = dbLayer.getPool();
+  res.json({
+    status: 'ok',
+    connected: dbLayer.isConnected(),
+    database: 'aws-1-eu-central-1 (New Clean Supabase)',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Synchronize with Supabase Cloud for serverless environments (Vercel)
 app.use(async (req, res, next) => {
-  if (req.path.startsWith('/api/')) {
+  if (req.path.startsWith('/api/') && req.path !== '/api/health') {
     await dbLayer.syncFromSupabase();
   }
   next();
 });
 app.use(express.static(path.join(__dirname, 'public'), { index: false }));
-
-// Database Layer (Supabase PostgreSQL with fallback to local db.json)
-const dbLayer = require('./db_supabase');
-const getDB = dbLayer.getDB;
-const saveDB = dbLayer.saveDB;
 
 // Arabic Day Names mapping
 
