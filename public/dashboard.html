@@ -5680,9 +5680,11 @@
           <div class="flex items-center gap-2 pt-4 border-t border-slate-100">
             <button 
               type="submit" 
-              class="flex-1 py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs shadow-md transition cursor-pointer"
+              :disabled="isCreatingEvent"
+              class="flex-1 py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-black text-xs shadow-md transition cursor-pointer flex items-center justify-center gap-2"
             >
-              إطلاق الفعالية وإتاحتها للجميع الآن 🚀
+              <i v-if="isCreatingEvent" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+              <span>{{ isCreatingEvent ? 'جاري إطلاق الفعالية...' : 'إطلاق الفعالية وإتاحتها للجميع الآن 🚀' }}</span>
             </button>
             <button 
               type="button" 
@@ -6546,11 +6548,15 @@
           nextTick(() => lucide.createIcons());
         }
 
+        const isCreatingEvent = ref(false);
+
         async function createEvent() {
+          if (isCreatingEvent.value) return;
           if (!newEventForm.value.title || !newEventForm.value.date) {
             alert('يرجى ملء جميع الحقول المطلوبة');
             return;
           }
+          isCreatingEvent.value = true;
           try {
             const res = await fetch('/api/events', {
               method: 'POST',
@@ -6571,6 +6577,8 @@
             }
           } catch (e) {
             alert('حدث خطأ أثناء الاتصال بالخادم');
+          } finally {
+            isCreatingEvent.value = false;
           }
         }
 
@@ -8438,6 +8446,7 @@
           newEventForm,
           fetchDashboardEvents,
           openCreateEventModal,
+          isCreatingEvent,
           createEvent,
           toggleEventStatus,
           deleteEvent,

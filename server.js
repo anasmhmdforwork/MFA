@@ -2147,6 +2147,16 @@ app.post('/api/events', async (req, res) => {
     return res.status(400).json({ success: false, message: 'يرجى إدخال اسم الفعالية وتاريخ الانعقاد' });
   }
 
+  // Prevent rapid double-creation / duplicate clicks
+  const cleanTitle = String(title).trim().toLowerCase();
+  const recentDuplicate = db.events.find(e => 
+    e.title.toLowerCase().trim() === cleanTitle && 
+    (Date.now() - new Date(e.createdAt).getTime()) < 8000
+  );
+  if (recentDuplicate) {
+    return res.json({ success: true, message: 'تم إطلاق الفعالية بنجاح!', event: recentDuplicate });
+  }
+
   const newEvent = {
     id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
     title: String(title).trim(),

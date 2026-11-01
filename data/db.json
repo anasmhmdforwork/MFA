@@ -9891,6 +9891,24 @@
       "directorateType": "academic"
     }
   ],
+  "events": [
+    {
+      "id": "evt_1793564048124_0f1z",
+      "date": "2026-11-08",
+      "time": "09:00",
+      "type": "workshop",
+      "notes": "التجمع أمام البوابة الرئيسية وإحضار إثبات الشخصية",
+      "title": "انغقلة",
+      "isOpen": true,
+      "capacity": 50,
+      "location": "مقر وزارة الخارجية المصرية - الحي الحكومي، العاصمة الإدارية الجديدة",
+      "createdAt": "2026-11-01T20:14:08.124Z",
+      "createdBy": "organization",
+      "dressCode": "زي رسمي دبلوماسي كامل (بدلة كاملة)",
+      "description": "",
+      "createdByName": "إدارة التنظيم والموارد البشرية المركزية"
+    }
+  ],
   "quizzes": [
     {
       "id": "quiz_1792760791043_go9d7",
@@ -23443,28 +23461,19 @@
       "grade": "الفرقة الثانية",
       "phone": "01107850472",
       "skills": "بعرف أتعامل مع الناس وأتواصل معاهم كويس، وبحب الشغل الجماعي وتبادل الأفكار. عندي اهتمام بمجال الـ PR وتنظيم الإيفنتات، وبحب أشارك بأفكار جديدة وأساعد في التخطيط والتنظيم. كمان بحب أتعلم حاجات جديدة وأطور من نفسي، وعندي استعداد أتحمل المسؤولية وأشتغل مع التيم علشان نطلع بأحسن نتيجة.",
-      "slotId": "slot_428_mvl59y2d",
+      "slotId": null,
       "faculty": "اعلام",
       "fullName": "Ahlam Mohammed Basuony mohamed  Abdalla",
       "priority": 3,
       "roleType": null,
-      "slotInfo": {
-        "date": "2026-10-30",
-        "type": "online",
-        "dayNameAr": "الجمعة",
-        "endTime24": "22:00",
-        "dateDisplay": "الجمعة 30 أكتوبر 2026",
-        "startTime24": "21:45",
-        "timeDisplay": "9:45 م - 10:00 م",
-        "locationOrLink": "https://meet.google.com/sgi-foxr-xrn"
-      },
+      "slotInfo": null,
       "topSkill": "الانتباه للتفاصيل",
       "arabicName": "احلام محمد بسيوني محمد عبدالله",
       "evaluation": {
-        "notes": "",
+        "notes": " [تم التحويل من التحول الرقمي إلى فلسطين: نقص عدد]",
         "score": null,
         "attended": false,
-        "decision": "pending",
+        "decision": "transferred",
         "evaluatedAt": null,
         "englishScore": null,
         "knowledgeScore": null,
@@ -23476,7 +23485,7 @@
       "motivation": "اللي شجعني أقدم هو إني حابة أطور من نفسي وأكتسب خبرات جديدة، وأتعرف على مجالات مختلفة وأتعامل مع ناس عندهم نفس الشغف بالتعلم والتطور. كمان حابة أخرج من منطقة الراحة بتاعتي، وأقوي مهاراتي في التواصل والبحث والعمل ضمن فريق، وأستفيد من التجربة دي في تحديد مستقبلي المهني بشكل أوضح.",
       "university": "جامعة أخرى",
       "englishLevel": "متوسط",
-      "bookingStatus": "booked",
+      "bookingStatus": "pending",
       "subDepartment": null,
       "allPreferences": "الاتصالات ونظم المعلومات والتحول الرقمي",
       "pastActivities": "نعم، في تنظيم فعاليات تطوعية",
@@ -23485,12 +23494,25 @@
       "firstPreference": "الاتصالات ونظم المعلومات والتحول الرقمي",
       "interviewStatus": "pending",
       "trackPreference": "الإعلامي",
-      "transferHistory": [],
+      "transferHistory": [
+        {
+          "id": "transfer_1793564325979",
+          "reason": "نقص عدد",
+          "timestamp": "2026-11-01T20:18:45.979Z",
+          "candidateId": "c_241",
+          "candidateName": "احلام محمد بسيوني محمد عبدالله",
+          "toCommitteeId": "palestine",
+          "transferredBy": "مدير لجنة الاتصالات والتحول الرقمي",
+          "fromCommitteeId": "digital",
+          "toCommitteeName": "فلسطين",
+          "fromCommitteeName": "الاتصالات ونظم المعلومات والتحول الرقمي"
+        }
+      ],
       "activitiesDetails": "شاركت في أنشطة وفعاليات تطوعية من خلال فريق YLY التابع لوزارة الشباب والرياضة، وكمان حضرت مؤتمرات وفعاليات في الجامعة وشاركت في تجارب مرتبطة بمجال الميديا. التجارب دي ساعدتني أتعرف على ناس جديدة، وأطور مهارات التواصل والعمل الجماعي، وأفهم أكتر طبيعة تنظيم الفعاليات والتعامل مع الجمهور. كمان عندي اهتمام بالجانب الإعلامي والعلاقات العامة، وحابة أستغل الفرصة دي علشان أكتسب خبرات أكتر وأطور من نفسي.",
       "reasonsForSectors": "أنا حابة أنضم للقطاعات دي لأن عندي اهتمام بالتواصل مع الناس، وفهم القضايا المختلفة، ومتابعة الأحداث والتطورات اللي بتحصل حوالينا. كمان حابة أتعلم أكتر عن العلاقات الدولية والعمل الدبلوماسي، وأطور مهاراتي في البحث والتواصل والعمل الجماعي. شايفة إن الانضمام للقطاعات دي هيديني فرصة أكتسب خبرات جديدة، وأوسع معرفتي، وأربط دراستي في كلية الإعلام بتطبيقات عملية تفيدني في مستقبلي المهني.",
       "weeklyEvaluations": {},
       "lectureEvaluations": {},
-      "assignedCommitteeId": "digital",
+      "assignedCommitteeId": "palestine",
       "originalCommitteeId": "digital",
       "attendanceCommitment": "نعم"
     },
@@ -36718,6 +36740,24 @@
       "durationMinutes": 15
     }
   ],
+  "eventBookings": [
+    {
+      "id": "bk_1793564121089_3nsq",
+      "name": "انس محمد",
+      "email": "anas.mhmd.khairy@gmail.com",
+      "phone": "01146325762",
+      "status": "confirmed",
+      "userId": "c_439_mvkwa9xn",
+      "eventId": "evt_1793564048124_0f1z",
+      "faculty": "—",
+      "bookedAt": "2026-11-01T20:15:21.089Z",
+      "userType": "delegate",
+      "roleTitle": "مندوب (Delegate)",
+      "university": "جامعة السويس",
+      "committeeId": "economic",
+      "committeeName": "التعاون الاقتصادي"
+    }
+  ],
   "quizSubmissions": [
     {
       "id": "sub_1792760801736_qqcfr",
@@ -36924,6 +36964,18 @@
       "timestamp": "2026-11-01T19:26:29.954Z",
       "candidateId": "c_296",
       "candidateName": "يارا احمد سيد محمود محمد",
+      "toCommitteeId": "palestine",
+      "transferredBy": "مدير لجنة الاتصالات والتحول الرقمي",
+      "fromCommitteeId": "digital",
+      "toCommitteeName": "فلسطين",
+      "fromCommitteeName": "الاتصالات ونظم المعلومات والتحول الرقمي"
+    },
+    {
+      "id": "transfer_1793564325979",
+      "reason": "نقص عدد",
+      "timestamp": "2026-11-01T20:18:45.979Z",
+      "candidateId": "c_241",
+      "candidateName": "احلام محمد بسيوني محمد عبدالله",
       "toCommitteeId": "palestine",
       "transferredBy": "مدير لجنة الاتصالات والتحول الرقمي",
       "fromCommitteeId": "digital",
@@ -43438,41 +43490,5 @@
         "firstPreference": "التعاون الاقتصادي متعدد الأطراف والإقليمي"
       }
     ]
-  },
-  "events": [
-    {
-      "id": "evt_mfa_capital_visit",
-      "title": "زيارة رسمية إلى ديوان عام وزارة الخارجية المصرية بالعاصمة الإدارية",
-      "type": "visit",
-      "description": "زيارة ميدانية وتدريبية لقطاعات وزارة الخارجية المصرية، حضور جلسات محاكاة مصغرة ولقاء تفاعلي مع دبلوماسيين مصريين.",
-      "date": "2026-11-20",
-      "time": "09:00",
-      "location": "مقر وزارة الخارجية المصرية - الحي الدبلوماسي والحكومي، العاصمة الإدارية الجديدة",
-      "capacity": 45,
-      "isOpen": true,
-      "dressCode": "زي رسمي دبلوماسي كامل (بدلة كاملة للشباب / فورمال للبنات)",
-      "notes": "التجمع الساعة 7:30 صباحاً أمام البوابة الرئيسية لجامعة السويس. يرجى إحضار بطاقة الرقم القومي أو إثبات الشخصية.",
-      "createdBy": "hr",
-      "createdByName": "إدارة التنظيم والموارد البشرية المركزية",
-      "createdAt": "2026-11-01T20:06:49.318Z"
-    }
-  ],
-  "eventBookings": [
-    {
-      "id": "bk_sample_1",
-      "eventId": "evt_mfa_capital_visit",
-      "userId": "c_3",
-      "userType": "member",
-      "roleTitle": "عضو تنظيم وموارد بشرية",
-      "name": "مصطفى محمد علي",
-      "committeeId": "climate",
-      "committeeName": "المناخ والبيئة والتنمية المستدامة",
-      "phone": "01142793514",
-      "email": "mostafa@example.com",
-      "faculty": "السياسة والاقتصاد",
-      "university": "جامعة السويس",
-      "bookedAt": "2026-11-01T20:06:49.318Z",
-      "status": "confirmed"
-    }
-  ]
+  }
 }

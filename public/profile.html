@@ -187,36 +187,6 @@
           </div>
         </div>
 
-        <!-- 2. WhatsApp Official Group Banner (If Committee Link Exists) -->
-        <div v-if="candidate.whatsappGroupLink" class="bg-gradient-to-r from-emerald-950/70 via-emerald-900/40 to-slate-900/80 border border-emerald-500/40 rounded-3xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
-            <div class="flex items-center gap-3.5">
-              <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 border border-emerald-500/30">
-                <i data-lucide="message-circle" class="w-6 h-6"></i>
-              </div>
-              <div>
-                <h3 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
-                  <span>المجموعة الرسمية للجنة على واتساب</span>
-                  <span class="px-2 py-0.5 rounded-md bg-emerald-500/30 text-emerald-200 text-[10px] font-bold">معتمد</span>
-                </h3>
-                <p class="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                  انضم الآن إلى جروب واتساب <strong>{{ candidate.committeeName }}</strong> لمتابعة التكليفات الأكاديمية ومواعيد المحاضرات والأنشطة.
-                </p>
-              </div>
-            </div>
-
-            <a 
-              :href="candidate.whatsappGroupLink" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-black shadow-lg hover:shadow-emerald-600/30 transition flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer"
-            >
-              <i data-lucide="send" class="w-4 h-4"></i>
-              <span>انضمام إلى جروب الواتساب</span>
-            </a>
-          </div>
-        </div>
-
         <!-- ============================================== -->
         <!-- UPCOMING EVENTS & VISITS (1-Click Booking) -->
         <!-- ============================================== -->
