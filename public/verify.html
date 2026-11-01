@@ -145,6 +145,24 @@
             </div>
           </div>
 
+          <!-- Event Boarding Pass Verification Section (If Ticket Detected) -->
+          <div v-if="result.verification.ticketDetails" class="p-4 rounded-2xl bg-amber-950/40 border border-amber-500/50 text-right space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                تصريح دخول وتذكرة فعالية رسمية موثقة
+              </span>
+              <span class="font-mono text-xs font-black text-amber-300">{{ result.verification.ticketDetails.ticketCode }}</span>
+            </div>
+            <h4 class="text-sm font-black text-white leading-snug">{{ result.verification.ticketDetails.eventTitle }}</h4>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-slate-300 gap-1 pt-1">
+              <span>{{ result.verification.ticketDetails.eventDate }} ({{ result.verification.ticketDetails.eventTime }}) • {{ result.verification.ticketDetails.eventLocation }}</span>
+              <span class="font-bold flex items-center gap-1" :class="result.verification.ticketDetails.attendanceStatus === 'attended' ? 'text-emerald-400' : 'text-amber-400'">
+                <i :data-lucide="result.verification.ticketDetails.attendanceStatus === 'attended' ? 'badge-check' : 'clock'" class="w-3.5 h-3.5"></i>
+                <span>{{ result.verification.ticketDetails.attendanceStatus === 'attended' ? 'تم تسجيل الحضور وتأكيد الدخول رسمياً' : 'تذكرة مؤكدة وسارية المفعول' }}</span>
+              </span>
+            </div>
+          </div>
+
           <!-- Official Verification Notice -->
           <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-start gap-3">
             <i data-lucide="award" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
@@ -223,7 +241,7 @@
         const inputCode = ref('');
         const currentDate = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
 
-        const verifyCode = async (code) => {
+        const verifyCode = async (code, eventId, ticketCode) => {
           if (!code || !code.trim()) return;
           loading.value = true;
           error.value = null;
@@ -231,7 +249,13 @@
 
           try {
             const clean = encodeURIComponent(code.trim());
-            const res = await fetch('/api/verify/' + clean);
+            let url = '/api/verify/' + clean;
+            const q = [];
+            if (eventId) q.push('event=' + encodeURIComponent(eventId));
+            if (ticketCode) q.push('ticket=' + encodeURIComponent(ticketCode));
+            if (q.length) url += '?' + q.join('&');
+
+            const res = await fetch(url);
             const data = await res.json();
             if (data.success && data.valid) {
               result.value = data;

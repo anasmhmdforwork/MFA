@@ -340,10 +340,19 @@
 
           <div class="flex items-center gap-2 flex-shrink-0">
             <!-- If Booked -->
-            <div v-if="activeUpcomingEvent.myBooking" class="flex items-center gap-2 bg-emerald-950/80 border border-emerald-500/40 px-3.5 py-2 rounded-xl">
-              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-              <span class="text-xs font-bold text-emerald-300">تم حجز مقعدك بالفعالية</span>
-              <button @click="cancelBoardEventBooking(activeUpcomingEvent)" class="text-[11px] text-rose-300 hover:underline mr-2 font-bold cursor-pointer">إلغاء</button>
+            <div v-if="activeUpcomingEvent.myBooking" class="flex items-center gap-2 bg-emerald-950/80 border border-emerald-500/40 px-3.5 py-2 rounded-xl flex-wrap">
+              <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                <span>تم تأكيد حجز مقعدك</span>
+              </div>
+              <button 
+                @click="openBoardEventTicket(activeUpcomingEvent)" 
+                class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-bold hover:bg-amber-500/30 flex items-center gap-1 cursor-pointer transition shadow-sm"
+              >
+                <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
+                <span>تذكرتي الرسمية (QR)</span>
+              </button>
+              <button @click="cancelBoardEventBooking(activeUpcomingEvent)" class="text-[11px] text-rose-300 hover:underline mr-1 font-bold cursor-pointer">إلغاء</button>
             </div>
 
             <!-- If Not Booked -->
@@ -6665,6 +6674,206 @@
       </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- MODAL 3: LIVE QR CAMERA CHECK-IN DESK          -->
+    <!-- ============================================== -->
+    <div v-if="showQrScannerModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 text-right">
+      <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl max-w-xl w-full p-5 sm:p-7 border-2 border-amber-500/40 shadow-2xl space-y-4 max-h-[95vh] overflow-y-auto">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+              <i data-lucide="scan-line" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-black text-white">مكتب التحضير الميداني الذكي بالـ QR</h3>
+              <p class="text-[11px] text-slate-400 font-mono">Instant Camera & Ticket Check-In Desk</p>
+            </div>
+          </div>
+          <button 
+            @click="closeQrScannerModal" 
+            class="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Target Scope Selectors (Optional target selection) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1">الفعالية أو الزيارة المستهدفة:</label>
+            <select 
+              v-model="qrCheckinTargetEventId" 
+              class="w-full bg-slate-950 text-amber-300 border border-slate-800 rounded-xl p-2.5 text-xs outline-none focus:border-amber-400 font-bold"
+            >
+              <option value="">كشف تلقائي من كود التذكرة (تلقائي ذكي)</option>
+              <option v-for="ev in dashboardEvents" :key="ev.id" :value="ev.id">{{ ev.title }} ({{ ev.date }})</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1">أو الجلسة / المحاضرة الشهرية:</label>
+            <select 
+              v-model="qrCheckinTargetSessionId" 
+              class="w-full bg-slate-950 text-amber-300 border border-slate-800 rounded-xl p-2.5 text-xs outline-none focus:border-amber-400 font-bold"
+            >
+              <option value="">بدون ربط بجلسة تشغيل</option>
+              <option v-for="s in operationsSessions" :key="s.id" :value="s.id">{{ s.title }} ({{ s.date }})</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Camera Scanner Viewport -->
+        <div class="bg-black/60 rounded-2xl p-3 border border-slate-800 text-center relative overflow-hidden">
+          <div id="qr-camera-reader" class="w-full max-w-[340px] mx-auto rounded-xl overflow-hidden bg-slate-950 min-h-[220px]"></div>
+          
+          <div class="flex items-center justify-between text-[11px] text-slate-400 mt-2 px-2">
+            <span class="flex items-center gap-1.5 text-emerald-400 font-bold" v-if="isCameraScanning">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              الكاميرا نشطة وجاهزة للمسح
+            </span>
+            <span class="text-amber-400" v-else>
+              جاري تجهيز الكاميرا أو يمكنك الإدخال يدوياً
+            </span>
+            <button 
+              @click="startQrScannerCamera" 
+              class="text-amber-300 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+            >
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>إعادة تشغيل الكاميرا</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Manual Input / Scanner Gun Input -->
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-300">أو أدخل كود العضوية / رقم التذكرة / امسح بجهاز الباركود:</label>
+          <div class="flex items-center gap-2">
+            <input 
+              v-model="qrScannerInput" 
+              @keyup.enter="handleManualQrCheckin"
+              type="text" 
+              placeholder="مثال: TKT-B1A4-042 أو MFA-26-ECO-D-042 أو الرابط"
+              class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 font-mono outline-none focus:border-amber-400"
+            >
+            <button 
+              @click="handleManualQrCheckin" 
+              class="btn-gold px-4 py-2.5 rounded-xl text-xs font-black flex items-center gap-1.5 cursor-pointer shadow-md"
+            >
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>تأكيد الحضور</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Check-in Success Result Box -->
+        <div v-if="qrCheckinResult" class="p-4 rounded-2xl bg-emerald-950/60 border border-emerald-500/50 space-y-2 animate-fadeIn">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-emerald-300 font-bold text-xs">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
+              <span>{{ qrCheckinResult.message }}</span>
+            </div>
+            <span class="font-mono text-[10px] text-emerald-400/80 bg-emerald-900/60 px-2 py-0.5 rounded-md">
+              {{ qrCheckinResult.candidate.checkedInAt }}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs pt-1 text-slate-200">
+            <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">الاسم:</span>
+              <span class="font-bold truncate block">{{ qrCheckinResult.candidate.name }}</span>
+            </div>
+            <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">كود العضوية:</span>
+              <span class="font-mono text-amber-300 font-bold truncate block">{{ qrCheckinResult.candidate.diplomaticId }}</span>
+            </div>
+            <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">اللجنة / التخصص:</span>
+              <span class="font-bold truncate block">{{ qrCheckinResult.candidate.committeeName }}</span>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-300 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800 flex items-center justify-between">
+            <span>الهدف المسجل: <strong class="text-amber-300">{{ qrCheckinResult.target }}</strong></span>
+            <span class="text-emerald-400 font-bold">مؤشر الجدارة: {{ qrCheckinResult.candidate.cpi?.score || 85 }}/100</span>
+          </div>
+        </div>
+
+        <!-- Check-in Error Box -->
+        <div v-if="qrCheckinError" class="p-3.5 rounded-2xl bg-rose-950/60 border border-rose-500/50 flex items-center gap-2.5 text-xs text-rose-200 animate-fadeIn">
+          <i data-lucide="alert-triangle" class="w-5 h-5 text-rose-400 flex-shrink-0"></i>
+          <span>{{ qrCheckinError }}</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 4: BOARD EVENT ENTRY BOARDING PASS       -->
+    <!-- ============================================== -->
+    <div v-if="showBoardTicketModal && selectedBoardTicket" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 text-center">
+      <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl max-w-lg w-full p-6 sm:p-8 gold-card-border shadow-2xl relative space-y-5">
+        
+        <button 
+          @click="showBoardTicketModal = false" 
+          class="absolute top-4 left-4 w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition cursor-pointer"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="space-y-1.5">
+          <img src="/logo.jpg" alt="Logo" class="w-14 h-14 rounded-full mx-auto border-2 border-amber-400 shadow-lg object-cover">
+          <span class="text-[10px] font-black text-amber-400 block uppercase tracking-wider">نموذج محاكاة وزارة الخارجية • High Board Pass</span>
+          <h2 class="text-xl font-black text-white">تصريح دخول فعالية رسمي للقيادة الدبلوماسية</h2>
+          <span class="text-xs text-slate-400 font-mono">Official Leadership Event Boarding Pass</span>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-950/90 border border-amber-500/40 text-right space-y-4">
+          <div class="border-b border-slate-800/80 pb-3 flex items-center justify-between">
+            <h3 class="text-sm font-black text-white">{{ selectedBoardTicket.title }}</h3>
+            <span class="font-mono text-xs font-black text-amber-400">
+              {{ selectedBoardTicket.myBooking?.ticketCode || 'TKT-' + selectedBoardTicket.id.slice(-4).toUpperCase() }}
+            </span>
+          </div>
+
+          <div class="text-center py-2">
+            <div class="inline-block p-3 rounded-2xl bg-white shadow-xl border-2 border-amber-400/60">
+              <div id="board-ticket-qr" class="w-[150px] h-[150px] flex items-center justify-center"></div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2 font-mono">امسح الكود عند البوابة لإثبات الحضور الفوري للقيادة</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-slate-800/80">
+            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">الصفة الدبلوماسية:</span>
+              <span class="font-bold text-slate-100 truncate block">{{ currentUser ? currentUser.roleTitle || currentUser.name : 'رئاسة النموذج' }}</span>
+            </div>
+            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">الموعد والتوقيت:</span>
+              <span class="font-bold text-slate-200 text-[11px] block">{{ selectedBoardTicket.date }} ({{ selectedBoardTicket.time }})</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-3 pt-2">
+          <button 
+            onclick="window.print()" 
+            class="btn-gold flex-1 py-2.5 px-4 rounded-xl text-xs font-black inline-flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+          >
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>طباعة التصريح</span>
+          </button>
+          <button 
+            @click="showBoardTicketModal = false" 
+            class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition cursor-pointer"
+          >
+            إغلاق
+          </button>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -9419,6 +9628,9 @@
           deleteOperationsTask,
           loadAuditLogs,
           formatAuditTime,
+          showBoardTicketModal,
+          selectedBoardTicket,
+          openBoardEventTicket,
           openQrScannerModal,
           closeQrScannerModal,
           startQrScannerCamera,

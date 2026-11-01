@@ -2280,7 +2280,7 @@ app.get('/api/admin/all-committees-performance', (req, res) => {
 // Helper: Check if event is visible/allowed for user/candidate based on target audience
 function isEventVisibleToUser(evt, targetCandId, targetUsername, db) {
   // If no targetAudience or scope is 'all', visible to everyone
-  if (!evt.targetAudience || evt.targetAudience.scope === 'all') {
+  if (!evt.targetAudience || evt.targetAudience.scope === 'all' || evt.targetAudience.type === 'all' || (!evt.targetAudience.roles && !evt.targetAudience.sectors && !evt.targetAudience.committees)) {
     return true;
   }
 
@@ -2388,6 +2388,12 @@ app.get('/api/events', (req, res) => {
       myBooking = activeBookings.find(b => b.userId === currentUserId || b.userId === candidateId || b.userId === username);
     }
 
+    let candUser = null;
+    if (myBooking) {
+      candUser = (db.candidates || []).find(c => c.id === (myBooking.candidateId || myBooking.userId));
+    }
+    const tktSuffix = candUser ? (candUser.diplomaticId ? candUser.diplomaticId.slice(-7) : candUser.id.slice(-4)) : String(currentUserId || '0000').slice(-4);
+
     return {
       ...evt,
       bookedCount,
@@ -2396,9 +2402,12 @@ app.get('/api/events', (req, res) => {
       isFull,
       myBooking: myBooking ? {
         id: myBooking.id,
+        ticketCode: myBooking.ticketCode || `TKT-${evt.id.slice(-4).toUpperCase()}-${tktSuffix.toUpperCase()}`,
         bookedAt: myBooking.bookedAt,
         status: myBooking.status,
-        roleTitle: myBooking.roleTitle
+        roleTitle: myBooking.roleTitle,
+        attendanceStatus: myBooking.attendanceStatus || 'pending',
+        checkedInAt: myBooking.checkedInAt || null
       } : null
     };
   });
@@ -2531,9 +2540,10 @@ app.post('/api/events/:id/book', async (req, res) => {
   let email = '';
   let faculty = '—';
   let university = 'جامعة السويس';
+  let cand = null;
 
   if (targetCandId) {
-    const cand = (db.candidates || []).find(c => 
+    cand = (db.candidates || []).find(c => 
       c.id === targetCandId || 
       (c.diplomaticId && c.diplomaticId.toUpperCase() === String(targetCandId).toUpperCase())
     );
@@ -2603,6 +2613,9 @@ app.post('/api/events/:id/book', async (req, res) => {
     return res.status(403).json({ success: false, message: 'عذراً، هذه الفعالية مخصصة لفئات وتصنيفات محددة وغير متاحة لحسابك' });
   }
 
+  const ticketSuffix = cand ? (cand.diplomaticId ? cand.diplomaticId.slice(-7) : cand.id.slice(-4)) : userId.slice(-4);
+  const ticketCode = `TKT-${event.id.slice(-4).toUpperCase()}-${ticketSuffix.toUpperCase()}`;
+
   // Check existing booking
   const existing = db.eventBookings.find(b => b.eventId === event.id && b.userId === userId);
   if (existing) {
@@ -2611,15 +2624,18 @@ app.post('/api/events/:id/book', async (req, res) => {
     } else {
       existing.status = 'confirmed';
       existing.bookedAt = new Date().toISOString();
+      if (!existing.ticketCode) existing.ticketCode = ticketCode;
       await saveDB(db);
-      return res.json({ success: true, message: 'تم إعادة تأكيد حجز مقعدك بنجاح!', booking: existing });
+      return res.json({ success: true, message: 'تم إعادة تأكيد حجز مقعدك وتوليد تذكرة الدخول بنجاح!', booking: existing });
     }
   }
 
   const newBooking = {
     id: 'bk_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+    ticketCode,
     eventId: event.id,
     userId,
+    candidateId: (userType === 'delegate' || userType === 'member') ? userId : null,
     userType,
     roleTitle,
     name,
@@ -2630,7 +2646,8 @@ app.post('/api/events/:id/book', async (req, res) => {
     faculty,
     university,
     bookedAt: new Date().toISOString(),
-    status: 'confirmed'
+    status: 'confirmed',
+    attendanceStatus: 'pending'
   };
 
   db.eventBookings.push(newBooking);
@@ -2758,18 +2775,35 @@ app.post('/api/checkin/qr', async (req, res) => {
     return res.status(400).json({ success: false, message: 'يرجى تقديم كود الـ QR أو كود العضوية الدبلوماسي' });
   }
 
+  let activeEventId = eventId;
+  let detectedTicketCode = null;
+
   // Parse QR payload (supports raw string, JSON, or URL like https://.../verify?code=...)
   let searchKey = String(qrPayload).trim();
   try {
     if (searchKey.startsWith('{') && searchKey.endsWith('}')) {
       const parsed = JSON.parse(searchKey);
+      if (parsed.ticketCode) detectedTicketCode = parsed.ticketCode;
+      if (parsed.eventId) activeEventId = parsed.eventId;
       if (parsed.diplomaticId) searchKey = parsed.diplomaticId;
       else if (parsed.id) searchKey = parsed.id;
+      else if (parsed.candidateId) searchKey = parsed.candidateId;
       else if (parsed.code) searchKey = parsed.code;
     } else if (searchKey.includes('code=')) {
       const u = new URL(searchKey);
       const c = u.searchParams.get('code');
+      const ev = u.searchParams.get('event');
+      const tkt = u.searchParams.get('ticket');
       if (c) searchKey = c;
+      if (ev) activeEventId = ev;
+      if (tkt) detectedTicketCode = tkt;
+    } else if (searchKey.startsWith('TKT-')) {
+      detectedTicketCode = searchKey;
+      const b = (db.eventBookings || []).find(x => x.ticketCode === searchKey);
+      if (b) {
+        activeEventId = b.eventId;
+        searchKey = b.candidateId || b.userId;
+      }
     } else if (searchKey.includes('/verify/')) {
       const parts = searchKey.split('/verify/');
       if (parts[1]) searchKey = parts[1].split('?')[0].trim();
@@ -2800,8 +2834,8 @@ app.post('/api/checkin/qr', async (req, res) => {
   let bookingRecord = null;
 
   // 1. If checking in for an Event / Visit
-  if (eventId) {
-    const event = db.events.find(e => e.id === eventId);
+  if (activeEventId) {
+    const event = db.events.find(e => e.id === activeEventId);
     if (event) {
       checkinTargetTitle = `فعالية: ${event.title}`;
       bookingRecord = db.eventBookings.find(b => b.eventId === event.id && (b.candidateId === cand.id || b.userId === cand.id) && b.status !== 'cancelled');
@@ -2813,6 +2847,7 @@ app.post('/api/checkin/qr', async (req, res) => {
         if (activeBookings.length < capacity) {
           bookingRecord = {
             id: 'bk_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+            ticketCode: detectedTicketCode || `TKT-${event.id.slice(-4).toUpperCase()}-${cand.diplomaticId ? cand.diplomaticId.slice(-7).toUpperCase() : cand.id.slice(-4).toUpperCase()}`,
             eventId: event.id,
             candidateId: cand.id,
             userId: cand.id,
@@ -2846,7 +2881,7 @@ app.post('/api/checkin/qr', async (req, res) => {
       } else {
         bookingRecord.attendanceStatus = 'attended';
         bookingRecord.checkedInAt = new Date().toISOString();
-        bookingRecord.checkinMethod = 'qr_scanner';
+        bookingRecord.checkinMethod = detectedTicketCode ? 'ticket_qr' : 'qr_scanner';
       }
     }
   }
@@ -3129,11 +3164,27 @@ app.get('/api/verify/:code', (req, res) => {
   const db = getDB();
   const rawCode = String(req.params.code || '').trim();
   const cleanCode = rawCode.toUpperCase();
+  const queryEventId = req.query.event;
+  const queryTicketCode = req.query.ticket;
 
-  const cand = (db.candidates || []).find(c => 
-    (c.diplomaticId && c.diplomaticId.toUpperCase() === cleanCode) ||
-    (c.id && c.id.toUpperCase() === cleanCode)
-  );
+  let cand = null;
+  let matchedBooking = null;
+
+  // 1. Check if the code itself is an event ticket code (e.g. TKT-EVT1-042)
+  if (cleanCode.startsWith('TKT-')) {
+    matchedBooking = (db.eventBookings || []).find(b => b.ticketCode && b.ticketCode.toUpperCase() === cleanCode);
+    if (matchedBooking) {
+      cand = (db.candidates || []).find(c => c.id === matchedBooking.candidateId || c.id === matchedBooking.userId);
+    }
+  }
+
+  // 2. Otherwise search by Diplomatic ID or system ID
+  if (!cand) {
+    cand = (db.candidates || []).find(c => 
+      (c.diplomaticId && c.diplomaticId.toUpperCase() === cleanCode) ||
+      (c.id && c.id.toUpperCase() === cleanCode)
+    );
+  }
 
   if (!cand) {
     return res.status(404).json({
@@ -3141,6 +3192,31 @@ app.get('/api/verify/:code', (req, res) => {
       valid: false,
       message: 'لم يتم العثور على أي وثيقة أو شهادة معتمدة بهذا الكود المرجعي'
     });
+  }
+
+  // Resolve Ticket Details if applicable
+  let ticketDetails = null;
+  const targetBooking = matchedBooking || (db.eventBookings || []).find(b => 
+    (b.candidateId === cand.id || b.userId === cand.id) && 
+    (queryTicketCode ? b.ticketCode === queryTicketCode : (queryEventId ? b.eventId === queryEventId : true))
+  );
+
+  if (targetBooking) {
+    const ev = (db.events || []).find(e => e.id === targetBooking.eventId);
+    if (ev) {
+      ticketDetails = {
+        ticketCode: targetBooking.ticketCode || ('TKT-' + ev.id.slice(-4).toUpperCase()),
+        eventId: ev.id,
+        eventTitle: ev.title,
+        eventType: ev.type,
+        eventDate: ev.date,
+        eventTime: ev.time,
+        eventLocation: ev.location,
+        dressCode: ev.dressCode,
+        attendanceStatus: targetBooking.attendanceStatus || 'pending',
+        checkedInAt: targetBooking.checkedInAt || null
+      };
+    }
   }
 
   const commId = cand.assignedCommitteeId || cand.originalCommitteeId;
@@ -3166,7 +3242,8 @@ app.get('/api/verify/:code', (req, res) => {
       season: 'الموسم الدبلوماسي 2026',
       issueDate: '2026-11-01',
       status: 'معتمدة وموثقة رسمياً في سجلات نموذج المحاكاة',
-      authority: 'وزارة الخارجية المصرية – نموذج محاكاة جامعة السويس'
+      authority: 'وزارة الخارجية المصرية – نموذج محاكاة جامعة السويس',
+      ticketDetails: ticketDetails || null
     }
   });
 });

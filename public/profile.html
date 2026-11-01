@@ -405,21 +405,54 @@
               <!-- Action Booking Button -->
               <div class="pt-4 mt-3 border-t border-slate-800">
                 <!-- If Already Booked -->
-                <div v-if="evt.myBooking" class="flex items-center justify-between gap-3 bg-emerald-950/50 border border-emerald-500/40 p-3 rounded-2xl">
-                  <div class="flex items-center gap-2 text-xs font-bold text-emerald-300">
-                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 flex-shrink-0"></i>
-                    <div>
-                      <span>تم حجز مقعدك بنجاح</span>
-                      <span class="block text-[10px] text-emerald-400/80 font-mono">حجز مؤكد • {{ evt.myBooking.roleTitle }}</span>
+                <div v-if="evt.myBooking" class="space-y-3 bg-emerald-950/40 border border-emerald-500/40 p-4 rounded-2xl">
+                  <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <div class="flex items-center gap-2 text-xs font-bold text-emerald-300">
+                      <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 flex-shrink-0"></i>
+                      <div>
+                        <span>تم تأكيد حجز مقعدك بالفعالية</span>
+                        <span class="block text-[11px] text-emerald-400/80 font-mono">حجز مؤكد • {{ evt.myBooking.roleTitle }}</span>
+                      </div>
                     </div>
+
+                    <span v-if="evt.myBooking.attendanceStatus === 'attended'" class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
+                      <i data-lucide="badge-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                      <span>تم تسجيل الحضور رسمياً</span>
+                    </span>
+                    <span v-else class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                      <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
+                      <span>بانتظار التحضير بالبوابة</span>
+                    </span>
                   </div>
 
-                  <button 
-                    @click="cancelEventBooking(evt)" 
-                    class="text-[11px] font-bold text-rose-300 hover:text-rose-200 hover:underline px-2.5 py-1 rounded-lg bg-rose-950/60 border border-rose-500/30 transition flex-shrink-0"
-                  >
-                    إلغاء الحجز
-                  </button>
+                  <!-- Ticket Code info -->
+                  <div class="flex items-center justify-between bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 text-xs">
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="ticket" class="w-4 h-4 text-amber-400"></i>
+                      <span class="text-slate-300">رقم التذكرة:</span>
+                      <span class="font-mono font-bold text-amber-300">{{ evt.myBooking.ticketCode }}</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400">تصريح دخول رسمي بالـ QR</span>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="flex items-center gap-2 pt-1">
+                    <button 
+                      @click="openEventTicketModal(evt)" 
+                      class="btn-gold flex-1 py-2.5 px-3 rounded-xl text-xs font-black shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <i data-lucide="qr-code" class="w-4 h-4"></i>
+                      <span>عرض تصريح وتذكرة الدخول الرسمية (QR Ticket)</span>
+                    </button>
+
+                    <button 
+                      v-if="evt.myBooking.attendanceStatus !== 'attended'"
+                      @click="cancelEventBooking(evt)" 
+                      class="text-[11px] font-bold text-rose-300 hover:text-rose-200 hover:underline px-3 py-2.5 rounded-xl bg-rose-950/60 border border-rose-500/30 transition flex-shrink-0 cursor-pointer"
+                    >
+                      إلغاء الحجز
+                    </button>
+                  </div>
                 </div>
 
                 <!-- If Open for Booking -->
@@ -688,6 +721,104 @@
 
     </main>
 
+    <!-- Official Event Boarding Pass & QR Ticket Modal -->
+    <div v-if="showEventTicketModal && selectedEventTicket" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+      <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl p-6 sm:p-8 gold-card-border shadow-2xl max-w-lg w-full relative overflow-hidden text-center space-y-5">
+        
+        <button 
+          @click="showEventTicketModal = false"
+          class="absolute top-4 left-4 w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition cursor-pointer"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Header -->
+        <div class="space-y-1.5">
+          <img src="/logo.jpg" alt="Logo" class="w-14 h-14 rounded-full mx-auto border-2 border-amber-400 shadow-lg object-cover">
+          <span class="text-[10px] font-black text-amber-400 block uppercase tracking-wider">جمهورية مصر العربية • نموذج محاكاة وزارة الخارجية</span>
+          <h2 class="text-lg sm:text-xl font-black text-white">تصريح دخول رسمي وتذكرة حضور</h2>
+          <span class="text-[11px] text-slate-400 font-mono">Official Event Entry Boarding Pass</span>
+        </div>
+
+        <!-- Ticket Card Box -->
+        <div class="p-5 rounded-2xl bg-slate-950/90 border border-amber-500/40 text-right space-y-4">
+          <!-- Event Title & Category -->
+          <div class="border-b border-slate-800/80 pb-3">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                {{ selectedEventTicket.type === 'visit' ? 'زيارة رسمية ميدانية' : (selectedEventTicket.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}
+              </span>
+              <span class="font-mono text-[11px] font-black text-amber-400">
+                {{ selectedEventTicket.myBooking?.ticketCode || 'TKT-' + selectedEventTicket.id.slice(-4).toUpperCase() }}
+              </span>
+            </div>
+            <h3 class="text-base font-black text-white leading-snug">{{ selectedEventTicket.title }}</h3>
+          </div>
+
+          <!-- Dedicated QR Code Section -->
+          <div class="text-center py-2">
+            <div class="inline-block p-3 rounded-2xl bg-white shadow-xl border-2 border-amber-400/60">
+              <div id="event-ticket-qr" class="w-[150px] h-[150px] flex items-center justify-center"></div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2 font-mono">امسح الكود عند البوابة لإثبات الحضور الفوري</p>
+            <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold"
+                 :class="selectedEventTicket.myBooking?.attendanceStatus === 'attended' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'">
+              <i :data-lucide="selectedEventTicket.myBooking?.attendanceStatus === 'attended' ? 'badge-check' : 'ticket'" class="w-3.5 h-3.5"></i>
+              <span>{{ selectedEventTicket.myBooking?.attendanceStatus === 'attended' ? 'تم تسجيل الحضور وتأكيد الدخول' : 'حجز مؤكد • صالحة للدخول' }}</span>
+            </div>
+          </div>
+
+          <!-- Delegate & Logistics Details -->
+          <div class="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-slate-800/80">
+            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">اسم المندوب:</span>
+              <span class="font-bold text-slate-100 truncate block">{{ candidate ? (candidate.arabicName || candidate.fullName) : '' }}</span>
+            </div>
+            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">كود العضوية الدبلوماسي:</span>
+              <span class="font-mono font-bold text-amber-300 text-[11px] truncate block">{{ candidate ? (candidate.diplomaticId || candidate.id) : '' }}</span>
+            </div>
+            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">الموعد والتوقيت:</span>
+              <span class="font-bold text-slate-200 text-[11px] block">{{ selectedEventTicket.date }} ({{ selectedEventTicket.time }})</span>
+            </div>
+            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">المقر:</span>
+              <span class="font-bold text-slate-200 text-[11px] truncate block">{{ selectedEventTicket.location }}</span>
+            </div>
+          </div>
+
+          <div v-if="selectedEventTicket.dressCode" class="text-[11px] text-amber-200/90 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 flex items-center gap-2">
+            <i data-lucide="shirt" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0"></i>
+            <span>الزي المطلوب: {{ selectedEventTicket.dressCode }}</span>
+          </div>
+
+          <div v-if="selectedEventTicket.notes" class="text-[11px] text-slate-400 italic">
+            {{ selectedEventTicket.notes }}
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-between gap-3 pt-2">
+          <button 
+            onclick="window.print()" 
+            class="btn-gold flex-1 py-2.5 px-4 rounded-xl text-xs font-black inline-flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+          >
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>طباعة / حفظ التصريح</span>
+          </button>
+
+          <button 
+            @click="showEventTicketModal = false" 
+            class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition cursor-pointer"
+          >
+            إغلاق
+          </button>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Certificate Preview Modal -->
     <div v-if="showCertificateModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
       <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl p-6 sm:p-8 gold-card-border shadow-2xl max-w-2xl w-full relative overflow-hidden text-center space-y-6">
@@ -866,8 +997,13 @@
             });
             const data = await res.json();
             if (data.success) {
-              alert(data.message);
               await fetchEvents();
+              const updatedEvt = events.value.find(e => e.id === evt.id);
+              if (updatedEvt && updatedEvt.myBooking) {
+                openEventTicketModal(updatedEvt);
+              } else {
+                alert(data.message);
+              }
             } else {
               alert(data.message || 'تعذر حجز المقعد');
             }
@@ -986,6 +1122,9 @@
           tasks,
           taskProgressPercent,
           showCertificateModal,
+          showEventTicketModal,
+          selectedEventTicket,
+          openEventTicketModal,
           fetchEvents,
           fetchTasks,
           toggleTaskStatus,
