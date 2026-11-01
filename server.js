@@ -163,6 +163,7 @@ app.post('/api/auth/login', (req, res) => {
     res.cookie('mfa_user', JSON.stringify({
       username: user.username,
       role: user.role,
+      directorateType: user.directorateType || null,
       committeeId: user.committeeId,
       name: user.name
     }), { httpOnly: false, maxAge: 7 * 24 * 60 * 60 * 1000 });
@@ -176,6 +177,7 @@ app.post('/api/auth/login', (req, res) => {
         username: user.username,
         name: user.name,
         role: user.role,
+        directorateType: user.directorateType || null,
         committeeId: user.committeeId,
         committeeName: user.committeeName,
         committeeSlug: user.committeeSlug,

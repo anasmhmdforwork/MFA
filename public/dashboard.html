@@ -83,7 +83,7 @@
           </button>
 
           <!-- Committee Switcher (for Admin or Demo) -->
-          <div v-if="currentUser && currentUser.role === 'admin'" class="flex items-center">
+          <div v-if="currentUser && (currentUser.role === 'admin' || currentUser.role === 'directorate')" class="flex items-center">
             <select 
               v-model="selectedCommitteeId" 
               @change="onCommitteeChange"
@@ -367,6 +367,49 @@
 
         
         <!-- Cross-Committees Quizzes, Attendance & Structure Overview -->
+        <!-- Directorate Specific Banner -->
+        <div v-if="currentUser && currentUser.role === 'directorate'" class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 text-white p-6 sm:p-8 rounded-3xl border border-amber-500/30 shadow-xl mb-6 relative overflow-hidden">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg flex-shrink-0"
+                   :class="currentUser.directorateType === 'hr' ? 'bg-pink-600' : (currentUser.directorateType === 'media' ? 'bg-purple-600' : 'bg-emerald-600')">
+                <i :data-lucide="currentUser.directorateType === 'hr' ? 'users' : (currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-7 h-7 text-white"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h2 class="text-xl sm:text-2xl font-black text-white">
+                    {{ currentUser.name }}
+                  </h2>
+                  <span class="px-3 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold border border-amber-400/30">
+                    إشراف ومتابعة مركزية (كافة القطاعات)
+                  </span>
+                </div>
+                <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                  {{ currentUser.directorateType === 'hr' ? 'متابعة وتقييم كوادر ومسؤولي التنظيم والموارد البشرية وتوزيعهم على اللجان والفعاليات.' : (currentUser.directorateType === 'media' ? 'متابعة وتقييم كوادر الميديا والتصوير والتغطيات الإعلامية لجميع اللجان.' : 'متابعة وتقييم الكوادر الأكاديمية والمناديب ومستوى الحضور والاختبارات عبر اللجان.') }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <button 
+                @click="copyAllDirectoratePhones" 
+                class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition flex items-center gap-2 border border-slate-700 shadow-sm"
+              >
+                <i data-lucide="copy" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>نسخ أرقام الهواتف (جروب الواتساب)</span>
+              </button>
+
+              <button 
+                @click="exportAcceptedMembersToCSV" 
+                class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition flex items-center gap-2 shadow-md"
+              >
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>تصدير الكشف المجمع (CSV)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
           <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
             <div>
@@ -6189,6 +6232,17 @@
           } catch (e) {
             alert('حدث خطأ بالاتصال');
           }
+        }
+
+        function copyAllDirectoratePhones() {
+          const list = filteredStructureMembers.value;
+          const phones = list.map(c => c.phone).filter(Boolean);
+          if (phones.length === 0) {
+            alert('لا توجد أرقام هواتف لنسخها');
+            return;
+          }
+          navigator.clipboard.writeText(phones.join('\n'));
+          alert('تم نسخ ' + phones.length + ' رقم هاتف بنجاح!');
         }
 
         function exportAcceptedMembersToCSV() {

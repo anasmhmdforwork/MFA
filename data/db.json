@@ -9849,6 +9849,46 @@
       "committeeId": "africa",
       "committeeName": "شئون أفريقيا",
       "committeeSlug": "africa"
+    },
+    {
+      "id": "u_dir_hr",
+      "name": "إدارة التنظيم والموارد البشرية المركزية",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "hr",
+      "committeeId": null,
+      "committeeName": "إدارة التنظيم والموارد البشرية (كافة القطاعات)",
+      "directorateType": "hr"
+    },
+    {
+      "id": "u_dir_org_alias",
+      "name": "إدارة التنظيم والموارد البشرية المركزية",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "organization",
+      "committeeId": null,
+      "committeeName": "إدارة التنظيم والموارد البشرية (كافة القطاعات)",
+      "directorateType": "hr"
+    },
+    {
+      "id": "u_dir_media",
+      "name": "إدارة الميديا والإعلام المركزية",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "media",
+      "committeeId": null,
+      "committeeName": "إدارة الميديا والإعلام (كافة القطاعات)",
+      "directorateType": "media"
+    },
+    {
+      "id": "u_dir_academic",
+      "name": "إدارة الشؤون الأكاديمية والتدريب المركزية",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "academic",
+      "committeeId": null,
+      "committeeName": "إدارة اللجان والشؤون الأكاديمية (كافة القطاعات)",
+      "directorateType": "academic"
     }
   ],
   "quizzes": [
@@ -10105,7 +10145,12 @@
       "lectureEvaluations": {},
       "assignedCommitteeId": "climate",
       "originalCommitteeId": "economic",
-      "attendanceCommitment": "نعم"
+      "attendanceCommitment": "نعم",
+      "memberEvaluation": {
+        "score": 9.5,
+        "notes": "مسؤول تنظيم ملتزم جداً ومتميز في إدارة القاعة",
+        "updatedAt": "2026-11-01T13:50:16.780Z"
+      }
     },
     {
       "id": "c_4",

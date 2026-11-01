@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>تسجيل الدخول الموحد | نموذج محاكاة وزارة الخارجية - جامعة السويس</title>
+  <title>تسجيل الدخول | نموذج محاكاة وزارة الخارجية - جامعة السويس</title>
   <link rel="icon" type="image/jpeg" href="/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
       background-color: #070e1e;
     }
     .royal-bg {
-      background: radial-gradient(circle at 50% 20%, #112240 0%, #070e1e 70%, #030712 100%);
+      background: radial-gradient(circle at 50% 30%, #112240 0%, #070e1e 70%, #030712 100%);
     }
     .gold-gradient-text {
       background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
@@ -41,6 +41,14 @@
       box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.35);
       transform: translateY(-1px);
     }
+    .single-line-quote {
+      font-size: clamp(8px, 2.2vw, 12px);
+      white-space: nowrap;
+      letter-spacing: -0.015em;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
     @media (max-width: 640px) {
       input {
         font-size: 16px !important;
@@ -48,161 +56,147 @@
     }
   </style>
 </head>
-<body class="royal-bg min-h-screen text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950 relative overflow-x-hidden">
+<body class="royal-bg min-h-screen text-slate-100 flex flex-col justify-between items-center selection:bg-amber-400 selection:text-slate-950 relative overflow-x-hidden p-2.5 sm:p-6">
 
   <!-- Subtle Ambient Glows -->
-  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-amber-500/10 blur-[120px] rounded-full pointer-events-none -z-10"></div>
-  <div class="fixed bottom-0 right-0 w-[400px] h-[300px] bg-sky-600/10 blur-[130px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-amber-500/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed bottom-0 right-0 w-[400px] h-[350px] bg-sky-600/10 blur-[130px] rounded-full pointer-events-none -z-10"></div>
 
-  <!-- Top Simple Bar -->
-  <header class="py-4 px-6 border-b border-slate-800/80 bg-slate-950/40 backdrop-blur-md">
-    <div class="max-w-5xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-10 h-10 rounded-full border border-amber-400/40 object-cover shadow-md">
-        <div>
-          <span class="text-xs sm:text-sm font-bold text-slate-200 block">نموذج محاكاة وزارة الخارجية</span>
-          <span class="text-[10px] sm:text-xs text-amber-400 font-semibold block">جامعة السويس • MOFA SU</span>
-        </div>
-      </div>
-      <div class="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
-        <span>بوابة رسمية آمنة</span>
-      </div>
-    </div>
-  </header>
+  <!-- Spacer to vertically balance -->
+  <div class="w-full h-1 sm:h-6"></div>
 
-  <!-- Main Login Section -->
-  <main class="flex-1 flex items-center justify-center px-4 py-8 sm:py-12">
-    <div class="w-full max-w-md">
+  <!-- Main Login Card Container -->
+  <main class="w-full max-w-lg my-auto relative z-20">
 
-      <!-- Login Card -->
-      <div class="bg-slate-900/85 backdrop-blur-xl rounded-3xl p-6 sm:p-8 gold-card-border shadow-2xl relative overflow-hidden">
+    <div class="bg-slate-900/90 backdrop-blur-xl rounded-3xl px-4 py-5 sm:p-8 gold-card-border shadow-2xl relative overflow-hidden">
+      
+      <!-- Top Card Gold Accent Line -->
+      <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
+
+      <!-- Official Logo & Welcome Header -->
+      <div class="text-center mb-6 sm:mb-7">
         
-        <!-- Top Card Accent -->
-        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
+        <!-- Logo Emblem (100px balanced size) -->
+        <div class="relative inline-block mb-3">
+          <div class="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-amber-500/40 to-amber-200/20 blur-sm"></div>
+          <img 
+            src="/logo.jpg" 
+            alt="شعار نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس" 
+            class="relative rounded-full border-2 border-amber-400/80 object-cover p-1 bg-slate-950 shadow-xl mx-auto"
+            style="width: 100px; height: 100px; min-width: 100px; max-width: 100px; min-height: 100px; max-height: 100px;"
+          >
+        </div>
 
-        <!-- Official Logo & Titles -->
-        <div class="text-center mb-7">
-          <div class="relative inline-block mb-3">
-            <div class="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-amber-500/40 to-amber-200/20 blur-sm"></div>
-            <img 
-              src="/logo.jpg" 
-              alt="شعار نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس" 
-              class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-amber-400/80 object-cover p-1 bg-slate-950 shadow-xl mx-auto"
-            >
-          </div>
+        <!-- Clean Welcome Text (Plain text without badge, border, or icon) -->
+        <p class="text-slate-300 text-xs sm:text-sm font-semibold mb-1">
+          أهلاً بك في
+        </p>
 
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[11px] font-bold mb-2">
-            <i data-lucide="landmark" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span>جامعة السويس • موسم 2026 / 2027</span>
-          </div>
+        <!-- Title (With جامعة السويس • MFA) -->
+        <h1 class="text-slate-200 text-sm sm:text-base font-bold mb-1">
+          جامعة السويس • MFA
+          <span class="block text-xl sm:text-2xl font-black gold-gradient-text mt-0.5 tracking-tight">
+            نموذج محاكاة وزارة الخارجية
+          </span>
+        </h1>
 
-          <h1 class="text-xl sm:text-2xl font-black text-white mb-1">
-            نموذج محاكاة <span class="gold-gradient-text">وزارة الخارجية</span>
-          </h1>
-          <p class="text-xs sm:text-sm text-slate-400 font-medium">
-            بوابة تسجيل الدخول الموحدة (الإدارة • اللجان • المندوبين)
+        <!-- Subtitle on ONE SINGLE LINE without breaking or clipping -->
+        <div class="w-full overflow-hidden mt-2 px-1">
+          <p class="single-line-quote text-slate-300 font-medium">
+            حيث يلتقي العلم بالإبداع، لنحوّل المعرفة إلى ممارسة، والطموح إلى قيادة تصنع المستقبل.
           </p>
         </div>
-
-        <!-- Alert Message Container -->
-        <div id="login-alert" class="hidden mb-5 p-3.5 rounded-2xl text-xs font-bold flex items-start gap-2.5 transition-all">
-          <i id="login-alert-icon" data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
-          <span id="login-alert-text" class="leading-relaxed"></span>
-        </div>
-
-        <!-- Login Form -->
-        <form id="unified-login-form" onsubmit="handleUnifiedLogin(event)" class="space-y-4">
-          
-          <!-- Username / Email / Phone Input -->
-          <div>
-            <label for="login-identifier" class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
-              <span class="flex items-center gap-1.5">
-                <i data-lucide="user" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>اسم المستخدم أو البريد الإلكتروني أو الهاتف</span>
-              </span>
-            </label>
-            <div class="relative">
-              <input 
-                id="login-identifier" 
-                type="text" 
-                required
-                autocomplete="username"
-                dir="auto"
-                placeholder="اسم المستخدم أو الإيميل أو رقم الهاتف"
-                class="w-full bg-slate-950/70 border border-slate-700/80 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all font-medium"
-              >
-            </div>
-          </div>
-
-          <!-- Password Input with Toggle -->
-          <div>
-            <label for="login-password" class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
-              <span class="flex items-center gap-1.5">
-                <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>كلمة المرور</span>
-              </span>
-            </label>
-            <div class="relative">
-              <input 
-                id="login-password" 
-                type="password" 
-                required
-                autocomplete="current-password"
-                dir="ltr"
-                placeholder="••••••••"
-                class="w-full bg-slate-950/70 border border-slate-700/80 rounded-2xl pl-11 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all font-mono"
-              >
-              <button 
-                type="button" 
-                onclick="togglePasswordVisibility()" 
-                class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400 transition-colors p-1"
-                aria-label="إظهار / إخفاء كلمة المرور"
-              >
-                <i id="password-toggle-icon" data-lucide="eye" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Submit Button -->
-          <div class="pt-2">
-            <button 
-              type="submit" 
-              id="login-submit-btn"
-              class="w-full btn-gold py-3.5 px-4 rounded-2xl text-sm font-black shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span id="btn-text">تسجيل الدخول</span>
-              <i id="btn-icon" data-lucide="arrow-left" class="w-4 h-4"></i>
-            </button>
-          </div>
-        </form>
-
-        <!-- Informational Helper Box -->
-        <div class="mt-6 pt-5 border-t border-slate-800 text-[11px] text-slate-400 space-y-2 leading-relaxed bg-slate-950/40 -mx-6 -mb-6 p-5 rounded-b-3xl">
-          <div class="flex items-start gap-2">
-            <i data-lucide="info" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5"></i>
-            <div>
-              <p class="font-bold text-slate-300 mb-1">تعليمات الدخول حسب صفتك:</p>
-              <ul class="space-y-1 text-slate-400 list-disc list-inside">
-                <li><strong class="text-amber-300/90">رؤساء اللجان والإدارة:</strong> اسم مستخدم اللجنة وكلمة المرور الخاصة بك.</li>
-                <li><strong class="text-amber-300/90">المندوبين وأعضاء الهيكل:</strong> بالبريد الإلكتروني أو رقم الهاتف المسجل، وكلمة المرور هي كلمة سر الاختبارات (الافتراضية: 1234).</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
       </div>
 
-      <!-- Quick Back / Help Links -->
-      <div class="mt-6 text-center text-xs text-slate-400">
-        <span>تواجه مشكلة في تسجيل الدخول؟ تواصل مع إدارة النموذج أو رئيس لجنتك</span>
+      <!-- Alert Message Container -->
+      <div id="login-alert" class="hidden mb-5 p-3.5 rounded-2xl text-xs font-bold flex items-start gap-2.5 transition-all">
+        <i id="login-alert-icon" data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+        <span id="login-alert-text" class="leading-relaxed"></span>
+      </div>
+
+      <!-- Login Form -->
+      <form id="unified-login-form" onsubmit="handleUnifiedLogin(event)" class="space-y-4">
+        
+        <!-- Email / Phone Input -->
+        <div>
+          <label for="login-identifier" class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="mail" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>البريد الإلكتروني أو رقم الهاتف</span>
+            </span>
+          </label>
+          <div class="relative">
+            <input 
+              id="login-identifier" 
+              type="text" 
+              required
+              autocomplete="username"
+              dir="auto"
+              placeholder="البريد الإلكتروني أو رقم الهاتف"
+              class="w-full bg-slate-950/70 border border-slate-700/80 rounded-2xl px-4 py-3 sm:py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all font-medium"
+            >
+          </div>
+        </div>
+
+        <!-- Password Input with Toggle -->
+        <div>
+          <label for="login-password" class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>كلمة المرور</span>
+            </span>
+          </label>
+          <div class="relative">
+            <input 
+              id="login-password" 
+              type="password" 
+              required
+              autocomplete="current-password"
+              dir="ltr"
+              placeholder="••••••••"
+              class="w-full bg-slate-950/70 border border-slate-700/80 rounded-2xl pl-11 pr-4 py-3 sm:py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all font-mono"
+            >
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility()" 
+              class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400 transition-colors p-1"
+              aria-label="إظهار / إخفاء كلمة المرور"
+            >
+              <i id="password-toggle-icon" data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+          <button 
+            type="submit" 
+            id="login-submit-btn"
+            class="w-full btn-gold py-3.5 px-4 rounded-2xl text-sm font-black shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span id="btn-text">تسجيل الدخول</span>
+            <i id="btn-icon" data-lucide="arrow-left" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Informational Helper Box -->
+      <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 leading-relaxed bg-slate-950/40 -mx-4 sm:-mx-8 -mb-5 sm:-mb-8 p-4 rounded-b-3xl flex items-center justify-center gap-2 text-center">
+        <i data-lucide="info" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+        <span>كلمة المرور هي كلمة سر الاختبارات (الافتراضية: <strong class="text-amber-300 font-mono">1234</strong>)</span>
       </div>
 
     </div>
+
+    <!-- Quick Back / Help Links -->
+    <div class="mt-4 sm:mt-5 text-center text-xs text-slate-400">
+      <span>تواجه مشكلة في تسجيل الدخول؟ تواصل مع إدارة النموذج أو رئيس لجنتك</span>
+    </div>
+
   </main>
 
-  <!-- Footer -->
-  <footer class="py-4 px-6 border-t border-slate-800/60 text-center text-xs text-slate-500">
+  <!-- Clean Minimal Footer -->
+  <footer class="py-3 sm:py-4 px-6 text-center text-[11px] sm:text-xs text-slate-500/80">
     <p>جميع الحقوق محفوظة © 2026 - نموذج محاكاة وزارة الخارجية المصرية | جامعة السويس</p>
   </footer>
 
