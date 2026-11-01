@@ -128,7 +128,7 @@ app.post('/api/auth/login', (req, res) => {
   const { username, password, committeeId, role } = req.body;
   const db = getDB();
 
-  const cleanUser = String(username || '').trim().toLowerCase();
+  const cleanInput = String(username || '').trim();
   const cleanPass = String(password || '').trim();
 
   if (!cleanPass) {
@@ -137,54 +137,194 @@ app.post('/api/auth/login', (req, res) => {
 
   let user = null;
 
-  // 1. Find by explicit username if provided
-  if (cleanUser) {
+  // 1. Check if it is Staff (Admin or Committee Head) in db.users
+  if (cleanInput) {
     user = (db.users || []).find(u => 
-      u.username.toLowerCase() === cleanUser || 
-      (u.committeeSlug && u.committeeSlug.toLowerCase() === cleanUser) ||
-      (u.committeeId && u.committeeId.toLowerCase() === cleanUser)
+      u.username.toLowerCase() === cleanInput.toLowerCase() || 
+      (u.committeeSlug && u.committeeSlug.toLowerCase() === cleanInput.toLowerCase()) ||
+      (u.committeeId && u.committeeId.toLowerCase() === cleanInput.toLowerCase())
     );
-  } 
-  // 2. Or by committeeId
-  else if (committeeId) {
+  } else if (committeeId) {
     user = (db.users || []).find(u => u.committeeId === committeeId);
-  } 
-  // 3. Or by role admin
-  else if (role === 'admin') {
+  } else if (role === 'admin') {
     user = (db.users || []).find(u => u.role === 'admin');
   }
 
-  if (!user) {
-    return res.status(401).json({ success: false, message: 'اسم المستخدم غير صحيح أو غير مسجل' });
-  }
+  if (user) {
+    if (user.password !== cleanPass) {
+      return res.status(401).json({ success: false, message: 'كلمة المرور غير صحيحة، يرجى إعادة المحاولة' });
+    }
 
-  // Strict Password Verification
-  if (user.password !== cleanPass) {
-    return res.status(401).json({ success: false, message: 'كلمة المرور غير صحيحة، يرجى إعادة المحاولة' });
-  }
+    let committee = null;
+    if (user.committeeId) {
+      committee = (db.committees || []).find(c => c.id === user.committeeId);
+    }
 
-  // Find committee info if committee head
-  let committee = null;
-  if (user.committeeId) {
-    committee = (db.committees || []).find(c => c.id === user.committeeId);
-  }
-
-  res.json({
-    success: true,
-    user: {
-      id: user.id,
+    res.cookie('mfa_user', JSON.stringify({
       username: user.username,
-      name: user.name,
       role: user.role,
       committeeId: user.committeeId,
-      committeeName: user.committeeName,
-      committeeSlug: user.committeeSlug,
-      committee: committee
+      name: user.name
+    }), { httpOnly: false, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
+    return res.json({
+      success: true,
+      userType: 'staff',
+      redirect: '/dashboard',
+      user: {
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        role: user.role,
+        committeeId: user.committeeId,
+        committeeName: user.committeeName,
+        committeeSlug: user.committeeSlug,
+        committee: committee
+      }
+    });
+  }
+
+  // 2. Check if it is a Candidate (Delegate or Member in Committee)
+  const inputPhone = cleanPhone(cleanInput);
+  const inputEmail = cleanInput.toLowerCase();
+
+  const cand = (db.candidates || []).find(c => {
+    const cEmail = (c.email || '').toLowerCase().trim();
+    const cPhone = cleanPhone(c.phone);
+    return (cEmail && cEmail === inputEmail) || (inputPhone && cPhone === inputPhone);
+  });
+
+  if (cand) {
+    const validPassword = cand.delegatePassword || '1234';
+    if (cleanPass !== validPassword && cleanPass !== '1234') {
+      return res.status(401).json({ success: false, message: 'كلمة المرور غير صحيحة (كلمة المرور الموحدة هي 1234)' });
     }
+
+    // Set candidate auth cookie
+    res.cookie('mfa_delegate_id', cand.id, { httpOnly: false, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
+    const comm = (db.committees || []).find(c => c.id === (cand.assignedCommitteeId || cand.originalCommitteeId));
+
+    return res.json({
+      success: true,
+      userType: 'delegate',
+      redirect: '/profile',
+      user: {
+        id: cand.id,
+        username: cand.email || cand.phone,
+        name: cand.arabicName || cand.fullName,
+        arabicName: cand.arabicName || cand.fullName,
+        fullName: cand.fullName,
+        email: cand.email,
+        phone: cand.phone,
+        role: 'delegate',
+        roleType: cand.roleType || 'delegate',
+        subDepartment: cand.subDepartment,
+        committeeId: cand.assignedCommitteeId || cand.originalCommitteeId,
+        committeeName: comm ? comm.name : 'اللجنة'
+      }
+    });
+  }
+
+  return res.status(401).json({
+    success: false,
+    message: 'اسم المستخدم أو البريد الإلكتروني غير مسجل، يرجى التحقق وإعادة المحاولة'
   });
 });
 
 // ==========================================
+// Delegate / Member Personal Profile & Performance API
+app.get('/api/delegate/my-profile', (req, res) => {
+  const db = getDB();
+  const candId = req.cookies.mfa_delegate_id || req.query.id;
+  if (!candId) {
+    return res.status(401).json({ success: false, message: 'يرجى تسجيل الدخول أولاً' });
+  }
+
+  const cand = (db.candidates || []).find(c => c.id === candId);
+  if (!cand) {
+    return res.status(404).json({ success: false, message: 'الملف الشخصي غير موجود' });
+  }
+
+  const commId = cand.assignedCommitteeId || cand.originalCommitteeId;
+  const comm = (db.committees || []).find(c => c.id === commId);
+
+  // All quizzes for this committee
+  const commQuizzes = (db.quizzes || []).filter(q => q.committeeId === commId || q.committeeId === 'all');
+
+  // Map quiz performance records
+  const quizRecords = commQuizzes.map(q => {
+    const sub = (db.quizSubmissions || []).find(s => s.quizId === q.id && s.candidateId === cand.id);
+    const evalData = (cand.lectureEvaluations && cand.lectureEvaluations[q.id]) ? cand.lectureEvaluations[q.id] : null;
+
+    return {
+      quizId: q.id,
+      title: q.title,
+      lectureNumber: q.lectureNumber,
+      totalPoints: q.totalPoints || (q.questions ? q.questions.length : 10),
+      durationMinutes: q.durationMinutes,
+      isOpen: q.isOpen,
+      attended: !!sub,
+      score: sub ? sub.score : null,
+      percentage: sub ? sub.percentage : null,
+      submittedAt: sub ? sub.submittedAt : null,
+      evaluation: evalData
+    };
+  });
+
+  const totalQuizzes = commQuizzes.length;
+  const attendedCount = quizRecords.filter(r => r.attended).length;
+  const attendanceRate = totalQuizzes > 0 ? Math.round((attendedCount / totalQuizzes) * 100) : 100;
+  const gradedQuizzes = quizRecords.filter(r => r.percentage !== null);
+  const avgScore = gradedQuizzes.length > 0 ? Math.round(gradedQuizzes.reduce((sum, r) => sum + r.percentage, 0) / gradedQuizzes.length) : null;
+
+  // Total bonus points
+  let totalBonus = 0;
+  if (cand.lectureEvaluations) {
+    Object.values(cand.lectureEvaluations).forEach(ev => {
+      if (ev && ev.bonusScore) totalBonus += Number(ev.bonusScore) || 0;
+    });
+  }
+
+  res.json({
+    success: true,
+    candidate: {
+      id: cand.id,
+      arabicName: cand.arabicName || cand.fullName,
+      fullName: cand.fullName,
+      email: cand.email,
+      phone: cand.phone,
+      faculty: cand.faculty,
+      university: cand.university,
+      grade: cand.grade,
+      roleType: cand.roleType || 'delegate',
+      subDepartment: cand.subDepartment,
+      assignedCommitteeId: commId,
+      committeeName: comm ? comm.name : 'اللجنة',
+      committeeSlug: comm ? comm.slug : '',
+      whatsappGroupLink: comm ? (comm.whatsappGroupLink || '') : '',
+      interviewScore: (cand.evaluation && cand.evaluation.score !== null) ? cand.evaluation.score : null,
+      interviewNotes: cand.evaluation ? (cand.evaluation.notes || '') : '',
+      memberEvaluation: cand.memberEvaluation || null,
+      totalBonus,
+      stats: {
+        totalQuizzes,
+        attendedCount,
+        attendanceRate,
+        avgScore
+      },
+      quizzes: quizRecords
+    }
+  });
+});
+
+// Logout Endpoint
+app.get('/api/auth/logout', (req, res) => {
+  res.clearCookie('mfa_user');
+  res.clearCookie('mfa_delegate_id');
+  res.json({ success: true, redirect: '/login' });
+});
+
 // 2. COMMITTEES APIS
 // ==========================================
 
@@ -1955,6 +2095,10 @@ app.get('/', (req, res) => {
 });
 
 // Fallback direct routes to HTML files
+app.get('/profile', (req, res) => {
+  res.sendFile('profile.html', { root: PUBLIC_DIR });
+});
+
 app.get('/dashboard', (req, res) => {
   res.sendFile('dashboard.html', { root: PUBLIC_DIR });
 });

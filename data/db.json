@@ -34029,6 +34029,7 @@
       "slotId": null,
       "faculty": "",
       "fullName": "anas mhmd",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": null,
@@ -34048,6 +34049,7 @@
         "communicationScore": 8
       },
       "motivation": "تمت الإضافة يدوياً من لوحة التحكم",
+      "notifiedAt": "2026-11-01T11:32:44.914Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "pending",
@@ -34078,9 +34080,7 @@
       },
       "assignedCommitteeId": "economic",
       "originalCommitteeId": "economic",
-      "attendanceCommitment": "نعم",
-      "notified": true,
-      "notifiedAt": "2026-11-01T11:32:44.914Z"
+      "attendanceCommitment": "نعم"
     },
     {
       "id": "c_440_mvli3c67",

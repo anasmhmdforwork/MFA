@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>لوحة تحكم مدير القطاع | نموذج محاكاة وزارة الخارجية</title>
+  <link rel="icon" type="image/jpeg" href="/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -52,12 +53,7 @@
         
         <!-- Logo & Committee Identity -->
         <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
-          <div 
-            class="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0"
-            :style="{ backgroundColor: currentCommittee ? currentCommittee.color : '#c5a059' }"
-          >
-            <i data-lucide="landmark" class="w-5 h-5 sm:w-7 sm:h-7 text-white"></i>
-          </div>
+          <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-400/60 object-cover shadow-md flex-shrink-0">
           <div class="min-w-0">
             <div class="flex items-center gap-1.5 sm:gap-2">
               <h1 class="font-black text-xs sm:text-lg text-white leading-tight truncate max-w-[170px] sm:max-w-none">

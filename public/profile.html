@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>الملف التعريفي وسجل الأداء | نموذج محاكاة وزارة الخارجية</title>
+  <link rel="icon" type="image/jpeg" href="/logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    body { 
+      font-family: 'Cairo', sans-serif;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      background-color: #070e1e;
+    }
+    .royal-bg {
+      background: radial-gradient(circle at 50% 10%, #112240 0%, #070e1e 75%, #030712 100%);
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-card-border {
+      border: 1px solid rgba(197, 160, 89, 0.28);
+    }
+    .gold-card-border:hover {
+      border-color: rgba(197, 160, 89, 0.5);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #a87e2b 100%);
+      color: #070e1e;
+      transition: all 0.25s ease;
+    }
+    .btn-gold:hover {
+      background: linear-gradient(135deg, #e5be4a 0%, #d4af37 50%, #b88a32 100%);
+      box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.35);
+      transform: translateY(-1px);
+    }
+    [v-cloak] { display: none; }
+  </style>
+</head>
+<body class="royal-bg min-h-screen text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950">
+
+  <div id="app" v-cloak class="flex flex-col min-h-screen">
+
+    <!-- Top Navigation Header -->
+    <header class="py-3.5 px-4 sm:px-8 border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md sticky top-0 z-40">
+      <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
+        
+        <!-- Brand Info -->
+        <div class="flex items-center gap-3">
+          <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-amber-400/50 object-cover shadow-md">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs sm:text-base font-black text-white">نموذج محاكاة وزارة الخارجية</span>
+              <span class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
+                جامعة السويس
+              </span>
+            </div>
+            <p class="text-[10px] sm:text-xs text-amber-400 font-medium">الملف الشخصي وسجل الأداء</p>
+          </div>
+        </div>
+
+        <!-- User Logout Action -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span v-if="candidate" class="hidden md:inline-block text-xs font-semibold text-slate-300">
+            مرحبًا بك، <strong class="text-amber-300">{{ candidate.arabicName || candidate.fullName }}</strong>
+          </span>
+          <button 
+            @click="logout"
+            class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+          >
+            <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span>خروج</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 py-6 sm:py-10 space-y-6">
+
+      <!-- Loading State -->
+      <div v-if="loading" class="py-24 text-center">
+        <div class="w-12 h-12 border-3 border-amber-400/30 border-t-amber-400 rounded-full animate-spin mx-auto mb-4"></div>
+        <p class="text-sm text-slate-300 font-bold">جاري تحميل ملف الأداء والبيانات الرسمية...</p>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="bg-rose-950/40 border border-rose-500/30 rounded-3xl p-8 text-center max-w-lg mx-auto shadow-2xl">
+        <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto mb-3">
+          <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-black text-rose-200 mb-2">تعذر عرض الملف الشخصي</h3>
+        <p class="text-xs text-rose-300 mb-5">{{ error }}</p>
+        <button 
+          @click="redirectToLogin" 
+          class="btn-gold px-6 py-2.5 rounded-xl text-xs font-black inline-flex items-center gap-2"
+        >
+          <span>الانتقال لصفحة تسجيل الدخول</span>
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Main Profile Dashboard (When Loaded) -->
+      <template v-else-if="candidate">
+
+        <!-- 1. Hero Identity Banner -->
+        <div class="bg-gradient-to-r from-slate-900/90 via-slate-900/80 to-slate-950/90 backdrop-blur-xl rounded-3xl p-5 sm:p-8 gold-card-border shadow-2xl relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-80 h-40 bg-amber-500/5 blur-3xl pointer-events-none"></div>
+
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            
+            <div class="flex items-center gap-4 sm:gap-6">
+              <!-- Avatar Ring -->
+              <div class="relative flex-shrink-0">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-amber-400 via-amber-600 to-amber-700 p-0.5 shadow-xl">
+                  <div class="w-full h-full bg-slate-950 rounded-[14px] sm:rounded-[22px] flex items-center justify-center text-amber-400 font-black text-xl sm:text-2xl">
+                    {{ (candidate.arabicName || candidate.fullName || 'م').charAt(0) }}
+                  </div>
+                </div>
+                <div class="absolute -bottom-1 -left-1 w-6 h-6 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center shadow">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-white"></i>
+                </div>
+              </div>
+
+              <!-- Personal Info Details -->
+              <div class="min-w-0 space-y-1.5">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h2 class="text-lg sm:text-2xl font-black text-white">
+                    {{ candidate.arabicName || candidate.fullName }}
+                  </h2>
+                  
+                  <!-- Role Badge -->
+                  <span 
+                    class="px-2.5 py-1 rounded-full text-[11px] font-bold border"
+                    :class="candidate.roleType === 'member' ? 'bg-purple-500/20 text-purple-300 border-purple-500/40' : 'bg-amber-500/20 text-amber-300 border-amber-500/40'"
+                  >
+                    {{ candidate.roleType === 'member' ? ('عضو هيكل: ' + (candidate.subDepartment || 'لجنة')) : 'مندوب (Delegate)' }}
+                  </span>
+                </div>
+
+                <!-- Committee & University Details -->
+                <div class="flex items-center gap-3 text-xs sm:text-sm text-slate-300 flex-wrap">
+                  <span class="flex items-center gap-1.5 text-amber-300/90 font-bold">
+                    <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                    <span>{{ candidate.committeeName }}</span>
+                  </span>
+                  <span class="text-slate-600">•</span>
+                  <span class="flex items-center gap-1.5 text-slate-300 font-medium">
+                    <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <span>{{ candidate.faculty || 'جامعة السويس' }} <span v-if="candidate.grade">({{ candidate.grade }})</span></span>
+                  </span>
+                </div>
+
+                <!-- Contact Info Badges -->
+                <div class="flex items-center gap-3 text-xs text-slate-400 pt-1 flex-wrap font-mono">
+                  <span v-if="candidate.email" class="flex items-center gap-1">
+                    <i data-lucide="mail" class="w-3 h-3 text-slate-500"></i>
+                    <span>{{ candidate.email }}</span>
+                  </span>
+                  <span v-if="candidate.phone" class="flex items-center gap-1">
+                    <i data-lucide="phone" class="w-3 h-3 text-slate-500"></i>
+                    <span dir="ltr">{{ candidate.phone }}</span>
+                  </span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Profile Status Pill -->
+            <div class="flex md:flex-col items-center md:items-end justify-between border-t md:border-t-0 border-slate-800 pt-3 md:pt-0 gap-2">
+              <span class="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold inline-flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>عضوية معتمدة ومفعلة</span>
+              </span>
+              <span class="text-[11px] text-slate-400">كود العضوية: #{{ candidate.id ? candidate.id.slice(0, 8) : 'MFA' }}</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2. WhatsApp Official Group Banner (If Committee Link Exists) -->
+        <div v-if="candidate.whatsappGroupLink" class="bg-gradient-to-r from-emerald-950/70 via-emerald-900/40 to-slate-900/80 border border-emerald-500/40 rounded-3xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+            <div class="flex items-center gap-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 border border-emerald-500/30">
+                <i data-lucide="message-circle" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h3 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
+                  <span>المجموعة الرسمية للجنة على واتساب</span>
+                  <span class="px-2 py-0.5 rounded-md bg-emerald-500/30 text-emerald-200 text-[10px] font-bold">معتمد</span>
+                </h3>
+                <p class="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                  انضم الآن إلى جروب واتساب <strong>{{ candidate.committeeName }}</strong> لمتابعة التكليفات الأكاديمية ومواعيد المحاضرات والأنشطة.
+                </p>
+              </div>
+            </div>
+
+            <a 
+              :href="candidate.whatsappGroupLink" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-black shadow-lg hover:shadow-emerald-600/30 transition flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer"
+            >
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>انضمام إلى جروب الواتساب</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. Key Performance Metric Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          
+          <!-- Metric 1: Attendance Rate -->
+          <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-400">معدل الحضور</span>
+              <div class="w-7 h-7 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="text-xl sm:text-3xl font-black text-white mb-2">
+              {{ candidate.stats ? candidate.stats.attendanceRate : 100 }}%
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div 
+                class="bg-gradient-to-r from-amber-500 to-amber-300 h-1.5 rounded-full" 
+                :style="{ width: (candidate.stats ? candidate.stats.attendanceRate : 100) + '%' }"
+              ></div>
+            </div>
+            <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium">
+              حضور {{ candidate.stats ? candidate.stats.attendedCount : 0 }} من إجمالي {{ candidate.stats ? candidate.stats.totalQuizzes : 0 }} محاضرات
+            </span>
+          </div>
+
+          <!-- Metric 2: Average Quiz Score -->
+          <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-400">متوسط الاختبارات</span>
+              <div class="w-7 h-7 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center">
+                <i data-lucide="award" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="text-xl sm:text-3xl font-black text-white mb-2">
+              {{ candidate.stats && candidate.stats.avgScore !== null ? candidate.stats.avgScore + '%' : '—' }}
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div 
+                class="bg-gradient-to-r from-sky-500 to-sky-300 h-1.5 rounded-full" 
+                :style="{ width: (candidate.stats && candidate.stats.avgScore !== null ? candidate.stats.avgScore : 0) + '%' }"
+              ></div>
+            </div>
+            <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium">
+              {{ candidate.stats && candidate.stats.avgScore !== null ? 'متوسط الدرجات المحققة' : 'لا توجد اختبارات مسجلة بعد' }}
+            </span>
+          </div>
+
+          <!-- Metric 3: Bonus Points -->
+          <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-400">نقاط التميز والبونص</span>
+              <div class="w-7 h-7 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="text-xl sm:text-3xl font-black text-emerald-400 mb-2">
+              +{{ candidate.totalBonus || 0 }}
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div class="bg-emerald-500 h-1.5 rounded-full" :style="{ width: Math.min(100, (candidate.totalBonus || 0) * 10) + '%' }"></div>
+            </div>
+            <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium">
+              نقاط إضافية عن المشاركة والتكليفات
+            </span>
+          </div>
+
+          <!-- Metric 4: Interview Rating -->
+          <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-400">تقييم المقابلة الشخصية</span>
+              <div class="w-7 h-7 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                <i data-lucide="user-check" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="text-xl sm:text-3xl font-black text-amber-300 mb-2">
+              {{ candidate.interviewScore !== null ? candidate.interviewScore + ' / 10' : 'مقبول' }}
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div class="bg-amber-400 h-1.5 rounded-full" :style="{ width: ((candidate.interviewScore || 10) * 10) + '%' }"></div>
+            </div>
+            <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium truncate">
+              {{ candidate.interviewNotes ? ('ملاحظة: ' + candidate.interviewNotes) : 'تم اجتياز المقابلة والقبول' }}
+            </span>
+          </div>
+
+        </div>
+
+        <!-- 4. Member Evaluation (if candidate is a structure member) -->
+        <div v-if="candidate.roleType === 'member' && candidate.memberEvaluation" class="bg-slate-900/85 backdrop-blur-md rounded-3xl p-5 sm:p-6 gold-card-border shadow-xl">
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="clipboard-list" class="w-5 h-5 text-amber-400"></i>
+            <h3 class="text-base font-black text-white">تقييم الأداء التنظيمي لعضو اللجنة</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800">
+              <span class="text-[11px] text-slate-400 font-bold block mb-1">الالتزام والحضور</span>
+              <span class="text-sm font-black text-amber-300">{{ candidate.memberEvaluation.commitment || 'ممتاز' }}</span>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800">
+              <span class="text-[11px] text-slate-400 font-bold block mb-1">إنجاز المهام والتكليفات</span>
+              <span class="text-sm font-black text-amber-300">{{ candidate.memberEvaluation.tasks || 'منتظم ومتميز' }}</span>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800">
+              <span class="text-[11px] text-slate-400 font-bold block mb-1">ملاحظات رئيس اللجنة</span>
+              <span class="text-sm font-medium text-slate-200">{{ candidate.memberEvaluation.notes || 'أداء إيجابي ومستمر' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Lectures & Quizzes Detailed History -->
+        <div class="bg-slate-900/85 backdrop-blur-md rounded-3xl p-5 sm:p-7 gold-card-border shadow-xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <div>
+              <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                <i data-lucide="book-open" class="w-5 h-5 text-amber-400"></i>
+                <span>سجل المحاضرات والاختبارات الدورية</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">
+                كشف تفصيلي بحضور المحاضرات ودرجات الاختبارات المنعقدة داخل اللجنة
+              </p>
+            </div>
+            <span class="px-3 py-1 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold self-start sm:self-auto">
+              إجمالي المحاضرات: {{ candidate.quizzes ? candidate.quizzes.length : 0 }}
+            </span>
+          </div>
+
+          <!-- Empty Quizzes State -->
+          <div v-if="!candidate.quizzes || candidate.quizzes.length === 0" class="py-12 text-center border border-dashed border-slate-800 rounded-2xl">
+            <div class="w-10 h-10 rounded-2xl bg-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-2">
+              <i data-lucide="file-question" class="w-5 h-5"></i>
+            </div>
+            <p class="text-xs text-slate-400 font-bold">لم تُسجل أي محاضرات أو اختبارات لهذه اللجنة حتى الآن</p>
+            <p class="text-[11px] text-slate-500 mt-1">سيتم إتاحة الاختبارات وسجل الحضور تباعًا وفق جدول اللجنة</p>
+          </div>
+
+          <!-- Quizzes List / Cards -->
+          <div v-else class="space-y-3">
+            <div 
+              v-for="(quiz, index) in candidate.quizzes" 
+              :key="quiz.quizId"
+              class="p-4 sm:p-5 rounded-2xl bg-slate-950/60 border border-slate-800 hover:border-slate-700 transition flex flex-col md:flex-row md:items-center justify-between gap-4"
+            >
+              <div class="flex items-start gap-3.5">
+                <div 
+                  class="w-10 h-10 rounded-2xl flex items-center justify-center text-xs font-black flex-shrink-0"
+                  :class="quiz.attended ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'"
+                >
+                  <span v-if="quiz.lectureNumber">#{{ quiz.lectureNumber }}</span>
+                  <span v-else>#{{ index + 1 }}</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white mb-1">
+                    {{ quiz.title }}
+                  </h4>
+                  <div class="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
+                    <span v-if="quiz.submittedAt" class="flex items-center gap-1 font-mono text-[11px]">
+                      <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i>
+                      <span>{{ formatDate(quiz.submittedAt) }}</span>
+                    </span>
+                    <span v-if="quiz.evaluation && quiz.evaluation.notes" class="text-amber-300 text-[11px]">
+                      ملاحظة: {{ quiz.evaluation.notes }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Status & Score Badges -->
+              <div class="flex items-center gap-3 self-end md:self-auto">
+                
+                <!-- Attendance Pill -->
+                <span 
+                  class="px-2.5 py-1 rounded-xl text-xs font-bold inline-flex items-center gap-1"
+                  :class="quiz.attended ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'"
+                >
+                  <i :data-lucide="quiz.attended ? 'check' : 'x'" class="w-3.5 h-3.5"></i>
+                  <span>{{ quiz.attended ? 'حاضر' : 'لم يحضر / غائب' }}</span>
+                </span>
+
+                <!-- Score Pill -->
+                <span 
+                  v-if="quiz.score !== null"
+                  class="px-3 py-1 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-black font-mono"
+                >
+                  {{ quiz.score }} / {{ quiz.totalPoints }} ({{ quiz.percentage }}%)
+                </span>
+
+                <!-- Action Button if Quiz is Currently Open -->
+                <a 
+                  v-if="quiz.isOpen && !quiz.attended" 
+                  :href="'/quiz.html?id=' + quiz.quizId"
+                  class="btn-gold px-3 py-1 rounded-xl text-xs font-black inline-flex items-center gap-1"
+                >
+                  <span>أداء الاختبار</span>
+                  <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                </a>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </template>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 px-6 border-t border-slate-800/80 bg-slate-950/40 text-center text-xs text-slate-500">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <span>نموذج محاكاة وزارة الخارجية – جامعة السويس © 2026</span>
+        <span class="text-amber-400 font-medium">بوابة شؤون المندوبين والأعضاء</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const { createApp, ref, onMounted, nextTick } = Vue;
+
+    createApp({
+      setup() {
+        const loading = ref(true);
+        const error = ref(null);
+        const candidate = ref(null);
+
+        // Fetch candidate profile data
+        const fetchProfile = async () => {
+          loading.value = true;
+          error.value = null;
+
+          try {
+            const res = await fetch('/api/delegate/my-profile');
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+              candidate.value = data.candidate;
+            } else {
+              error.value = data.message || 'يرجى تسجيل الدخول لعرض الملف الشخصي';
+              // If unauthorized, redirect to login after a brief moment
+              if (res.status === 401) {
+                setTimeout(() => {
+                  window.location.href = '/login';
+                }, 1500);
+              }
+            }
+          } catch (err) {
+            console.error('Fetch profile error:', err);
+            error.value = 'حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة لاحقاً';
+          } finally {
+            loading.value = false;
+            nextTick(() => lucide.createIcons());
+          }
+        };
+
+        const formatDate = (dateStr) => {
+          if (!dateStr) return '';
+          try {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+          } catch (e) {
+            return dateStr;
+          }
+        };
+
+        const logout = async () => {
+          try {
+            await fetch('/api/auth/logout');
+          } catch (e) {
+            console.error('Logout error:', e);
+          }
+          window.location.href = '/login';
+        };
+
+        const redirectToLogin = () => {
+          window.location.href = '/login';
+        };
+
+        onMounted(() => {
+          fetchProfile();
+        });
+
+        return {
+          loading,
+          error,
+          candidate,
+          formatDate,
+          logout,
+          redirectToLogin
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
