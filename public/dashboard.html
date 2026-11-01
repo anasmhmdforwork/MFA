@@ -57,14 +57,17 @@
           <div class="min-w-0">
             <div class="flex items-center gap-1.5 sm:gap-2">
               <h1 class="font-black text-xs sm:text-lg text-white leading-tight truncate max-w-[170px] sm:max-w-none">
-                {{ currentCommittee ? currentCommittee.name : 'الإدارة العامة - جميع اللجان' }}
+                {{ currentUser && currentUser.role === 'directorate' ? currentUser.name : (currentCommittee ? currentCommittee.name : 'الإدارة العامة - جميع اللجان') }}
               </h1>
               <span v-if="currentUser && currentUser.role === 'admin'" class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] sm:text-[11px] font-bold border border-amber-500/30 whitespace-nowrap">
                 رئيس النموذج
               </span>
+              <span v-else-if="currentUser && currentUser.role === 'directorate'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-[11px] font-bold border border-amber-400/40 whitespace-nowrap">
+                {{ currentUser.directorateType === 'hr' ? 'مسؤول التنظيم والموارد البشرية' : (currentUser.directorateType === 'media' ? 'مسؤول الميديا والإعلام' : 'مسؤول الشؤون الأكاديمية') }}
+              </span>
             </div>
             <p class="hidden sm:block text-xs text-amber-400 font-medium mt-0.5 truncate">
-              {{ currentUser ? currentUser.name : 'مدير اللجنة' }} • لوحة إدارة وتقييم المقابلات
+              {{ currentUser && currentUser.role === 'directorate' ? 'إدارة ومتابعة وتقييم الكوادر التابعة لك في مختلف اللجان' : ((currentUser ? currentUser.name : 'مدير اللجنة') + ' • لوحة إدارة وتقييم المقابلات') }}
             </p>
           </div>
         </div>
@@ -74,6 +77,7 @@
           
           <!-- Copy Student Booking Link Button -->
           <button 
+            v-if="currentUser && currentUser.role !== 'directorate'"
             @click="copyBookingLink"
             class="hidden lg:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition shadow-sm"
             title="نسخ رابط صفحة الحجز لإرساله للطلاب"
@@ -115,107 +119,158 @@
       <div class="no-print mb-6 border-b border-slate-200">
         <nav class="flex space-x-reverse space-x-1.5 sm:space-x-3 overflow-x-auto whitespace-nowrap no-scrollbar pb-2 text-xs sm:text-sm font-bold -mx-3 px-3 sm:mx-0 sm:px-0" style="-webkit-overflow-scrolling: touch;">
           
-          <!-- Admin / Directorate Central Overview Tab -->
-          <button 
-            v-if="currentUser && (currentUser.role === 'admin' || currentUser.role === 'directorate')"
-            @click="activeTab = 'minister'" 
-            :class="activeTab === 'minister' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i :data-lucide="currentUser.role === 'directorate' ? (currentUser.directorateType === 'hr' ? 'users' : (currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')) : 'crown'" class="w-4 h-4 text-amber-500"></i>
-            <span>{{ currentUser.role === 'directorate' ? 'لوحة المتابعة المركزية للقطاعات' : 'أداء القطاعات (الإدارة العامة)' }}</span>
-          </button>
+          <!-- ============================================== -->
+          <!-- 1. DIRECTORATES DEDICATED TABS ONLY -->
+          <!-- ============================================== -->
+          <template v-if="currentUser && currentUser.role === 'directorate'">
+            <!-- Tab 1: Directorate Overview -->
+            <button 
+              @click="activeTab = 'directorate_overview'" 
+              :class="activeTab === 'directorate_overview' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i :data-lucide="currentUser.directorateType === 'hr' ? 'users' : (currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-4 h-4 text-amber-500"></i>
+              <span>{{ currentUser.directorateType === 'hr' ? 'لوحة متابعة التنظيم (كافة القطاعات)' : (currentUser.directorateType === 'media' ? 'لوحة متابعة الميديا والإعلام (كافة القطاعات)' : 'المتابعة الأكاديمية والتدريبية (كافة القطاعات)') }}</span>
+            </button>
 
-          <!-- 1. Candidates & Interviews -->
-          <button 
-            @click="activeTab = 'candidates'" 
-            :class="activeTab === 'candidates' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i data-lucide="users" class="w-4 h-4"></i>
-            <span>المرشحون والمقابلات ({{ candidates.length }})</span>
-          </button>
+            <!-- Tab 2: Directorate Members & Evaluations -->
+            <button 
+              @click="activeTab = 'directorate_members'" 
+              :class="activeTab === 'directorate_members' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="star" class="w-4 h-4 text-amber-500"></i>
+              <span>{{ currentUser.directorateType === 'hr' ? 'كوادر التنظيم وتقييم الأداء (' + directorateMembersList.length + ')' : (currentUser.directorateType === 'media' ? 'فريق الميديا وتقييم التغطيات (' + directorateMembersList.length + ')' : 'المناديب واللجان الأكاديمية (' + directorateMembersList.length + ')') }}</span>
+            </button>
 
-          <!-- 2. Slots Schedule (MOVED TO 2ND BUTTON) -->
-          <button 
-            @click="activeTab = 'slots'" 
-            :class="activeTab === 'slots' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i data-lucide="calendar" class="w-4 h-4"></i>
-            <span>جدول المواعيد المتاحة ({{ slots.length }})</span>
-          </button>
+            <!-- Tab 3 & 4 (Academic Directorate Only) -->
+            <template v-if="currentUser.directorateType === 'academic'">
+              <button 
+                @click="activeTab = 'gradebook'; loadGradebook();" 
+                :class="activeTab === 'gradebook' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+                class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+              >
+                <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i>
+                <span>سجل الدرجات والغياب (Excel)</span>
+              </button>
 
-          <!-- 3. Acceptance WhatsApp Notices (إبلاغ المقبولين) -->
-          <button 
-            @click="activeTab = 'notices'" 
-            :class="activeTab === 'notices' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i data-lucide="send" class="w-4 h-4 text-emerald-600"></i>
-            <span>إبلاغ المقبولين ({{ acceptedMembersList.length }})</span>
-          </button>
+              <button 
+                @click="activeTab = 'quizzes'" 
+                :class="activeTab === 'quizzes' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+                class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+              >
+                <i data-lucide="qr-code" class="w-4 h-4 text-purple-600"></i>
+                <span>الاختبارات والـ QR</span>
+              </button>
+            </template>
+          </template>
 
-          <!-- 3. Structure & Accepted Members -->
-          <button 
-            @click="activeTab = 'structure'" 
-            :class="activeTab === 'structure' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
-            <span>الهيكل والأعضاء ({{ acceptedMembersList.length }})</span>
-          </button>
+          <!-- ============================================== -->
+          <!-- 2. ADMIN & COMMITTEE HEAD TABS ONLY -->
+          <!-- ============================================== -->
+          <template v-else>
+            <!-- Admin Dashboard Tab (Admin only) -->
+            <button 
+              v-if="currentUser && currentUser.role === 'admin'"
+              @click="activeTab = 'minister'" 
+              :class="activeTab === 'minister' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
+              <span>أداء القطاعات (الإدارة العامة)</span>
+            </button>
 
-          <!-- 4. Lectures & Quizzes -->
-          <button 
-            @click="activeTab = 'quizzes'" 
-            :class="activeTab === 'quizzes' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i data-lucide="qr-code" class="w-4 h-4 text-purple-600"></i>
-            <span>الاختبارات والـ QR ({{ committeeQuizzes.length }})</span>
-          </button>
+            <!-- 1. Candidates & Interviews -->
+            <button 
+              @click="activeTab = 'candidates'" 
+              :class="activeTab === 'candidates' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="users" class="w-4 h-4"></i>
+              <span>المرشحون والمقابلات ({{ candidates.length }})</span>
+            </button>
 
-          <!-- 5. Gradebook & Excel Sheet -->
-          <button 
-            @click="activeTab = 'gradebook'; loadGradebook();" 
-            :class="activeTab === 'gradebook' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i>
-            <span>سجل الدرجات والغياب (Excel)</span>
-          </button>
+            <!-- 2. Slots Schedule -->
+            <button 
+              @click="activeTab = 'slots'" 
+              :class="activeTab === 'slots' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              <span>جدول المواعيد المتاحة ({{ slots.length }})</span>
+            </button>
 
-          <!-- 6. Professional Analytics Dashboard -->
-          <button 
-            @click="activeTab = 'analytics'" 
-            :class="activeTab === 'analytics' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i data-lucide="pie-chart" class="w-4 h-4"></i>
-            <span>الإحصائيات والتحليلات</span>
-          </button>
+            <!-- 3. Acceptance WhatsApp Notices -->
+            <button 
+              @click="activeTab = 'notices'" 
+              :class="activeTab === 'notices' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="send" class="w-4 h-4 text-emerald-600"></i>
+              <span>إبلاغ المقبولين ({{ acceptedMembersList.length }})</span>
+            </button>
 
-          <!-- 7. Transfers Audit Log -->
-          <button 
-            @click="activeTab = 'transfers'" 
-            :class="activeTab === 'transfers' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
-            <span>سجل التحويلات ({{ transferAuditLogs.length }})</span>
-          </button>
+            <!-- 4. Structure & Accepted Members -->
+            <button 
+              @click="activeTab = 'structure'" 
+              :class="activeTab === 'structure' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+              <span>الهيكل والأعضاء ({{ acceptedMembersList.length }})</span>
+            </button>
 
-          <!-- 8. Secondary Preference Candidates -->
-          <button 
-            v-if="currentCommittee && secondaryCandidates.length > 0"
-            @click="activeTab = 'secondary'" 
-            :class="activeTab === 'secondary' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-          >
-            <i data-lucide="bookmark" class="w-4 h-4 text-purple-600"></i>
-            <span>مرشحو الرغبة الثانية ({{ secondaryCandidates.length }})</span>
-          </button>
+            <!-- 5. Lectures & Quizzes -->
+            <button 
+              @click="activeTab = 'quizzes'" 
+              :class="activeTab === 'quizzes' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="qr-code" class="w-4 h-4 text-purple-600"></i>
+              <span>الاختبارات والـ QR ({{ committeeQuizzes.length }})</span>
+            </button>
+
+            <!-- 6. Gradebook & Excel Sheet -->
+            <button 
+              @click="activeTab = 'gradebook'; loadGradebook();" 
+              :class="activeTab === 'gradebook' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i>
+              <span>سجل الدرجات والغياب (Excel)</span>
+            </button>
+
+            <!-- 7. Professional Analytics Dashboard -->
+            <button 
+              @click="activeTab = 'analytics'" 
+              :class="activeTab === 'analytics' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="pie-chart" class="w-4 h-4"></i>
+              <span>الإحصائيات والتحليلات</span>
+            </button>
+
+            <!-- 8. Transfers Audit Log -->
+            <button 
+              @click="activeTab = 'transfers'" 
+              :class="activeTab === 'transfers' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
+              <span>سجل التحويلات ({{ transferAuditLogs.length }})</span>
+            </button>
+
+            <!-- 9. Secondary Preference Candidates -->
+            <button 
+              v-if="currentCommittee && secondaryCandidates.length > 0"
+              @click="activeTab = 'secondary'" 
+              :class="activeTab === 'secondary' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="bookmark" class="w-4 h-4 text-purple-600"></i>
+              <span>مرشحو الرغبة الثانية ({{ secondaryCandidates.length }})</span>
+            </button>
+          </template>
 
         </nav>
       </div>
@@ -225,6 +280,457 @@
       <!-- ============================================== -->
       <!-- TAB 0: MINISTER / EXECUTIVE DASHBOARD -->
       <!-- ============================================== -->
+      <!-- ============================================== -->
+      <!-- DEDICATED TAB: DIRECTORATE CENTRAL OVERVIEW -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'directorate_overview'" class="space-y-8">
+        
+        <!-- Directorate Hero Banner -->
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-8 border border-amber-500/30 shadow-xl relative overflow-hidden">
+          <div class="absolute -left-10 -bottom-10 w-48 h-48 rounded-full blur-3xl pointer-events-none"
+               :class="currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-500/15' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-500/15' : 'bg-emerald-500/15')"></div>
+
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-black text-2xl shadow-lg flex-shrink-0"
+                   :class="currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-600 text-white' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-600 text-white' : 'bg-emerald-600 text-white')">
+                <i :data-lucide="currentUser && currentUser.directorateType === 'hr' ? 'users' : (currentUser && currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-8 h-8"></i>
+              </div>
+              <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold mb-1 border border-amber-400/30">
+                  {{ currentUser && currentUser.directorateType === 'hr' ? 'الإدارة المركزية للتنظيم والموارد البشرية' : (currentUser && currentUser.directorateType === 'media' ? 'الإدارة المركزية للميديا والإعلام' : 'الإدارة المركزية للشؤون الأكاديمية والتدريب') }}
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-white">
+                  {{ currentUser ? currentUser.name : '' }}
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                  {{ currentUser && currentUser.directorateType === 'hr' ? 'متابعة وإدارة مسؤولي وكوادر التنظيم والموارد البشرية وتوزيعهم على اللجان والقطاعات الـ 9 وتقييم انضباطهم الميداني.' : (currentUser && currentUser.directorateType === 'media' ? 'متابعة وإدارة فريق الميديا، التصوير، المونتاج، والتغطيات الإعلامية الميدانية لكافة فعاليات ولجان النموذج.' : 'متابعة المناديب الأكاديميين، نسب حضور المحاضرات، وتطوير المهارات الدبلوماسية وسجلات الاختبارات عبر اللجان.') }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <button 
+                @click="copyDirectoratePhones" 
+                class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition flex items-center gap-2 border border-slate-700 shadow-sm"
+                title="نسخ أرقام الهواتف لجروب الواتساب"
+              >
+                <i data-lucide="copy" class="w-4 h-4 text-amber-400"></i>
+                <span>نسخ أرقام الواتساب ({{ directorateMembersList.length }})</span>
+              </button>
+
+              <button 
+                @click="exportDirectorateCSV" 
+                class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition flex items-center gap-2 shadow-md"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>تصدير الكشف (Excel)</span>
+              </button>
+
+              <button 
+                @click="activeTab = 'directorate_members'" 
+                class="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-xs font-black transition flex items-center gap-2 shadow-md"
+              >
+                <i data-lucide="user-check" class="w-4 h-4 text-emerald-600"></i>
+                <span>فتح كشف التقييمات</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Metric Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <!-- Card 1: Total Members -->
+          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+                 :class="currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-100 text-pink-700' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-100 text-purple-700' : 'bg-emerald-100 text-emerald-700')">
+              <i :data-lucide="currentUser && currentUser.directorateType === 'hr' ? 'users' : (currentUser && currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-xs text-slate-400 font-bold block">
+                {{ currentUser && currentUser.directorateType === 'hr' ? 'مسؤولو التنظيم' : (currentUser && currentUser.directorateType === 'media' ? 'كوادر الميديا' : 'المناديب والأكاديميين') }}
+              </span>
+              <span class="text-2xl font-black text-slate-900 font-mono">{{ directorateMembersList.length }}</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Committees Covered -->
+          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="landmark" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-xs text-slate-400 font-bold block">اللجان المغطاة</span>
+              <span class="text-2xl font-black text-slate-900 font-mono">
+                {{ committeesCoveredCount }} <span class="text-xs font-normal text-slate-400">/ 9 لجان</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Card 3: Average Evaluation -->
+          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="star" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-xs text-slate-400 font-bold block">متوسط التقييم</span>
+              <span class="text-2xl font-black text-slate-900 font-mono">
+                {{ directorateAvgScore ? directorateAvgScore + ' / 10' : '—' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Card 4: Evaluated Count -->
+          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="clipboard-check" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="text-xs text-slate-400 font-bold block">تم تقييمهم</span>
+              <span class="text-2xl font-black text-slate-900 font-mono">
+                {{ directorateEvaluatedCount }} <span class="text-xs font-normal text-slate-400">/ {{ directorateMembersList.length }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9 Sectors Distribution Grid -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h4 class="font-black text-slate-900 text-lg flex items-center gap-2">
+                <i data-lucide="layout-grid" class="w-5 h-5 text-amber-500"></i>
+                <span>توزيع كوادر {{ currentUser && currentUser.directorateType === 'hr' ? 'التنظيم والـ HR' : (currentUser && currentUser.directorateType === 'media' ? 'الميديا والإعلام' : 'الشؤون الأكاديمية') }} على الـ 9 قطاعات</span>
+              </h4>
+              <p class="text-xs text-slate-500">استعرض أعضاء إدارتك في كل لجنة وتابع تقييم أدائهم الميداني</p>
+            </div>
+            <button 
+              @click="activeTab = 'directorate_members'; directorateCommitteeFilter = 'all';" 
+              class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1"
+            >
+              <span>عرض كافة الكوادر ({{ directorateMembersList.length }})</span>
+              <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div 
+              v-for="comm in committees" 
+              :key="comm.id" 
+              class="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-slate-300"
+            >
+              <div>
+                <!-- Header: Comm Badge & Name -->
+                <div class="flex items-center justify-between gap-3 mb-3">
+                  <div class="flex items-center gap-3">
+                    <div 
+                      class="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white shadow-md text-xs"
+                      :style="{ backgroundColor: comm.color }"
+                    >
+                      <i data-lucide="landmark" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <h5 class="font-black text-slate-900 text-sm group-hover:text-amber-600 transition-colors">
+                        {{ comm.shortName || comm.name }}
+                      </h5>
+                      <span class="text-[11px] text-slate-400 block">{{ comm.headName }}</span>
+                    </div>
+                  </div>
+                  
+                  <span 
+                    class="text-xs font-black px-2.5 py-1 rounded-full"
+                    :class="getDirectorateMembersInCommittee(comm.id).length > 0 ? (currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-100 text-pink-800' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-100 text-purple-800' : 'bg-emerald-100 text-emerald-800')) : 'bg-slate-100 text-slate-500'"
+                  >
+                    {{ getDirectorateMembersInCommittee(comm.id).length }} كادر
+                  </span>
+                </div>
+
+                <!-- Members List Preview in this Committee -->
+                <div v-if="getDirectorateMembersInCommittee(comm.id).length > 0" class="space-y-2 my-3">
+                  <div 
+                    v-for="mem in getDirectorateMembersInCommittee(comm.id)" 
+                    :key="mem.id"
+                    class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between gap-2"
+                  >
+                    <div class="min-w-0">
+                      <span class="text-xs font-bold text-slate-800 truncate block">{{ mem.arabicName }}</span>
+                      <span class="text-[10px] text-slate-400 block">{{ mem.faculty }}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                      <span 
+                        v-if="mem.memberEvaluation && mem.memberEvaluation.score" 
+                        class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-black"
+                      >
+                        ⭐ {{ mem.memberEvaluation.score }}
+                      </span>
+                      <span v-else class="text-[10px] text-slate-400 font-bold">لم يُقيّم</span>
+                      
+                      <button 
+                        @click="openMemberEvalModal(mem)" 
+                        class="p-1 rounded-md bg-slate-200 hover:bg-amber-500 hover:text-white text-slate-600 transition"
+                        title="تقييم العضو"
+                      >
+                        <i data-lucide="edit-3" class="w-3 h-3"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Empty alert if no members assigned -->
+                <div v-else class="my-4 p-3 rounded-2xl border border-dashed border-slate-200 text-center">
+                  <span class="text-xs text-slate-400">لا يوجد كوادر مسندين لهذه اللجنة حتى الآن</span>
+                </div>
+              </div>
+
+              <!-- Button to jump to members list filtered for this committee -->
+              <button 
+                @click="activeTab = 'directorate_members'; directorateCommitteeFilter = comm.id;" 
+                class="w-full mt-3 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
+              >
+                <span>عرض وتقييم كوادر {{ comm.shortName }}</span>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Directorate Only: Cross-Committees Lectures & Attendance Table -->
+        <div v-if="currentUser && currentUser.directorateType === 'academic'" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-800 text-xs font-bold mb-1 border border-purple-200">
+                <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+                <span>المتابعة الأكاديمية والتدريبية للـ 9 قطاعات</span>
+              </div>
+              <h4 class="text-lg font-black text-slate-900">متابعة أداء الاختبارات ونسب حضور المحاضرات لكل لجنة</h4>
+              <p class="text-xs text-slate-500">كشف حي يوضح نشاط كل رئيس لجنة، عدد المحاضرات المنعقدة، ونسبة التزام المناديب بالحضور.</p>
+            </div>
+            <button 
+              @click="loadAdminPerformance" 
+              class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5"
+            >
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>تحديث الأرقام</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div 
+              v-for="comm in allCommitteesPerformance" 
+              :key="comm.committeeId"
+              class="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:shadow-md transition flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-xs shadow-sm"
+                         :style="{ backgroundColor: comm.color }">
+                      {{ comm.committeeName.charAt(0) }}
+                    </div>
+                    <div>
+                      <h5 class="font-black text-sm text-slate-900">{{ comm.committeeName }}</h5>
+                      <span class="text-[10px] text-slate-400 font-mono">{{ comm.slug }}</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-800 text-[10px] font-bold">
+                    {{ comm.acceptedCount }} مقبول
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                    <span class="text-[10px] text-slate-400 block">المناديب (Delegates)</span>
+                    <span class="font-black text-sm text-blue-700">{{ comm.delegatesCount }}</span>
+                  </div>
+                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                    <span class="text-[10px] text-slate-400 block">أعضاء الهيكل</span>
+                    <span class="font-black text-sm text-purple-700">{{ comm.membersCount }}</span>
+                  </div>
+                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                    <span class="text-[10px] text-slate-400 block">الاختبارات المنعقدة</span>
+                    <span class="font-black text-sm text-slate-900">{{ comm.quizzesCount }} اختبارات</span>
+                  </div>
+                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                    <span class="text-[10px] text-slate-400 block">نسبة الحضور</span>
+                    <span class="font-black text-sm" :class="comm.attendanceRate >= 70 ? 'text-emerald-700' : 'text-amber-700'">
+                      {{ comm.attendanceRate }}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                @click="activeTab = 'gradebook'; selectedCommitteeId = comm.committeeId; loadGradebook();"
+                class="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <span>فتح سجل درجات اللجنة</span>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- DEDICATED TAB: DIRECTORATE MEMBERS & EVALUATIONS -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'directorate_members'" class="space-y-6">
+
+        <!-- Members Filter & Search Header -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div>
+              <h4 class="font-black text-slate-900 text-lg flex items-center gap-2">
+                <i :data-lucide="currentUser && currentUser.directorateType === 'hr' ? 'users' : (currentUser && currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-5 h-5 text-amber-500"></i>
+                <span>كشف وتقييم كوادر {{ currentUser && currentUser.directorateType === 'hr' ? 'التنظيم والموارد البشرية' : (currentUser && currentUser.directorateType === 'media' ? 'الميديا والإعلام' : 'المناديب والأكاديميين') }}</span>
+              </h4>
+              <p class="text-xs text-slate-500">متابعة أداء كل عضو، تسجيل التقييمات والملاحظات الميدانية، والتواصل المباشر عبر الواتساب.</p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-800 text-xs font-black">
+                إجمالي المعروض: {{ directorateMembersList.length }} كادر
+              </span>
+            </div>
+          </div>
+
+          <!-- Filters Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
+            <!-- Search Input -->
+            <div class="relative">
+              <input 
+                v-model="directorateSearch" 
+                type="text" 
+                placeholder="بحث بالاسم، الكلية، أو رقم الهاتف..." 
+                class="w-full pr-10 pl-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:border-amber-500 outline-none"
+              >
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3 top-3"></i>
+            </div>
+
+            <!-- Committee Filter -->
+            <div>
+              <select 
+                v-model="directorateCommitteeFilter" 
+                class="w-full py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 focus:border-amber-500 outline-none"
+              >
+                <option value="all">جميع اللجان والقطاعات (كافة الـ 9)</option>
+                <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.shortName || c.name }}</option>
+              </select>
+            </div>
+
+            <!-- Evaluation Status Filter -->
+            <div>
+              <select 
+                v-model="directorateEvalFilter" 
+                class="w-full py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 focus:border-amber-500 outline-none"
+              >
+                <option value="all">كافة الكوادر (المقيّمين وغير المقيّمين)</option>
+                <option value="evaluated">تم تقييمهم فقط</option>
+                <option value="pending">في انتظار التقييم</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cards Grid of Directorate Members -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div 
+            v-for="cand in directorateMembersList" 
+            :key="cand.id" 
+            class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+          >
+            <div>
+              <!-- Top row: Avatar & Committee Badge -->
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-black text-white text-base shadow-sm"
+                       :class="currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-600' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-600' : 'bg-emerald-600')">
+                    {{ cand.arabicName ? cand.arabicName.charAt(0) : 'ع' }}
+                  </div>
+                  <div>
+                    <h5 class="font-black text-sm text-slate-900 leading-snug">{{ cand.arabicName }}</h5>
+                    <span class="text-[11px] text-slate-400 block">{{ cand.university }} - {{ cand.faculty }}</span>
+                  </div>
+                </div>
+
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold"
+                      :style="{ backgroundColor: getCommitteeColor(cand.assignedCommitteeId || cand.originalCommitteeId) + '20', color: getCommitteeColor(cand.assignedCommitteeId || cand.originalCommitteeId) }">
+                  {{ getCommitteeName(cand.assignedCommitteeId || cand.originalCommitteeId) }}
+                </span>
+              </div>
+
+              <!-- Phone & Direct Contact Buttons -->
+              <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 space-y-2 mb-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-500 flex items-center gap-1.5 font-mono">
+                    <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <span>{{ cand.phone }}</span>
+                  </span>
+
+                  <div class="flex items-center gap-1.5">
+                    <a 
+                      :href="getDirectorateMemberWALink(cand)" 
+                      target="_blank" 
+                      class="px-2.5 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[11px] font-bold flex items-center gap-1 transition"
+                      title="محادثة واتساب مباشرة"
+                    >
+                      <i data-lucide="message-circle" class="w-3 h-3 text-emerald-600"></i>
+                      <span>واتساب</span>
+                    </a>
+
+                    <a 
+                      :href="'tel:' + cand.phone" 
+                      class="p-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 transition"
+                      title="اتصال هاتفي"
+                    >
+                      <i data-lucide="phone-call" class="w-3 h-3"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Evaluation Box -->
+              <div class="p-3 rounded-2xl mb-3"
+                   :class="cand.memberEvaluation && cand.memberEvaluation.score ? 'bg-amber-50/70 border border-amber-200' : 'bg-slate-50 border border-dashed border-slate-200'">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[11px] font-bold text-slate-700">تقييم الأداء الميداني:</span>
+                  <span v-if="cand.memberEvaluation && cand.memberEvaluation.score" class="font-black text-amber-700 text-xs">
+                    ⭐ {{ cand.memberEvaluation.score }} / 10
+                  </span>
+                  <span v-else class="text-[10px] text-slate-400 font-bold">لم يُقيّم بعد</span>
+                </div>
+
+                <p v-if="cand.memberEvaluation && cand.memberEvaluation.notes" class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                  "{{ cand.memberEvaluation.notes }}"
+                </p>
+                <p v-else class="text-[10px] text-slate-400 italic">
+                  اضغط زر التقييم بالأسفل لتسجيل درجة وملاحظات أداء العضو...
+                </p>
+              </div>
+            </div>
+
+            <!-- Action Button: Open Eval Modal -->
+            <button 
+              @click="openMemberEvalModal(cand)" 
+              class="w-full py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm"
+            >
+              <i data-lucide="edit-3" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>{{ cand.memberEvaluation && cand.memberEvaluation.score ? 'تعديل تقييم الأداء' : 'تسجيل تقييم العضو الآن' }}</span>
+            </button>
+          </div>
+
+          <!-- Empty State -->
+          <div v-if="directorateMembersList.length === 0" class="col-span-full py-12 text-center bg-white rounded-3xl border border-slate-200">
+            <i :data-lucide="currentUser && currentUser.directorateType === 'hr' ? 'users' : (currentUser && currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
+            <h5 class="font-bold text-slate-800 text-sm">لا توجد كوادر مطابقة لخيارات البحث أو التصفية الحالية</h5>
+            <p class="text-xs text-slate-400 mt-1">جرّب تغيير اللجنة المحددة أو إزالة نص البحث</p>
+          </div>
+        </div>
+
+      </section>
+
       <section v-show="activeTab === 'minister'" class="space-y-8">
         
         <!-- Minister Welcome Banner -->
@@ -367,48 +873,7 @@
 
         
         <!-- Cross-Committees Quizzes, Attendance & Structure Overview -->
-        <!-- Directorate Specific Banner -->
-        <div v-if="currentUser && currentUser.role === 'directorate'" class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 text-white p-6 sm:p-8 rounded-3xl border border-amber-500/30 shadow-xl mb-6 relative overflow-hidden">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-            <div class="flex items-center gap-4">
-              <div class="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg flex-shrink-0"
-                   :class="currentUser.directorateType === 'hr' ? 'bg-pink-600' : (currentUser.directorateType === 'media' ? 'bg-purple-600' : 'bg-emerald-600')">
-                <i :data-lucide="currentUser.directorateType === 'hr' ? 'users' : (currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-7 h-7 text-white"></i>
-              </div>
-              <div>
-                <div class="flex items-center gap-2 flex-wrap">
-                  <h2 class="text-xl sm:text-2xl font-black text-white">
-                    {{ currentUser.name }}
-                  </h2>
-                  <span class="px-3 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold border border-amber-400/30">
-                    إشراف ومتابعة مركزية (كافة القطاعات)
-                  </span>
-                </div>
-                <p class="text-xs text-slate-300 mt-1 leading-relaxed">
-                  {{ currentUser.directorateType === 'hr' ? 'متابعة وتقييم كوادر ومسؤولي التنظيم والموارد البشرية وتوزيعهم على اللجان والفعاليات.' : (currentUser.directorateType === 'media' ? 'متابعة وتقييم كوادر الميديا والتصوير والتغطيات الإعلامية لجميع اللجان.' : 'متابعة وتقييم الكوادر الأكاديمية والمناديب ومستوى الحضور والاختبارات عبر اللجان.') }}
-                </p>
-              </div>
-            </div>
 
-            <div class="flex items-center gap-2.5 flex-wrap">
-              <button 
-                @click="copyAllDirectoratePhones" 
-                class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition flex items-center gap-2 border border-slate-700 shadow-sm"
-              >
-                <i data-lucide="copy" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>نسخ أرقام الهواتف (جروب الواتساب)</span>
-              </button>
-
-              <button 
-                @click="exportAcceptedMembersToCSV" 
-                class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition flex items-center gap-2 shadow-md"
-              >
-                <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                <span>تصدير الكشف المجمع (CSV)</span>
-              </button>
-            </div>
-          </div>
-        </div>
 
         <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
           <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
@@ -5363,8 +5828,10 @@
           }
           selectedCommitteeId.value = currentUser.value.committeeId || 'all';
           batchForm.value.committeeId = currentUser.value.committeeId || 'crises';
-          if (currentUser.value.role === 'admin' || currentUser.value.role === 'directorate') {
+          if (currentUser.value.role === 'admin') {
             activeTab.value = 'minister';
+          } else if (currentUser.value.role === 'directorate') {
+            activeTab.value = 'directorate_overview';
           } else {
             activeTab.value = 'candidates';
           }
@@ -5485,6 +5952,130 @@
           nextTick(() => {
             lucide.createIcons();
           });
+        }
+
+        // ==============================================
+        // DIRECTORATE WORKSPACE STATE & COMPUTED
+        // ==============================================
+        const directorateSearch = ref('');
+        const directorateCommitteeFilter = ref('all');
+        const directorateEvalFilter = ref('all');
+
+        const directorateMembersList = computed(() => {
+          if (!currentUser.value || currentUser.value.role !== 'directorate') return [];
+          const type = currentUser.value.directorateType;
+          let list = acceptedMembersList.value || [];
+          
+          if (type === 'hr') {
+            list = list.filter(c => c.roleType === 'member' && c.subDepartment === 'hr');
+          } else if (type === 'media') {
+            list = list.filter(c => c.roleType === 'member' && c.subDepartment === 'media');
+          } else if (type === 'academic') {
+            list = list.filter(c => (c.roleType || 'delegate') === 'delegate' || (c.roleType === 'member' && c.subDepartment === 'academic'));
+          }
+          
+          if (directorateCommitteeFilter.value !== 'all') {
+            list = list.filter(c => (c.assignedCommitteeId || c.originalCommitteeId) === directorateCommitteeFilter.value);
+          }
+          
+          if (directorateEvalFilter.value === 'evaluated') {
+            list = list.filter(c => c.memberEvaluation && typeof c.memberEvaluation.score === 'number');
+          } else if (directorateEvalFilter.value === 'pending') {
+            list = list.filter(c => !c.memberEvaluation || typeof c.memberEvaluation.score !== 'number');
+          }
+          
+          if (directorateSearch.value.trim()) {
+            const q = directorateSearch.value.trim().toLowerCase();
+            list = list.filter(c => 
+              (c.arabicName && c.arabicName.toLowerCase().includes(q)) ||
+              (c.fullName && c.fullName.toLowerCase().includes(q)) ||
+              (c.phone && c.phone.includes(q)) ||
+              (c.faculty && c.faculty.toLowerCase().includes(q))
+            );
+          }
+          
+          return list;
+        });
+
+        function getDirectorateMembersInCommittee(commId) {
+          if (!currentUser.value || currentUser.value.role !== 'directorate') return [];
+          const type = currentUser.value.directorateType;
+          let list = (acceptedMembersList.value || []).filter(c => (c.assignedCommitteeId || c.originalCommitteeId) === commId);
+          if (type === 'hr') {
+            return list.filter(c => c.roleType === 'member' && c.subDepartment === 'hr');
+          } else if (type === 'media') {
+            return list.filter(c => c.roleType === 'member' && c.subDepartment === 'media');
+          } else if (type === 'academic') {
+            return list.filter(c => (c.roleType || 'delegate') === 'delegate' || (c.roleType === 'member' && c.subDepartment === 'academic'));
+          }
+          return [];
+        }
+
+        const directorateAvgScore = computed(() => {
+          const scored = directorateMembersList.value.filter(c => c.memberEvaluation && typeof c.memberEvaluation.score === 'number');
+          if (scored.length === 0) return null;
+          const sum = scored.reduce((acc, c) => acc + c.memberEvaluation.score, 0);
+          return (sum / scored.length).toFixed(1);
+        });
+
+        const directorateEvaluatedCount = computed(() => {
+          return directorateMembersList.value.filter(c => c.memberEvaluation && typeof c.memberEvaluation.score === 'number').length;
+        });
+
+        const committeesCoveredCount = computed(() => {
+          const set = new Set();
+          directorateMembersList.value.forEach(c => {
+            const id = c.assignedCommitteeId || c.originalCommitteeId;
+            if (id) set.add(id);
+          });
+          return set.size;
+        });
+
+        function getCommitteeName(id) {
+          const c = (committees.value || []).find(cm => cm.id === id);
+          return c ? (c.shortName || c.name) : 'اللجنة';
+        }
+
+        function getCommitteeColor(id) {
+          const c = (committees.value || []).find(cm => cm.id === id);
+          return c && c.color ? c.color : '#d97706';
+        }
+
+        function getDirectorateMemberWALink(cand) {
+          if (!cand || !cand.phone) return '#';
+          const raw = cand.phone.replace(/\D/g, '').replace(/^0/, '');
+          const cleanPhone = '20' + raw;
+          const roleTitle = currentUser.value && currentUser.value.directorateType === 'hr' ? 'التنظيم والموارد البشرية' : (currentUser.value && currentUser.value.directorateType === 'media' ? 'الميديا والإعلام' : 'الشؤون الأكاديمية');
+          const msg = `مرحباً ${cand.arabicName || ''}، معك إدارة ${roleTitle} بنموذج محاكاة وزارة الخارجية (جامعة السويس).`;
+          return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+        }
+
+        function copyDirectoratePhones() {
+          const phones = directorateMembersList.value.map(c => c.phone).filter(Boolean);
+          if (phones.length === 0) {
+            alert('لا توجد أرقام هواتف لنسخها');
+            return;
+          }
+          navigator.clipboard.writeText(phones.join('\n'));
+          alert('تم نسخ ' + phones.length + ' رقم هاتف بنجاح!');
+        }
+
+        function exportDirectorateCSV() {
+          const typeName = currentUser.value.directorateType === 'hr' ? 'التنظيم_والموارد_البشرية' : (currentUser.value.directorateType === 'media' ? 'الميديا_والإعلام' : 'الشؤون_الأكاديمية');
+          let csv = '\uFEFFم,الاسم,اللجنة,الجامعة,الكلية,الهاتف,البريد الإلكتروني,تقييم الأداء,ملاحظات التقييم\n';
+          directorateMembersList.value.forEach((c, idx) => {
+            const comm = (committees.value || []).find(cm => cm.id === (c.assignedCommitteeId || c.originalCommitteeId));
+            const commName = comm ? (comm.shortName || comm.name) : '—';
+            const score = (c.memberEvaluation && typeof c.memberEvaluation.score === 'number') ? c.memberEvaluation.score : 'لم يُقيّم';
+            const notes = (c.memberEvaluation && c.memberEvaluation.notes ? c.memberEvaluation.notes : '').replace(/"/g, '""');
+            csv += (idx + 1) + ',"' + (c.arabicName || c.fullName) + '","' + commName + '","' + c.university + '","' + c.faculty + '","' + c.phone + '","' + c.email + '","' + score + '","' + notes + '"\n';
+          });
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'كشف_' + typeName + '_' + new Date().toISOString().split('T')[0] + '.csv';
+          a.click();
         }
 
         const acceptedMembersList = computed(() => {
@@ -7064,6 +7655,19 @@
         });
 
         return {
+          directorateSearch,
+          directorateCommitteeFilter,
+          directorateEvalFilter,
+          directorateMembersList,
+          getDirectorateMembersInCommittee,
+          directorateAvgScore,
+          directorateEvaluatedCount,
+          committeesCoveredCount,
+          getCommitteeName,
+          getCommitteeColor,
+          getDirectorateMemberWALink,
+          copyDirectoratePhones,
+          exportDirectorateCSV,
           attendedDelegatesList,
           editingCandidateModal,
           isSavingCandidateEdit,
