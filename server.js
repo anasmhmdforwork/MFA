@@ -5,9 +5,29 @@ const path = require('path');
 const fs = require('fs');
 
 
+function normalizeDigits(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+    .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+}
+
+function normalizeArabic(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/[\u064B-\u065F\u0670]/g, '')
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/ى/g, 'ي')
+    .replace(/[\-_#]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
 function cleanPhone(p) {
   if (!p) return '';
-  let digits = String(p).replace(/\D/g, '');
+  let digits = normalizeDigits(String(p)).replace(/\D/g, '');
   if (digits.startsWith('20')) digits = digits.substring(2);
   if (digits.startsWith('0')) digits = digits.substring(1);
   return digits;
@@ -345,24 +365,50 @@ app.post('/api/auth/login', (req, res) => {
   }
 
   // 2. Check if it is a Candidate (Delegate or Member in Committee)
+  const normInput = normalizeArabic(cleanInput);
+  const inputDigits = normalizeDigits(cleanInput).replace(/\D/g, '');
   const inputPhone = cleanPhone(cleanInput);
-  const inputEmail = cleanInput.toLowerCase();
-  const inputCode = cleanInput.toUpperCase();
+  const inputEmail = cleanInput.toLowerCase().trim();
+  const inputCode = cleanInput.toUpperCase().replace(/^[#\s]+/, '').trim();
+  const cleanPassNorm = normalizeDigits(cleanPass);
 
   const cand = (db.candidates || []).find(c => {
     const cEmail = (c.email || '').toLowerCase().trim();
     const cPhone = cleanPhone(c.phone);
+    const cNatId = normalizeDigits(c.nationalId || '').replace(/\D/g, '');
     const cDipId = (c.diplomaticId || '').toUpperCase().trim();
     const cId = (c.id || '').toUpperCase().trim();
-    return (cEmail && cEmail === inputEmail) || 
-           (inputPhone && cPhone === inputPhone) || 
-           (cDipId && cDipId === inputCode) ||
-           (cId && cId === inputCode);
+    const cNormArabic = normalizeArabic(c.arabicName || '');
+    const cNormFull = normalizeArabic(c.fullName || '');
+
+    // Match by email
+    if (cEmail && cEmail === inputEmail) return true;
+
+    // Match by phone
+    if (inputPhone && cPhone && (cPhone === inputPhone || cPhone.endsWith(inputPhone) || inputPhone.endsWith(cPhone))) return true;
+
+    // Match by National ID
+    if (inputDigits && inputDigits.length >= 10 && cNatId && cNatId === inputDigits) return true;
+
+    // Match by Diplomatic ID or short code
+    if (inputCode) {
+      if (cDipId && (cDipId === inputCode || cDipId.replace(/[-_]/g, '') === inputCode.replace(/[-_]/g, '') || cDipId.endsWith(inputCode))) return true;
+      if (cId && (cId === inputCode || cId.includes(inputCode))) return true;
+    }
+
+    // Match by Name (Arabic or English) - exact normalized match
+    if (normInput && normInput.length >= 3 && !cleanInput.includes('@') && !/^\d+$/.test(inputDigits)) {
+      if (cNormArabic && (cNormArabic === normInput || cNormArabic.replace(/\s+/g, '') === normInput.replace(/\s+/g, ''))) return true;
+      if (cNormFull && (cNormFull === normInput || cNormFull.replace(/\s+/g, '') === normInput.replace(/\s+/g, ''))) return true;
+    }
+
+    return false;
   });
 
   if (cand) {
-    const validPassword = cand.delegatePassword || '1234';
-    if (cleanPass !== validPassword && cleanPass !== '1234') {
+    const validPassword = String(cand.delegatePassword || '1234').trim();
+    const isPassValid = (cleanPass === validPassword || cleanPassNorm === validPassword || cleanPass === '1234' || cleanPassNorm === '1234');
+    if (!isPassValid) {
       return res.status(401).json({ success: false, message: 'كلمة المرور غير صحيحة (كلمة المرور الموحدة هي 1234)' });
     }
 
@@ -402,14 +448,24 @@ app.post('/api/auth/login', (req, res) => {
 // Delegate / Member Personal Profile & Performance API
 app.get('/api/delegate/my-profile', (req, res) => {
   const db = getDB();
-  const candId = req.cookies.mfa_delegate_id || req.query.id;
+  let candId = req.cookies.mfa_delegate_id || req.query.id;
+  if (!candId && req.cookies.mfa_user) {
+    try {
+      const u = JSON.parse(req.cookies.mfa_user);
+      if (u.id) candId = u.id;
+    } catch (e) {}
+  }
   if (!candId) {
     return res.status(401).json({ success: false, message: 'يرجى تسجيل الدخول أولاً' });
   }
 
+  const cleanCandId = String(candId).toUpperCase().trim();
+  const cleanCandPhone = cleanPhone(candId);
   const cand = (db.candidates || []).find(c => 
     c.id === candId || 
-    (c.diplomaticId && c.diplomaticId.toUpperCase() === String(candId).toUpperCase())
+    (c.diplomaticId && c.diplomaticId.toUpperCase() === cleanCandId) ||
+    (c.phone && cleanPhone(c.phone) === cleanCandPhone) ||
+    (c.email && c.email.toLowerCase() === String(candId).toLowerCase())
   );
   if (!cand) {
     return res.status(404).json({ success: false, message: 'الملف الشخصي غير موجود' });

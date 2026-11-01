@@ -238,6 +238,24 @@
       lucide.createIcons();
     }
 
+    function resetSubmitButton() {
+      const submitBtn = document.getElementById('login-submit-btn');
+      const btnText = document.getElementById('btn-text');
+      const btnIcon = document.getElementById('btn-icon');
+      if (submitBtn) submitBtn.disabled = false;
+      if (btnText) btnText.textContent = 'تسجيل الدخول';
+      if (btnIcon) {
+        btnIcon.setAttribute('data-lucide', 'arrow-left');
+        btnIcon.classList.remove('animate-spin');
+        lucide.createIcons();
+      }
+    }
+
+    // Always reset form state on pageshow (e.g. bfcache back button)
+    window.addEventListener('pageshow', function() {
+      resetSubmitButton();
+    });
+
     // Unified Login Handler
     async function handleUnifiedLogin(e) {
       e.preventDefault();
@@ -260,16 +278,22 @@
       btnIcon.classList.add('animate-spin');
       lucide.createIcons();
 
+      // Controller with 10-second timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
       try {
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
           body: JSON.stringify({
             username: identifier,
             password: password
           })
         });
 
+        clearTimeout(timeoutId);
         const data = await res.json();
 
         if (res.ok && data.success) {
@@ -284,33 +308,26 @@
             }
           }
 
-          // Redirect based on backend response
+          // Use replace to prevent back-button redirect loops
           setTimeout(() => {
             if (data.userType === 'delegate') {
               const candId = (data.user && data.user.id) ? data.user.id : '';
-              window.location.href = '/profile' + (candId ? '?id=' + encodeURIComponent(candId) : '');
+              window.location.replace('/profile' + (candId ? '?id=' + encodeURIComponent(candId) : ''));
             } else if (data.redirect) {
-              window.location.href = data.redirect;
+              window.location.replace(data.redirect);
             } else {
-              window.location.href = '/dashboard';
+              window.location.replace('/dashboard');
             }
-          }, 400);
+          }, 250);
         } else {
           showAlert(data.message || 'بيانات الدخول غير صحيحة، يرجى المحاولة مرة أخرى');
-          submitBtn.disabled = false;
-          btnText.textContent = 'تسجيل الدخول';
-          btnIcon.setAttribute('data-lucide', 'arrow-left');
-          btnIcon.classList.remove('animate-spin');
-          lucide.createIcons();
+          resetSubmitButton();
         }
       } catch (err) {
+        clearTimeout(timeoutId);
         console.error('Login error:', err);
-        showAlert('حدث خطأ في الاتصال بالخادم، يرجى المحاولة مجددًا');
-        submitBtn.disabled = false;
-        btnText.textContent = 'تسجيل الدخول';
-        btnIcon.setAttribute('data-lucide', 'arrow-left');
-        btnIcon.classList.remove('animate-spin');
-        lucide.createIcons();
+        showAlert(err.name === 'AbortError' ? 'استغرق الاتصال بالخادم وقتاً أطول من المتوقع، يرجى المحاولة ثانية' : 'حدث خطأ في الاتصال بالخادم، يرجى المحاولة مجددًا');
+        resetSubmitButton();
       }
     }
   </script>

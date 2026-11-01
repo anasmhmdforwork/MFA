@@ -78,6 +78,8 @@ function initSupabase() {
   }
 }
 
+let inFlightSync = null;
+
 // Smart lightweight sync: ONLY checks updated_at timestamp (28 bytes) instead of downloading 2MB
 async function syncFromSupabase(force = false) {
   const now = Date.now();
@@ -96,6 +98,23 @@ async function syncFromSupabase(force = false) {
     initSupabase();
   }
 
+  // Deduplicate concurrent in-flight sync requests & enforce a 3000ms max timeout
+  if (inFlightSync) {
+    return inFlightSync;
+  }
+
+  inFlightSync = Promise.race([
+    doSync(force),
+    new Promise(resolve => setTimeout(() => resolve(memoryCache), 3000))
+  ]).finally(() => {
+    inFlightSync = null;
+  });
+
+  return inFlightSync;
+}
+
+async function doSync(force) {
+  const now = Date.now();
   if (pool) {
     try {
       lastCheckTime = now;
@@ -126,7 +145,7 @@ async function syncFromSupabase(force = false) {
         }
       }
     } catch (err) {
-      console.error('Error syncing from Supabase (using fallback):', err.message);
+      console.warn('Error syncing from Supabase (using memoryCache fallback):', err.message);
       isConnected = false;
     }
   }
