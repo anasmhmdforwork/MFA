@@ -2089,6 +2089,346 @@ app.get('/api/admin/all-committees-performance', (req, res) => {
   res.json({ success: true, summary });
 });
 
+
+// ==========================================
+// EVENTS & VISITS MANAGEMENT APIS (HR & ALL)
+// ==========================================
+
+// 1. GET /api/events - List all events with user booking status
+app.get('/api/events', (req, res) => {
+  const db = getDB();
+  db.events = db.events || [];
+  db.eventBookings = db.eventBookings || [];
+
+  const candidateId = req.query.candidateId || req.cookies.mfa_delegate_id;
+  let username = req.query.username;
+  if (!username && req.cookies.mfa_user) {
+    try { username = JSON.parse(req.cookies.mfa_user).username; } catch (e) {}
+  }
+  const currentUserId = candidateId || username;
+
+  const result = db.events.map(evt => {
+    const activeBookings = db.eventBookings.filter(b => b.eventId === evt.id && b.status !== 'cancelled');
+    const bookedCount = activeBookings.length;
+    const capacity = parseInt(evt.capacity, 10) || 50;
+    const availableSeats = Math.max(0, capacity - bookedCount);
+    const isFull = bookedCount >= capacity;
+
+    let myBooking = null;
+    if (currentUserId) {
+      myBooking = activeBookings.find(b => b.userId === currentUserId || b.userId === candidateId || b.userId === username);
+    }
+
+    return {
+      ...evt,
+      bookedCount,
+      capacity,
+      availableSeats,
+      isFull,
+      myBooking: myBooking ? {
+        id: myBooking.id,
+        bookedAt: myBooking.bookedAt,
+        status: myBooking.status,
+        roleTitle: myBooking.roleTitle
+      } : null
+    };
+  });
+
+  res.json({ success: true, events: result });
+});
+
+// 2. POST /api/events - Create new event (HR / Admin)
+app.post('/api/events', async (req, res) => {
+  const db = getDB();
+  db.events = db.events || [];
+
+  const { title, type, description, date, time, location, capacity, dressCode, notes, createdBy, createdByName } = req.body;
+  if (!title || !date) {
+    return res.status(400).json({ success: false, message: 'يرجى إدخال اسم الفعالية وتاريخ الانعقاد' });
+  }
+
+  const newEvent = {
+    id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+    title: String(title).trim(),
+    type: type || 'visit',
+    description: description || '',
+    date: date,
+    time: time || '10:00',
+    location: location || 'جامعة السويس',
+    capacity: parseInt(capacity, 10) || 50,
+    isOpen: true,
+    dressCode: dressCode || 'زي رسمي كامل (Formal)',
+    notes: notes || '',
+    createdBy: createdBy || 'hr',
+    createdByName: createdByName || 'إدارة التنظيم والموارد البشرية المركزية',
+    createdAt: new Date().toISOString()
+  };
+
+  db.events.unshift(newEvent);
+  await saveDB(db);
+
+  res.json({ success: true, message: 'تم إطلاق الفعالية بنجاح وإتاحتها لكافة أفراد النموذج!', event: newEvent });
+});
+
+// 3. PUT /api/events/:id - Edit event or toggle open/closed
+app.put('/api/events/:id', async (req, res) => {
+  const db = getDB();
+  db.events = db.events || [];
+
+  const evt = db.events.find(e => e.id === req.params.id);
+  if (!evt) {
+    return res.status(404).json({ success: false, message: 'الفعالية غير موجودة' });
+  }
+
+  const { title, type, description, date, time, location, capacity, dressCode, notes, isOpen } = req.body;
+  if (title !== undefined) evt.title = String(title).trim();
+  if (type !== undefined) evt.type = type;
+  if (description !== undefined) evt.description = description;
+  if (date !== undefined) evt.date = date;
+  if (time !== undefined) evt.time = time;
+  if (location !== undefined) evt.location = location;
+  if (capacity !== undefined) evt.capacity = parseInt(capacity, 10) || evt.capacity;
+  if (dressCode !== undefined) evt.dressCode = dressCode;
+  if (notes !== undefined) evt.notes = notes;
+  if (isOpen !== undefined) evt.isOpen = Boolean(isOpen);
+  evt.updatedAt = new Date().toISOString();
+
+  await saveDB(db);
+  res.json({ success: true, message: 'تم تحديث بيانات الفعالية بنجاح', event: evt });
+});
+
+// 4. DELETE /api/events/:id - Delete event
+app.delete('/api/events/:id', async (req, res) => {
+  const db = getDB();
+  db.events = (db.events || []).filter(e => e.id !== req.params.id);
+  db.eventBookings = (db.eventBookings || []).filter(b => b.eventId !== req.params.id);
+
+  await saveDB(db);
+  res.json({ success: true, message: 'تم حذف الفعالية وحجوزاتها بنجاح' });
+});
+
+// 5. POST /api/events/:id/book - 1-Click Instant Reservation
+app.post('/api/events/:id/book', async (req, res) => {
+  const db = getDB();
+  db.events = db.events || [];
+  db.eventBookings = db.eventBookings || [];
+
+  const event = db.events.find(e => e.id === req.params.id);
+  if (!event) {
+    return res.status(404).json({ success: false, message: 'الفعالية غير موجودة' });
+  }
+
+  if (event.isOpen === false) {
+    return res.status(400).json({ success: false, message: 'عذراً، تم إغلاق باب الحجز لهذه الفعالية من قِبل إدارة التنظيم' });
+  }
+
+  const activeBookings = db.eventBookings.filter(b => b.eventId === event.id && b.status !== 'cancelled');
+  const capacity = parseInt(event.capacity, 10) || 50;
+  if (activeBookings.length >= capacity) {
+    return res.status(400).json({ success: false, message: 'عذراً، اكتملت جميع المقاعد المتاحة لهذه الفعالية (' + capacity + ' مقعد)!' });
+  }
+
+  const { candidateId, username } = req.body;
+  const cookieCandId = req.cookies.mfa_delegate_id;
+  let cookieUsername = null;
+  if (req.cookies.mfa_user) {
+    try { cookieUsername = JSON.parse(req.cookies.mfa_user).username; } catch (e) {}
+  }
+
+  const targetCandId = candidateId || cookieCandId;
+  const targetUsername = username || cookieUsername;
+
+  let userId = null;
+  let userType = 'delegate';
+  let roleTitle = 'مندوب';
+  let name = '';
+  let committeeId = 'general';
+  let committeeName = 'الإدارة العامة';
+  let phone = '';
+  let email = '';
+  let faculty = '—';
+  let university = 'جامعة السويس';
+
+  if (targetCandId) {
+    const cand = (db.candidates || []).find(c => c.id === targetCandId);
+    if (cand) {
+      userId = cand.id;
+      name = cand.arabicName || cand.fullName;
+      userType = cand.roleType === 'member' ? 'member' : 'delegate';
+      if (cand.roleType === 'member') {
+        const subDeptTitle = cand.subDepartment === 'hr' ? 'تنظيم وموارد بشرية' : (cand.subDepartment === 'media' ? 'ميديا وإعلام' : 'أكاديمي وتدريب');
+        roleTitle = 'عضو ' + subDeptTitle;
+      } else {
+        roleTitle = 'مندوب (Delegate)';
+      }
+      committeeId = cand.assignedCommitteeId || cand.originalCommitteeId || 'general';
+      const comm = (db.committees || []).find(c => c.id === committeeId);
+      committeeName = comm ? (comm.shortName || comm.name) : 'اللجنة';
+      phone = cand.phone || '';
+      email = cand.email || '';
+      faculty = cand.faculty || '—';
+      university = cand.university || 'جامعة السويس';
+    }
+  }
+
+  if (!userId && targetUsername) {
+    const user = (db.users || []).find(u => u.username === targetUsername);
+    if (user) {
+      userId = user.username;
+      name = user.name;
+      userType = 'board';
+      roleTitle = user.role === 'admin' ? 'رئيس النموذج' : (user.role === 'directorate' ? user.name : 'رئيس لجنة');
+      committeeId = user.committeeId || 'central';
+      committeeName = user.committeeName || (user.committeeId ? 'لجنة ' + user.committeeId : 'الإدارة المركزية');
+      phone = user.phone || '01000000000';
+      email = user.email || (user.username + '@mofa.org');
+      faculty = 'الإدارة العليا';
+      university = 'جامعة السويس';
+    }
+  }
+
+  if (!userId) {
+    return res.status(401).json({ success: false, message: 'يرجى تسجيل الدخول أولاً لإتمام الحجز بنقرة واحدة' });
+  }
+
+  // Check existing booking
+  const existing = db.eventBookings.find(b => b.eventId === event.id && b.userId === userId);
+  if (existing) {
+    if (existing.status !== 'cancelled') {
+      return res.status(400).json({ success: false, message: 'أنت مسجل بالفعل في هذه الفعالية ومقعدك محجوز!' });
+    } else {
+      existing.status = 'confirmed';
+      existing.bookedAt = new Date().toISOString();
+      await saveDB(db);
+      return res.json({ success: true, message: 'تم إعادة تأكيد حجز مقعدك بنجاح!', booking: existing });
+    }
+  }
+
+  const newBooking = {
+    id: 'bk_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+    eventId: event.id,
+    userId,
+    userType,
+    roleTitle,
+    name,
+    committeeId,
+    committeeName,
+    phone,
+    email,
+    faculty,
+    university,
+    bookedAt: new Date().toISOString(),
+    status: 'confirmed'
+  };
+
+  db.eventBookings.push(newBooking);
+  await saveDB(db);
+
+  res.json({
+    success: true,
+    message: 'تم حجز مقعدك بنجاح في الفعالية!',
+    booking: newBooking,
+    remainingSeats: Math.max(0, capacity - activeBookings.length - 1)
+  });
+});
+
+// 6. POST /api/events/:id/cancel - Cancel Reservation
+app.post('/api/events/:id/cancel', async (req, res) => {
+  const db = getDB();
+  db.eventBookings = db.eventBookings || [];
+
+  const { candidateId, username } = req.body;
+  const cookieCandId = req.cookies.mfa_delegate_id;
+  let cookieUsername = null;
+  if (req.cookies.mfa_user) {
+    try { cookieUsername = JSON.parse(req.cookies.mfa_user).username; } catch (e) {}
+  }
+  const currentUserId = candidateId || username || cookieCandId || cookieUsername;
+
+  if (!currentUserId) {
+    return res.status(400).json({ success: false, message: 'المستخدم غير محدد' });
+  }
+
+  const booking = db.eventBookings.find(b => b.eventId === req.params.id && (b.userId === currentUserId || b.userId === candidateId || b.userId === username) && b.status !== 'cancelled');
+  if (!booking) {
+    return res.status(404).json({ success: false, message: 'لا يوجد حجز فعال لإلغائه' });
+  }
+
+  booking.status = 'cancelled';
+  booking.cancelledAt = new Date().toISOString();
+  await saveDB(db);
+
+  res.json({ success: true, message: 'تم إلغاء حجز المقعد بنجاح، وأصبح المقعد متاحاً لزملائك' });
+});
+
+// 7. GET /api/events/:id/attendees - Full Attendees Roster with Real-time Analytics Breakdown
+app.get('/api/events/:id/attendees', (req, res) => {
+  const db = getDB();
+  const event = (db.events || []).find(e => e.id === req.params.id);
+  if (!event) {
+    return res.status(404).json({ success: false, message: 'الفعالية غير موجودة' });
+  }
+
+  const bookings = (db.eventBookings || []).filter(b => b.eventId === event.id && b.status !== 'cancelled');
+  const totalBooked = bookings.length;
+  const capacity = parseInt(event.capacity, 10) || 50;
+
+  // Breakdown by Role
+  const delegatesCount = bookings.filter(b => b.userType === 'delegate').length;
+  const membersCount = bookings.filter(b => b.userType === 'member').length;
+  const boardCount = bookings.filter(b => b.userType === 'board' || b.userType === 'admin').length;
+
+  // Breakdown by Committee / Sector
+  const committeeBreakdown = (db.committees || []).map(comm => {
+    const inComm = bookings.filter(b => b.committeeId === comm.id);
+    return {
+      committeeId: comm.id,
+      committeeName: comm.shortName || comm.name,
+      color: comm.color,
+      count: inComm.length,
+      delegates: inComm.filter(b => b.userType === 'delegate').length,
+      members: inComm.filter(b => b.userType === 'member').length
+    };
+  });
+
+  // Central / High Board entries
+  const centralBookings = bookings.filter(b => b.committeeId === 'central' || b.userType === 'board');
+
+  res.json({
+    success: true,
+    event,
+    analytics: {
+      totalBooked,
+      capacity,
+      remainingSeats: Math.max(0, capacity - totalBooked),
+      fillPercentage: Math.round((totalBooked / capacity) * 100),
+      roleBreakdown: {
+        delegatesCount,
+        membersCount,
+        boardCount
+      },
+      committeeBreakdown,
+      centralBoardCount: centralBookings.length
+    },
+    attendees: bookings
+  });
+});
+
+// 8. PUT /api/events/:id/attendees/:bookingId/status - Toggle Attendance Check-in
+app.put('/api/events/:id/attendees/:bookingId/status', async (req, res) => {
+  const db = getDB();
+  const booking = (db.eventBookings || []).find(b => b.id === req.params.bookingId);
+  if (!booking) {
+    return res.status(404).json({ success: false, message: 'الحجز غير موجود' });
+  }
+
+  booking.attendanceStatus = req.body.status || 'attended'; // 'attended', 'absent', 'confirmed'
+  booking.checkedInAt = new Date().toISOString();
+  await saveDB(db);
+
+  res.json({ success: true, message: 'تم تحديث حالة الحضور في القاعة بنجاح', booking });
+});
+
 const PUBLIC_DIR = path.resolve(__dirname, 'public');
 
 // Root redirects directly to login (user requested no landing page)

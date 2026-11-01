@@ -114,6 +114,45 @@
 
     <!-- Main Content Area -->
     <main class="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-1">
+      <!-- High Board / Committee Head 1-Click Event Booking Banner -->
+      <div v-if="activeUpcomingEvent" class="mb-6 bg-gradient-to-r from-amber-950/60 via-slate-900 to-slate-900 border border-amber-500/40 rounded-3xl p-4 sm:p-6 shadow-xl relative overflow-hidden">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
+              <i data-lucide="compass" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
+                  {{ activeUpcomingEvent.type === 'visit' ? '🏛️ زيارة رسمية' : (activeUpcomingEvent.type === 'seminar' ? '🎤 ندوة علمية' : '🤝 فعالية ومؤتمر') }}
+                </span>
+                <span class="text-xs text-slate-300 font-bold">{{ activeUpcomingEvent.date }} (الساعة {{ activeUpcomingEvent.time }}) • {{ activeUpcomingEvent.location }}</span>
+              </div>
+              <h3 class="text-sm sm:text-base font-black text-white mt-1">{{ activeUpcomingEvent.title }}</h3>
+              <p class="text-[11px] text-slate-400">الطاقة الاستيعابية: متبقي {{ activeUpcomingEvent.availableSeats }} مقعد من أصل {{ activeUpcomingEvent.capacity }}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <!-- If Booked -->
+            <div v-if="activeUpcomingEvent.myBooking" class="flex items-center gap-2 bg-emerald-950/80 border border-emerald-500/40 px-3.5 py-2 rounded-xl">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+              <span class="text-xs font-bold text-emerald-300">تم حجز مقعدك بالفعالية ✅</span>
+              <button @click="cancelBoardEventBooking(activeUpcomingEvent)" class="text-[11px] text-rose-300 hover:underline mr-2 font-bold cursor-pointer">إلغاء</button>
+            </div>
+
+            <!-- If Not Booked -->
+            <button 
+              v-else-if="!activeUpcomingEvent.isFull && activeUpcomingEvent.isOpen"
+              @click="bookBoardEvent(activeUpcomingEvent)"
+              class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition flex items-center gap-2 shadow-md cursor-pointer"
+            >
+              <i data-lucide="ticket" class="w-4 h-4"></i>
+              <span>حجز مقعدي كعضو هاي بورد / رئيس لجنة 🎟️</span>
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- Navigation Tabs -->
       <div class="no-print mb-6 border-b border-slate-200">
@@ -131,6 +170,17 @@
             >
               <i :data-lucide="currentUser.directorateType === 'hr' ? 'users' : (currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-4 h-4 text-amber-500"></i>
               <span>{{ currentUser.directorateType === 'hr' ? 'لوحة متابعة التنظيم (كافة القطاعات)' : (currentUser.directorateType === 'media' ? 'لوحة متابعة الميديا والإعلام (كافة القطاعات)' : 'المتابعة الأكاديمية والتدريبية (كافة القطاعات)') }}</span>
+            </button>
+
+            <!-- Tab 3: Events & Visits (HR Only) -->
+            <button 
+              v-if="currentUser.directorateType === 'hr'"
+              @click="activeTab = 'directorate_events'; fetchDashboardEvents();" 
+              :class="activeTab === 'directorate_events' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="compass" class="w-4 h-4 text-pink-600"></i>
+              <span>إدارة الفعاليات والزيارات ({{ dashboardEvents.length }})</span>
             </button>
 
             <!-- Tab 2: Directorate Members & Evaluations -->
@@ -178,6 +228,17 @@
             >
               <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
               <span>أداء القطاعات (الإدارة العامة)</span>
+            </button>
+
+            <!-- Events & Visits Tab (Admin) -->
+            <button 
+              v-if="currentUser && currentUser.role === 'admin'"
+              @click="activeTab = 'directorate_events'; fetchDashboardEvents();" 
+              :class="activeTab === 'directorate_events' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+            >
+              <i data-lucide="compass" class="w-4 h-4 text-amber-500"></i>
+              <span>إدارة الفعاليات والزيارات ({{ dashboardEvents.length }})</span>
             </button>
 
             <!-- 1. Candidates & Interviews -->
@@ -726,6 +787,150 @@
             <i :data-lucide="currentUser && currentUser.directorateType === 'hr' ? 'users' : (currentUser && currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
             <h5 class="font-bold text-slate-800 text-sm">لا توجد كوادر مطابقة لخيارات البحث أو التصفية الحالية</h5>
             <p class="text-xs text-slate-400 mt-1">جرّب تغيير اللجنة المحددة أو إزالة نص البحث</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- DEDICATED TAB: EVENTS & VISITS MANAGEMENT -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'directorate_events'" class="space-y-6">
+        
+        <!-- Header Banner -->
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-8 border border-amber-500/30 shadow-xl relative overflow-hidden">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-600 to-amber-600 flex items-center justify-center font-black text-2xl shadow-lg flex-shrink-0 text-white">
+                <i data-lucide="compass" class="w-8 h-8"></i>
+              </div>
+              <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold mb-1 border border-amber-400/30">
+                  إدارة الفعاليات والزيارات الرسمية (كافة القطاعات)
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-white">
+                  بوابة تنظيم الزيارات الميدانية والندوات
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                  أنشئ زيارة أو ندوة رسمية، حدد الطاقة الاستيعابية، وسيتاح الحجز الفوري بنقرة واحدة لكافة مناديب وأعضاء ورؤساء لجان النموذج، مع متابعة لحظية لنسب الحضور وتقسيم القطاعات.
+                </p>
+              </div>
+            </div>
+
+            <!-- Create Event Button -->
+            <button 
+              @click="openCreateEventModal"
+              class="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition flex items-center gap-2 shadow-xl cursor-pointer"
+            >
+              <i data-lucide="plus-circle" class="w-5 h-5"></i>
+              <span>إطلاق فعالية / زيارة جديدة</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Events List Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div 
+            v-for="evt in dashboardEvents" 
+            :key="evt.id"
+            class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-sm hover:shadow-xl transition flex flex-col justify-between"
+          >
+            <div class="space-y-3">
+              <!-- Top Row Badges -->
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-2.5 py-1 rounded-full text-xs font-black"
+                      :class="evt.type === 'visit' ? 'bg-amber-100 text-amber-800' : (evt.type === 'seminar' ? 'bg-sky-100 text-sky-800' : 'bg-purple-100 text-purple-800')">
+                  {{ evt.type === 'visit' ? '🏛️ زيارة رسمية' : (evt.type === 'seminar' ? '🎤 ندوة علمية' : '🤝 مؤتمر / ورشة عمل') }}
+                </span>
+
+                <span class="px-2.5 py-1 rounded-full text-[11px] font-bold"
+                      :class="evt.isOpen ? (evt.isFull ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800') : 'bg-slate-100 text-slate-600'">
+                  {{ evt.isOpen ? (evt.isFull ? 'مكتمل المقاعد' : 'متاح للحجز الآن') : 'مغلق من التنظيم' }}
+                </span>
+              </div>
+
+              <!-- Title & Description -->
+              <h4 class="font-black text-base text-slate-900 leading-snug">{{ evt.title }}</h4>
+              <p v-if="evt.description" class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ evt.description }}</p>
+
+              <!-- Capacity Progress Bar -->
+              <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 space-y-2">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span class="text-slate-600">نسبة الامتلاء:</span>
+                  <span class="font-mono text-amber-700">
+                    {{ evt.bookedCount }} / {{ evt.capacity }} مقعد
+                    ({{ Math.round((evt.bookedCount / evt.capacity) * 100) }}%)
+                  </span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                  <div 
+                    class="h-2 rounded-full transition-all duration-500"
+                    :class="evt.isFull ? 'bg-rose-500' : 'bg-gradient-to-r from-amber-500 to-emerald-500'"
+                    :style="{ width: Math.min(100, Math.round((evt.bookedCount / evt.capacity) * 100)) + '%' }"
+                  ></div>
+                </div>
+                <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                  <span>المقاعد الشاغرة: <b class="text-emerald-700">{{ evt.availableSeats }}</b></span>
+                  <span>الزي: <b>{{ evt.dressCode || 'رسمي' }}</b></span>
+                </div>
+              </div>
+
+              <!-- Date & Location -->
+              <div class="space-y-1.5 text-xs text-slate-600">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-500 flex-shrink-0"></i>
+                  <span>{{ evt.date }} • {{ evt.time }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-500 flex-shrink-0"></i>
+                  <span class="truncate">{{ evt.location }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons on Card -->
+            <div class="pt-4 mt-3 border-t border-slate-100 space-y-2">
+              <button 
+                @click="openEventAttendeesModal(evt)"
+                class="w-full py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-black transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+              >
+                <i data-lucide="users" class="w-4 h-4 text-amber-400"></i>
+                <span>كشف الحضور والتحليلات المباشرة ({{ evt.bookedCount }})</span>
+              </button>
+
+              <div class="flex items-center gap-2">
+                <button 
+                  @click="toggleEventStatus(evt)"
+                  class="flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 border"
+                  :class="evt.isOpen ? 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200'"
+                >
+                  <i :data-lucide="evt.isOpen ? 'lock' : 'unlock'" class="w-3 h-3"></i>
+                  <span>{{ evt.isOpen ? 'إغلاق الحجز' : 'فتح الحجز' }}</span>
+                </button>
+
+                <button 
+                  @click="deleteEvent(evt)"
+                  class="p-2 rounded-xl bg-slate-100 hover:bg-rose-100 hover:text-rose-700 text-slate-500 transition"
+                  title="حذف الفعالية"
+                >
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty Events State -->
+          <div v-if="dashboardEvents.length === 0" class="col-span-full py-16 text-center bg-white rounded-3xl border border-slate-200">
+            <i data-lucide="compass" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
+            <h5 class="font-bold text-slate-800 text-sm">لا توجد فعاليات أو زيارات مضافة حتى الآن</h5>
+            <p class="text-xs text-slate-400 mt-1 mb-4">انقر فوق الزر بالأعلى لإطلاق أول زيارة أو ندوة رسميًا</p>
+            <button 
+              @click="openCreateEventModal"
+              class="px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold inline-flex items-center gap-2"
+            >
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>إنشاء فعالية جديدة</span>
+            </button>
           </div>
         </div>
 
@@ -5342,6 +5547,334 @@
       </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- MODAL 1: CREATE NEW EVENT MODAL -->
+    <!-- ============================================== -->
+    <div v-if="showCreateEventModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-700 flex items-center justify-center">
+              <i data-lucide="plus-circle" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-slate-900 text-base">إطلاق فعالية / زيارة رسمية جديدة</h4>
+              <p class="text-xs text-slate-500">تظهر فوراً عند كافة أفراد النموذج للحجز بنقرة واحدة</p>
+            </div>
+          </div>
+          <button @click="showCreateEventModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form @submit.prevent="createEvent" class="space-y-4">
+          <!-- Title -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">عنوان الفعالية / الزيارة *</label>
+            <input 
+              v-model="newEventForm.title" 
+              type="text" 
+              required
+              placeholder="مثال: زيارة رسمية إلى ديوان عام وزارة الخارجية بالعاصمة الإدارية"
+              class="w-full p-3 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:border-amber-500 font-bold"
+            >
+          </div>
+
+          <!-- Type & Capacity -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">نوع الفعالية</label>
+              <select 
+                v-model="newEventForm.type" 
+                class="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 outline-none focus:border-amber-500"
+              >
+                <option value="visit">🏛️ زيارة رسمية ميدانية</option>
+                <option value="seminar">🎤 ندوة علمية / سياسية</option>
+                <option value="conference">🤝 مؤتمر / ملتقى</option>
+                <option value="workshop">💡 ورشة عمل تدريبية</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">الطاقة الاستيعابية (المقاعد) *</label>
+              <input 
+                v-model.number="newEventForm.capacity" 
+                type="number" 
+                min="5" 
+                max="500" 
+                required
+                class="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 outline-none focus:border-amber-500 font-mono"
+              >
+            </div>
+          </div>
+
+          <!-- Date & Time -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ الانعقاد *</label>
+              <input 
+                v-model="newEventForm.date" 
+                type="date" 
+                required
+                class="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 outline-none focus:border-amber-500"
+              >
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">وقت التجمع / البدء</label>
+              <input 
+                v-model="newEventForm.time" 
+                type="time" 
+                required
+                class="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 outline-none focus:border-amber-500"
+              >
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">المكان / العنوان أو مقر التجمع *</label>
+            <input 
+              v-model="newEventForm.location" 
+              type="text" 
+              required
+              placeholder="مثال: مقر وزارة الخارجية المصرية - العاصمة الإدارية الجديدة"
+              class="w-full p-3 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:border-amber-500"
+            >
+          </div>
+
+          <!-- Dress Code -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">الزي المطلوب (Dress Code)</label>
+            <input 
+              v-model="newEventForm.dressCode" 
+              type="text" 
+              placeholder="مثال: زي رسمي دبلوماسي كامل (بدلة كاملة)"
+              class="w-full p-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:border-amber-500"
+            >
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">تفاصيل الفعالية وبرنامج اليوم</label>
+            <textarea 
+              v-model="newEventForm.description" 
+              rows="2"
+              placeholder="وصف موجز لأهمية الزيارة والأنشطة المقررة..."
+              class="w-full p-3 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:border-amber-500"
+            ></textarea>
+          </div>
+
+          <!-- Notes / Instructions -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">تعليمات هامة للحضور (أوراق مطلوبة، مواعيد التجمع...)</label>
+            <input 
+              v-model="newEventForm.notes" 
+              type="text" 
+              placeholder="مثال: التجمع الساعة 7:30 ص أمام البوابة الرئيسية وإحضار إثبات الشخصية"
+              class="w-full p-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:border-amber-500"
+            >
+          </div>
+
+          <div class="flex items-center gap-2 pt-4 border-t border-slate-100">
+            <button 
+              type="submit" 
+              class="flex-1 py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs shadow-md transition cursor-pointer"
+            >
+              إطلاق الفعالية وإتاحتها للجميع الآن 🚀
+            </button>
+            <button 
+              type="button" 
+              @click="showCreateEventModal = false" 
+              class="px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+            >
+              إلغاء
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 2: ATTENDEES ROSTER & REAL-TIME ANALYTICS -->
+    <!-- ============================================== -->
+    <div v-if="showAttendeesModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-4xl w-full p-5 sm:p-8 border border-slate-200 shadow-2xl max-h-[94vh] overflow-y-auto text-right">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-800 text-[11px] font-bold">
+                كشف الحضور والتحليلات المباشرة
+              </span>
+              <span class="text-xs text-slate-400 font-bold">{{ currentEventData ? currentEventData.date : '' }}</span>
+            </div>
+            <h4 class="font-black text-slate-900 text-lg mt-1">{{ currentEventData ? currentEventData.title : '' }}</h4>
+          </div>
+          <button @click="showAttendeesModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div v-if="eventAttendeesData" class="space-y-6">
+          
+          <!-- 3 Analytics Role KPI Cards -->
+          <div class="grid grid-cols-3 gap-3">
+            <div class="bg-blue-50/60 border border-blue-200 p-4 rounded-2xl text-center">
+              <span class="text-xs font-bold text-blue-700 block">المناديب (Delegates)</span>
+              <span class="text-2xl font-black text-blue-900 font-mono mt-0.5 block">
+                {{ eventAttendeesData.analytics ? eventAttendeesData.analytics.roleBreakdown.delegatesCount : 0 }}
+              </span>
+            </div>
+
+            <div class="bg-purple-50/60 border border-purple-200 p-4 rounded-2xl text-center">
+              <span class="text-xs font-bold text-purple-700 block">أعضاء الهيكل (Members)</span>
+              <span class="text-2xl font-black text-purple-900 font-mono mt-0.5 block">
+                {{ eventAttendeesData.analytics ? eventAttendeesData.analytics.roleBreakdown.membersCount : 0 }}
+              </span>
+            </div>
+
+            <div class="bg-amber-50/60 border border-amber-200 p-4 rounded-2xl text-center">
+              <span class="text-xs font-bold text-amber-700 block">الهاي بورد ورؤساء اللجان</span>
+              <span class="text-2xl font-black text-amber-900 font-mono mt-0.5 block">
+                {{ eventAttendeesData.analytics ? eventAttendeesData.analytics.roleBreakdown.boardCount : 0 }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Sector Breakdown Cards (التقسيم حسب اللجان) -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <h5 class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="layout-grid" class="w-4 h-4 text-amber-500"></i>
+                <span>تقسيم الحضور حسب القطاعات واللجان الـ 9:</span>
+              </h5>
+              <span class="text-xs font-bold text-slate-500">
+                إجمالي المحجوز: {{ eventAttendeesData.analytics ? eventAttendeesData.analytics.totalBooked : 0 }} / {{ eventAttendeesData.analytics ? eventAttendeesData.analytics.capacity : 0 }} مقعد
+              </span>
+            </div>
+
+            <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 text-xs">
+              <div 
+                v-for="comm in (eventAttendeesData.analytics ? eventAttendeesData.analytics.committeeBreakdown : [])" 
+                :key="comm.committeeId"
+                class="p-2.5 rounded-xl border bg-slate-50 text-center"
+                :class="comm.count > 0 ? 'border-amber-300 bg-amber-50/40 font-bold' : 'border-slate-200 text-slate-400'"
+              >
+                <span class="truncate block text-[11px]">{{ comm.committeeName }}</span>
+                <span class="text-sm font-black font-mono" :class="comm.count > 0 ? 'text-amber-800' : 'text-slate-400'">
+                  {{ comm.count }} حجز
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Filters Bar -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+            <div class="flex items-center gap-2 flex-1">
+              <div class="relative flex-1">
+                <input 
+                  v-model="attendeesSearch" 
+                  type="text" 
+                  placeholder="بحث في الحضور بالاسم، الهاتف، أو الكلية..." 
+                  class="w-full pr-9 pl-3 py-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-amber-500"
+                >
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3 top-2.5"></i>
+              </div>
+
+              <select 
+                v-model="attendeesRoleFilter" 
+                class="py-2 px-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 outline-none"
+              >
+                <option value="all">كافة الأدوار</option>
+                <option value="delegate">المناديب فقط</option>
+                <option value="member">أعضاء اللجان فقط</option>
+                <option value="board">الهاي بورد فقط</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button 
+                @click="copyEventPhones" 
+                class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+              >
+                <i data-lucide="copy" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>نسخ أرقام الواتساب</span>
+              </button>
+
+              <button 
+                @click="exportEventAttendeesCSV" 
+                class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition flex items-center gap-1.5 shadow-sm"
+              >
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>تصدير Excel</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Attendees Table -->
+          <div class="border border-slate-200 rounded-2xl overflow-hidden overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
+                <tr>
+                  <th class="py-3 px-3 w-10">م</th>
+                  <th class="py-3 px-3">الاسم</th>
+                  <th class="py-3 px-3">الصفة / الدور</th>
+                  <th class="py-3 px-3">اللجنة / القطاع</th>
+                  <th class="py-3 px-3">الهاتف</th>
+                  <th class="py-3 px-3">الكلية</th>
+                  <th class="py-3 px-3">حالة الحضور</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-medium">
+                <tr 
+                  v-for="(bk, idx) in filteredEventAttendees" 
+                  :key="bk.id" 
+                  class="hover:bg-slate-50/80"
+                >
+                  <td class="py-2.5 px-3 text-slate-400 font-mono">{{ idx + 1 }}</td>
+                  <td class="py-2.5 px-3 font-bold text-slate-900">{{ bk.name }}</td>
+                  <td class="py-2.5 px-3">
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold"
+                          :class="bk.userType === 'delegate' ? 'bg-blue-100 text-blue-800' : (bk.userType === 'member' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800')">
+                      {{ bk.roleTitle }}
+                    </span>
+                  </td>
+                  <td class="py-2.5 px-3 text-slate-600">{{ bk.committeeName }}</td>
+                  <td class="py-2.5 px-3">
+                    <a :href="'https://wa.me/2' + bk.phone.replace(/\D/g, '').replace(/^0/, '')" target="_blank" class="text-emerald-700 font-mono font-bold hover:underline flex items-center gap-1">
+                      <i data-lucide="message-circle" class="w-3 h-3 text-emerald-600"></i>
+                      <span>{{ bk.phone }}</span>
+                    </a>
+                  </td>
+                  <td class="py-2.5 px-3 text-slate-500">{{ bk.faculty }}</td>
+                  <td class="py-2.5 px-3">
+                    <button 
+                      @click="toggleCheckIn(bk)" 
+                      class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                      :class="bk.attendanceStatus === 'attended' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                    >
+                      <i :data-lucide="bk.attendanceStatus === 'attended' ? 'check' : 'circle'" class="w-3 h-3"></i>
+                      <span>{{ bk.attendanceStatus === 'attended' ? 'حاضر بالقاعة' : 'تأكيد الحضور' }}</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr v-if="filteredEventAttendees.length === 0">
+                  <td colspan="7" class="py-8 text-center text-slate-400">
+                    لا يوجد حضور مطابق لخيارات البحث أو التصفية الحالية
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -5851,6 +6384,7 @@
             await fetchStats();
             await fetchCommitteeDetails();
             await fetchGlobalCandidates();
+            await fetchDashboardEvents();
 
             nextTick(() => {
               lucide.createIcons();
@@ -5952,6 +6486,244 @@
           nextTick(() => {
             lucide.createIcons();
           });
+        }
+
+        // ==============================================
+        // EVENTS & VISITS MANAGEMENT STATE & METHODS
+        // ==============================================
+        const dashboardEvents = ref([]);
+        const showCreateEventModal = ref(false);
+        const showAttendeesModal = ref(false);
+        const currentEventData = ref(null);
+        const eventAttendeesData = ref(null);
+        const attendeesSearch = ref('');
+        const attendeesRoleFilter = ref('all');
+
+        const newEventForm = ref({
+          title: '',
+          type: 'visit',
+          description: '',
+          date: new Date(Date.now() + 86400000 * 7).toISOString().split('T')[0],
+          time: '09:00',
+          location: 'مقر وزارة الخارجية المصرية - الحي الحكومي، العاصمة الإدارية الجديدة',
+          capacity: 50,
+          dressCode: 'زي رسمي دبلوماسي كامل (بدلة كاملة)',
+          notes: 'التجمع أمام البوابة الرئيسية وإحضار إثبات الشخصية'
+        });
+
+        const activeUpcomingEvent = computed(() => {
+          return dashboardEvents.value.find(e => e.isOpen !== false) || dashboardEvents.value[0] || null;
+        });
+
+        async function fetchDashboardEvents() {
+          try {
+            const uName = currentUser.value ? currentUser.value.username : '';
+            const res = await fetch('/api/events' + (uName ? '?username=' + encodeURIComponent(uName) : ''));
+            const data = await res.json();
+            if (data.success) {
+              dashboardEvents.value = data.events;
+            }
+          } catch (e) {
+            console.error('Fetch dashboard events error:', e);
+          } finally {
+            nextTick(() => lucide.createIcons());
+          }
+        }
+
+        function openCreateEventModal() {
+          newEventForm.value = {
+            title: '',
+            type: 'visit',
+            description: '',
+            date: new Date(Date.now() + 86400000 * 7).toISOString().split('T')[0],
+            time: '09:00',
+            location: 'مقر وزارة الخارجية المصرية - الحي الحكومي، العاصمة الإدارية الجديدة',
+            capacity: 50,
+            dressCode: 'زي رسمي دبلوماسي كامل (بدلة كاملة)',
+            notes: 'التجمع أمام البوابة الرئيسية وإحضار إثبات الشخصية'
+          };
+          showCreateEventModal.value = true;
+          nextTick(() => lucide.createIcons());
+        }
+
+        async function createEvent() {
+          if (!newEventForm.value.title || !newEventForm.value.date) {
+            alert('يرجى ملء جميع الحقول المطلوبة');
+            return;
+          }
+          try {
+            const res = await fetch('/api/events', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                ...newEventForm.value,
+                createdBy: currentUser.value ? currentUser.value.username : 'hr',
+                createdByName: currentUser.value ? currentUser.value.name : 'إدارة التنظيم'
+              })
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert('🎉 ' + data.message);
+              showCreateEventModal.value = false;
+              await fetchDashboardEvents();
+            } else {
+              alert(data.message || 'حدث خطأ');
+            }
+          } catch (e) {
+            alert('حدث خطأ أثناء الاتصال بالخادم');
+          }
+        }
+
+        async function toggleEventStatus(evt) {
+          try {
+            const res = await fetch('/api/events/' + evt.id, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ isOpen: !evt.isOpen })
+            });
+            const data = await res.json();
+            if (data.success) {
+              evt.isOpen = !evt.isOpen;
+              alert(evt.isOpen ? 'تم فتح باب الحجز للجميع' : 'تم إغلاق باب الحجز');
+            }
+          } catch (e) {
+            alert('حدث خطأ');
+          }
+        }
+
+        async function deleteEvent(evt) {
+          if (!confirm('هل أنت متأكد من رغبتك في حذف هذه الفعالية وكافة حجوزاتها؟')) return;
+          try {
+            const res = await fetch('/api/events/' + evt.id, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+              alert(data.message);
+              await fetchDashboardEvents();
+            }
+          } catch (e) {
+            alert('حدث خطأ');
+          }
+        }
+
+        async function openEventAttendeesModal(evt) {
+          currentEventData.value = evt;
+          showAttendeesModal.value = true;
+          try {
+            const res = await fetch('/api/events/' + evt.id + '/attendees');
+            const data = await res.json();
+            if (data.success) {
+              eventAttendeesData.value = data;
+            }
+          } catch (e) {
+            console.error('Fetch attendees error:', e);
+          } finally {
+            nextTick(() => lucide.createIcons());
+          }
+        }
+
+        const filteredEventAttendees = computed(() => {
+          if (!eventAttendeesData.value || !eventAttendeesData.value.attendees) return [];
+          let list = eventAttendeesData.value.attendees;
+          if (attendeesRoleFilter.value === 'delegate') {
+            list = list.filter(b => b.userType === 'delegate');
+          } else if (attendeesRoleFilter.value === 'member') {
+            list = list.filter(b => b.userType === 'member');
+          } else if (attendeesRoleFilter.value === 'board') {
+            list = list.filter(b => b.userType === 'board' || b.userType === 'admin');
+          }
+          if (attendeesSearch.value.trim()) {
+            const q = attendeesSearch.value.trim().toLowerCase();
+            list = list.filter(b => 
+              (b.name && b.name.toLowerCase().includes(q)) ||
+              (b.phone && b.phone.includes(q)) ||
+              (b.faculty && b.faculty.toLowerCase().includes(q)) ||
+              (b.committeeName && b.committeeName.toLowerCase().includes(q))
+            );
+          }
+          return list;
+        });
+
+        function copyEventPhones() {
+          const list = filteredEventAttendees.value;
+          const phones = list.map(b => b.phone).filter(Boolean);
+          if (phones.length === 0) {
+            alert('لا توجد أرقام هواتف لنسخها');
+            return;
+          }
+          navigator.clipboard.writeText(phones.join('\n'));
+          alert('تم نسخ ' + phones.length + ' رقم هاتف لجروب واتساب الفعالية بنجاح!');
+        }
+
+        function exportEventAttendeesCSV() {
+          const evt = currentEventData.value;
+          const title = evt ? evt.title.replace(/\s+/g, '_') : 'الفعالية';
+          let csv = '\uFEFFم,الاسم,الصفة,اللجنة / القطاع,الهاتف,البريد الإلكتروني,الكلية,تاريخ الحجز,حالة الحضور\n';
+          filteredEventAttendees.value.forEach((b, idx) => {
+            const status = b.attendanceStatus === 'attended' ? 'حاضر' : 'مؤكد';
+            csv += (idx + 1) + ',"' + b.name + '","' + b.roleTitle + '","' + b.committeeName + '","' + b.phone + '","' + b.email + '","' + b.faculty + '","' + b.bookedAt + '","' + status + '"\n';
+          });
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'كشف_حضور_' + title + '.csv';
+          a.click();
+        }
+
+        async function toggleCheckIn(bk) {
+          const newStatus = bk.attendanceStatus === 'attended' ? 'confirmed' : 'attended';
+          try {
+            const res = await fetch('/api/events/' + bk.eventId + '/attendees/' + bk.id + '/status', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: newStatus })
+            });
+            const data = await res.json();
+            if (data.success) {
+              bk.attendanceStatus = newStatus;
+            }
+          } catch (e) {
+            alert('حدث خطأ');
+          }
+        }
+
+        async function bookBoardEvent(evt) {
+          if (!currentUser.value) return;
+          try {
+            const res = await fetch('/api/events/' + evt.id + '/book', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username: currentUser.value.username })
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert('🎉 ' + data.message);
+              await fetchDashboardEvents();
+            } else {
+              alert(data.message || 'تعذر حجز المقعد');
+            }
+          } catch (e) {
+            alert('حدث خطأ أثناء الاتصال بالخادم');
+          }
+        }
+
+        async function cancelBoardEventBooking(evt) {
+          if (!currentUser.value) return;
+          if (!confirm('هل ترغب في إلغاء حجز مقعدك بالفعالية؟')) return;
+          try {
+            const res = await fetch('/api/events/' + evt.id + '/cancel', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username: currentUser.value.username })
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert(data.message);
+              await fetchDashboardEvents();
+            }
+          } catch (e) {
+            alert('حدث خطأ');
+          }
         }
 
         // ==============================================
@@ -7655,6 +8427,27 @@
         });
 
         return {
+          dashboardEvents,
+          activeUpcomingEvent,
+          showCreateEventModal,
+          showAttendeesModal,
+          currentEventData,
+          eventAttendeesData,
+          attendeesSearch,
+          attendeesRoleFilter,
+          newEventForm,
+          fetchDashboardEvents,
+          openCreateEventModal,
+          createEvent,
+          toggleEventStatus,
+          deleteEvent,
+          openEventAttendeesModal,
+          filteredEventAttendees,
+          copyEventPhones,
+          exportEventAttendeesCSV,
+          toggleCheckIn,
+          bookBoardEvent,
+          cancelBoardEventBooking,
           directorateSearch,
           directorateCommitteeFilter,
           directorateEvalFilter,
