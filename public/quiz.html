@@ -16,11 +16,58 @@
       font-family: 'Cairo', sans-serif;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
+      background-color: #070e1e;
+      color: #f1f5f9;
+    }
+    .royal-bg {
+      background: radial-gradient(circle at 50% 15%, #112240 0%, #070e1e 75%, #030712 100%);
+      background-attachment: fixed;
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-card-border {
+      border: 1px solid rgba(197, 160, 89, 0.28) !important;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #a87e2b 100%) !important;
+      color: #070e1e !important;
+      font-weight: 800 !important;
+      transition: all 0.25s ease;
     }
     .hero-navy {
       background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
     }
     [v-cloak] { display: none; }
+    
+    @media screen {
+      .bg-white {
+        background-color: rgba(15, 23, 42, 0.88) !important;
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(197, 160, 89, 0.22) !important;
+        color: #f8fafc !important;
+      }
+      .bg-slate-50 {
+        background-color: rgba(7, 14, 30, 0.65) !important;
+        color: #cbd5e1 !important;
+      }
+      .bg-slate-100 {
+        background-color: rgba(30, 41, 59, 0.8) !important;
+        color: #f1f5f9 !important;
+      }
+      .text-slate-900, .text-slate-800 { color: #ffffff !important; }
+      .text-slate-700 { color: #e2e8f0 !important; }
+      .text-slate-600 { color: #cbd5e1 !important; }
+      .text-slate-500 { color: #94a3b8 !important; }
+      .border-slate-200, .border-slate-100 { border-color: rgba(197, 160, 89, 0.18) !important; }
+      input, select, textarea {
+        background-color: rgba(3, 7, 18, 0.85) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(71, 85, 105, 0.8) !important;
+      }
+    }
     
     @media (max-width: 640px) {
       input, select, textarea {
@@ -29,16 +76,20 @@
     }
     
     .radio-card input:checked + label {
-      border-color: #c5a059;
-      background-color: #fef9c3;
-      color: #713f12;
-      box-shadow: 0 4px 12px rgba(197, 160, 89, 0.2);
+      border-color: #f59e0b;
+      background-color: rgba(245, 158, 11, 0.18);
+      color: #fef08a;
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-amber-100 selection:text-amber-900">
+<body class="royal-bg min-h-screen text-slate-100 antialiased flex flex-col selection:bg-amber-400 selection:text-slate-950 relative overflow-x-hidden">
 
-  <div id="app" v-cloak class="flex flex-col min-h-screen">
+  <!-- Subtle Ambient Glows -->
+  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-500/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed bottom-0 right-0 w-[500px] h-[400px] bg-sky-600/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
+
+  <div id="app" v-cloak class="flex flex-col min-h-screen relative z-10">
     
     <!-- Top Header -->
     <header class="hero-navy text-white border-b border-slate-800 shadow-md sticky top-0 z-40">
