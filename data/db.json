@@ -9960,6 +9960,7 @@
       "slotId": "slot_431_mvlg1est",
       "faculty": "كلية السياسة والاقتصاد",
       "fullName": "Nada Abdallah Ebrahim Ali Azab",
+      "notified": false,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -9988,6 +9989,7 @@
         "communicationScore": 10
       },
       "motivation": "علشان عايزة اجرب",
+      "notifiedAt": null,
       "university": "جامعة السويس",
       "englishLevel": "مبتدئ",
       "bookingStatus": "booked",
@@ -10019,9 +10021,7 @@
       },
       "assignedCommitteeId": "crises",
       "originalCommitteeId": "crises",
-      "attendanceCommitment": "نعم",
-      "notified": false,
-      "notifiedAt": null
+      "attendanceCommitment": "نعم"
     },
     {
       "id": "c_3",
@@ -34753,7 +34753,8 @@
       "password": "mofa1234",
       "shortName": "التعاون الاقتصادي",
       "description": "الاتفاقيات الاقتصادية، التكتلات التجارية، والدبلوماسية الاقتصادية الدولية",
-      "headUsername": "economic_head"
+      "headUsername": "economic_head",
+      "whatsappGroupLink": ""
     },
     {
       "id": "security",

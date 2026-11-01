@@ -269,6 +269,26 @@ app.get('/api/committees/:slug', (req, res) => {
   });
 });
 
+// Update committee whatsapp group link
+app.put('/api/committees/:id/whatsapp-link', async (req, res) => {
+  const db = getDB();
+  const comm = db.committees.find(c => c.id === req.params.id || c.slug === req.params.id);
+  if (!comm) {
+    return res.status(404).json({ success: false, message: 'اللجنة غير موجودة' });
+  }
+
+  const { whatsappGroupLink } = req.body;
+  comm.whatsappGroupLink = (whatsappGroupLink || '').trim();
+
+  await saveDB(db);
+  res.json({
+    success: true,
+    message: 'تم حفظ رابط جروب الواتساب للجنة بنجاح',
+    whatsappGroupLink: comm.whatsappGroupLink,
+    committeeId: comm.id
+  });
+});
+
 // ==========================================
 // 3. CANDIDATES APIS
 // ==========================================
