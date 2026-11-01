@@ -200,62 +200,165 @@
         </div>
 
         <!-- ============================================== -->
-        <!-- DIGITAL DIPLOMATIC PASS (QR Code Attendance) -->
+        <!-- ACTIVE EVENT BOARDING PASSES & QR TICKETS      -->
         <!-- ============================================== -->
         <div class="bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-slate-950/95 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-card-border shadow-2xl relative overflow-hidden">
-          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          
+          <!-- State 1: Candidate has booked one or more events -->
+          <div v-if="myBookedEvents.length > 0" class="space-y-4">
             
-            <div class="space-y-3 flex-1">
+            <!-- Header & Switcher (if multiple booked events) -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[11px] font-black border border-amber-500/30 flex items-center gap-1.5">
-                  <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i>
-                  <span>كارت الهوية الدبلوماسية المشفر (Digital Diplomatic Pass)</span>
+                  <i data-lucide="ticket" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>تصريح دخول وتذكرة فعالية رسمية (Event Boarding Pass)</span>
                 </span>
-                <span v-if="candidate.cpi" class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30">
-                  {{ candidate.cpi.standing }}
+                
+                <span v-if="activeBookedEvent.myBooking?.attendanceStatus === 'attended'" class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1">
+                  <i data-lucide="badge-check" class="w-3 h-3"></i>
+                  <span>تم تسجيل الحضور وتأكيد الدخول رسمياً</span>
+                </span>
+                <span v-else class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30 flex items-center gap-1">
+                  <i data-lucide="clock" class="w-3 h-3"></i>
+                  <span>حجز مؤكد • صالحة للدخول بالبوابة</span>
                 </span>
               </div>
 
-              <h3 class="text-base sm:text-xl font-black text-white">
-                رمز التحضير الفوري والاعتماد الرسمي (MFA Instant Pass)
-              </h3>
-              <p class="text-xs text-slate-300 leading-relaxed max-w-xl">
-                يُبرز هذا الرمز الرقمي لمسؤولي التنظيم عند حضور الندوات، المحاضرات، والزيارات الميدانية الرسمية (مثل زيارة ديوان وزارة الخارجية) ليتم تسجيل حضورك آلياً بكاميرا التحضير في ثانية واحدة دون الحاجة لأي كشوف ورقية.
-              </p>
-
-              <!-- Quick Verification Link & Certificate Action -->
-              <div class="flex items-center gap-3 pt-2 flex-wrap">
-                <a 
-                  :href="'/verify?code=' + encodeURIComponent(candidate.diplomaticId || candidate.id)" 
-                  target="_blank"
-                  class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-sm"
-                >
-                  <i data-lucide="award" class="w-4 h-4"></i>
-                  <span>بوابة التحقق والاستعلام بالـ QR</span>
-                </a>
-
+              <!-- Multi-pass switcher if candidate has more than 1 booked event -->
+              <div v-if="myBookedEvents.length > 1" class="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-xs">
+                <span class="text-slate-400 text-[11px] px-1.5 font-bold">التصاريح ({{ myBookedEvents.length }}):</span>
                 <button 
-                  @click="showCertificateModal = true"
-                  class="px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  v-for="(bkEvt, idx) in myBookedEvents" 
+                  :key="bkEvt.id"
+                  @click="selectedPassIndex = idx"
+                  class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer"
+                  :class="selectedPassIndex === idx ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-300 hover:text-white'"
                 >
-                  <i data-lucide="file-badge" class="w-4 h-4"></i>
-                  <span>استعراض شهادة الاعتماد الدبلوماسي</span>
+                  تذكرة {{ idx + 1 }}
                 </button>
               </div>
             </div>
 
-            <!-- QR Code Box -->
-            <div class="flex flex-col items-center justify-center p-5 rounded-2xl bg-slate-950 border border-amber-500/30 shadow-2xl flex-shrink-0 self-center">
-              <div class="p-2.5 bg-white rounded-xl shadow-inner mb-2.5">
-                <div id="diplomatic-qr" class="w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center"></div>
+            <!-- Active Pass Card Body -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              
+              <div class="space-y-3.5 flex-1">
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono">
+                      {{ activeBookedEvent.type === 'visit' ? 'زيارة رسمية ميدانية' : (activeBookedEvent.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}
+                    </span>
+                    <span class="font-mono text-xs font-black text-amber-400">
+                      {{ activeBookedEvent.myBooking?.ticketCode || ('TKT-' + activeBookedEvent.id.slice(-4).toUpperCase()) }}
+                    </span>
+                  </div>
+                  <h3 class="text-lg sm:text-2xl font-black text-white leading-snug">
+                    {{ activeBookedEvent.title }}
+                  </h3>
+                  <p v-if="activeBookedEvent.description" class="text-xs text-slate-300 mt-1 line-clamp-2">
+                    {{ activeBookedEvent.description }}
+                  </p>
+                </div>
+
+                <!-- Logistics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+                    <span>{{ activeBookedEvent.date }} (الساعة {{ activeBookedEvent.time }})</span>
+                  </div>
+                  <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+                    <span class="truncate">{{ activeBookedEvent.location }}</span>
+                  </div>
+                </div>
+
+                <div v-if="activeBookedEvent.dressCode" class="text-[11px] text-amber-200/90 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 flex items-center gap-2">
+                  <i data-lucide="shirt" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0"></i>
+                  <span>الزي المطلوب: {{ activeBookedEvent.dressCode }}</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2.5 pt-1 flex-wrap">
+                  <button 
+                    @click="openEventTicketModal(activeBookedEvent)"
+                    class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md"
+                  >
+                    <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                    <span>تكبير وطباعة التصريح الرسمي (Boarding Pass)</span>
+                  </button>
+
+                  <a 
+                    :href="'/verify?code=' + encodeURIComponent(candidate.diplomaticId || candidate.id) + '&event=' + encodeURIComponent(activeBookedEvent.id) + '&ticket=' + encodeURIComponent(activeBookedEvent.myBooking?.ticketCode || '')" 
+                    target="_blank"
+                    class="px-3.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  >
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>التحقق من التذكرة بالبوابة</span>
+                  </a>
+
+                  <button 
+                    v-if="activeBookedEvent.myBooking?.attendanceStatus !== 'attended'"
+                    @click="cancelEventBooking(activeBookedEvent)"
+                    class="text-[11px] font-bold text-rose-300 hover:text-rose-200 hover:underline px-3 py-2 rounded-xl bg-rose-950/60 border border-rose-500/30 transition cursor-pointer"
+                  >
+                    إلغاء الحجز
+                  </button>
+                </div>
               </div>
-              <span class="text-[11px] font-mono font-bold text-amber-300 tracking-wider">
-                {{ candidate.diplomaticId || candidate.id }}
-              </span>
-              <span class="text-[9px] text-slate-400 mt-0.5">امسح الكود لتسجيل الحضور الفوري</span>
+
+              <!-- Dedicated Event QR Code Box -->
+              <div class="flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl bg-slate-950 border border-amber-500/40 shadow-2xl flex-shrink-0 self-center text-center">
+                <div class="p-2.5 bg-white rounded-xl shadow-inner mb-2 border-2 border-amber-400/70">
+                  <div id="active-event-qr" class="w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center"></div>
+                </div>
+                <span class="text-[11px] font-mono font-black text-amber-300 tracking-wider">
+                  {{ activeBookedEvent.myBooking?.ticketCode }}
+                </span>
+                <span class="text-[10px] text-slate-400 mt-0.5">كود QR مخصص لدخول هذه الفعالية</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- State 2: Candidate has NOT booked any event yet -->
+          <div v-else class="flex flex-col sm:flex-row items-center justify-between gap-6 text-right py-2">
+            <div class="space-y-3 flex-1">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-md bg-amber-500/10 text-amber-300 text-[11px] font-black border border-amber-500/20 flex items-center gap-1.5">
+                  <i data-lucide="ticket" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>تصاريح وتذاكر الفعاليات الرسمية (Event QR Passes)</span>
+                </span>
+              </div>
+
+              <h3 class="text-base sm:text-xl font-black text-white">
+                لا توجد تصاريح أو تذاكر فعاليات نشطة حالياً
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed max-w-xl">
+                عند قيامك بحجز مقعدك في أي ندوة، مؤتمر، أو زيارة ميدانية رسمية (مثل زيارة ديوان وزارة الخارجية) من جدول الفعاليات بالأسفل، سيتولد لك تلقائياً تصريح دخول رسمي وكود QR مخصص للفعالية لإبرازها عند البوابة وتأكيد حضورك فورياً.
+              </p>
+
+              <div class="pt-2">
+                <a 
+                  href="#events-section" 
+                  class="btn-gold px-5 py-2.5 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md"
+                >
+                  <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                  <span>استعراض الفعاليات والزيارات المتاحة للحجز الآن</span>
+                </a>
+              </div>
             </div>
 
+            <!-- Empty State Graphic -->
+            <div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-slate-950/80 border border-slate-800 text-center flex-shrink-0 self-center">
+              <div class="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 mb-2">
+                <i data-lucide="qr-code" class="w-8 h-8 opacity-60"></i>
+              </div>
+              <span class="text-xs font-bold text-slate-400">توليد تلقائي للـ QR</span>
+              <span class="text-[10px] text-slate-500 font-mono mt-0.5">عند حجز أي حدث جديد</span>
+            </div>
           </div>
+
         </div>
 
         <!-- ============================================== -->
@@ -336,7 +439,7 @@
         <!-- ============================================== -->
         <!-- UPCOMING EVENTS & VISITS (1-Click Booking) -->
         <!-- ============================================== -->
-        <div v-if="events && events.length > 0" class="space-y-4">
+        <div id="events-section" v-if="events && events.length > 0" class="space-y-4">
           <div class="flex items-center justify-between flex-wrap gap-2">
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
@@ -506,7 +609,7 @@
                 <span class="text-[10px] text-slate-400 block font-sans">الأهلية للاعتماد</span>
                 <span class="text-xs font-bold text-emerald-400 flex items-center gap-1">
                   <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
-                  <span>مؤهل للشهادة والتمثيل الخارجي</span>
+                  <span>مرشح للتمثيل الدبلوماسي المتميز</span>
                 </span>
               </div>
             </div>
@@ -819,66 +922,7 @@
       </div>
     </div>
 
-    <!-- Certificate Preview Modal -->
-    <div v-if="showCertificateModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
-      <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl p-6 sm:p-8 gold-card-border shadow-2xl max-w-2xl w-full relative overflow-hidden text-center space-y-6">
-        
-        <button 
-          @click="showCertificateModal = false"
-          class="absolute top-4 left-4 w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition cursor-pointer"
-        >
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
 
-        <div class="space-y-2">
-          <img src="/logo.jpg" alt="Logo" class="w-16 h-16 rounded-full mx-auto border-2 border-amber-400 shadow-lg object-cover">
-          <span class="text-[11px] font-bold text-amber-400 block uppercase tracking-wider">جمهورية مصر العربية – جامعة السويس</span>
-          <h2 class="text-xl sm:text-2xl font-black text-white">شهادة اعتماد دبلوماسي رسمية</h2>
-          <span class="text-xs text-slate-400 font-mono">Official Certificate of Diplomatic Accreditation</span>
-        </div>
-
-        <div class="p-6 rounded-2xl bg-slate-950/80 border border-amber-500/30 text-right space-y-4 text-xs leading-relaxed">
-          <p class="text-slate-200">
-            تشهد رئاسة نموذج محاكاة وزارة الخارجية المصرية بجامعة السويس بأن:
-          </p>
-          <div class="text-center py-2">
-            <h3 class="text-2xl font-black text-amber-300">{{ candidate ? (candidate.arabicName || candidate.fullName) : '' }}</h3>
-            <p class="text-xs text-slate-400 font-mono mt-0.5">{{ candidate ? (candidate.diplomaticId || candidate.id) : '' }}</p>
-          </div>
-          <p class="text-slate-300">
-            قد أتم بنجاح متطلبات التمثيل والتدريب في <strong class="text-white">{{ candidate ? candidate.committeeName : '' }}</strong> للعام الدبلوماسي 2026، وحصل على مؤشر جدارة تراكمي <strong class="text-emerald-400">{{ candidate && candidate.cpi ? candidate.cpi.score : 85 }}/100</strong> بتقدير عام <strong class="text-amber-300">{{ candidate && candidate.cpi ? candidate.cpi.standing : 'امتياز' }}</strong>.
-          </p>
-        </div>
-
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          <a 
-            :href="'/verify?code=' + encodeURIComponent(candidate ? (candidate.diplomaticId || candidate.id) : '')"
-            target="_blank"
-            class="text-xs text-amber-300 hover:underline flex items-center gap-1 font-bold"
-          >
-            <i data-lucide="external-link" class="w-4 h-4"></i>
-            <span>التحقق الرقمي من السجلات بالـ QR</span>
-          </a>
-
-          <div class="flex items-center gap-2">
-            <button 
-              onclick="window.print()"
-              class="btn-gold px-5 py-2.5 rounded-xl text-xs font-black inline-flex items-center gap-1.5 cursor-pointer shadow-md"
-            >
-              <i data-lucide="printer" class="w-4 h-4"></i>
-              <span>طباعة الشهادة</span>
-            </button>
-            <button 
-              @click="showCertificateModal = false"
-              class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition cursor-pointer"
-            >
-              إغلاق
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
 
     <!-- Footer -->
     <footer class="py-4 px-6 border-t border-slate-800/80 bg-slate-950/40 text-center text-xs text-slate-500">
@@ -891,7 +935,7 @@
   </div>
 
   <script>
-    const { createApp, ref, onMounted, nextTick } = Vue;
+    const { createApp, ref, computed, watch, onMounted, nextTick } = Vue;
 
     createApp({
       setup() {
@@ -902,7 +946,48 @@
         const bookingEventId = ref(null);
         const tasks = ref([]);
         const taskProgressPercent = ref(100);
-        const showCertificateModal = ref(false);
+        const selectedPassIndex = ref(0);
+
+        const myBookedEvents = computed(() => {
+          return (events.value || []).filter(e => e.myBooking && e.myBooking.status !== 'cancelled');
+        });
+
+        const activeBookedEvent = computed(() => {
+          if (myBookedEvents.value.length === 0) return null;
+          const idx = Math.min(selectedPassIndex.value, myBookedEvents.value.length - 1);
+          return myBookedEvents.value[idx] || myBookedEvents.value[0];
+        });
+
+        const generateActivePassQR = () => {
+          const container = document.getElementById('active-event-qr');
+          if (!container || !activeBookedEvent.value || !candidate.value) return;
+          container.innerHTML = '';
+          const evt = activeBookedEvent.value;
+          const codeVal = candidate.value.diplomaticId || candidate.value.id;
+          const tktCode = evt.myBooking?.ticketCode || ('TKT-' + evt.id.slice(-4).toUpperCase());
+          const verifyUrl = window.location.origin + '/verify?code=' + encodeURIComponent(codeVal) + '&event=' + encodeURIComponent(evt.id) + '&ticket=' + encodeURIComponent(tktCode);
+          try {
+            new QRCode(container, {
+              text: verifyUrl,
+              width: 140,
+              height: 140,
+              colorDark: '#070e1e',
+              colorLight: '#ffffff',
+              correctLevel: QRCode.CorrectLevel.H
+            });
+          } catch (e) {
+            console.error('Active pass QR generation error:', e);
+          }
+        };
+
+        watch(activeBookedEvent, (val) => {
+          if (val) {
+            nextTick(() => {
+              generateActivePassQR();
+              lucide.createIcons();
+            });
+          }
+        }, { immediate: true });
 
         const fetchTasks = async () => {
           if (!candidate.value) return;
@@ -942,25 +1027,7 @@
           }
         };
 
-        const generateQRCode = () => {
-          const container = document.getElementById('diplomatic-qr');
-          if (!container || !candidate.value) return;
-          container.innerHTML = '';
-          const codeVal = candidate.value.diplomaticId || candidate.value.id;
-          const verifyUrl = window.location.origin + '/verify?code=' + encodeURIComponent(codeVal);
-          try {
-            new QRCode(container, {
-              text: verifyUrl,
-              width: 140,
-              height: 140,
-              colorDark: '#070e1e',
-              colorLight: '#ffffff',
-              correctLevel: QRCode.CorrectLevel.H
-            });
-          } catch (e) {
-            console.error('QR code generation error:', e);
-          }
-        };
+        // Legacy QR helper replaced by event-tied generateActivePassQR
 
         const copyText = (txt) => {
           if (!txt) return;
@@ -1057,7 +1124,7 @@
                 localStorage.setItem('mfa_delegate_id', data.candidate.id);
               }
               await fetchTasks();
-              nextTick(() => generateQRCode());
+              nextTick(() => generateActivePassQR());
             } else {
               error.value = data.message || 'يرجى تسجيل الدخول لعرض الملف الشخصي';
               // If unauthorized, redirect to login after a brief moment
@@ -1109,7 +1176,7 @@
           await fetchEvents();
           if (candidate.value) {
             await fetchTasks();
-            nextTick(() => generateQRCode());
+            nextTick(() => generateActivePassQR());
           }
         });
 
@@ -1121,7 +1188,9 @@
           bookingEventId,
           tasks,
           taskProgressPercent,
-          showCertificateModal,
+          selectedPassIndex,
+          myBookedEvents,
+          activeBookedEvent,
           showEventTicketModal,
           selectedEventTicket,
           openEventTicketModal,
