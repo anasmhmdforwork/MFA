@@ -9891,24 +9891,7 @@
       "directorateType": "academic"
     }
   ],
-  "events": [
-    {
-      "id": "evt_1793564048124_0f1z",
-      "date": "2026-11-08",
-      "time": "09:00",
-      "type": "workshop",
-      "notes": "التجمع أمام البوابة الرئيسية وإحضار إثبات الشخصية",
-      "title": "انغقلة",
-      "isOpen": true,
-      "capacity": 50,
-      "location": "مقر وزارة الخارجية المصرية - الحي الحكومي، العاصمة الإدارية الجديدة",
-      "createdAt": "2026-11-01T20:14:08.124Z",
-      "createdBy": "organization",
-      "dressCode": "زي رسمي دبلوماسي كامل (بدلة كاملة)",
-      "description": "",
-      "createdByName": "إدارة التنظيم والموارد البشرية المركزية"
-    }
-  ],
+  "events": [],
   "quizzes": [
     {
       "id": "quiz_1792760791043_go9d7",
@@ -25384,6 +25367,11 @@
       "trackPreference": "الأكاديمي",
       "transferHistory": [],
       "delegatePassword": "1234",
+      "memberEvaluation": {
+        "notes": "",
+        "score": 6.5,
+        "updatedAt": "2026-11-01T20:56:39.001Z"
+      },
       "activitiesDetails": "لا",
       "reasonsForSectors": "أهتم بهذه القطاعات لإيماني بأهمية فهم العلاقات الدولية والتحديات السياسية والاقتصادية والبيئية التي تؤثر في استقرار الدول ومستقبل الشعوب. كما أن اهتمامي بقطاع الشؤون الأمريكية ينبع من أهمية العلاقات المصرية الأمريكية وتأثيرها في المجالات السياسية والاقتصادية والتنموية. وأهتم بقطاع البحث والتخطيط السياسي وإدارة الأزمات لما له من دور في تحليل القضايا واتخاذ القرارات المبنية على المعرفة والبيانات. أما قطاع المناخ والبيئة والتنمية المستدامة، فأراه من القطاعات المهمة لتحقيق التنمية الشاملة وتحسين جودة حياة المواطنين، وهو ما يتوافق مع خلفيتي في المجال الصحي واهتمامي بقضايا التنمية وخدمة المجتمع. وأسعى من خلال الانضمام إلى هذه القطاعات إلى تطوير معرفتي، وتوسيع رؤيتي، والمساهمة بخبرتي العملية في دعم أهداف التنمية الوطنية",
       "weeklyEvaluations": {},
@@ -34976,6 +34964,7 @@
       "slotId": null,
       "faculty": "السياسة والاقتصاد",
       "fullName": "youssef mosaad",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": null,
@@ -34995,6 +34984,7 @@
         "communicationScore": 8
       },
       "motivation": "تمت الإضافة يدوياً من لوحة التحكم",
+      "notifiedAt": "2026-11-01T21:11:25.414Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -35024,6 +35014,7 @@
       "slotId": null,
       "faculty": "السياسة والاقتصا",
       "fullName": "ziad hosny",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": null,
@@ -35043,6 +35034,7 @@
         "communicationScore": null
       },
       "motivation": "تمت الإضافة يدوياً من لوحة التحكم",
+      "notifiedAt": "2026-11-01T21:11:23.220Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "pending",
@@ -35072,6 +35064,7 @@
       "slotId": null,
       "faculty": "السياسة والاقتصاد",
       "fullName": "Mayada mohamed",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": null,
@@ -35091,6 +35084,7 @@
         "communicationScore": null
       },
       "motivation": "تمت الإضافة يدوياً من لوحة التحكم",
+      "notifiedAt": "2026-11-01T21:11:26.168Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "pending",
@@ -36740,24 +36734,7 @@
       "durationMinutes": 15
     }
   ],
-  "eventBookings": [
-    {
-      "id": "bk_1793564121089_3nsq",
-      "name": "انس محمد",
-      "email": "anas.mhmd.khairy@gmail.com",
-      "phone": "01146325762",
-      "status": "confirmed",
-      "userId": "c_439_mvkwa9xn",
-      "eventId": "evt_1793564048124_0f1z",
-      "faculty": "—",
-      "bookedAt": "2026-11-01T20:15:21.089Z",
-      "userType": "delegate",
-      "roleTitle": "مندوب (Delegate)",
-      "university": "جامعة السويس",
-      "committeeId": "economic",
-      "committeeName": "التعاون الاقتصادي"
-    }
-  ],
+  "eventBookings": [],
   "quizSubmissions": [
     {
       "id": "sub_1792760801736_qqcfr",

@@ -851,6 +851,19 @@
                 </span>
               </div>
 
+              <!-- Audience Targeting Badge -->
+              <div class="flex items-center gap-1.5 text-[11px]">
+                <i data-lucide="target" class="w-3.5 h-3.5 text-amber-600 flex-shrink-0"></i>
+                <span class="text-slate-500 font-bold">الظهور:</span>
+                <span 
+                  class="px-2 py-0.5 rounded-md font-bold text-[10px] truncate max-w-[220px]"
+                  :class="(!evt.targetAudience || evt.targetAudience.scope === 'all') ? 'bg-slate-100 text-slate-700' : 'bg-amber-100 text-amber-900 border border-amber-300'"
+                  :title="getEventAudienceLabel(evt)"
+                >
+                  {{ getEventAudienceLabel(evt) }}
+                </span>
+              </div>
+
               <!-- Title & Description -->
               <h4 class="font-black text-base text-slate-900 leading-snug">{{ evt.title }}</h4>
               <p v-if="evt.description" class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ evt.description }}</p>
@@ -902,8 +915,17 @@
 
               <div class="flex items-center gap-2">
                 <button 
+                  @click="openEditEventModal(evt)"
+                  class="py-1.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition flex items-center justify-center gap-1 border border-amber-200 cursor-pointer"
+                  title="تعديل بيانات الفعالية ونطاق الظهور"
+                >
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  <span>تعديل</span>
+                </button>
+
+                <button 
                   @click="toggleEventStatus(evt)"
-                  class="flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 border"
+                  class="flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 border cursor-pointer"
                   :class="evt.isOpen ? 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200'"
                 >
                   <i :data-lucide="evt.isOpen ? 'lock' : 'unlock'" class="w-3 h-3"></i>
@@ -912,7 +934,7 @@
 
                 <button 
                   @click="deleteEvent(evt)"
-                  class="p-2 rounded-xl bg-slate-100 hover:bg-rose-100 hover:text-rose-700 text-slate-500 transition"
+                  class="p-2 rounded-xl bg-slate-100 hover:bg-rose-100 hover:text-rose-700 text-slate-500 transition cursor-pointer"
                   title="حذف الفعالية"
                 >
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -5558,11 +5580,15 @@
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-700 flex items-center justify-center">
-              <i data-lucide="plus-circle" class="w-5 h-5"></i>
+              <i :data-lucide="isEditingEvent ? 'edit-3' : 'plus-circle'" class="w-5 h-5"></i>
             </div>
             <div>
-              <h4 class="font-black text-slate-900 text-base">إطلاق فعالية / زيارة رسمية جديدة</h4>
-              <p class="text-xs text-slate-500">تظهر فوراً عند كافة أفراد النموذج للحجز بنقرة واحدة</p>
+              <h4 class="font-black text-slate-900 text-base">
+                {{ isEditingEvent ? 'تعديل الفعالية وتصنيفات الظهور' : 'إطلاق فعالية / زيارة رسمية جديدة' }}
+              </h4>
+              <p class="text-xs text-slate-500">
+                {{ isEditingEvent ? 'تعديل التفاصيل أو تغيير الفئات والمجموعات المسموح لها بالحجز' : 'تحديد تفاصيل الفعالية والفئات المسموح لها برؤيتها وحجزها' }}
+              </p>
             </div>
           </div>
           <button @click="showCreateEventModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100">
@@ -5570,7 +5596,7 @@
           </button>
         </div>
 
-        <form @submit.prevent="createEvent" class="space-y-4">
+        <form @submit.prevent="saveEvent" class="space-y-4">
           <!-- Title -->
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">عنوان الفعالية / الزيارة *</label>
@@ -5679,6 +5705,136 @@
             >
           </div>
 
+          <!-- Target Audience / Categorization -->
+          <div class="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 space-y-3">
+            <div class="flex items-center justify-between flex-wrap gap-1">
+              <label class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="target" class="w-4 h-4 text-amber-600"></i>
+                <span>الفئات والتصنيفات المستهدفة بالفعالية</span>
+              </label>
+              <span class="text-[10px] text-slate-500 font-bold">حدد من تظهر له هذه الفعالية</span>
+            </div>
+
+            <!-- Scope Choice -->
+            <div class="grid grid-cols-2 gap-2">
+              <button 
+                type="button" 
+                @click="newEventForm.targetAudience.scope = 'all'"
+                class="py-2.5 px-3 rounded-xl text-xs font-black border transition flex items-center justify-center gap-1.5 cursor-pointer"
+                :class="newEventForm.targetAudience.scope === 'all' ? 'bg-amber-500 text-slate-950 border-amber-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'"
+              >
+                <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                <span>متاحة للجميع (عامة)</span>
+              </button>
+
+              <button 
+                type="button" 
+                @click="newEventForm.targetAudience.scope = 'custom'"
+                class="py-2.5 px-3 rounded-xl text-xs font-black border transition flex items-center justify-center gap-1.5 cursor-pointer"
+                :class="newEventForm.targetAudience.scope === 'custom' ? 'bg-amber-500 text-slate-950 border-amber-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'"
+              >
+                <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+                <span>تخصيص فئات محددة</span>
+              </button>
+            </div>
+
+            <!-- Custom Options (Shown when scope === 'custom') -->
+            <div v-if="newEventForm.targetAudience.scope === 'custom'" class="pt-2 border-t border-slate-200/80 space-y-3.5">
+              
+              <!-- 1. Roles Selection -->
+              <div>
+                <span class="block text-[11px] font-bold text-slate-700 mb-1.5">1. الأدوار التنظيمية المسموح لها بالظهور والحجز:</span>
+                <div class="grid grid-cols-3 gap-1.5">
+                  <label 
+                    class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
+                    :class="newEventForm.targetAudience.roles.includes('delegate') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                  >
+                    <input type="checkbox" value="delegate" v-model="newEventForm.targetAudience.roles" class="rounded text-amber-600 focus:ring-0">
+                    <span>المناديب</span>
+                  </label>
+
+                  <label 
+                    class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
+                    :class="newEventForm.targetAudience.roles.includes('member') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                  >
+                    <input type="checkbox" value="member" v-model="newEventForm.targetAudience.roles" class="rounded text-amber-600 focus:ring-0">
+                    <span>أعضاء اللجان</span>
+                  </label>
+
+                  <label 
+                    class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
+                    :class="newEventForm.targetAudience.roles.includes('board') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                  >
+                    <input type="checkbox" value="board" v-model="newEventForm.targetAudience.roles" class="rounded text-amber-600 focus:ring-0">
+                    <span>الهاي بورد</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 2. Sectors Selection -->
+              <div>
+                <span class="block text-[11px] font-bold text-slate-700 mb-1.5">2. القطاعات المستهدفة:</span>
+                <div class="grid grid-cols-3 gap-1.5">
+                  <label 
+                    class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
+                    :class="newEventForm.targetAudience.sectors.includes('hr') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                  >
+                    <input type="checkbox" value="hr" v-model="newEventForm.targetAudience.sectors" class="rounded text-amber-600 focus:ring-0">
+                    <span>قطاع التنظيم</span>
+                  </label>
+
+                  <label 
+                    class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
+                    :class="newEventForm.targetAudience.sectors.includes('media') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                  >
+                    <input type="checkbox" value="media" v-model="newEventForm.targetAudience.sectors" class="rounded text-amber-600 focus:ring-0">
+                    <span>قطاع الميديا</span>
+                  </label>
+
+                  <label 
+                    class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
+                    :class="newEventForm.targetAudience.sectors.includes('academic') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                  >
+                    <input type="checkbox" value="academic" v-model="newEventForm.targetAudience.sectors" class="rounded text-amber-600 focus:ring-0">
+                    <span>قطاع الأكاديمي</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 3. Committees Selection -->
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[11px] font-bold text-slate-700">3. اللجان الأكاديمية المستهدفة:</span>
+                  <button 
+                    type="button" 
+                    @click="toggleAllCommittees" 
+                    class="text-[10px] text-amber-700 font-bold hover:underline cursor-pointer"
+                  >
+                    {{ isAllCommitteesSelected ? 'إلغاء تحديد الكل' : 'تحديد جميع اللجان' }}
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-36 overflow-y-auto p-1 bg-white rounded-xl border border-slate-200">
+                  <label 
+                    v-for="comm in officialCommitteesList" 
+                    :key="comm.id"
+                    class="flex items-center gap-2 p-1.5 rounded-lg text-[10px] font-bold cursor-pointer transition hover:bg-slate-50"
+                    :class="newEventForm.targetAudience.committees.includes(comm.id) ? 'bg-amber-50/70 text-amber-900 font-black' : 'text-slate-600'"
+                  >
+                    <input 
+                      type="checkbox" 
+                      :value="comm.id" 
+                      v-model="newEventForm.targetAudience.committees" 
+                      class="rounded text-amber-600 focus:ring-0"
+                    >
+                    <span class="truncate">{{ comm.name }}</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
           <div class="flex items-center gap-2 pt-4 border-t border-slate-100">
             <button 
               type="submit" 
@@ -5686,7 +5842,7 @@
               class="flex-1 py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-black text-xs shadow-md transition cursor-pointer flex items-center justify-center gap-2"
             >
               <i v-if="isCreatingEvent" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
-              <span>{{ isCreatingEvent ? 'جاري إطلاق الفعالية...' : 'إطلاق الفعالية وإتاحتها للجميع الآن' }}</span>
+              <span>{{ isCreatingEvent ? 'جاري الحفظ...' : (isEditingEvent ? 'حفظ تعديلات الفعالية وتصنيفات الظهور' : 'إطلاق الفعالية وفق التصنيفات المحددة') }}</span>
             </button>
             <button 
               type="button" 
@@ -6503,6 +6659,29 @@
         const attendeesSearch = ref('');
         const attendeesRoleFilter = ref('all');
 
+        const isEditingEvent = ref(false);
+        const editingEventId = ref(null);
+        const isCreatingEvent = ref(false);
+
+        const officialCommitteesList = [
+          { id: 'crises', name: 'البحث والتقديرات والتخطيط السياسي وإدارة الأزمات' },
+          { id: 'economic', name: 'التعاون الاقتصادي متعدد الأطراف والإقليمي' },
+          { id: 'security', name: 'الشئون متعددة الأطراف والأمن الدولي' },
+          { id: 'arab', name: 'الشئون العربية' },
+          { id: 'climate', name: 'المناخ والبيئة والتنمية المستدامة' },
+          { id: 'digital', name: 'الاتصالات ونظم المعلومات والتحول الرقمي' },
+          { id: 'palestine', name: 'فلسطين' },
+          { id: 'american', name: 'الشئون الأمريكية' },
+          { id: 'africa', name: 'شئون أفريقيا' }
+        ];
+
+        const defaultTargetAudience = () => ({
+          scope: 'all',
+          roles: ['delegate', 'member', 'board'],
+          sectors: ['hr', 'media', 'academic'],
+          committees: officialCommitteesList.map(c => c.id)
+        });
+
         const newEventForm = ref({
           title: '',
           type: 'visit',
@@ -6512,8 +6691,57 @@
           location: 'مقر وزارة الخارجية المصرية - الحي الحكومي، العاصمة الإدارية الجديدة',
           capacity: 50,
           dressCode: 'زي رسمي دبلوماسي كامل (بدلة كاملة)',
-          notes: 'التجمع أمام البوابة الرئيسية وإحضار إثبات الشخصية'
+          notes: 'التجمع أمام البوابة الرئيسية وإحضار إثبات الشخصية',
+          targetAudience: defaultTargetAudience()
         });
+
+        const isAllCommitteesSelected = computed(() => {
+          if (!newEventForm.value.targetAudience || !newEventForm.value.targetAudience.committees) return false;
+          return newEventForm.value.targetAudience.committees.length === officialCommitteesList.length;
+        });
+
+        function toggleAllCommittees() {
+          if (!newEventForm.value.targetAudience) {
+            newEventForm.value.targetAudience = defaultTargetAudience();
+          }
+          if (isAllCommitteesSelected.value) {
+            newEventForm.value.targetAudience.committees = [];
+          } else {
+            newEventForm.value.targetAudience.committees = officialCommitteesList.map(c => c.id);
+          }
+        }
+
+        function getEventAudienceLabel(evt) {
+          if (!evt.targetAudience || evt.targetAudience.scope === 'all') {
+            return 'الجميع (كافة أفراد النموذج)';
+          }
+          const aud = evt.targetAudience;
+          const parts = [];
+
+          // Roles
+          if (aud.roles && aud.roles.length > 0 && aud.roles.length < 3) {
+            const roleLabels = aud.roles.map(r => r === 'delegate' ? 'المناديب' : (r === 'member' ? 'الأعضاء' : 'الهاي بورد'));
+            parts.push(roleLabels.join(' و '));
+          }
+
+          // Sectors
+          if (aud.sectors && aud.sectors.length > 0 && aud.sectors.length < 3) {
+            const secLabels = aud.sectors.map(s => s === 'hr' ? 'التنظيم' : (s === 'media' ? 'الميديا' : 'الأكاديمي'));
+            parts.push('قطاع ' + secLabels.join(' و '));
+          }
+
+          // Committees
+          if (aud.committees && aud.committees.length > 0 && aud.committees.length < officialCommitteesList.length && !aud.committees.includes('all')) {
+            if (aud.committees.length === 1) {
+              const comm = officialCommitteesList.find(c => c.id === aud.committees[0]);
+              parts.push(comm ? comm.name : aud.committees[0]);
+            } else {
+              parts.push(`${aud.committees.length} لجان محددة`);
+            }
+          }
+
+          return parts.length > 0 ? parts.join(' • ') : 'فئات وتصنيفات مخصصة';
+        }
 
         const activeUpcomingEvent = computed(() => {
           return dashboardEvents.value.find(e => e.isOpen !== false) || dashboardEvents.value[0] || null;
@@ -6535,6 +6763,8 @@
         }
 
         function openCreateEventModal() {
+          isEditingEvent.value = false;
+          editingEventId.value = null;
           newEventForm.value = {
             title: '',
             type: 'visit',
@@ -6544,15 +6774,44 @@
             location: 'مقر وزارة الخارجية المصرية - الحي الحكومي، العاصمة الإدارية الجديدة',
             capacity: 50,
             dressCode: 'زي رسمي دبلوماسي كامل (بدلة كاملة)',
-            notes: 'التجمع أمام البوابة الرئيسية وإحضار إثبات الشخصية'
+            notes: 'التجمع أمام البوابة الرئيسية وإحضار إثبات الشخصية',
+            targetAudience: defaultTargetAudience()
           };
           showCreateEventModal.value = true;
           nextTick(() => lucide.createIcons());
         }
 
-        const isCreatingEvent = ref(false);
+        function openEditEventModal(evt) {
+          isEditingEvent.value = true;
+          editingEventId.value = evt.id;
 
-        async function createEvent() {
+          let aud = defaultTargetAudience();
+          if (evt.targetAudience) {
+            aud = {
+              scope: evt.targetAudience.scope || 'all',
+              roles: Array.isArray(evt.targetAudience.roles) ? [...evt.targetAudience.roles] : ['delegate', 'member', 'board'],
+              sectors: Array.isArray(evt.targetAudience.sectors) ? [...evt.targetAudience.sectors] : ['hr', 'media', 'academic'],
+              committees: Array.isArray(evt.targetAudience.committees) ? [...evt.targetAudience.committees] : officialCommitteesList.map(c => c.id)
+            };
+          }
+
+          newEventForm.value = {
+            title: evt.title || '',
+            type: evt.type || 'visit',
+            description: evt.description || '',
+            date: evt.date || '',
+            time: evt.time || '09:00',
+            location: evt.location || '',
+            capacity: evt.capacity || 50,
+            dressCode: evt.dressCode || '',
+            notes: evt.notes || '',
+            targetAudience: aud
+          };
+          showCreateEventModal.value = true;
+          nextTick(() => lucide.createIcons());
+        }
+
+        async function saveEvent() {
           if (isCreatingEvent.value) return;
           if (!newEventForm.value.title || !newEventForm.value.date) {
             alert('يرجى ملء جميع الحقول المطلوبة');
@@ -6560,8 +6819,12 @@
           }
           isCreatingEvent.value = true;
           try {
-            const res = await fetch('/api/events', {
-              method: 'POST',
+            const isEdit = isEditingEvent.value && editingEventId.value;
+            const url = isEdit ? `/api/events/${editingEventId.value}` : '/api/events';
+            const method = isEdit ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+              method,
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 ...newEventForm.value,
@@ -6575,7 +6838,7 @@
               showCreateEventModal.value = false;
               await fetchDashboardEvents();
             } else {
-              alert(data.message || 'حدث خطأ');
+              alert(data.message || 'حدث خطأ أثناء الحفظ');
             }
           } catch (e) {
             alert('حدث خطأ أثناء الاتصال بالخادم');
@@ -6583,6 +6846,9 @@
             isCreatingEvent.value = false;
           }
         }
+
+        // Backward-compatibility alias
+        const createEvent = saveEvent;
 
         async function toggleEventStatus(evt) {
           try {
@@ -8448,6 +8714,14 @@
           newEventForm,
           fetchDashboardEvents,
           openCreateEventModal,
+          isEditingEvent,
+          editingEventId,
+          openEditEventModal,
+          saveEvent,
+          officialCommitteesList,
+          isAllCommitteesSelected,
+          toggleAllCommittees,
+          getEventAudienceLabel,
           isCreatingEvent,
           createEvent,
           toggleEventStatus,

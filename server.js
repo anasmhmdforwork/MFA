@@ -2094,6 +2094,89 @@ app.get('/api/admin/all-committees-performance', (req, res) => {
 // EVENTS & VISITS MANAGEMENT APIS (HR & ALL)
 // ==========================================
 
+// Helper: Check if event is visible/allowed for user/candidate based on target audience
+function isEventVisibleToUser(evt, targetCandId, targetUsername, db) {
+  // If no targetAudience or scope is 'all', visible to everyone
+  if (!evt.targetAudience || evt.targetAudience.scope === 'all') {
+    return true;
+  }
+
+  // Head of Organization or Admin always sees all events to manage them
+  if (targetUsername) {
+    const user = (db.users || []).find(u => u.username === targetUsername);
+    if (user && (user.role === 'admin' || user.username === 'hr' || user.username === 'organization')) {
+      return true;
+    }
+  }
+
+  const { roles, sectors, committees } = evt.targetAudience;
+
+  // 1. If Candidate (Delegate or Member)
+  if (targetCandId) {
+    const cand = (db.candidates || []).find(c => c.id === targetCandId);
+    if (cand) {
+      const candRole = cand.roleType === 'member' ? 'member' : 'delegate';
+
+      // Check Role
+      if (Array.isArray(roles) && roles.length > 0 && !roles.includes(candRole)) {
+        return false;
+      }
+
+      // Check Sector
+      if (Array.isArray(sectors) && sectors.length > 0) {
+        if (candRole === 'member') {
+          const candSector = cand.subDepartment || 'hr';
+          if (!sectors.includes(candSector)) return false;
+        } else if (candRole === 'delegate') {
+          // Delegates belong to academic committee tracks
+          if (!sectors.includes('academic')) return false;
+        }
+      }
+
+      // Check Committee
+      if (Array.isArray(committees) && committees.length > 0 && !committees.includes('all')) {
+        const candComm = cand.assignedCommitteeId || cand.originalCommitteeId;
+        if (!candComm || !committees.includes(candComm)) return false;
+      }
+
+      return true;
+    }
+  }
+
+  // 2. If Board User (Directorate or Committee Head)
+  if (targetUsername) {
+    const user = (db.users || []).find(u => u.username === targetUsername);
+    if (user) {
+      // Check Role
+      if (Array.isArray(roles) && roles.length > 0 && !roles.includes('board')) {
+        return false;
+      }
+
+      // Check Sector
+      if (Array.isArray(sectors) && sectors.length > 0) {
+        let userSector = 'academic';
+        if (user.username === 'media') userSector = 'media';
+        else if (user.username === 'hr' || user.username === 'organization') userSector = 'hr';
+        else if (user.username === 'academic') userSector = 'academic';
+
+        if (!sectors.includes(userSector)) return false;
+      }
+
+      // Check Committee
+      if (Array.isArray(committees) && committees.length > 0 && !committees.includes('all')) {
+        if (user.role === 'head' && user.committeeId) {
+          if (!committees.includes(user.committeeId)) return false;
+        }
+      }
+
+      return true;
+    }
+  }
+
+  // If unauthenticated or no match
+  return false;
+}
+
 // 1. GET /api/events - List all events with user booking status
 app.get('/api/events', (req, res) => {
   const db = getDB();
@@ -2107,7 +2190,10 @@ app.get('/api/events', (req, res) => {
   }
   const currentUserId = candidateId || username;
 
-  const result = db.events.map(evt => {
+  // Filter events based on target audience
+  const visibleEvents = db.events.filter(evt => isEventVisibleToUser(evt, candidateId, username, db));
+
+  const result = visibleEvents.map(evt => {
     const activeBookings = db.eventBookings.filter(b => b.eventId === evt.id && b.status !== 'cancelled');
     const bookedCount = activeBookings.length;
     const capacity = parseInt(evt.capacity, 10) || 50;
@@ -2142,7 +2228,7 @@ app.post('/api/events', async (req, res) => {
   const db = getDB();
   db.events = db.events || [];
 
-  const { title, type, description, date, time, location, capacity, dressCode, notes, createdBy, createdByName } = req.body;
+  const { title, type, description, date, time, location, capacity, dressCode, notes, targetAudience, createdBy, createdByName } = req.body;
   if (!title || !date) {
     return res.status(400).json({ success: false, message: 'يرجى إدخال اسم الفعالية وتاريخ الانعقاد' });
   }
@@ -2169,6 +2255,7 @@ app.post('/api/events', async (req, res) => {
     isOpen: true,
     dressCode: dressCode || 'زي رسمي كامل (Formal)',
     notes: notes || '',
+    targetAudience: targetAudience || { scope: 'all' },
     createdBy: createdBy || 'hr',
     createdByName: createdByName || 'إدارة التنظيم والموارد البشرية المركزية',
     createdAt: new Date().toISOString()
@@ -2177,7 +2264,7 @@ app.post('/api/events', async (req, res) => {
   db.events.unshift(newEvent);
   await saveDB(db);
 
-  res.json({ success: true, message: 'تم إطلاق الفعالية بنجاح وإتاحتها لكافة أفراد النموذج!', event: newEvent });
+  res.json({ success: true, message: 'تم إطلاق الفعالية بنجاح وفق الفئات والتصنيفات المحددة!', event: newEvent });
 });
 
 // 3. PUT /api/events/:id - Edit event or toggle open/closed
@@ -2190,7 +2277,7 @@ app.put('/api/events/:id', async (req, res) => {
     return res.status(404).json({ success: false, message: 'الفعالية غير موجودة' });
   }
 
-  const { title, type, description, date, time, location, capacity, dressCode, notes, isOpen } = req.body;
+  const { title, type, description, date, time, location, capacity, dressCode, notes, isOpen, targetAudience } = req.body;
   if (title !== undefined) evt.title = String(title).trim();
   if (type !== undefined) evt.type = type;
   if (description !== undefined) evt.description = description;
@@ -2201,10 +2288,11 @@ app.put('/api/events/:id', async (req, res) => {
   if (dressCode !== undefined) evt.dressCode = dressCode;
   if (notes !== undefined) evt.notes = notes;
   if (isOpen !== undefined) evt.isOpen = Boolean(isOpen);
+  if (targetAudience !== undefined) evt.targetAudience = targetAudience;
   evt.updatedAt = new Date().toISOString();
 
   await saveDB(db);
-  res.json({ success: true, message: 'تم تحديث بيانات الفعالية بنجاح', event: evt });
+  res.json({ success: true, message: 'تم تحديث بيانات الفعالية ونطاق الظهور بنجاح', event: evt });
 });
 
 // 4. DELETE /api/events/:id - Delete event
@@ -2299,6 +2387,11 @@ app.post('/api/events/:id/book', async (req, res) => {
 
   if (!userId) {
     return res.status(401).json({ success: false, message: 'يرجى تسجيل الدخول أولاً لإتمام الحجز بنقرة واحدة' });
+  }
+
+  // Check target audience permissions
+  if (!isEventVisibleToUser(event, targetCandId, targetUsername, db)) {
+    return res.status(403).json({ success: false, message: 'عذراً، هذه الفعالية مخصصة لفئات وتصنيفات محددة وغير متاحة لحسابك' });
   }
 
   // Check existing booking
