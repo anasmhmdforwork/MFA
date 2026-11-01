@@ -150,6 +150,16 @@
             <span>جدول المواعيد المتاحة ({{ slots.length }})</span>
           </button>
 
+          <!-- 3. Acceptance WhatsApp Notices (إبلاغ المقبولين) -->
+          <button 
+            @click="activeTab = 'notices'" 
+            :class="activeTab === 'notices' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+            class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+          >
+            <i data-lucide="send" class="w-4 h-4 text-emerald-600"></i>
+            <span>إبلاغ المقبولين ({{ acceptedMembersList.length }})</span>
+          </button>
+
           <!-- 3. Structure & Accepted Members -->
           <button 
             @click="activeTab = 'structure'" 
@@ -1178,6 +1188,397 @@
       </section>
 
       <!-- ============================================== -->
+      <!-- ============================================== -->
+      <!-- TAB: NOTIFY ACCEPTED CANDIDATES (إبلاغ المقبولين) -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'notices'" class="space-y-6">
+
+        <!-- Top Header & Broadcast Controls -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-6 pb-6 border-b border-slate-100">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold mb-2 border border-emerald-200">
+                <i data-lucide="send" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <span>حملة إبلاغ المقبولين بالهيكل التنظيمي</span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900">
+                إبلاغ المقبولين - {{ currentCommittee ? currentCommittee.name : 'جميع اللجان' }}
+              </h2>
+              <p class="text-xs text-slate-500 mt-1 max-w-2xl">
+                إرسال رسائل القبول الرسمية عبر واتساب لكل مرشح تم قبوله مع إدراج صفته المحددة في الهيكل (مندوب Delegate، موارد بشرية HR، ميديا، أكاديمي) واسم اللجنة تلقائياً.
+              </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center gap-2.5">
+              <!-- Toggle Template Customizer -->
+              <button 
+                @click="showTemplateEditor = !showTemplateEditor" 
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition shadow-sm"
+              >
+                <i data-lucide="edit-3" class="w-4 h-4 text-amber-600"></i>
+                <span>{{ showTemplateEditor ? 'إخفاء قالب الرسالة' : 'تخصيص قالب الرسالة' }}</span>
+              </button>
+
+              <!-- Copy All Phones -->
+              <button 
+                @click="copyAllAcceptedPhones" 
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition shadow-sm"
+                title="نسخ أرقام الهواتف لإنشاء جروب واتساب أو إرسال جماعي"
+              >
+                <i data-lucide="copy" class="w-4 h-4 text-slate-600"></i>
+                <span>{{ copiedAllPhones ? 'تم نسخ الأرقام!' : 'نسخ جميع الهواتف' }}</span>
+              </button>
+
+              <!-- Export CSV -->
+              <button 
+                @click="exportNoticeReportCSV" 
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shadow-sm"
+              >
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>تصدير كشف الإبلاغ (CSV)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Summary Metric Counters & Progress -->
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+              <span class="block text-xs font-bold text-slate-500 mb-1">إجمالي المقبولين</span>
+              <span class="text-2xl font-black text-slate-900">{{ acceptedMembersList.length }}</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-center">
+              <div class="flex items-center justify-center gap-1.5 mb-1 text-emerald-800 text-xs font-bold">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                <span>تم إبلاغهم</span>
+              </div>
+              <span class="text-2xl font-black text-emerald-700">{{ notifiedAcceptedCount }}</span>
+              <span class="block text-[10px] text-emerald-600 font-bold mt-0.5">({{ noticeProgressPercent }}%)</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-center">
+              <div class="flex items-center justify-center gap-1.5 mb-1 text-amber-800 text-xs font-bold">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                <span>بانتظار الإبلاغ</span>
+              </div>
+              <span class="text-2xl font-black text-amber-700">{{ pendingNoticeCount }}</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-center">
+              <span class="block text-xs font-bold text-blue-700 mb-1">المناديب (Delegates)</span>
+              <span class="text-2xl font-black text-blue-900">{{ delegatesCount }}</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200 text-center col-span-2 sm:col-span-1">
+              <span class="block text-xs font-bold text-purple-700 mb-1">أعضاء الهيكل (لجان)</span>
+              <span class="text-2xl font-black text-purple-900">{{ hrCount + mediaCount + academicCount }}</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center gap-3">
+            <span class="text-xs font-bold text-slate-500 whitespace-nowrap">نسبة إنجاز الإبلاغ:</span>
+            <div class="flex-1 h-3 rounded-full bg-slate-100 overflow-hidden relative">
+              <div 
+                class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500" 
+                :style="{ width: noticeProgressPercent + '%' }"
+              ></div>
+            </div>
+            <span class="text-xs font-bold text-emerald-700 font-mono">{{ notifiedAcceptedCount }} / {{ acceptedMembersList.length }}</span>
+          </div>
+        </div>
+
+        <!-- Collapsible Template Editor & Customizer -->
+        <div v-show="showTemplateEditor" class="bg-gradient-to-br from-amber-50/70 to-orange-50/40 rounded-3xl p-6 border border-amber-200 shadow-sm transition-all space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-amber-200/60">
+            <div class="flex items-center gap-2">
+              <i data-lucide="message-square" class="w-4 h-4 text-amber-700"></i>
+              <h3 class="font-bold text-sm text-slate-900">صيغة رسالة الواتساب الموحدة للمقبولين</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <button 
+                @click="resetNoticeTemplate" 
+                class="text-xs text-amber-800 hover:text-amber-900 font-bold underline px-2 py-1"
+              >
+                استعادة النص الأصلي
+              </button>
+              <button 
+                @click="saveNoticeTemplate" 
+                class="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5"
+              >
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                <span>حفظ التعديلات</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Variable Tags -->
+          <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+            <span class="text-slate-500 font-bold ml-1">المتغيرات التلقائية المتاحة:</span>
+            <span class="px-2 py-0.5 rounded-lg bg-white border border-amber-300 font-mono text-amber-900 font-bold">{الاسم}</span>
+            <span class="px-2 py-0.5 rounded-lg bg-white border border-amber-300 font-mono text-amber-900 font-bold">{البوزيشن}</span>
+            <span class="px-2 py-0.5 rounded-lg bg-white border border-amber-300 font-mono text-amber-900 font-bold">{اللجنة}</span>
+            <span class="px-2 py-0.5 rounded-lg bg-white border border-amber-300 font-mono text-amber-900 font-bold">{الكلية}</span>
+          </div>
+
+          <textarea 
+            v-model="noticeTemplate" 
+            rows="7"
+            class="w-full p-4 rounded-2xl border border-amber-300 bg-white text-slate-800 text-xs font-sans leading-relaxed outline-none focus:ring-2 focus:ring-amber-500 shadow-inner"
+            placeholder="اكتب صيغة الرسالة هنا..."
+          ></textarea>
+        </div>
+
+        <!-- Filter Pills & Search -->
+        <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+          <!-- Structure Role Filters -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0">
+            <button 
+              @click="noticeRoleFilter = 'all'"
+              :class="noticeRoleFilter === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap"
+            >
+              الكل ({{ acceptedMembersList.length }})
+            </button>
+
+            <button 
+              @click="noticeRoleFilter = 'delegate'"
+              :class="noticeRoleFilter === 'delegate' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
+            >
+              <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+              <span>المناديب ({{ delegatesCount }})</span>
+            </button>
+
+            <button 
+              @click="noticeRoleFilter = 'hr'"
+              :class="noticeRoleFilter === 'hr' ? 'bg-pink-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
+            >
+              <span>HR ({{ hrCount }})</span>
+            </button>
+
+            <button 
+              @click="noticeRoleFilter = 'media'"
+              :class="noticeRoleFilter === 'media' ? 'bg-purple-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
+            >
+              <span>ميديا ({{ mediaCount }})</span>
+            </button>
+
+            <button 
+              @click="noticeRoleFilter = 'academic'"
+              :class="noticeRoleFilter === 'academic' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
+            >
+              <span>أكاديمي ({{ academicCount }})</span>
+            </button>
+
+            <div class="h-5 w-px bg-slate-300 mx-1"></div>
+
+            <!-- Status Filter -->
+            <button 
+              @click="noticeStatusFilter = 'pending'"
+              :class="noticeStatusFilter === 'pending' ? 'bg-amber-600 text-white shadow-sm' : 'bg-white text-amber-700 hover:bg-amber-50 border border-amber-200'"
+              class="px-2.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
+            >
+              <i data-lucide="clock" class="w-3 h-3"></i>
+              <span>المتبقي فقط ({{ pendingNoticeCount }})</span>
+            </button>
+
+            <button 
+              @click="noticeStatusFilter = 'notified'"
+              :class="noticeStatusFilter === 'notified' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-emerald-700 hover:bg-emerald-50 border border-emerald-200'"
+              class="px-2.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
+            >
+              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+              <span>تم الإبلاغ ({{ notifiedAcceptedCount }})</span>
+            </button>
+          </div>
+
+          <!-- Search Input & Batch Controls -->
+          <div class="flex items-center gap-2">
+            <div class="relative w-full sm:w-64">
+              <input 
+                type="text" 
+                v-model="noticeSearch" 
+                placeholder="ابحث بالاسم أو الهاتف..."
+                class="w-full pl-4 pr-9 py-2 rounded-xl border border-slate-200 text-xs text-slate-800 outline-none focus:border-amber-500 bg-white"
+              >
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3 top-2.5 pointer-events-none"></i>
+            </div>
+
+            <!-- Batch Mark Toggle -->
+            <button 
+              @click="markAllDisplayedAsNotified(true)" 
+              class="hidden sm:inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+              title="تحديد كل المعروضين في الصفحة كـ تم الإبلاغ"
+            >
+              <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>تحديد المعروض كتم</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-if="filteredNoticeMembers.length === 0" class="bg-white rounded-3xl p-12 text-center border border-slate-200 text-slate-500">
+          <i data-lucide="message-circle" class="w-12 h-12 mx-auto text-slate-300 mb-3"></i>
+          <p class="font-bold text-sm">لا يوجد أعضاء مطابقين للفلتر أو البحث المحدد</p>
+          <p class="text-xs text-slate-400 mt-1">تأكد من اختيار فلتر آخر أو كتابة الاسم بشكل صحيح.</p>
+        </div>
+
+        <!-- Cards Grid -->
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div 
+            v-for="cand in filteredNoticeMembers" 
+            :key="cand.id"
+            :class="cand.notified ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-200 bg-white'"
+            class="rounded-2xl p-5 border shadow-sm hover:shadow-md transition flex flex-col justify-between"
+          >
+            <div>
+              <!-- Card Header -->
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="flex items-center gap-2.5">
+                  <div 
+                    :class="cand.notified ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white'"
+                    class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shadow-sm"
+                  >
+                    {{ (cand.arabicName || cand.fullName).charAt(0) }}
+                  </div>
+                  <div>
+                    <h4 class="font-black text-sm text-slate-900 leading-tight">{{ cand.arabicName || cand.fullName }}</h4>
+                    <p class="text-[11px] text-slate-500 mt-0.5">{{ cand.faculty }} • {{ cand.university }}</p>
+                  </div>
+                </div>
+
+                <!-- Role Badge -->
+                <span 
+                  v-if="(cand.roleType || 'delegate') === 'delegate'"
+                  class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-bold"
+                >
+                  مندوب (Delegate)
+                </span>
+                <span 
+                  v-else-if="cand.subDepartment === 'hr'"
+                  class="px-2.5 py-1 rounded-full bg-pink-50 text-pink-800 border border-pink-200 text-[10px] font-bold"
+                >
+                  عضو HR
+                </span>
+                <span 
+                  v-else-if="cand.subDepartment === 'media'"
+                  class="px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200 text-[10px] font-bold"
+                >
+                  عضو ميديا
+                </span>
+                <span 
+                  v-else
+                  class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold"
+                >
+                  عضو أكاديمي
+                </span>
+              </div>
+
+              <!-- Status Banner -->
+              <div class="flex items-center justify-between mb-3 text-xs">
+                <span class="text-slate-500 font-medium text-[11px]">حالة الإبلاغ:</span>
+                <div 
+                  v-if="cand.notified" 
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold border border-emerald-200"
+                >
+                  <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  <span>تم الإبلاغ بنجاح</span>
+                </div>
+                <div 
+                  v-else 
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 text-[11px] font-bold border border-amber-200"
+                >
+                  <i data-lucide="clock" class="w-3 h-3 text-amber-600"></i>
+                  <span>بانتظار الإرسال</span>
+                </div>
+              </div>
+
+              <!-- Candidate Info -->
+              <div class="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl mb-3 border border-slate-100">
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">الهاتف:</span>
+                  <a :href="'https://wa.me/2' + cand.phone" target="_blank" class="font-mono text-emerald-600 font-bold hover:underline flex items-center gap-1">
+                    <span>{{ cand.phone }}</span>
+                    <i data-lucide="phone" class="w-3 h-3"></i>
+                  </a>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">اللجنة:</span>
+                  <span class="font-bold text-slate-800 text-[11px] truncate max-w-[190px]">{{ getCandidateCommitteeTitle(cand) }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">الصفة بالهيكل:</span>
+                  <span class="font-bold text-amber-700 text-[11px]">{{ getCandidatePositionTitle(cand) }}</span>
+                </div>
+              </div>
+
+              <!-- Personalized WhatsApp Message Preview Box -->
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[11px] font-bold text-slate-600 flex items-center gap-1">
+                    <i data-lucide="eye" class="w-3 h-3 text-slate-400"></i>
+                    <span>معاينة نص الرسالة الخاصة به:</span>
+                  </span>
+                  <button 
+                    @click="copyCandidateMessage(cand)" 
+                    class="text-[11px] text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-1"
+                  >
+                    <i data-lucide="copy" class="w-3 h-3"></i>
+                    <span>{{ copiedCandidateId === cand.id ? 'تم النسخ!' : 'نسخ النص' }}</span>
+                  </button>
+                </div>
+                <div class="p-3 rounded-xl bg-emerald-50/50 border border-emerald-200/60 text-slate-700 text-[11px] leading-relaxed whitespace-pre-line max-h-36 overflow-y-auto font-sans shadow-inner select-all">
+{{ renderCandidateNoticeMessage(cand) }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Action Buttons -->
+            <div class="space-y-2 pt-3 border-t border-slate-100">
+              <!-- Send on WhatsApp (Main Action) -->
+              <a 
+                :href="getCandidateWhatsAppUrl(cand)" 
+                @click="onSendWhatsAppClick(cand)"
+                target="_blank"
+                class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm"
+              >
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>إرسال عبر واتساب فوراً</span>
+              </a>
+
+              <div class="flex items-center gap-2">
+                <!-- Toggle Notified Checkbox/Button -->
+                <button 
+                  @click="toggleCandidateNotified(cand)"
+                  :class="cand.notified ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'"
+                  class="flex-1 py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1"
+                >
+                  <i :data-lucide="cand.notified ? 'rotate-ccw' : 'check'" class="w-3.5 h-3.5"></i>
+                  <span>{{ cand.notified ? 'إلغاء التحديد' : 'تحديد كـ تم الإبلاغ' }}</span>
+                </button>
+
+                <!-- Quick Edit Role -->
+                <button 
+                  @click="openEditRoleModal(cand)"
+                  class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-1"
+                  title="تعديل صفة العضو في الهيكل"
+                >
+                  <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                  <span>تعديل البوزيشن</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
       <!-- TAB 3: ANALYTICS & METRICS -->
       <!-- ============================================== -->
       <section v-show="activeTab === 'analytics'" class="space-y-8">
@@ -4389,6 +4790,224 @@
         const activeTab = ref('candidates');
         const copySuccess = ref(false);
 
+        // Acceptance WhatsApp Notices State & Logic
+        const DEFAULT_NOTICE_TEMPLATE = `عزيزي *{الاسم}* \n\nبالنيابة عن فريق نموذج محاكاة وزارة الخارجية – جامعة السويس، يسعدنا ويشرفنا أن نرحب بك ضمن فريق عمل النموذج!\n\nبعد الانتهاء من المقابلات الشخصية، يسعدنا إبلاغك باختيارك للانضمام إلينا ك *[ {البوزيشن} ]* داخل {اللجنة} \n \nنتطلع إلى بدء هذه الرحلة معك، لنحوّل المعرفة إلى ممارسة، والطموح إلى إنجاز، ونصنع معًا تجربة ثرية بالتعلم والتعاون وتبادل الخبرات.\n\n*أهلًا بك في فريقنا، ونتطلع إلى تحقيق نجاحات كبيرة معًا!*`;
+        const noticeTemplate = ref(localStorage.getItem('mofa_notice_template') || DEFAULT_NOTICE_TEMPLATE);
+        const showTemplateEditor = ref(false);
+        const noticeRoleFilter = ref('all');
+        const noticeStatusFilter = ref('all');
+        const noticeSearch = ref('');
+        const copiedCandidateId = ref(null);
+        const copiedAllPhones = ref(false);
+
+        const notifiedAcceptedCount = computed(() => {
+          return acceptedMembersList.value.filter(c => c.notified).length;
+        });
+
+        const pendingNoticeCount = computed(() => {
+          return acceptedMembersList.value.filter(c => !c.notified).length;
+        });
+
+        const noticeProgressPercent = computed(() => {
+          const total = acceptedMembersList.value.length;
+          if (!total) return 0;
+          return Math.round((notifiedAcceptedCount.value / total) * 100);
+        });
+
+        function getCandidatePositionTitle(c) {
+          if (!c) return 'عضو';
+          if ((c.roleType || 'delegate') === 'delegate') {
+            return 'مندوب (Delegate)';
+          }
+          if (c.subDepartment === 'hr') {
+            return 'عضو موارد بشرية (HR)';
+          }
+          if (c.subDepartment === 'media') {
+            return 'عضو ميديا وإعلام (Media)';
+          }
+          if (c.subDepartment === 'academic') {
+            return 'عضو أكاديمي وتدريب (Academic)';
+          }
+          return 'عضو في الهيكل التنظيمي';
+        }
+
+        function getCandidateCommitteeTitle(c) {
+          if (!c) return '';
+          const commId = c.assignedCommitteeId || c.originalCommitteeId;
+          const found = committees.value.find(item => item.id === commId);
+          let name = found ? found.name : (currentCommittee.value ? currentCommittee.value.name : 'اللجنة');
+          if (!name.startsWith('لجنة') && !name.startsWith('قطاع')) {
+            name = 'لجنة ' + name;
+          }
+          return name;
+        }
+
+        function renderCandidateNoticeMessage(c) {
+          if (!c) return '';
+          const name = c.arabicName || c.fullName || 'المتقدم';
+          const pos = getCandidatePositionTitle(c);
+          const comm = getCandidateCommitteeTitle(c);
+          const faculty = c.faculty || '';
+          const university = c.university || '';
+          const phone = c.phone || '';
+
+          let template = noticeTemplate.value || DEFAULT_NOTICE_TEMPLATE;
+          return template
+            .replace(/\{الاسم\}|\*\/اسم المتقدم \*|\{اسم المتقدم\}/g, name)
+            .replace(/\{البوزيشن\}|\[ البوزيشن بتاعه في الهيكل \]|\[البوزيشن بتاعه في الهيكل\]|\{البوزيشن في الهيكل\}/g, pos)
+            .replace(/\{اللجنة\}|اسم اللجنة التابع ليها|\{اسم اللجنة\}/g, comm)
+            .replace(/\{الكلية\}/g, faculty)
+            .replace(/\{الجامعة\}/g, university)
+            .replace(/\{الهاتف\}/g, phone);
+        }
+
+        function getCandidateWhatsAppUrl(c) {
+          if (!c || !c.phone) return '#';
+          let digits = String(c.phone).replace(/\D/g, '');
+          if (digits.startsWith('20')) {
+            // already 20
+          } else if (digits.startsWith('0')) {
+            digits = '20' + digits.substring(1);
+          } else {
+            digits = '20' + digits;
+          }
+          const msg = renderCandidateNoticeMessage(c);
+          return 'https://wa.me/' + digits + '?text=' + encodeURIComponent(msg);
+        }
+
+        async function onSendWhatsAppClick(c) {
+          if (!c.notified) {
+            await toggleCandidateNotified(c, true);
+          }
+        }
+
+        function copyCandidateMessage(c) {
+          const msg = renderCandidateNoticeMessage(c);
+          navigator.clipboard.writeText(msg);
+          copiedCandidateId.value = c.id;
+          setTimeout(() => {
+            if (copiedCandidateId.value === c.id) copiedCandidateId.value = null;
+          }, 2000);
+        }
+
+        async function toggleCandidateNotified(c, forceStatus = null) {
+          const newStatus = forceStatus !== null ? forceStatus : !c.notified;
+          const prevStatus = c.notified;
+          const prevTime = c.notifiedAt;
+          c.notified = newStatus;
+          c.notifiedAt = newStatus ? new Date().toISOString() : null;
+
+          try {
+            const res = await fetch('/api/candidates/' + c.id + '/notify-status', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ notified: c.notified, notifiedAt: c.notifiedAt })
+            });
+            const data = await res.json();
+            if (!data.success) {
+              c.notified = prevStatus;
+              c.notifiedAt = prevTime;
+            }
+          } catch (e) {
+            console.error('Error toggling notify status:', e);
+          }
+        }
+
+        function copyAllAcceptedPhones() {
+          const list = filteredNoticeMembers.value;
+          const phones = list.map(c => c.phone).filter(Boolean);
+          if (phones.length === 0) {
+            alert('لا توجد أرقام هواتف لنسخها');
+            return;
+          }
+          navigator.clipboard.writeText(phones.join('\n'));
+          copiedAllPhones.value = true;
+          setTimeout(() => { copiedAllPhones.value = false; }, 2500);
+        }
+
+        async function markAllDisplayedAsNotified(status = true) {
+          const list = filteredNoticeMembers.value;
+          if (list.length === 0) return;
+          const ids = list.map(c => c.id);
+          if (!confirm('هل تريد بالتأكيد تحديد ' + ids.length + ' مرشح كـ ' + (status ? 'تم الإبلاغ' : 'بانتظار الإرسال') + '؟')) return;
+
+          list.forEach(c => {
+            c.notified = status;
+            c.notifiedAt = status ? new Date().toISOString() : null;
+          });
+
+          try {
+            await fetch('/api/candidates/batch-notify-status', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ candidateIds: ids, notified: status })
+            });
+          } catch (e) {
+            console.error('Batch notify status error:', e);
+          }
+        }
+
+        function exportNoticeReportCSV() {
+          let csv = '\uFEFFم,الاسم,الجامعة,الكلية,الهاتف,اللجنة,الصفة في الهيكل,حالة الإبلاغ,تاريخ الإبلاغ\n';
+          acceptedMembersList.value.forEach((c, idx) => {
+            const pos = getCandidatePositionTitle(c);
+            const comm = getCandidateCommitteeTitle(c);
+            const status = c.notified ? 'تم الإبلاغ' : 'بانتظار الإرسال';
+            const date = c.notifiedAt ? new Date(c.notifiedAt).toLocaleString('ar-EG') : '—';
+            csv += (idx + 1) + ',"' + (c.arabicName || c.fullName) + '","' + (c.university || '') + '","' + (c.faculty || '') + '","' + (c.phone || '') + '","' + comm + '","' + pos + '","' + status + '","' + date + '"\n';
+          });
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'تقرير_إبلاغ_المقبولين_' + (currentCommittee.value ? currentCommittee.value.name : 'الكل') + '.csv';
+          a.click();
+        }
+
+        function saveNoticeTemplate() {
+          localStorage.setItem('mofa_notice_template', noticeTemplate.value);
+          alert('تم حفظ قالب الرسالة بنجاح!');
+        }
+
+        function resetNoticeTemplate() {
+          if (confirm('هل تريد استعادة صيغة الرسالة الافتراضية؟')) {
+            noticeTemplate.value = DEFAULT_NOTICE_TEMPLATE;
+            localStorage.removeItem('mofa_notice_template');
+          }
+        }
+
+        const filteredNoticeMembers = computed(() => {
+          let list = acceptedMembersList.value;
+          if (noticeRoleFilter.value === 'delegate') {
+            list = list.filter(c => (c.roleType || 'delegate') === 'delegate');
+          } else if (['hr', 'media', 'academic'].includes(noticeRoleFilter.value)) {
+            list = list.filter(c => c.roleType === 'member' && c.subDepartment === noticeRoleFilter.value);
+          }
+
+          if (noticeStatusFilter.value === 'notified') {
+            list = list.filter(c => c.notified);
+          } else if (noticeStatusFilter.value === 'pending') {
+            list = list.filter(c => !c.notified);
+          }
+
+          if (noticeSearch.value.trim()) {
+            const q = noticeSearch.value.trim().toLowerCase();
+            list = list.filter(c => 
+              (c.arabicName && c.arabicName.toLowerCase().includes(q)) ||
+              (c.fullName && c.fullName.toLowerCase().includes(q)) ||
+              (c.phone && c.phone.includes(q)) ||
+              (c.faculty && c.faculty.toLowerCase().includes(q))
+            );
+          }
+          return list;
+        });
+
+        watch([noticeRoleFilter, noticeStatusFilter, showTemplateEditor], () => {
+          nextTick(() => {
+            if (window.lucide) lucide.createIcons();
+          });
+        });
+
         // Structure & Roles State
         const structureFilter = ref('all');
         const structureSearch = ref('');
@@ -6282,6 +6901,29 @@
           gradebookData,
           gradebookLoading,
           allCommitteesPerformance,
+          noticeTemplate,
+          showTemplateEditor,
+          noticeRoleFilter,
+          noticeStatusFilter,
+          noticeSearch,
+          copiedCandidateId,
+          copiedAllPhones,
+          notifiedAcceptedCount,
+          pendingNoticeCount,
+          noticeProgressPercent,
+          getCandidatePositionTitle,
+          getCandidateCommitteeTitle,
+          renderCandidateNoticeMessage,
+          getCandidateWhatsAppUrl,
+          onSendWhatsAppClick,
+          copyCandidateMessage,
+          toggleCandidateNotified,
+          copyAllAcceptedPhones,
+          markAllDisplayedAsNotified,
+          exportNoticeReportCSV,
+          saveNoticeTemplate,
+          resetNoticeTemplate,
+          filteredNoticeMembers,
           acceptedMembersList,
           delegatesCount,
           hrCount,

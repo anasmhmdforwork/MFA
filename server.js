@@ -565,6 +565,44 @@ app.put('/api/candidates/:id/role', async (req, res) => {
 });
 
 // Transfer candidate to another committee
+// Update candidate notification status (WhatsApp acceptance notice)
+app.put('/api/candidates/:id/notify-status', async (req, res) => {
+  const db = getDB();
+  const cand = (db.candidates || []).find(c => c.id === req.params.id);
+  if (!cand) {
+    return res.status(404).json({ success: false, message: 'المرشح غير موجود' });
+  }
+
+  const { notified, notifiedAt } = req.body;
+  cand.notified = Boolean(notified);
+  cand.notifiedAt = cand.notified ? (notifiedAt || new Date().toISOString()) : null;
+
+  await saveDB(db);
+  res.json({ success: true, message: 'تم تحديث حالة الإبلاغ بنجاح', candidate: cand });
+});
+
+// Batch update candidate notification status
+app.post('/api/candidates/batch-notify-status', async (req, res) => {
+  const db = getDB();
+  const { candidateIds, notified } = req.body;
+  if (!Array.isArray(candidateIds) || candidateIds.length === 0) {
+    return res.status(400).json({ success: false, message: 'قائمة المعرفات غير صالحة' });
+  }
+
+  const now = new Date().toISOString();
+  let updatedCount = 0;
+  (db.candidates || []).forEach(c => {
+    if (candidateIds.includes(c.id)) {
+      c.notified = Boolean(notified);
+      c.notifiedAt = c.notified ? now : null;
+      updatedCount++;
+    }
+  });
+
+  await saveDB(db);
+  res.json({ success: true, updatedCount });
+});
+
 app.post('/api/candidates/:id/transfer', async (req, res) => {
   const db = getDB();
   const cand = db.candidates.find(c => c.id === req.params.id);
