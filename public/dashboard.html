@@ -1516,7 +1516,15 @@
                     {{ (cand.arabicName || cand.fullName).charAt(0) }}
                   </div>
                   <div>
+                  <div class="flex items-center gap-1.5 flex-wrap">
                     <h4 class="font-black text-sm text-slate-900 leading-tight">{{ cand.arabicName || cand.fullName }}</h4>
+                    <span 
+                      :class="isFemaleCandidate(cand) ? 'bg-pink-50 text-pink-700 border-pink-200' : 'bg-slate-100 text-slate-600 border-slate-200'"
+                      class="px-1.5 py-0.5 rounded-md text-[10px] font-bold border"
+                    >
+                      {{ isFemaleCandidate(cand) ? 'عزيزتي' : 'عزيزي' }}
+                    </span>
+                  </div>
                     <p class="text-[11px] text-slate-500 mt-0.5">{{ cand.faculty }} • {{ cand.university }}</p>
                   </div>
                 </div>
@@ -1586,26 +1594,6 @@
                 </div>
               </div>
 
-              <!-- Personalized WhatsApp Message Preview Box -->
-              <div class="mb-4">
-                <div class="flex items-center justify-between mb-1.5">
-                  <span class="text-[11px] font-bold text-slate-600 flex items-center gap-1">
-                    <i data-lucide="eye" class="w-3 h-3 text-slate-400"></i>
-                    <span>معاينة نص الرسالة الخاصة به:</span>
-                  </span>
-                  <button 
-                    @click="copyCandidateMessage(cand)" 
-                    class="text-[11px] text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-1"
-                  >
-                    <i data-lucide="copy" class="w-3 h-3"></i>
-                    <span>{{ copiedCandidateId === cand.id ? 'تم النسخ!' : 'نسخ النص' }}</span>
-                  </button>
-                </div>
-                <div class="p-3 rounded-xl bg-emerald-50/50 border border-emerald-200/60 text-slate-700 text-[11px] leading-relaxed whitespace-pre-line max-h-36 overflow-y-auto font-sans shadow-inner select-all">
-{{ renderCandidateNoticeMessage(cand) }}
-                </div>
-              </div>
-            </div>
 
             <!-- Card Action Buttons -->
             <div class="space-y-2 pt-3 border-t border-slate-100">
@@ -1621,6 +1609,15 @@
               </a>
 
               <div class="flex items-center gap-2">
+                <!-- Copy Message Button -->
+                <button 
+                  @click="copyCandidateMessage(cand)"
+                  class="flex-1 py-2 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-1"
+                  title="نسخ نص الرسالة للحافظة"
+                >
+                  <i data-lucide="copy" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  <span>{{ copiedCandidateId === cand.id ? 'تم النسخ!' : 'نسخ الرسالة' }}</span>
+                </button>
                 <!-- Toggle Notified Checkbox/Button -->
                 <button 
                   @click="toggleCandidateNotified(cand)"
@@ -4936,21 +4933,57 @@
           return Math.round((notifiedAcceptedCount.value / total) * 100);
         });
 
+        const FEMALE_FIRST_NAMES = new Set([
+          'sarah', 'آلاء', 'آية', 'آيه', 'أروى', 'أمنية', 'أميرة', 'أمينه', 'إسراء', 'إيلاف', 'إيمان',
+          'احلام', 'اسراء', 'اسماء', 'اشرقت', 'الاء', 'الشيماء', 'امانى', 'اماني', 'اميرة', 'اميره',
+          'انجي', 'بسمله', 'بسنت', 'تقي', 'جنا', 'جنة', 'جنةالله', 'جنه', 'جنى', 'جني', 'جودي',
+          'جويرية', 'حبببه', 'حبيبة', 'حنين', 'خلود', 'دارين', 'داليا', 'دعاء', 'دلع',
+          'ديانا', 'دينا', 'رؤى', 'رؤي', 'راندا', 'رحاب', 'رحمة', 'رحمه', 'رضوي', 'رغد', 'رقيه',
+          'رنا', 'رواء', 'روان', 'روضه', 'روفان', 'رولا', 'ريتاج', 'ريتال', 'ريم', 'ريهام',
+          'زينب', 'زينة', 'سارة', 'ساره', 'سجود', 'سعاد', 'سلسبيل', 'سلمى', 'سلمي', 'سما',
+          'سندس', 'سها', 'سهيله', 'شاديه', 'شروق', 'شمس', 'شهد', 'شيرين', 'شيماء', 'صباح',
+          'صوفيا', 'عبير', 'علا', 'علياء', 'غرام', 'فادية', 'فاطمة', 'فاطمه', 'فرح', 'كنزي',
+          'لارا', 'لبنى', 'لمى', 'لمياء', 'لوجين', 'ليلى', 'لينة', 'مروة', 'مروه', 'مريم',
+          'ملك', 'منار', 'منة', 'منه', 'مودة', 'مي', 'مياده', 'نادين', 'نبيلة', 'نجاة', 'نجلاء',
+          'ندى', 'ندي', 'نرمين', 'نسمة', 'نشوى', 'نعمه', 'نور', 'نورا', 'نورالهدى', 'نوران',
+          'نورهان', 'نورين', 'نيره', 'نيهال', 'هاجر', 'هايا', 'هايدى', 'هايدي', 'هدى', 'هدير',
+          'هنا', 'هند', 'هيا', 'وداد', 'يارا', 'ياسمين', 'ياسمينا', 'ٱلاء', 'چنى'
+        ]);
+
+        const MALE_EXCEPTIONS = new Set(['حمزة', 'طه', 'عبده', 'طلحة', 'أسامة', 'اسامة', 'جمعة', 'عطية', 'سلامة', 'جونير', 'عمر']);
+
+        function isFemaleCandidate(cand) {
+          if (!cand) return false;
+          const raw = (cand.arabicName || cand.fullName || '').trim();
+          if (!raw) return false;
+          const first = raw.split(/\s+/)[0].toLowerCase();
+          if (first.startsWith('عبد')) return false;
+          if (MALE_EXCEPTIONS.has(first)) return false;
+          if (FEMALE_FIRST_NAMES.has(first)) return true;
+          const norm = first.replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي');
+          for (const fn of FEMALE_FIRST_NAMES) {
+            if (norm === fn.replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي')) return true;
+          }
+          if ((first.endsWith('ة') || first.endsWith('ه')) && !MALE_EXCEPTIONS.has(first)) return true;
+          return false;
+        }
+
         function getCandidatePositionTitle(c) {
           if (!c) return 'عضو';
+          const female = isFemaleCandidate(c);
           if ((c.roleType || 'delegate') === 'delegate') {
-            return 'مندوب (Delegate)';
+            return female ? 'مندوبة (Delegate)' : 'مندوب (Delegate)';
           }
           if (c.subDepartment === 'hr') {
-            return 'عضو موارد بشرية (HR)';
+            return female ? 'عضوة موارد بشرية (HR)' : 'عضو موارد بشرية (HR)';
           }
           if (c.subDepartment === 'media') {
-            return 'عضو ميديا وإعلام (Media)';
+            return female ? 'عضوة ميديا وإعلام (Media)' : 'عضو ميديا وإعلام (Media)';
           }
           if (c.subDepartment === 'academic') {
-            return 'عضو أكاديمي وتدريب (Academic)';
+            return female ? 'عضوة أكاديمية وتدريب (Academic)' : 'عضو أكاديمي وتدريب (Academic)';
           }
-          return 'عضو في الهيكل التنظيمي';
+          return female ? 'عضوة في الهيكل التنظيمي' : 'عضو في الهيكل التنظيمي';
         }
 
         function getCandidateCommitteeTitle(c) {
@@ -4966,7 +4999,9 @@
 
         function renderCandidateNoticeMessage(c) {
           if (!c) return '';
-          const name = c.arabicName || c.fullName || 'المتقدم';
+          const female = isFemaleCandidate(c);
+          const greeting = female ? 'عزيزتي' : 'عزيزي';
+          const name = c.arabicName || c.fullName || (female ? 'المتقدمة' : 'المتقدم');
           const pos = getCandidatePositionTitle(c);
           const comm = getCandidateCommitteeTitle(c);
           const faculty = c.faculty || '';
@@ -4984,6 +5019,7 @@
 
           let template = noticeTemplate.value || DEFAULT_NOTICE_TEMPLATE;
           let res = template
+            .replace(/\{التحية\}|عزيز[يى](\/عزيزتي)?|عزيزتي(\/عزيز[يى])?/g, greeting)
             .replace(/\{الاسم\}|\*\/اسم المتقدم \*|\{اسم المتقدم\}/g, name)
             .replace(/\{البوزيشن\}|\[ البوزيشن بتاعه في الهيكل \]|\[البوزيشن بتاعه في الهيكل\]|\{البوزيشن في الهيكل\}/g, pos)
             .replace(/\{اللجنة\}|اسم اللجنة التابع ليها|\{اسم اللجنة\}/g, comm)
@@ -5003,6 +5039,8 @@
 
           return res.replace(/\n{3,}/g, '\n\n').trim();
         }
+
+
 
         function getCandidateWhatsAppUrl(c) {
           if (!c || !c.phone) return '#';
@@ -7061,6 +7099,7 @@
           notifiedAcceptedCount,
           pendingNoticeCount,
           noticeProgressPercent,
+          isFemaleCandidate,
           getCandidatePositionTitle,
           getCandidateCommitteeTitle,
           renderCandidateNoticeMessage,

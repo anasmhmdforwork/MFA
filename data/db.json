@@ -34078,7 +34078,9 @@
       },
       "assignedCommitteeId": "economic",
       "originalCommitteeId": "economic",
-      "attendanceCommitment": "نعم"
+      "attendanceCommitment": "نعم",
+      "notified": true,
+      "notifiedAt": "2026-11-01T11:32:44.914Z"
     },
     {
       "id": "c_440_mvli3c67",
@@ -34754,7 +34756,7 @@
       "shortName": "التعاون الاقتصادي",
       "description": "الاتفاقيات الاقتصادية، التكتلات التجارية، والدبلوماسية الاقتصادية الدولية",
       "headUsername": "economic_head",
-      "whatsappGroupLink": ""
+      "whatsappGroupLink": "https://chat.whatsapp.com/JZ0guZyW9aQEpQlyaJzHj5"
     },
     {
       "id": "security",
