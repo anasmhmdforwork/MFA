@@ -63,11 +63,11 @@ function initSupabase() {
 
     pool.connect((err, client, release) => {
       if (err) {
-        console.warn('⚠️ Could not connect to Supabase (using local db.json fallback):', err.message);
+        console.warn('Could not connect to Supabase (using local db.json fallback):', err.message);
         isConnected = false;
       } else {
         isConnected = true;
-        console.log('⚡ Connected to Supabase Cloud PostgreSQL successfully!');
+        console.log('Connected to Supabase Cloud PostgreSQL successfully!');
         release();
         syncFromSupabase(true).catch(() => {});
       }
