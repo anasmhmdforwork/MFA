@@ -121,6 +121,164 @@ function formatTime12(time24) {
 }
 
 // ==========================================
+// DIPLOMATIC CODIFIER & GOVERNANCE HELPERS
+// ==========================================
+
+const COMM_CODE_MAP = {
+  crises: 'CRS',
+  economic: 'ECO',
+  security: 'SEC',
+  arab: 'ARB',
+  climate: 'CLM',
+  digital: 'DIG',
+  palestine: 'PAL',
+  american: 'USA',
+  africa: 'AFR',
+  general: 'GEN'
+};
+
+function getCommCode(commId) {
+  if (!commId) return 'GEN';
+  const clean = String(commId).toLowerCase().trim();
+  return COMM_CODE_MAP[clean] || clean.slice(0, 3).toUpperCase();
+}
+
+function generateDiplomaticId(cand, index) {
+  const commId = cand.assignedCommitteeId || cand.originalCommitteeId || 'general';
+  let commCode = getCommCode(commId);
+  let roleCode = 'D';
+
+  if (cand.roleType === 'member') {
+    roleCode = 'M';
+    const sub = String(cand.subDepartment || '').toLowerCase().trim();
+    if (sub === 'hr' || sub === 'organization') commCode = 'ORG';
+    else if (sub === 'media') commCode = 'MED';
+    else if (sub === 'academic') commCode = 'ACD';
+  } else if (cand.roleType === 'delegate') {
+    roleCode = 'D';
+  } else if (cand.roleType === 'head') {
+    roleCode = 'H';
+  } else if (cand.roleType === 'board') {
+    roleCode = 'B';
+  } else {
+    roleCode = 'C';
+  }
+
+  const num = cand.num || (index !== undefined ? index + 1 : Math.floor(Math.random() * 800) + 100);
+  const numPadded = String(num).padStart(3, '0');
+  return `MFA-26-${commCode}-${roleCode}-${numPadded}`;
+}
+
+function calculateCPI(candidate, db) {
+  const commId = candidate.assignedCommitteeId || candidate.originalCommitteeId;
+  const commQuizzes = (db.quizzes || []).filter(q => q.committeeId === commId || q.committeeId === 'all');
+  const totalSessions = commQuizzes.length;
+  let attendedCount = 0;
+  const quizScores = [];
+
+  commQuizzes.forEach(q => {
+    const sub = (db.quizSubmissions || []).find(s => s.quizId === q.id && s.candidateId === candidate.id);
+    if (sub) {
+      attendedCount++;
+      if (sub.percentage !== null && sub.percentage !== undefined) {
+        quizScores.push(Number(sub.percentage));
+      }
+    }
+  });
+
+  const attendanceRate = totalSessions > 0 ? (attendedCount / totalSessions) * 100 : 100;
+  const quizAvg = quizScores.length > 0 
+    ? Math.round(quizScores.reduce((a, b) => a + b, 0) / quizScores.length) 
+    : (attendanceRate > 0 ? 85 : 0);
+
+  let fieldScore = 80;
+  if (candidate.roleType === 'member') {
+    if (candidate.memberEvaluation && candidate.memberEvaluation.score !== null && candidate.memberEvaluation.score !== undefined) {
+      fieldScore = Math.min(100, Number(candidate.memberEvaluation.score) * 10);
+    }
+    const memberTasks = (db.operationsTasks || []).filter(t => t.assignedToCandidateId === candidate.id || t.assignedToDiplomaticId === candidate.diplomaticId);
+    if (memberTasks.length > 0) {
+      const completed = memberTasks.filter(t => t.status === 'completed').length;
+      const taskRatio = completed / memberTasks.length;
+      fieldScore = Math.round((fieldScore * 0.7) + (taskRatio * 100 * 0.3));
+    }
+  } else {
+    if (candidate.evaluation && candidate.evaluation.score !== null && candidate.evaluation.score !== undefined) {
+      fieldScore = Math.min(100, Number(candidate.evaluation.score) * 10);
+    }
+  }
+
+  let totalBonus = 0;
+  if (candidate.lectureEvaluations) {
+    Object.values(candidate.lectureEvaluations).forEach(ev => {
+      if (ev && ev.bonusScore) totalBonus += Number(ev.bonusScore) || 0;
+    });
+  }
+
+  const rawCPI = (attendanceRate * 0.35) + (quizAvg * 0.35) + (fieldScore * 0.30) + Math.min(5, totalBonus);
+  const score = Math.min(100, Math.round(rawCPI));
+
+  let standing = 'جيد';
+  let tier = 'good';
+  if (score >= 90) {
+    standing = 'امتياز مع مرتبة الشرف الدبلوماسية';
+    tier = 'high_honors';
+  } else if (score >= 80) {
+    standing = 'امتياز';
+    tier = 'excellent';
+  } else if (score >= 70) {
+    standing = 'جيد جداً';
+    tier = 'very_good';
+  }
+
+  return {
+    score,
+    attendanceRate: Math.round(attendanceRate),
+    quizAvg: Math.round(quizAvg),
+    fieldScore: Math.round(fieldScore),
+    totalBonus,
+    standing,
+    tier,
+    isEligibleForCertificate: score >= 75
+  };
+}
+
+function logActivity(req, action, details, target) {
+  try {
+    const db = getDB();
+    if (!db.auditLogs) db.auditLogs = [];
+
+    let actor = 'System';
+    if (req && req.cookies && req.cookies.mfa_user) {
+      try {
+        const u = JSON.parse(req.cookies.mfa_user);
+        actor = u.name || u.username;
+      } catch (e) {
+        actor = String(req.cookies.mfa_user);
+      }
+    } else if (req && req.cookies && req.cookies.mfa_delegate_id) {
+      const c = (db.candidates || []).find(x => x.id === req.cookies.mfa_delegate_id);
+      actor = c ? (c.arabicName || c.fullName) : req.cookies.mfa_delegate_id;
+    }
+
+    const logEntry = {
+      id: 'log_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+      timestamp: new Date().toISOString(),
+      actor,
+      action,
+      details,
+      target: target || null,
+      ip: req ? (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '') : null
+    };
+
+    db.auditLogs.unshift(logEntry);
+    if (db.auditLogs.length > 500) db.auditLogs.pop();
+  } catch (err) {
+    console.error('Audit log error:', err.message);
+  }
+}
+
+// ==========================================
 // 1. AUTHENTICATION APIS
 // ==========================================
 
@@ -189,11 +347,17 @@ app.post('/api/auth/login', (req, res) => {
   // 2. Check if it is a Candidate (Delegate or Member in Committee)
   const inputPhone = cleanPhone(cleanInput);
   const inputEmail = cleanInput.toLowerCase();
+  const inputCode = cleanInput.toUpperCase();
 
   const cand = (db.candidates || []).find(c => {
     const cEmail = (c.email || '').toLowerCase().trim();
     const cPhone = cleanPhone(c.phone);
-    return (cEmail && cEmail === inputEmail) || (inputPhone && cPhone === inputPhone);
+    const cDipId = (c.diplomaticId || '').toUpperCase().trim();
+    const cId = (c.id || '').toUpperCase().trim();
+    return (cEmail && cEmail === inputEmail) || 
+           (inputPhone && cPhone === inputPhone) || 
+           (cDipId && cDipId === inputCode) ||
+           (cId && cId === inputCode);
   });
 
   if (cand) {
@@ -243,13 +407,17 @@ app.get('/api/delegate/my-profile', (req, res) => {
     return res.status(401).json({ success: false, message: 'يرجى تسجيل الدخول أولاً' });
   }
 
-  const cand = (db.candidates || []).find(c => c.id === candId);
+  const cand = (db.candidates || []).find(c => 
+    c.id === candId || 
+    (c.diplomaticId && c.diplomaticId.toUpperCase() === String(candId).toUpperCase())
+  );
   if (!cand) {
     return res.status(404).json({ success: false, message: 'الملف الشخصي غير موجود' });
   }
 
   const commId = cand.assignedCommitteeId || cand.originalCommitteeId;
   const comm = (db.committees || []).find(c => c.id === commId);
+  const cpi = calculateCPI(cand, db);
 
   // All quizzes for this committee
   const commQuizzes = (db.quizzes || []).filter(q => q.committeeId === commId || q.committeeId === 'all');
@@ -292,6 +460,7 @@ app.get('/api/delegate/my-profile', (req, res) => {
     success: true,
     candidate: {
       id: cand.id,
+      diplomaticId: cand.diplomaticId || generateDiplomaticId(cand),
       arabicName: cand.arabicName || cand.fullName,
       fullName: cand.fullName,
       email: cand.email,
@@ -309,6 +478,7 @@ app.get('/api/delegate/my-profile', (req, res) => {
       interviewNotes: cand.evaluation ? (cand.evaluation.notes || '') : '',
       memberEvaluation: cand.memberEvaluation || null,
       totalBonus,
+      cpi: cpi,
       stats: {
         totalQuizzes,
         attendedCount,
@@ -465,6 +635,7 @@ app.post('/api/candidates', async (req, res) => {
   const newCandidate = {
     id: `c_${newNum}_${Date.now().toString(36)}`,
     num: newNum,
+    diplomaticId: '',
     arabicName: arabicName.trim(),
     fullName: (fullName || '').trim(),
     university: university || 'جامعة السويس',
@@ -508,7 +679,9 @@ app.post('/api/candidates', async (req, res) => {
     transferHistory: []
   };
 
+  newCandidate.diplomaticId = generateDiplomaticId(newCandidate, newNum - 1);
   db.candidates.push(newCandidate);
+  logActivity(req, 'إضافة مرشح جديد', `إضافة المرشح: ${newCandidate.arabicName} بكود: ${newCandidate.diplomaticId}`, newCandidate.id);
   await saveDB(db);
 
   res.json({
@@ -635,9 +808,13 @@ app.put('/api/candidates/:id/evaluation', async (req, res) => {
     if (!cand.delegatePassword) {
       cand.delegatePassword = '1234';
     }
+    cand.diplomaticId = generateDiplomaticId(cand);
+    logActivity(req, 'قبول مرشح واعتماد الهوية', `تم قبول ${cand.arabicName || cand.fullName} بصفة (${cand.roleType}) وتوليد الكود الدبلوماسي: ${cand.diplomaticId}`, cand.id);
   } else if (decision === 'rejected') {
     cand.roleType = null;
     cand.subDepartment = null;
+    cand.diplomaticId = generateDiplomaticId(cand);
+    logActivity(req, 'رفض المرشح في المقابلة', `تم تسجيل رفض المرشح: ${cand.arabicName || cand.fullName}`, cand.id);
   }
 
   if (attendanceStatus === 'attended') {
@@ -707,8 +884,12 @@ app.put('/api/candidates/:id/role', async (req, res) => {
     } else if (roleType === 'member') {
       cand.subDepartment = subDepartment || cand.subDepartment || 'academic';
     }
+    cand.diplomaticId = generateDiplomaticId(cand);
+    logActivity(req, 'تعديل الصفة التنظيمية', `تعديل صفة ${cand.arabicName || cand.fullName} إلى (${roleType}) وتحديث الكود: ${cand.diplomaticId}`, cand.id);
   } else if (subDepartment !== undefined) {
     cand.subDepartment = subDepartment;
+    cand.diplomaticId = generateDiplomaticId(cand);
+    logActivity(req, 'تعديل قطاع العضو', `تعديل قطاع ${cand.arabicName || cand.fullName} إلى (${subDepartment}) وتحديث الكود: ${cand.diplomaticId}`, cand.id);
   }
 
   if (memberScore !== undefined || memberNotes !== undefined) {
@@ -819,6 +1000,8 @@ app.post('/api/candidates/:id/transfer', async (req, res) => {
   };
 
   cand.assignedCommitteeId = targetCommitteeId;
+  cand.diplomaticId = generateDiplomaticId(cand);
+  logActivity(req, 'تحويل لجنة المرشح', `تحويل ${cand.arabicName || cand.fullName} من ${oldComm ? oldComm.shortName : ''} إلى ${newComm.shortName} - كود جديد: ${cand.diplomaticId}`, cand.id);
   cand.bookingStatus = 'pending';
   cand.slotId = null;
   cand.slotInfo = null;
@@ -2228,7 +2411,7 @@ app.post('/api/events', async (req, res) => {
   const db = getDB();
   db.events = db.events || [];
 
-  const { title, type, description, date, time, location, capacity, dressCode, notes, targetAudience, createdBy, createdByName } = req.body;
+  const { title, type, description, date, time, location, capacity, dressCode, notes, targetAudience, eligibilityCriteria, createdBy, createdByName } = req.body;
   if (!title || !date) {
     return res.status(400).json({ success: false, message: 'يرجى إدخال اسم الفعالية وتاريخ الانعقاد' });
   }
@@ -2256,6 +2439,7 @@ app.post('/api/events', async (req, res) => {
     dressCode: dressCode || 'زي رسمي كامل (Formal)',
     notes: notes || '',
     targetAudience: targetAudience || { scope: 'all' },
+    eligibilityCriteria: eligibilityCriteria || null,
     createdBy: createdBy || 'hr',
     createdByName: createdByName || 'إدارة التنظيم والموارد البشرية المركزية',
     createdAt: new Date().toISOString()
@@ -2277,7 +2461,7 @@ app.put('/api/events/:id', async (req, res) => {
     return res.status(404).json({ success: false, message: 'الفعالية غير موجودة' });
   }
 
-  const { title, type, description, date, time, location, capacity, dressCode, notes, isOpen, targetAudience } = req.body;
+  const { title, type, description, date, time, location, capacity, dressCode, notes, isOpen, targetAudience, eligibilityCriteria } = req.body;
   if (title !== undefined) evt.title = String(title).trim();
   if (type !== undefined) evt.type = type;
   if (description !== undefined) evt.description = description;
@@ -2289,6 +2473,7 @@ app.put('/api/events/:id', async (req, res) => {
   if (notes !== undefined) evt.notes = notes;
   if (isOpen !== undefined) evt.isOpen = Boolean(isOpen);
   if (targetAudience !== undefined) evt.targetAudience = targetAudience;
+  if (eligibilityCriteria !== undefined) evt.eligibilityCriteria = eligibilityCriteria;
   evt.updatedAt = new Date().toISOString();
 
   await saveDB(db);
@@ -2348,8 +2533,32 @@ app.post('/api/events/:id/book', async (req, res) => {
   let university = 'جامعة السويس';
 
   if (targetCandId) {
-    const cand = (db.candidates || []).find(c => c.id === targetCandId);
+    const cand = (db.candidates || []).find(c => 
+      c.id === targetCandId || 
+      (c.diplomaticId && c.diplomaticId.toUpperCase() === String(targetCandId).toUpperCase())
+    );
     if (cand) {
+      if (event.eligibilityCriteria) {
+        const cpi = calculateCPI(cand, db);
+        const { minAttendance, minQuizAvg, minCPI } = event.eligibilityCriteria;
+        const failedReasons = [];
+        if (minAttendance && cpi.attendanceRate < Number(minAttendance)) {
+          failedReasons.push(`الحد الأدنى لنسبة الحضور المطلوبة هو ${minAttendance}% (نسبتك الحالية: ${cpi.attendanceRate}%)`);
+        }
+        if (minQuizAvg && cpi.quizAvg < Number(minQuizAvg)) {
+          failedReasons.push(`الحد الأدنى لمتوسط درجات الاختبارات هو ${minQuizAvg}% (متوسطك الحالي: ${cpi.quizAvg}%)`);
+        }
+        if (minCPI && cpi.score < Number(minCPI)) {
+          failedReasons.push(`الحد الأدنى لمؤشر الجدارة التراكمي CPI هو ${minCPI} نقطة (مؤشرك الحالي: ${cpi.score})`);
+        }
+        if (failedReasons.length > 0) {
+          return res.status(403).json({
+            success: false,
+            message: 'عذراً، هذه الزيارة/الفعالية الرسمية محكومة بمتطلبات استحقاق وجدارة رقمية:\n• ' + failedReasons.join('\n• ') + '\n\nنتمنى لك التوفيق والالتزام بالجلسات والاختبارات القادمة لرفع معدل استحقاقك!'
+          });
+        }
+      }
+
       userId = cand.id;
       name = cand.arabicName || cand.fullName;
       userType = cand.roleType === 'member' ? 'member' : 'delegate';
@@ -2425,6 +2634,7 @@ app.post('/api/events/:id/book', async (req, res) => {
   };
 
   db.eventBookings.push(newBooking);
+  logActivity(req, 'حجز مقعد بفعالية', `حجز مقعد في "${event.title}" لـ ${name} (${roleTitle})`, userId);
   await saveDB(db);
 
   res.json({
@@ -2532,6 +2742,435 @@ app.put('/api/events/:id/attendees/:bookingId/status', async (req, res) => {
   res.json({ success: true, message: 'تم تحديث حالة الحضور في القاعة بنجاح', booking });
 });
 
+// ==========================================
+// 9. LIVE QR CAMERA CHECK-IN DESK API
+// ==========================================
+
+app.post('/api/checkin/qr', async (req, res) => {
+  const db = getDB();
+  db.candidates = db.candidates || [];
+  db.eventBookings = db.eventBookings || [];
+  db.events = db.events || [];
+  db.operationsSessions = db.operationsSessions || [];
+
+  const { qrPayload, eventId, sessionId } = req.body;
+  if (!qrPayload) {
+    return res.status(400).json({ success: false, message: 'يرجى تقديم كود الـ QR أو كود العضوية الدبلوماسي' });
+  }
+
+  // Parse QR payload (supports raw string, JSON, or URL like https://.../verify?code=...)
+  let searchKey = String(qrPayload).trim();
+  try {
+    if (searchKey.startsWith('{') && searchKey.endsWith('}')) {
+      const parsed = JSON.parse(searchKey);
+      if (parsed.diplomaticId) searchKey = parsed.diplomaticId;
+      else if (parsed.id) searchKey = parsed.id;
+      else if (parsed.code) searchKey = parsed.code;
+    } else if (searchKey.includes('code=')) {
+      const u = new URL(searchKey);
+      const c = u.searchParams.get('code');
+      if (c) searchKey = c;
+    } else if (searchKey.includes('/verify/')) {
+      const parts = searchKey.split('/verify/');
+      if (parts[1]) searchKey = parts[1].split('?')[0].trim();
+    }
+  } catch (e) {}
+
+  const cleanKey = searchKey.toUpperCase();
+  const cand = db.candidates.find(c => 
+    (c.diplomaticId && c.diplomaticId.toUpperCase() === cleanKey) ||
+    (c.id && c.id.toUpperCase() === cleanKey) ||
+    (c.phone && cleanPhone(c.phone) === cleanPhone(cleanKey)) ||
+    (c.email && c.email.toLowerCase() === searchKey.toLowerCase())
+  );
+
+  if (!cand) {
+    return res.status(404).json({
+      success: false,
+      message: `لم يتم العثور على أي عضوية مسجلة بالكود: ${searchKey}`
+    });
+  }
+
+  const commId = cand.assignedCommitteeId || cand.originalCommitteeId;
+  const comm = (db.committees || []).find(c => c.id === commId);
+  const commName = comm ? (comm.shortName || comm.name) : 'اللجنة';
+  const cpi = calculateCPI(cand, db);
+
+  let checkinTargetTitle = 'حضور عام للمقر';
+  let bookingRecord = null;
+
+  // 1. If checking in for an Event / Visit
+  if (eventId) {
+    const event = db.events.find(e => e.id === eventId);
+    if (event) {
+      checkinTargetTitle = `فعالية: ${event.title}`;
+      bookingRecord = db.eventBookings.find(b => b.eventId === event.id && (b.candidateId === cand.id || b.userId === cand.id) && b.status !== 'cancelled');
+      
+      if (!bookingRecord) {
+        // Auto-register if capacity allows
+        const activeBookings = db.eventBookings.filter(b => b.eventId === event.id && b.status !== 'cancelled');
+        const capacity = parseInt(event.capacity, 10) || 50;
+        if (activeBookings.length < capacity) {
+          bookingRecord = {
+            id: 'bk_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+            eventId: event.id,
+            candidateId: cand.id,
+            userId: cand.id,
+            name: cand.arabicName || cand.fullName,
+            phone: cand.phone || '',
+            email: cand.email || '',
+            userType: cand.roleType === 'member' ? 'member' : 'delegate',
+            roleTitle: cand.roleType === 'member' ? 'عضو هيكل' : 'مندوب (Delegate)',
+            committeeId: commId || 'general',
+            committeeName: commName,
+            faculty: cand.faculty || '—',
+            university: cand.university || 'جامعة السويس',
+            bookedAt: new Date().toISOString(),
+            status: 'confirmed',
+            attendanceStatus: 'attended',
+            checkedInAt: new Date().toISOString(),
+            checkinMethod: 'qr_scanner'
+          };
+          db.eventBookings.push(bookingRecord);
+        } else {
+          return res.status(400).json({
+            success: false,
+            message: `المقاعد مكتملة للفعالية (${capacity} مقعد)، والعضو ${cand.arabicName || cand.fullName} لم يكن لديه حجز مسبق.`,
+            candidate: {
+              name: cand.arabicName || cand.fullName,
+              diplomaticId: cand.diplomaticId,
+              committeeName: commName
+            }
+          });
+        }
+      } else {
+        bookingRecord.attendanceStatus = 'attended';
+        bookingRecord.checkedInAt = new Date().toISOString();
+        bookingRecord.checkinMethod = 'qr_scanner';
+      }
+    }
+  }
+
+  // 2. If checking in for a monthly Session / Lecture
+  if (sessionId) {
+    const session = db.operationsSessions.find(s => s.id === sessionId);
+    if (session) {
+      checkinTargetTitle = `جلسة: ${session.title}`;
+      if (!session.attendees) session.attendees = [];
+      const alreadyAttended = session.attendees.find(a => a.candidateId === cand.id);
+      if (!alreadyAttended) {
+        session.attendees.push({
+          candidateId: cand.id,
+          diplomaticId: cand.diplomaticId,
+          name: cand.arabicName || cand.fullName,
+          checkedInAt: new Date().toISOString(),
+          checkinMethod: 'qr_scanner'
+        });
+      }
+    }
+  }
+
+  logActivity(req, 'تسجيل حضور عبر QR', `تم تسجيل حضور ${cand.arabicName || cand.fullName} في (${checkinTargetTitle})`, cand.id);
+  await saveDB(db);
+
+  return res.json({
+    success: true,
+    message: `تم تسجيل حضور ${cand.arabicName || cand.fullName} بنجاح`,
+    target: checkinTargetTitle,
+    candidate: {
+      id: cand.id,
+      diplomaticId: cand.diplomaticId || generateDiplomaticId(cand),
+      name: cand.arabicName || cand.fullName,
+      roleType: cand.roleType || 'delegate',
+      subDepartment: cand.subDepartment || null,
+      committeeId: commId,
+      committeeName: commName,
+      faculty: cand.faculty,
+      grade: cand.grade,
+      cpi: cpi,
+      checkedInAt: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    }
+  });
+});
+
+// ==========================================
+// 10. MONTHLY OPERATIONS CALENDAR & TASKS API
+// ==========================================
+
+// GET /api/operations/calendar - Fetch sessions, tasks, and assignable members
+app.get('/api/operations/calendar', (req, res) => {
+  const db = getDB();
+  db.operationsSessions = db.operationsSessions || [];
+  db.operationsTasks = db.operationsTasks || [];
+  db.candidates = db.candidates || [];
+
+  const { committeeId, sector } = req.query;
+
+  // Filter sessions
+  let sessions = db.operationsSessions;
+  if (committeeId && committeeId !== 'all') {
+    sessions = sessions.filter(s => s.committeeId === committeeId || s.committeeId === 'all');
+  }
+  if (sector && sector !== 'all') {
+    sessions = sessions.filter(s => s.sector === sector || s.sector === 'all' || !s.sector);
+  }
+
+  // Filter tasks
+  let tasks = db.operationsTasks;
+  if (committeeId && committeeId !== 'all') {
+    tasks = tasks.filter(t => t.committeeId === committeeId || t.committeeId === 'all');
+  }
+  if (sector && sector !== 'all') {
+    tasks = tasks.filter(t => t.sector === sector || t.sector === 'all' || !t.sector);
+  }
+
+  // Filter assignable members (structure members)
+  let assignableMembers = db.candidates.filter(c => c.roleType === 'member');
+  if (committeeId && committeeId !== 'all') {
+    assignableMembers = assignableMembers.filter(c => c.assignedCommitteeId === committeeId || c.originalCommitteeId === committeeId);
+  }
+  if (sector && sector !== 'all') {
+    assignableMembers = assignableMembers.filter(c => c.subDepartment === sector);
+  }
+
+  const mappedMembers = assignableMembers.map(m => ({
+    id: m.id,
+    diplomaticId: m.diplomaticId || generateDiplomaticId(m),
+    name: m.arabicName || m.fullName,
+    committeeId: m.assignedCommitteeId || m.originalCommitteeId,
+    subDepartment: m.subDepartment,
+    phone: m.phone
+  }));
+
+  res.json({
+    success: true,
+    sessions,
+    tasks,
+    assignableMembers: mappedMembers,
+    stats: {
+      totalSessions: sessions.length,
+      totalTasks: tasks.length,
+      completedTasks: tasks.filter(t => t.status === 'completed').length,
+      pendingTasks: tasks.filter(t => t.status !== 'completed').length
+    }
+  });
+});
+
+// POST /api/operations/sessions - Add a new session/lecture to the monthly calendar
+app.post('/api/operations/sessions', async (req, res) => {
+  const db = getDB();
+  db.operationsSessions = db.operationsSessions || [];
+
+  const { date, title, committeeId, sector, description, requiredMembersCount, time, location } = req.body;
+  if (!date || !title) {
+    return res.status(400).json({ success: false, message: 'يرجى إدخال تاريخ وعنوان الجلسة' });
+  }
+
+  const newSession = {
+    id: 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+    date,
+    title: title.trim(),
+    committeeId: committeeId || 'all',
+    sector: sector || 'all',
+    description: (description || '').trim(),
+    requiredMembersCount: parseInt(requiredMembersCount, 10) || 3,
+    time: time || '14:00',
+    location: (location || 'مقر الجامعة / قاعة المحاكاة').trim(),
+    createdAt: new Date().toISOString(),
+    attendees: []
+  };
+
+  db.operationsSessions.push(newSession);
+  logActivity(req, 'إضافة جلسة تشغيلية', `إضافة يوم تشغيلي: "${newSession.title}" بتاريخ ${newSession.date}`, newSession.id);
+  await saveDB(db);
+
+  res.json({ success: true, message: 'تمت إضافة الجلسة التشغيلية بنجاح إلى التقويم', session: newSession });
+});
+
+// DELETE /api/operations/sessions/:id - Remove a session from the calendar
+app.delete('/api/operations/sessions/:id', async (req, res) => {
+  const db = getDB();
+  db.operationsSessions = db.operationsSessions || [];
+  const idx = db.operationsSessions.findIndex(s => s.id === req.params.id);
+  if (idx === -1) {
+    return res.status(404).json({ success: false, message: 'الجلسة غير موجودة' });
+  }
+
+  const removed = db.operationsSessions.splice(idx, 1)[0];
+  logActivity(req, 'حذف جلسة تشغيلية', `حذف الجلسة: "${removed.title}"`, removed.id);
+  await saveDB(db);
+
+  res.json({ success: true, message: 'تم حذف الجلسة التشغيلية بنجاح' });
+});
+
+// POST /api/operations/tasks - Assign a task to a member
+app.post('/api/operations/tasks', async (req, res) => {
+  const db = getDB();
+  db.operationsTasks = db.operationsTasks || [];
+  db.candidates = db.candidates || [];
+
+  const { sessionId, title, description, assignedToCandidateId, committeeId, sector, dueDate } = req.body;
+  if (!title || !assignedToCandidateId) {
+    return res.status(400).json({ success: false, message: 'يرجى إدخال عنوان التكليف واختيار العضو المكلف' });
+  }
+
+  const cand = db.candidates.find(c => c.id === assignedToCandidateId || c.diplomaticId === assignedToCandidateId);
+  if (!cand) {
+    return res.status(404).json({ success: false, message: 'العضو المحدد غير موجود' });
+  }
+
+  const newTask = {
+    id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+    sessionId: sessionId || null,
+    title: title.trim(),
+    description: (description || '').trim(),
+    assignedToCandidateId: cand.id,
+    assignedToDiplomaticId: cand.diplomaticId || generateDiplomaticId(cand),
+    assignedToCandidateName: cand.arabicName || cand.fullName,
+    committeeId: committeeId || cand.assignedCommitteeId || 'general',
+    sector: sector || cand.subDepartment || 'all',
+    dueDate: dueDate || null,
+    status: 'pending',
+    createdAt: new Date().toISOString(),
+    completedAt: null
+  };
+
+  db.operationsTasks.push(newTask);
+  logActivity(req, 'إسناد تكليف تشغيلي', `إسناد التكليف "${newTask.title}" إلى ${cand.arabicName || cand.fullName}`, cand.id);
+  await saveDB(db);
+
+  res.json({ success: true, message: `تم إسناد التكليف إلى ${cand.arabicName || cand.fullName} بنجاح`, task: newTask });
+});
+
+// PUT /api/operations/tasks/:id/status - Update task status & boost member evaluation
+app.put('/api/operations/tasks/:id/status', async (req, res) => {
+  const db = getDB();
+  db.operationsTasks = db.operationsTasks || [];
+  const task = db.operationsTasks.find(t => t.id === req.params.id);
+  if (!task) {
+    return res.status(404).json({ success: false, message: 'التكليف غير موجود' });
+  }
+
+  const newStatus = req.body.status || (task.status === 'completed' ? 'pending' : 'completed');
+  task.status = newStatus;
+  task.updatedAt = new Date().toISOString();
+  if (newStatus === 'completed') {
+    task.completedAt = new Date().toISOString();
+  } else {
+    task.completedAt = null;
+  }
+
+  // Reflect in member's continuous evaluation
+  if (task.assignedToCandidateId) {
+    const cand = (db.candidates || []).find(c => c.id === task.assignedToCandidateId || c.diplomaticId === task.assignedToCandidateId);
+    if (cand) {
+      if (!cand.memberEvaluation) {
+        cand.memberEvaluation = { notes: '', score: 8.0, commitment: 'متميز', tasks: 'منتظم' };
+      }
+      const memberTasks = db.operationsTasks.filter(t => t.assignedToCandidateId === cand.id);
+      const completedTasks = memberTasks.filter(t => t.status === 'completed').length;
+      cand.memberEvaluation.completedTasksCount = completedTasks;
+      cand.memberEvaluation.totalTasksCount = memberTasks.length;
+      cand.memberEvaluation.taskCompletionRate = memberTasks.length > 0 ? Math.round((completedTasks / memberTasks.length) * 100) : 100;
+
+      // Dynamic score update
+      if (memberTasks.length > 0) {
+        const calculatedScore = Math.min(10, Number((7.0 + (completedTasks / memberTasks.length) * 3.0).toFixed(1)));
+        cand.memberEvaluation.score = calculatedScore;
+      }
+      cand.memberEvaluation.updatedAt = new Date().toISOString();
+
+      logActivity(req, 'تحديث تكليف تشغيلي', `تم تحويل حالة التكليف "${task.title}" إلى (${newStatus === 'completed' ? 'مكتمل' : 'قيد التنفيذ'}) للعضو ${cand.arabicName || cand.fullName}`, cand.id);
+    }
+  }
+
+  await saveDB(db);
+  res.json({ success: true, message: 'تم تحديث حالة التكليف بنجاح', task });
+});
+
+// GET /api/members/:id/tasks - Tasks assigned to a specific member
+app.get('/api/members/:id/tasks', (req, res) => {
+  const db = getDB();
+  db.operationsTasks = db.operationsTasks || [];
+  const candId = req.params.id;
+
+  const memberTasks = db.operationsTasks.filter(t => t.assignedToCandidateId === candId || t.assignedToDiplomaticId === candId);
+  const total = memberTasks.length;
+  const completed = memberTasks.filter(t => t.status === 'completed').length;
+  const progressPercent = total > 0 ? Math.round((completed / total) * 100) : 100;
+
+  res.json({
+    success: true,
+    tasks: memberTasks,
+    stats: {
+      total,
+      completed,
+      pending: total - completed,
+      progressPercent
+    }
+  });
+});
+
+// ==========================================
+// 11. AUDIT TRAIL API
+// ==========================================
+
+app.get('/api/audit-logs', (req, res) => {
+  const db = getDB();
+  const logs = (db.auditLogs || []).slice(0, 100);
+  res.json({ success: true, logs });
+});
+
+// ==========================================
+// 12. PUBLIC DIPLOMATIC VERIFICATION PORTAL API
+// ==========================================
+
+app.get('/api/verify/:code', (req, res) => {
+  const db = getDB();
+  const rawCode = String(req.params.code || '').trim();
+  const cleanCode = rawCode.toUpperCase();
+
+  const cand = (db.candidates || []).find(c => 
+    (c.diplomaticId && c.diplomaticId.toUpperCase() === cleanCode) ||
+    (c.id && c.id.toUpperCase() === cleanCode)
+  );
+
+  if (!cand) {
+    return res.status(404).json({
+      success: false,
+      valid: false,
+      message: 'لم يتم العثور على أي وثيقة أو شهادة معتمدة بهذا الكود المرجعي'
+    });
+  }
+
+  const commId = cand.assignedCommitteeId || cand.originalCommitteeId;
+  const comm = (db.committees || []).find(c => c.id === commId);
+  const cpi = calculateCPI(cand, db);
+
+  res.json({
+    success: true,
+    valid: true,
+    verification: {
+      certificateCode: `CERT-MFA26-${cand.diplomaticId || cand.id}`,
+      diplomaticId: cand.diplomaticId || generateDiplomaticId(cand),
+      fullNameArabic: cand.arabicName || cand.fullName,
+      fullNameEnglish: cand.fullName || cand.arabicName,
+      role: cand.roleType === 'member' ? 'عضو الهيكل التنظيمي' : 'مندوب دبلوماسي (Diplomatic Delegate)',
+      committee: comm ? comm.name : 'اللجنة',
+      sector: cand.subDepartment ? (cand.subDepartment === 'hr' ? 'التنظيم والموارد البشرية' : (cand.subDepartment === 'media' ? 'الميديا والإعلام' : 'الشؤون الأكاديمية')) : null,
+      faculty: cand.faculty || '—',
+      university: cand.university || 'جامعة السويس',
+      cpiScore: cpi.score,
+      attendanceRate: cpi.attendanceRate,
+      standing: cpi.standing,
+      season: 'الموسم الدبلوماسي 2026',
+      issueDate: '2026-11-01',
+      status: 'معتمدة وموثقة رسمياً في سجلات نموذج المحاكاة',
+      authority: 'وزارة الخارجية المصرية – نموذج محاكاة جامعة السويس'
+    }
+  });
+});
+
 const PUBLIC_DIR = path.resolve(__dirname, 'public');
 
 // Root redirects directly to login (user requested no landing page)
@@ -2566,6 +3205,14 @@ app.get('/quiz/:id', (req, res) => {
 
 app.get('/quiz', (req, res) => {
   res.sendFile('quiz.html', { root: PUBLIC_DIR });
+});
+
+app.get('/verify/:code', (req, res) => {
+  res.sendFile('verify.html', { root: PUBLIC_DIR });
+});
+
+app.get('/verify', (req, res) => {
+  res.sendFile('verify.html', { root: PUBLIC_DIR });
 });
 
 // Catch-all fallback

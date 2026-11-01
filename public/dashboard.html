@@ -14,6 +14,7 @@
   <script src="/js/qrcode.min.js"></script>
   <script src="/js/xlsx.full.min.js"></script>
   <script src="/js/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <style>
     body { 
       font-family: 'Cairo', sans-serif;
@@ -269,6 +270,16 @@
         <!-- Header Actions -->
         <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
           
+          <!-- Live QR Camera Check-in Desk Button -->
+          <button 
+            @click="openQrScannerModal"
+            class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black flex items-center gap-1.5 transition shadow-md cursor-pointer"
+            title="فتح كاميرا مسح كود الـ QR لتحضير الطلاب والندوات"
+          >
+            <i data-lucide="scan-line" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">تحضير الـ QR</span>
+          </button>
+
           <!-- Copy Student Booking Link Button -->
           <button 
             v-if="currentUser && currentUser.role !== 'directorate'"
@@ -387,6 +398,16 @@
               <span>{{ currentUser.directorateType === 'hr' ? 'كوادر التنظيم وتقييم الأداء (' + directorateMembersList.length + ')' : (currentUser.directorateType === 'media' ? 'فريق الميديا وتقييم التغطيات (' + directorateMembersList.length + ')' : 'المناديب واللجان الأكاديمية (' + directorateMembersList.length + ')') }}</span>
             </button>
 
+            <!-- Tab: Monthly Operations Calendar & Sector Matrix -->
+            <button 
+              @click="activeTab = 'operations'; loadOperationsCalendar();" 
+              :class="activeTab === 'operations' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="calendar-days" class="w-4 h-4 text-amber-500"></i>
+              <span>التشغيل والتقويم الشهري للقطاع ({{ operationsSessions.length }})</span>
+            </button>
+
             <!-- Tab 3 & 4 (Academic Directorate Only) -->
             <template v-if="currentUser.directorateType === 'academic'">
               <button 
@@ -475,6 +496,16 @@
               <span>الهيكل والأعضاء ({{ acceptedMembersList.length }})</span>
             </button>
 
+            <!-- 5. Operations & Monthly Schedule -->
+            <button 
+              @click="activeTab = 'operations'; loadOperationsCalendar();" 
+              :class="activeTab === 'operations' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="calendar-days" class="w-4 h-4 text-amber-500"></i>
+              <span>التشغيل والجدول الشهري ({{ operationsSessions.length }})</span>
+            </button>
+
             <!-- 5. Lectures & Quizzes -->
             <button 
               @click="activeTab = 'quizzes'" 
@@ -513,6 +544,17 @@
             >
               <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
               <span>سجل التحويلات ({{ transferAuditLogs.length }})</span>
+            </button>
+
+            <!-- 10. Audit Trail (Admin only) -->
+            <button 
+              v-if="currentUser && currentUser.role === 'admin'"
+              @click="activeTab = 'audit_logs'; loadAuditLogs();" 
+              :class="activeTab === 'audit_logs' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="history" class="w-4 h-4 text-sky-400"></i>
+              <span>سجل التدقيق الإداري (Audit Trail)</span>
             </button>
 
             <!-- 9. Secondary Preference Candidates -->
@@ -3409,6 +3451,400 @@
 
 
       <!-- ============================================== -->
+      <!-- TAB: MONTHLY OPERATIONS CALENDAR & TASKS -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'operations'" class="space-y-6">
+
+        <!-- Header & Action Banner -->
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-8 border border-amber-500/30 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30">
+              <i data-lucide="calendar-range" class="w-4 h-4 text-amber-400"></i>
+              <span>منظومة الحوكمة والتشغيل الميداني للموسم الدبلوماسي 2026</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-white">
+              {{ currentUser && currentUser.role === 'directorate' ? ('خطة التشغيل والتقويم الشهري لقطاع ' + (currentUser.directorateType === 'hr' ? 'التنظيم' : (currentUser.directorateType === 'media' ? 'الميديا' : 'الشؤون الأكاديمية'))) : ('جدول التشغيل والتقويم الشهري - ' + (currentCommittee ? currentCommittee.name : 'اللجنة')) }}
+            </h2>
+            <p class="text-xs text-slate-400 max-w-2xl leading-relaxed">
+              تخطيط وتوزيع أيام المحاضرات الشهرية، احتساب احتياج الكوادر، وإسناد التكليفات التشغيلية للأعضاء مع المتابعة الفورية لنسب الإنجاز وتحديث تقييمات الأداء آلياً.
+            </p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-2.5 flex-wrap flex-shrink-0">
+            <button 
+              @click="openCreateSessionModal"
+              class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black transition flex items-center gap-2 shadow-md cursor-pointer"
+            >
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>إضافة يوم تشغيلي / محاضرة</span>
+            </button>
+            <button 
+              @click="openAssignTaskModal(null)"
+              class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/30 text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer"
+            >
+              <i data-lucide="user-plus" class="w-4 h-4"></i>
+              <span>إسناد تكليف لعضو</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrics Summary Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div class="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 shadow-md">
+            <span class="text-xs font-bold text-slate-400 block mb-1">إجمالي الأيام التشغيلية للشهر</span>
+            <span class="text-2xl sm:text-3xl font-black text-amber-300">{{ operationsStats.totalSessions }}</span>
+            <span class="text-[10px] text-slate-500 block mt-1">محاضرات وجلسات مجدولة</span>
+          </div>
+          <div class="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 shadow-md">
+            <span class="text-xs font-bold text-slate-400 block mb-1">إجمالي التكليفات المسندة</span>
+            <span class="text-2xl sm:text-3xl font-black text-sky-400">{{ operationsStats.totalTasks }}</span>
+            <span class="text-[10px] text-slate-500 block mt-1">مهام لوجستية وميدانية</span>
+          </div>
+          <div class="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 shadow-md">
+            <span class="text-xs font-bold text-slate-400 block mb-1">التكليفات المنجزة بنجاح</span>
+            <span class="text-2xl sm:text-3xl font-black text-emerald-400">{{ operationsStats.completedTasks }}</span>
+            <span class="text-[10px] text-slate-500 block mt-1">تم توثيقها في تقييم العضو</span>
+          </div>
+          <div class="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 shadow-md">
+            <span class="text-xs font-bold text-slate-400 block mb-1">نسبة إنجاز المهام العامة</span>
+            <span class="text-2xl sm:text-3xl font-black text-purple-400">
+              {{ operationsStats.totalTasks > 0 ? Math.round((operationsStats.completedTasks / operationsStats.totalTasks) * 100) : 100 }}%
+            </span>
+            <span class="text-[10px] text-slate-500 block mt-1">مؤشر كفاءة التشغيل الميداني</span>
+          </div>
+        </div>
+
+        <!-- View Mode Switcher -->
+        <div class="flex items-center justify-between gap-3 bg-slate-900/80 p-2 rounded-2xl border border-slate-800 flex-wrap">
+          <div class="flex items-center gap-1.5">
+            <button 
+              @click="operationsViewMode = 'calendar'" 
+              :class="operationsViewMode === 'calendar' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-white'"
+              class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              <span>عرض التقويم الشهري (Calendar)</span>
+            </button>
+            <button 
+              @click="operationsViewMode = 'list'" 
+              :class="operationsViewMode === 'list' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-white'"
+              class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <i data-lucide="list-checks" class="w-4 h-4"></i>
+              <span>قائمة الجلسات والتكليفات (Sessions & Tasks)</span>
+            </button>
+            <button 
+              v-if="currentUser && currentUser.role === 'directorate'"
+              @click="operationsViewMode = 'sector_matrix'" 
+              :class="operationsViewMode === 'sector_matrix' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-white'"
+              class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <i data-lucide="grid" class="w-4 h-4"></i>
+              <span>مصفوفة توزيع كوادر القطاع</span>
+            </button>
+          </div>
+
+          <span class="text-xs font-bold text-amber-300 font-mono px-3">
+            نوفمبر 2026 (الموسم الأكاديمي)
+          </span>
+        </div>
+
+        <!-- VIEW 1: MONTHLY CALENDAR GRID -->
+        <div v-show="operationsViewMode === 'calendar'" class="bg-slate-900/90 rounded-3xl p-5 sm:p-7 border border-slate-800 shadow-xl space-y-4">
+          <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-slate-400 pb-2 border-b border-slate-800">
+            <span>الأحد</span>
+            <span>الإثنين</span>
+            <span>الثلاثاء</span>
+            <span>الأربعاء</span>
+            <span>الخميس</span>
+            <span>الجمعة</span>
+            <span>السبت</span>
+          </div>
+
+          <!-- 35 Days Grid for Month -->
+          <div class="grid grid-cols-7 gap-2">
+            <div 
+              v-for="day in calendarDays" 
+              :key="day.dateStr"
+              @click="handleDayClick(day)"
+              class="min-h-[90px] sm:min-h-[110px] p-2 rounded-2xl border transition flex flex-col justify-between cursor-pointer"
+              :class="day.sessions.length > 0 ? 'bg-amber-950/20 border-amber-500/40 hover:border-amber-400' : 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700'"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black font-mono" :class="day.isToday ? 'text-amber-400 bg-amber-500/20 px-1.5 py-0.5 rounded-lg' : 'text-slate-400'">
+                  {{ day.dayNum }}
+                </span>
+                <span v-if="day.sessions.length > 0" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              </div>
+
+              <!-- Sessions Pill in Day -->
+              <div class="space-y-1 my-1 overflow-hidden">
+                <div 
+                  v-for="s in day.sessions" 
+                  :key="s.id"
+                  class="text-[10px] p-1 rounded-lg bg-amber-500/20 text-amber-200 border border-amber-500/30 truncate font-bold"
+                  :title="s.title"
+                >
+                  {{ s.title }}
+                </div>
+              </div>
+
+              <!-- Day Footer Info -->
+              <div class="flex items-center justify-between text-[9px] text-slate-500 font-mono">
+                <span v-if="day.tasks.length > 0" class="text-sky-400">
+                  {{ day.tasks.length }} تكليف
+                </span>
+                <span v-else></span>
+                <span v-if="day.sessions.length > 0" class="text-amber-300 font-bold">
+                  {{ day.sessions.reduce((acc, x) => acc + (x.requiredMembersCount || 0), 0) }} كوادر
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 2: SESSIONS & TASKS LIST -->
+        <div v-show="operationsViewMode === 'list'" class="space-y-4">
+          <!-- Empty State -->
+          <div v-if="operationsSessions.length === 0" class="bg-slate-900/90 rounded-3xl p-12 text-center border border-slate-800">
+            <div class="w-12 h-12 rounded-2xl bg-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="calendar-plus" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-sm font-black text-white mb-1">لم يتم جدول أي أيام تشغيلية لهذا الشهر حتى الآن</h4>
+            <p class="text-xs text-slate-400 mb-4">اضغط على زر إضافة يوم تشغيلي لتحديد خطة المحاضرات واحتياج الكوادر وتكليفات الأعضاء</p>
+            <button @click="openCreateSessionModal" class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>إضافة يوم تشغيلي الآن</span>
+            </button>
+          </div>
+
+          <!-- Sessions List Cards -->
+          <div 
+            v-for="sess in operationsSessions" 
+            :key="sess.id"
+            class="bg-slate-900/90 rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-xl space-y-4"
+          >
+            <!-- Session Title & Details -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-300 flex items-center justify-center font-black flex-shrink-0">
+                  <i data-lucide="book-open" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">
+                      {{ sess.date }} (الساعة {{ sess.time }})
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                      {{ sess.location }}
+                    </span>
+                  </div>
+                  <h3 class="text-base font-black text-white mt-1">{{ sess.title }}</h3>
+                  <p v-if="sess.description" class="text-xs text-slate-400 mt-0.5">{{ sess.description }}</p>
+                </div>
+              </div>
+
+              <!-- Staff Count Badge & Actions -->
+              <div class="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
+                <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-amber-300 border border-amber-500/30 text-xs font-bold font-mono">
+                  احتياج الكوادر: {{ sess.requiredMembersCount }} أعضاء
+                </span>
+                <button 
+                  @click="openAssignTaskModal(sess)"
+                  class="btn-gold px-3 py-1.5 rounded-xl text-xs font-bold inline-flex items-center gap-1 cursor-pointer shadow-sm"
+                >
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>تكليف عضو</span>
+                </button>
+                <button 
+                  @click="deleteOperationsSession(sess.id)"
+                  class="p-2 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-500/30 transition cursor-pointer"
+                  title="حذف الجلسة"
+                >
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tasks Assigned for this Session -->
+            <div>
+              <span class="text-xs font-black text-slate-300 block mb-2.5">
+                التكليفات الميدانية المسندة لهذه الجلسة ({{ getSessionTasks(sess.id).length }}):
+              </span>
+
+              <div v-if="getSessionTasks(sess.id).length === 0" class="text-center py-4 bg-slate-950/50 rounded-2xl border border-dashed border-slate-800 text-xs text-slate-500">
+                لم يتم إسناد أي تكليفات لأعضاء اللجنة في هذه الجلسة بعد. اضغط على زر "تكليف عضو" لتوزيع المهام.
+              </div>
+
+              <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div 
+                  v-for="task in getSessionTasks(sess.id)" 
+                  :key="task.id"
+                  class="p-3.5 rounded-2xl bg-slate-950 border transition flex flex-col justify-between gap-3"
+                  :class="task.status === 'completed' ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800'"
+                >
+                  <div class="space-y-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="text-xs font-black text-amber-300">{{ task.assignedToCandidateName }}</span>
+                      <span 
+                        class="px-2 py-0.5 rounded-full text-[9px] font-bold"
+                        :class="task.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'"
+                      >
+                        {{ task.status === 'completed' ? 'تم الإنجاز' : 'قيد التنفيذ' }}
+                      </span>
+                    </div>
+                    <h5 class="text-xs font-bold text-white">{{ task.title }}</h5>
+                    <p v-if="task.description" class="text-[11px] text-slate-400">{{ task.description }}</p>
+                  </div>
+
+                  <div class="pt-2 border-t border-slate-900 flex items-center justify-between">
+                    <span v-if="task.dueDate" class="text-[10px] text-slate-500 font-mono">
+                      تسليم: {{ task.dueDate }}
+                    </span>
+                    <span v-else></span>
+                    <div class="flex items-center gap-1.5">
+                      <button 
+                        @click="toggleTaskStatus(task)"
+                        class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer"
+                        :class="task.status === 'completed' ? 'bg-slate-800 text-slate-300' : 'btn-gold'"
+                      >
+                        {{ task.status === 'completed' ? 'إعادة فتح' : 'تأكيد الإنجاز' }}
+                      </button>
+                      <button 
+                        @click="deleteOperationsTask(task.id)"
+                        class="p-1 rounded-lg text-rose-400 hover:bg-rose-950 transition cursor-pointer"
+                        title="حذف التكليف"
+                      >
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- VIEW 3: SECTOR ALLOCATION MATRIX (Directorate HR, Media, Academic) -->
+        <div v-show="operationsViewMode === 'sector_matrix'" class="bg-slate-900/90 rounded-3xl p-5 sm:p-7 border border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm sm:text-base font-black text-white">
+              مصفوفة توزيع كوادر القطاع على فعاليات وجلسات كافة اللجان
+            </h3>
+            <span class="text-xs font-bold text-amber-300">
+              الكوادر المتاحة للإسناد: {{ assignableMembers.length }} عضو
+            </span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 font-bold">
+                <tr>
+                  <th class="py-3 px-4">تاريخ وموعد الجلسة</th>
+                  <th class="py-3 px-4">عنوان الجلسة / الفعالية</th>
+                  <th class="py-3 px-4">اللجنة المنظمة</th>
+                  <th class="py-3 px-4">الكوادر المطلوبة</th>
+                  <th class="py-3 px-4">الأعضاء المكلفون من القطاع</th>
+                  <th class="py-3 px-4 text-center">إجراءات الإسناد</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 text-slate-200">
+                <tr v-for="sess in operationsSessions" :key="sess.id" class="hover:bg-slate-800/40 transition">
+                  <td class="py-3 px-4 font-mono font-bold text-amber-300">{{ sess.date }} ({{ sess.time }})</td>
+                  <td class="py-3 px-4 font-black text-white">{{ sess.title }}</td>
+                  <td class="py-3 px-4 text-slate-300">{{ getCommitteeName(sess.committeeId) }}</td>
+                  <td class="py-3 px-4 font-bold text-amber-400">{{ sess.requiredMembersCount }} أعضاء</td>
+                  <td class="py-3 px-4">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <span 
+                        v-for="t in getSessionTasks(sess.id)" 
+                        :key="t.id"
+                        class="px-2 py-0.5 rounded-md bg-slate-950 text-slate-300 border border-slate-800 text-[10px] font-bold"
+                      >
+                        {{ t.assignedToCandidateName }} ({{ t.title }})
+                      </span>
+                      <span v-if="getSessionTasks(sess.id).length === 0" class="text-slate-500 italic text-[11px]">
+                        لم يتم التوزيع بعد
+                      </span>
+                    </div>
+                  </td>
+                  <td class="py-3 px-4 text-center">
+                    <button 
+                      @click="openAssignTaskModal(sess)"
+                      class="btn-gold px-3 py-1.5 rounded-xl text-xs font-bold inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                      <span>توزيع كوادر</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB: IMMUTABLE AUDIT TRAIL (Governance) -->
+      <!-- ============================================== -->
+      <section v-show="activeTab === 'audit_logs'" class="space-y-6">
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-8 border border-sky-500/30 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 text-xs font-bold mb-2 border border-sky-500/30">
+              <i data-lucide="shield-alert" class="w-4 h-4 text-sky-400"></i>
+              <span>سجل الحوكمة والتدقيق الإداري ومكافحة التلاعب (Immutable Audit Trail)</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-white">سجل العمليات والقرارات الإدارية</h2>
+            <p class="text-xs text-slate-400 mt-1 max-w-xl">
+              توثيق زمني لحظي غير قابل للتعديل لكافة العمليات الحساسة: تقييمات المقابلات، تسجيل الحضور بالـ QR، وتعديل الصفات التنظيمية لضمان النزاهة التامة.
+            </p>
+          </div>
+
+          <button 
+            @click="loadAuditLogs" 
+            class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-2 cursor-pointer self-start sm:self-auto"
+          >
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            <span>تحديث السجل</span>
+          </button>
+        </div>
+
+        <!-- Audit Table -->
+        <div class="bg-slate-900/90 rounded-3xl p-5 border border-slate-800 shadow-xl overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 font-bold">
+              <tr>
+                <th class="py-3 px-4">التوقيت بالثانية</th>
+                <th class="py-3 px-4">المسؤول / القائم بالعملية</th>
+                <th class="py-3 px-4">نوع العملية</th>
+                <th class="py-3 px-4">تفاصيل الإجراء</th>
+                <th class="py-3 px-4">معرف الهدف</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-300">
+              <tr v-for="log in auditLogs" :key="log.id" class="hover:bg-slate-800/40 transition">
+                <td class="py-3 px-4 font-mono text-slate-400 text-[11px]">{{ formatAuditTime(log.timestamp) }}</td>
+                <td class="py-3 px-4 font-black text-amber-300">{{ log.actor }}</td>
+                <td class="py-3 px-4">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                    {{ log.action }}
+                  </span>
+                </td>
+                <td class="py-3 px-4 text-slate-200">{{ log.details }}</td>
+                <td class="py-3 px-4 font-mono text-[10px] text-slate-500">{{ log.target || '—' }}</td>
+              </tr>
+              <tr v-if="auditLogs.length === 0">
+                <td colspan="5" class="py-8 text-center text-slate-500">لا توجد عمليات مسجلة في سجل التدقيق حالياً</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
       <!-- TAB: LECTURES, QUIZZES & QR -->
       <!-- ============================================== -->
       <section v-show="activeTab === 'quizzes'" class="space-y-6">
@@ -6247,6 +6683,49 @@
         const activeTab = ref('candidates');
         const copySuccess = ref(false);
 
+        // ==========================================
+        // OPERATIONS CALENDAR & TASKS MATRIX STATE
+        // ==========================================
+        const operationsSessions = ref([]);
+        const operationsTasks = ref([]);
+        const assignableMembers = ref([]);
+        const operationsStats = ref({ totalSessions: 0, totalTasks: 0, completedTasks: 0, pendingTasks: 0 });
+        const auditLogs = ref([]);
+        const operationsViewMode = ref('calendar'); // 'calendar' | 'list' | 'sector_matrix'
+        const showCreateSessionModal = ref(false);
+        const newSessionForm = ref({
+          date: new Date().toISOString().split('T')[0],
+          title: '',
+          committeeId: 'all',
+          sector: 'all',
+          description: '',
+          requiredMembersCount: 3,
+          time: '14:00',
+          location: 'مقر الجامعة / قاعة المحاكاة'
+        });
+        const showAssignTaskModal = ref(false);
+        const newTaskForm = ref({
+          sessionId: null,
+          title: '',
+          description: '',
+          assignedToCandidateId: '',
+          committeeId: 'all',
+          sector: 'hr',
+          dueDate: ''
+        });
+
+        // ==========================================
+        // LIVE QR CAMERA CHECK-IN STATE
+        // ==========================================
+        const showQrScannerModal = ref(false);
+        const isCameraScanning = ref(false);
+        const qrScannerInput = ref('');
+        const qrCheckinTargetEventId = ref('');
+        const qrCheckinTargetSessionId = ref('');
+        const qrCheckinResult = ref(null);
+        const qrCheckinError = ref(null);
+        let html5QrScanner = null;
+
         // Acceptance WhatsApp Notices State & Logic
         const DEFAULT_NOTICE_TEMPLATE = `عزيزي *{الاسم}* \n\nبالنيابة عن فريق نموذج محاكاة وزارة الخارجية – جامعة السويس، يسعدنا ويشرفنا أن نرحب بك ضمن فريق عمل النموذج!\n\nبعد الانتهاء من المقابلات الشخصية، يسعدنا إبلاغك باختيارك للانضمام إلينا ك *[ {البوزيشن} ]* داخل {اللجنة} \n\n{رابط_الجروب}\n\nنتطلع إلى بدء هذه الرحلة معك، لنحوّل المعرفة إلى ممارسة، والطموح إلى إنجاز، ونصنع معًا تجربة ثرية بالتعلم والتعاون وتبادل الخبرات.\n\n*أهلًا بك في فريقنا، ونتطلع إلى تحقيق نجاحات كبيرة معًا!*`;
         const isSavingGroupLink = ref(false);
@@ -6734,6 +7213,7 @@
 
             // Load Candidates for active committee and global candidates
             await fetchCandidates();
+          await loadOperationsCalendar();
             await fetchSlots();
             await fetchStats();
             await fetchCommitteeDetails();
@@ -6886,7 +7366,8 @@
           capacity: 50,
           dressCode: 'زي رسمي دبلوماسي كامل (بدلة كاملة)',
           notes: 'التجمع أمام البوابة الرئيسية وإحضار إثبات الشخصية',
-          targetAudience: defaultTargetAudience()
+          targetAudience: defaultTargetAudience(),
+          eligibilityCriteria: { minAttendance: null, minQuizAvg: null, minCPI: null }
         });
 
         const isAllCommitteesSelected = computed(() => {
@@ -8907,7 +9388,43 @@
           attendeesSearch,
           attendeesRoleFilter,
           newEventForm,
-          fetchDashboardEvents,
+          // Operations & QR Exports
+          operationsSessions,
+          operationsTasks,
+          assignableMembers,
+          operationsStats,
+          auditLogs,
+          operationsViewMode,
+          showCreateSessionModal,
+          newSessionForm,
+          showAssignTaskModal,
+          newTaskForm,
+          showQrScannerModal,
+          isCameraScanning,
+          qrScannerInput,
+          qrCheckinTargetEventId,
+          qrCheckinTargetSessionId,
+          qrCheckinResult,
+          qrCheckinError,
+          calendarDays,
+          getSessionTasks,
+          loadOperationsCalendar,
+          handleDayClick,
+          openCreateSessionModal,
+          createOperationsSession,
+          deleteOperationsSession,
+          openAssignTaskModal,
+          createOperationsTask,
+          toggleTaskStatus,
+          deleteOperationsTask,
+          loadAuditLogs,
+          formatAuditTime,
+          openQrScannerModal,
+          closeQrScannerModal,
+          startQrScannerCamera,
+          handleManualQrCheckin,
+          performQrCheckin,
+                    fetchDashboardEvents,
           openCreateEventModal,
           isEditingEvent,
           editingEventId,

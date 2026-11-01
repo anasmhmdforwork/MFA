@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>بوابة التحقق الدبلوماسي الرقمي | نموذج محاكاة وزارة الخارجية</title>
+  <link rel="icon" type="image/jpeg" href="/logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    body { 
+      font-family: 'Cairo', sans-serif;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      background-color: #070e1e;
+    }
+    .royal-bg {
+      background: radial-gradient(circle at 50% 10%, #112240 0%, #070e1e 75%, #030712 100%);
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-card-border {
+      border: 1px solid rgba(197, 160, 89, 0.35);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #a87e2b 100%);
+      color: #070e1e;
+      transition: all 0.25s ease;
+    }
+    .btn-gold:hover {
+      background: linear-gradient(135deg, #e5be4a 0%, #d4af37 50%, #b88a32 100%);
+      box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.35);
+    }
+    [v-cloak] { display: none; }
+  </style>
+</head>
+<body class="royal-bg min-h-screen text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950">
+
+  <div id="app" v-cloak class="flex flex-col min-h-screen">
+
+    <!-- Top Navigation Header -->
+    <header class="py-4 px-4 sm:px-8 border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md sticky top-0 z-40">
+      <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-11 h-11 rounded-full border border-amber-400/60 object-cover shadow-lg">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm sm:text-base font-black text-white">نموذج محاكاة وزارة الخارجية المصرية</span>
+              <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
+                جامعة السويس
+              </span>
+            </div>
+            <p class="text-[11px] text-amber-400 font-medium">بوابة الاعتماد والتحقق الدبلوماسي الرقمي (Official Verification Portal)</p>
+          </div>
+        </div>
+
+        <a href="/login" class="text-xs text-slate-400 hover:text-amber-300 transition flex items-center gap-1.5 font-bold">
+          <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">تسجيل الدخول للمنظومة</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Verification Section -->
+    <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 sm:py-12 flex flex-col justify-center">
+
+      <!-- Loading State -->
+      <div v-if="loading" class="py-20 text-center">
+        <div class="w-12 h-12 border-3 border-amber-400/30 border-t-amber-400 rounded-full animate-spin mx-auto mb-4"></div>
+        <p class="text-sm text-slate-300 font-bold">جاري مضاهاة السجلات الدبلوماسية والتحقق من الاعتماد الرسمي...</p>
+      </div>
+
+      <!-- Valid Certificate Card -->
+      <div v-else-if="result && result.valid" class="bg-gradient-to-b from-slate-900/95 via-slate-900/90 to-slate-950/95 backdrop-blur-xl rounded-3xl p-6 sm:p-10 gold-card-border shadow-2xl relative overflow-hidden">
+        
+        <!-- Ambient Golden Glow -->
+        <div class="absolute -top-20 -right-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Official Seal Banner -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 flex items-center justify-center flex-shrink-0 shadow-inner">
+              <i data-lucide="shield-check" class="w-7 h-7"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black text-emerald-400 uppercase tracking-wider">سجل معتمد وموثق</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              </div>
+              <h2 class="text-base sm:text-lg font-black text-white">وثيقة اعتماد دبلوماسية رسمية</h2>
+            </div>
+          </div>
+
+          <div class="text-left font-mono">
+            <span class="text-[10px] text-slate-400 block font-sans">الرقم المرجعي الموحد</span>
+            <span class="text-xs sm:text-sm font-black text-amber-300 tracking-wider bg-slate-950 px-3 py-1 rounded-xl border border-amber-500/30 inline-block mt-0.5">
+              {{ result.verification.diplomaticId }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Student & Role Profile -->
+        <div class="py-6 sm:py-8 space-y-6">
+          <div class="text-center sm:text-right">
+            <span class="text-xs text-amber-400/90 font-bold block mb-1">تشهد رئاسة نموذج محاكاة وزارة الخارجية بجامعة السويس بأن:</span>
+            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-wide mb-2">
+              {{ result.verification.fullNameArabic }}
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 font-mono">
+              {{ result.verification.fullNameEnglish }}
+            </p>
+          </div>
+
+          <!-- Credential Details Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+              <span class="text-slate-400 block text-[11px] mb-1">الصفة والصفة التنظيمية</span>
+              <span class="font-black text-amber-300 text-sm">{{ result.verification.role }}</span>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+              <span class="text-slate-400 block text-[11px] mb-1">اللجنة الدبلوماسية / القطاع</span>
+              <span class="font-black text-slate-100 text-sm">{{ result.verification.committee }} <span v-if="result.verification.sector">({{ result.verification.sector }})</span></span>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+              <span class="text-slate-400 block text-[11px] mb-1">المؤسسة الأكاديمية</span>
+              <span class="font-bold text-slate-200">{{ result.verification.university }} - {{ result.verification.faculty }}</span>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+              <span class="text-slate-400 block text-[11px] mb-1">مؤشر الجدارة التراكمي (CPI) والتقدير العام</span>
+              <div class="flex items-center gap-2">
+                <span class="font-black text-emerald-400 text-sm">{{ result.verification.cpiScore }} / 100</span>
+                <span class="text-slate-400">•</span>
+                <span class="font-bold text-amber-300">{{ result.verification.standing }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Official Verification Notice -->
+          <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-start gap-3">
+            <i data-lucide="award" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+            <div class="text-xs text-amber-200/90 leading-relaxed">
+              تم إصدار هذا الاعتماد الرقمي بناءً على استيفاء كافة متطلبات الحضور، الاختبارات الأكاديمية، والتقييمات الميدانية المعتمدة من رئاسة النموذج للموسم الدبلوماسي 2026. الوثيقة صادرة ومعتمدة ومحمية بكود رقمي موثق.
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-[11px] text-slate-400 font-mono text-center sm:text-right">
+            تاريخ التحقق الفعلي: {{ currentDate }} • كود التوثيق: {{ result.verification.certificateCode }}
+          </div>
+          <button 
+            onclick="window.print()" 
+            class="btn-gold px-5 py-2.5 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md"
+          >
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>طباعة وثيقة الاعتماد الرسمية</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Invalid or Search State -->
+      <div v-else class="bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8 sm:p-12 gold-card-border shadow-2xl text-center max-w-xl mx-auto">
+        <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-4 border border-amber-500/30">
+          <i data-lucide="search" class="w-7 h-7"></i>
+        </div>
+        <h2 class="text-xl font-black text-white mb-2">التحقق من كود الاعتماد الدبلوماسي</h2>
+        <p class="text-xs text-slate-400 mb-6 leading-relaxed">
+          أدخل كود العضوية الدبلوماسي الموحد (مثال: <code class="text-amber-300 font-mono">MFA-26-ECO-D-042</code>) للتأكد الفوري من مصداقية الوثيقة وصحة بيانات العضو في السجلات الرسمية.
+        </p>
+
+        <form @submit.prevent="verifyCode(inputCode)" class="flex gap-2 max-w-md mx-auto mb-4">
+          <input 
+            v-model="inputCode" 
+            type="text" 
+            placeholder="MFA-26-..." 
+            dir="ltr"
+            class="flex-1 bg-slate-950 text-white font-mono px-4 py-3 rounded-xl border border-slate-700 focus:border-amber-400 outline-none text-sm text-center uppercase tracking-wider"
+            required
+          >
+          <button type="submit" class="btn-gold px-6 py-3 rounded-xl text-xs font-black flex items-center gap-1.5 flex-shrink-0 cursor-pointer">
+            <span>تحقق</span>
+            <i data-lucide="check" class="w-4 h-4"></i>
+          </button>
+        </form>
+
+        <div v-if="error" class="text-xs text-rose-400 bg-rose-950/50 border border-rose-500/30 p-3 rounded-xl mt-4">
+          {{ error }}
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 px-6 border-t border-slate-800/80 bg-slate-950/60 text-center text-xs text-slate-500">
+      <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <span>نموذج محاكاة وزارة الخارجية – جامعة السويس © 2026</span>
+        <span class="text-amber-400 font-medium">سجل الحوكمة والاعتماد الدبلوماسي</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const { createApp, ref, onMounted, nextTick } = Vue;
+
+    createApp({
+      setup() {
+        const loading = ref(false);
+        const result = ref(null);
+        const error = ref(null);
+        const inputCode = ref('');
+        const currentDate = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        const verifyCode = async (code) => {
+          if (!code || !code.trim()) return;
+          loading.value = true;
+          error.value = null;
+          result.value = null;
+
+          try {
+            const clean = encodeURIComponent(code.trim());
+            const res = await fetch('/api/verify/' + clean);
+            const data = await res.json();
+            if (data.success && data.valid) {
+              result.value = data;
+            } else {
+              error.value = data.message || 'لم يتم العثور على أي وثيقة مطابقة في السجلات الرسمية';
+            }
+          } catch (e) {
+            error.value = 'تعذر الاتصال بالخادم للتحقق من السجلات الدبلوماسية';
+          } finally {
+            loading.value = false;
+            nextTick(() => lucide.createIcons());
+          }
+        };
+
+        onMounted(() => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const qCode = urlParams.get('code');
+          if (qCode) {
+            inputCode.value = qCode;
+            verifyCode(qCode);
+          } else {
+            // Check path if /verify/:code
+            const pathParts = window.location.pathname.split('/').filter(Boolean);
+            if (pathParts.length >= 2 && pathParts[0] === 'verify') {
+              const pCode = pathParts[1];
+              inputCode.value = pCode;
+              verifyCode(pCode);
+            }
+          }
+          nextTick(() => lucide.createIcons());
+        });
+
+        return {
+          loading,
+          result,
+          error,
+          inputCode,
+          currentDate,
+          verifyCode
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
