@@ -166,7 +166,7 @@ app.post('/api/auth/login', (req, res) => {
       directorateType: user.directorateType || null,
       committeeId: user.committeeId,
       name: user.name
-    }), { httpOnly: false, maxAge: 7 * 24 * 60 * 60 * 1000 });
+    }), { httpOnly: false, path: '/', sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
 
     return res.json({
       success: true,
@@ -203,7 +203,7 @@ app.post('/api/auth/login', (req, res) => {
     }
 
     // Set candidate auth cookie
-    res.cookie('mfa_delegate_id', cand.id, { httpOnly: false, maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.cookie('mfa_delegate_id', cand.id, { httpOnly: false, path: '/', sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
 
     const comm = (db.committees || []).find(c => c.id === (cand.assignedCommitteeId || cand.originalCommitteeId));
 
@@ -322,8 +322,8 @@ app.get('/api/delegate/my-profile', (req, res) => {
 
 // Logout Endpoint
 app.get('/api/auth/logout', (req, res) => {
-  res.clearCookie('mfa_user');
-  res.clearCookie('mfa_delegate_id');
+  res.clearCookie('mfa_user', { path: '/' });
+  res.clearCookie('mfa_delegate_id', { path: '/' });
   res.json({ success: true, redirect: '/login' });
 });
 

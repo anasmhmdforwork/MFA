@@ -115,15 +115,15 @@
       <div class="no-print mb-6 border-b border-slate-200">
         <nav class="flex space-x-reverse space-x-1.5 sm:space-x-3 overflow-x-auto whitespace-nowrap no-scrollbar pb-2 text-xs sm:text-sm font-bold -mx-3 px-3 sm:mx-0 sm:px-0" style="-webkit-overflow-scrolling: touch;">
           
-          <!-- Admin Dashboard Tab (Admin only) -->
+          <!-- Admin / Directorate Central Overview Tab -->
           <button 
-            v-if="currentUser && currentUser.role === 'admin'"
+            v-if="currentUser && (currentUser.role === 'admin' || currentUser.role === 'directorate')"
             @click="activeTab = 'minister'" 
             :class="activeTab === 'minister' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
             class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
           >
-            <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
-            <span>أداء القطاعات (الإدارة العامة)</span>
+            <i :data-lucide="currentUser.role === 'directorate' ? (currentUser.directorateType === 'hr' ? 'users' : (currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')) : 'crown'" class="w-4 h-4 text-amber-500"></i>
+            <span>{{ currentUser.role === 'directorate' ? 'لوحة المتابعة المركزية للقطاعات' : 'أداء القطاعات (الإدارة العامة)' }}</span>
           </button>
 
           <!-- 1. Candidates & Interviews -->
@@ -5339,15 +5339,31 @@
 
         // Initialize User Session
         function checkAuth() {
-          const userStr = localStorage.getItem('mofa_user');
+          let userStr = localStorage.getItem('mofa_user');
+          if (!userStr) {
+            try {
+              const match = document.cookie.match(/(?:^|;\s*)mfa_user=([^;]*)/);
+              if (match) {
+                userStr = decodeURIComponent(match[1]);
+                localStorage.setItem('mofa_user', userStr);
+              }
+            } catch (e) {
+              console.warn('Cookie parse error:', e);
+            }
+          }
           if (!userStr) {
             window.location.href = '/login';
             return;
           }
-          currentUser.value = JSON.parse(userStr);
+          try {
+            currentUser.value = JSON.parse(userStr);
+          } catch(e) {
+            window.location.href = '/login';
+            return;
+          }
           selectedCommitteeId.value = currentUser.value.committeeId || 'all';
           batchForm.value.committeeId = currentUser.value.committeeId || 'crises';
-          if (currentUser.value.role === 'admin') {
+          if (currentUser.value.role === 'admin' || currentUser.value.role === 'directorate') {
             activeTab.value = 'minister';
           } else {
             activeTab.value = 'candidates';
@@ -5952,7 +5968,17 @@
 
         function logout() {
           localStorage.removeItem('mofa_user');
-          window.location.href = '/login';
+          localStorage.removeItem('mofa_role');
+          localStorage.removeItem('mfa_delegate_id');
+          document.cookie = "mfa_user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie = "mfa_delegate_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          try {
+            fetch('/api/auth/logout').finally(() => {
+              window.location.href = '/login';
+            });
+          } catch(e) {
+            window.location.href = '/login';
+          }
         }
 
         // ===================================

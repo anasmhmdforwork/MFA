@@ -10139,18 +10139,18 @@
         }
       ],
       "delegatePassword": "1234",
+      "memberEvaluation": {
+        "notes": "مسؤول تنظيم ملتزم جداً ومتميز في إدارة القاعة",
+        "score": 9.5,
+        "updatedAt": "2026-11-01T13:50:16.780Z"
+      },
       "activitiesDetails": "مجلس نواب hr",
       "reasonsForSectors": "مهتم جدا بمجال الاقتصاد وتعاون الدول فيه وايضا مجال الاتصالات هو من أهم المجالات في الوقت الحالي",
       "weeklyEvaluations": {},
       "lectureEvaluations": {},
       "assignedCommitteeId": "climate",
       "originalCommitteeId": "economic",
-      "attendanceCommitment": "نعم",
-      "memberEvaluation": {
-        "score": 9.5,
-        "notes": "مسؤول تنظيم ملتزم جداً ومتميز في إدارة القاعة",
-        "updatedAt": "2026-11-01T13:50:16.780Z"
-      }
+      "attendanceCommitment": "نعم"
     },
     {
       "id": "c_4",
@@ -10464,6 +10464,7 @@
       "slotId": "slot_414_mvl4iv2u",
       "faculty": "سياسة واقتصاد",
       "fullName": "Dalaa Ali Omar Ahmed",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -10492,6 +10493,7 @@
         "communicationScore": 6
       },
       "motivation": "رغبتي في اكتساب خبرة جديدة  وتوسيع معرفتي بالقضايا الاقتصادية وتطوير مهاراتي في البحث والتحليل والعمل ضمن فريق بما يساعدني على الاستفادة من دراستي وتطبيقها بشكل عملي",
+      "notifiedAt": "2026-11-01T14:37:16.720Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -10875,6 +10877,7 @@
       "slotId": "slot_290_mvl1p4m8",
       "faculty": "السياسة والاقتصاد",
       "fullName": "Mina Shokry Saeed Bekhit Gerges",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -10903,6 +10906,7 @@
         "communicationScore": 7
       },
       "motivation": "اكتساب خبرات ومهارات جديده",
+      "notifiedAt": "2026-11-01T14:37:43.271Z",
       "university": "جامعة السويس",
       "englishLevel": "مبتدئ",
       "bookingStatus": "booked",
@@ -10992,6 +10996,7 @@
       "slotId": "slot_269_mvl1awj9",
       "faculty": "السياسة والاقتصاد",
       "fullName": "Salma Sheshtawy Mustafa Beltagy",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -11020,6 +11025,7 @@
         "communicationScore": 6
       },
       "motivation": "حابّة أقدم عشان أتعرف أكتر على طبيعة شغل وزارة الخارجية ودورها في العلاقات الدولية وأكتسب خبرة ومعلومات جديدة تساعدني أطور من نفسي وأربط اللي بدرسُه في الكلية بالواقع العملي",
+      "notifiedAt": "2026-11-01T14:37:58.675Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -11100,6 +11106,7 @@
       "slotId": "slot_370_mvl2fo7f",
       "faculty": "سياسة واقتصاد",
       "fullName": "Hazem elsayed saad mahmoud mansour",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -11125,6 +11132,7 @@
         "communicationScore": 8
       },
       "motivation": "اكتساب الخبرات وتجربة العمل الجماعي",
+      "notifiedAt": "2026-11-01T15:12:33.621Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -11254,6 +11262,7 @@
       "slotId": "slot_273_mvl1nye3",
       "faculty": "السياسة والاقتصاد",
       "fullName": "Mohamed Amr Rashad Elsayed Shaheen",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -11282,6 +11291,7 @@
         "communicationScore": 6
       },
       "motivation": "أتطلع إلى اكتساب الخبرات ومعرفة كيف تدار الأمور بشكل عملي أكثر واتطلع إلى بناء علاقات وإجادة العمل الجماعي اكثر",
+      "notifiedAt": "2026-11-01T14:38:17.542Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "booked",
@@ -11362,6 +11372,7 @@
       "slotId": "slot_420_mvl4iv2u",
       "faculty": "السياسة والإقتصاد",
       "fullName": "Fatma Hamed Ali Moustafa",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -11390,6 +11401,7 @@
         "communicationScore": 6
       },
       "motivation": "المشاركه برأيي والإستفاده من آراء الآخرين",
+      "notifiedAt": "2026-11-01T14:38:33.892Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -11627,6 +11639,7 @@
       "slotId": "slot_415_mvl4iv2u",
       "faculty": "سياسة واقتصاد",
       "fullName": "Esraa Gamale Mohamed Helal",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -11655,6 +11668,7 @@
         "communicationScore": 5
       },
       "motivation": "اكتساب الخبره وتنمية المهارات",
+      "notifiedAt": "2026-11-01T14:39:19.921Z",
       "university": "جامعة السويس",
       "englishLevel": "مبتدئ",
       "bookingStatus": "completed",
@@ -11744,6 +11758,7 @@
       "slotId": "slot_271_mvl1awj9",
       "faculty": "السياسة والاقتصاد",
       "fullName": "Hana Fahmy Ahmed Ali",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -11772,6 +11787,7 @@
         "communicationScore": 6
       },
       "motivation": "للحصول على خبرة والتعلم",
+      "notifiedAt": "2026-11-01T14:39:34.593Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "booked",
@@ -11803,6 +11819,7 @@
       "slotId": "slot_289_mvl1nye3",
       "faculty": "Faculty of Economics & Political Science",
       "fullName": "Seif Eldeen Adel Ahmed Fouad",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -11831,6 +11848,7 @@
         "communicationScore": 6
       },
       "motivation": "عايز أعيش تجربة عملية قريبة من الشغل الدبلوماسي الحقيقي، وأكمّل على اللي اتعلمته في جامعة الدول العربية وبرنامج السلام والأمن الأفريقي. \n\nعايز أطور مهاراتي في البحث السياسي وكتابة المذكرات والتفاوض، وأشتغل مع فريق بيتابع القضايا الإقليمية والدولية، وأضيف بخبرتي التحليلية والتنظيمية.",
+      "notifiedAt": "2026-11-01T14:40:29.875Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -12027,6 +12045,7 @@
       "slotId": "slot_278_mvl1nye3",
       "faculty": "سياسه واقتصاد",
       "fullName": "mostafa ahmed afifi elsayed",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -12055,6 +12074,7 @@
         "communicationScore": 7
       },
       "motivation": "لاكتساب خبرات",
+      "notifiedAt": "2026-11-01T14:41:05.441Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "booked",
@@ -12414,6 +12434,7 @@
       "slotId": "slot_406_mvl4iv2u",
       "faculty": "السياسه و الاقتصاد",
       "fullName": "Menaa Mohsen Mohamed Mohamed Sayed Ahmed",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -12442,6 +12463,7 @@
         "communicationScore": 6
       },
       "motivation": "رغبتي في توسيع مداركي السياسية والاقتصادية، والتعرف عن قرب على طبيعة العمل الدبلوماسي وآليات صنع القرار وإدارة العلاقات الدولية. وأسعى إلى تطوير مهاراتي في البحث والتحليل والتفاوض والعمل الجماعي، واكتساب القدرة على مناقشة القضايا المختلفة بصورة موضوعية وتقديم حلول مبنية على المعلومات والمنطق. كما أطمح إلى ربط دراستي الأكاديمية بالواقع العملي، خاصة في مجال التعاون الاقتصادي الدولي، وفهم كيفية تعزيز المصالح المصرية وبناء علاقات تعاون مثمرة مع الدول والمنظمات الدولية. وأؤمن بأن المشاركة في النموذج ستمنحني فرصة للتعلم وتبادل الخبرات وتحمل المسؤولية، بما يساعدني على تطوير شخصيتي وقدراتي، ويقربني من تحقيق أهدافي الأكاديمية والمهنية والمساهمة مستقبلًا في خدمة بلدي.",
+      "notifiedAt": "2026-11-01T14:41:31.285Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -12531,6 +12553,7 @@
       "slotId": "slot_308_mvl1p4m8",
       "faculty": "سياسه واقتصاد",
       "fullName": "Shahd Nabih Esmail EIKASRAWY",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -12559,6 +12582,7 @@
         "communicationScore": 7
       },
       "motivation": "رغبتي في تطوير نفسي على المستويين الأكاديمي والشخصي، واكتساب خبرات عملية تساعدني على فهم طبيعة العمل الدبلوماسي والاقتصادي. كما أسعى إلى تعزيز مهارات التواصل والعمل الجماعي، والتعرف على قضايا دول الخليج والتعاون الاقتصادي بينها وبين الدول الأخرى، والمشاركة بفاعلية في أنشطة النموذج.",
+      "notifiedAt": "2026-11-01T14:41:41.276Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "booked",
@@ -12850,6 +12874,7 @@
       "slotId": "slot_272_mvl1awj9",
       "faculty": "سياسة واقتصاد",
       "fullName": "Nagat Eslam mohamed",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -12878,6 +12903,7 @@
         "communicationScore": 6
       },
       "motivation": "اكتساب الخبرة",
+      "notifiedAt": "2026-11-01T14:41:50.531Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -13132,6 +13158,7 @@
       "slotId": "slot_370_mvl2ablf",
       "faculty": "سياسة واقتصاد",
       "fullName": "Shams abdalrhman mohamed",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -13160,6 +13187,7 @@
         "communicationScore": 9
       },
       "motivation": "اكتساب خبرات والمشاركة وكسر حاجز الخوف وعلاج الرهاب الاجتماعي نهائياً",
+      "notifiedAt": "2026-11-01T15:15:02.972Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -13289,6 +13317,7 @@
       "slotId": "slot_368_mvl2ablf",
       "faculty": "سياسه واقتصاد",
       "fullName": "Salma Ahmed Elsayed Metwaly",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -13317,6 +13346,7 @@
         "communicationScore": 7
       },
       "motivation": "عايزه اكتسب خبره و اعرف ناس اكتر و اتواصل مع ناس ونتعلم اكتر طبعا",
+      "notifiedAt": "2026-11-01T15:15:26.263Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -13602,6 +13632,7 @@
       "slotId": "slot_371_mvl2ablf",
       "faculty": "كلية التربية",
       "fullName": "Hager Gharib Mohamed",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -13630,6 +13661,7 @@
         "communicationScore": 7
       },
       "motivation": "دفعي الأساسي للتقدم هو رغبتي في صقل مهاراتي القيادية والعمل ضمن فريق عمل طموح يشاركنني نفس الشغف بالعمل العام والشؤون الدولية. أتطلع للاستفادة من الورش التدريبية، النقاشات الفكرية، والفرص العملية التي يقدمها النموذج لتحويل المعرفة النظرية إلى خبرات تطبيقية حقيقية، فضلاً عن الرغبة في ترك بصمة إيجابية والمساهمة الفعّالة في فعاليات وأنشطة النموذج",
+      "notifiedAt": "2026-11-01T15:22:57.912Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -13924,6 +13956,7 @@
       "slotId": "slot_286_mvl1bux5",
       "faculty": "السياسة والاقتصاد",
       "fullName": "Aya Othman Mohammed Alsebaei",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -13952,6 +13985,7 @@
         "communicationScore": 7
       },
       "motivation": "للاستفاده واكتساب المهارة والخبرة وجمع المعلومات",
+      "notifiedAt": "2026-11-01T14:42:17.855Z",
       "university": "جامعة السويس",
       "englishLevel": "مبتدئ",
       "bookingStatus": "booked",
@@ -14265,6 +14299,7 @@
       "slotId": "slot_285_mvl1bux5",
       "faculty": "السياسة والاقتصاد",
       "fullName": "EHAB MOHAMED",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -14293,6 +14328,7 @@
         "communicationScore": 6
       },
       "motivation": "لاكتساب الخبرات",
+      "notifiedAt": "2026-11-01T14:42:51.704Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -14324,6 +14360,7 @@
       "slotId": "slot_419_mvl4iv2u",
       "faculty": "السياسه و الاقتصاد",
       "fullName": "Abeer Waleed Nafaad Ebrahim",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -14352,6 +14389,7 @@
         "communicationScore": 5
       },
       "motivation": "لأن مشاركتي فى النموذج سوف يطور من خبرتي في العمل  الأكاديمي و هكتسب منه الخبره الكافيه و ايضا هساعد الاخرين بمعلوماتي",
+      "notifiedAt": "2026-11-01T14:43:35.815Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -14811,6 +14849,7 @@
       "slotId": "slot_267_mvl1awj9",
       "faculty": "كلية السياسة والاقتصاد",
       "fullName": "Basmala Alaa Ibrahim Amin",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -14839,6 +14878,7 @@
         "communicationScore": 6
       },
       "motivation": "الرغبة في محاكاة الدبلوماسية الاقتصادية والسياسية بشكل عملي، وتطوير قدراتي في التحليل السياسي وصياغة المذكرات والدراسات التخصصية. أطمح إلى إثراء معرفتي بالسياسة الخارجية المصرية وأدوات العمل الدبلوماسي، ونقل خبراتي الأكاديمية والقيادية السابقة للنموذج للمساهمة في تقديم محتوى أكاديمي رفيع المستوى يعكس كفاءة طلاب كلية السياسة والاقتصاد.",
+      "notifiedAt": "2026-11-01T14:43:49.004Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -14968,6 +15008,7 @@
       "slotId": "slot_281_mvl1nye3",
       "faculty": "السياسة والاقتصاد- قسم اقتصاد",
       "fullName": "Malak Yasser Ahmed Abdelsalam",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -14996,6 +15037,7 @@
         "communicationScore": 8
       },
       "motivation": "رغبتى فى الانضمام للنموذج بسبب اعجابى الشديد بفكرة النموذج لكى اتطلع من خلاله للتعرف عن قرب على كيفية إدارة العمل الدبلوماسي داخل وزارة الخارجية وكيف تسير الأمور على أرض الواقع بشكل يحاكى الواقع الحقيقى وفي الوقت نفسه أطمح للربط بين تخصصي في الاقتصاد وبين المجال الدبلوماسي وتطبيق ما درسته بشكل عملي ومفيد",
+      "notifiedAt": "2026-11-01T14:44:37.653Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -15363,6 +15405,7 @@
       "slotId": "slot_421_mvl4iv2u",
       "faculty": "سياسة واقتصاد",
       "fullName": "Habiba Mmdouh Essa Wahba",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -15391,6 +15434,7 @@
         "communicationScore": 6
       },
       "motivation": "اللي شجعني اقدم هو إن النموذج تجربة جديدة ومختلفة بالنسبالي وحاسة إنه هيديني فرصة أتعلم حاجات جديدة وأخد خبرة وأطور من نفسي اكتر",
+      "notifiedAt": "2026-11-01T14:44:49.247Z",
       "university": "جامعة السويس",
       "englishLevel": "مبتدئ",
       "bookingStatus": "booked",
@@ -15422,6 +15466,7 @@
       "slotId": "slot_277_mvl1nye3",
       "faculty": "سياسة واقتصاد",
       "fullName": "Ibrahim abdelmajed ibrahim heikal",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -15450,6 +15495,7 @@
         "communicationScore": 6
       },
       "motivation": "ما دفعني للتقديم هو رغبتي في تطوير مهاراتي البحثية والحوار والتفاوض، والاستفادة من بيئة النموذج الأكاديمية المحفزة. كما أن مشاركتي السابقة في النموذج كانت تجربة مفيدة جداً وأريد البناء عليها والمساهمة بشكل أكثر فاعلية هذه المرة، بالإضافة إلى تكوين شبكة علاقات مع مهتمين بنفس المجال.",
+      "notifiedAt": "2026-11-01T14:45:20.169Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "booked",
@@ -15542,6 +15588,7 @@
       "slotId": "slot_273_mvl1awj9",
       "faculty": "سياسه واقتصاد",
       "fullName": "roaa Mohamed Mahmoud abd ellatif mahgoub",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -15570,6 +15617,7 @@
         "communicationScore": 6
       },
       "motivation": "أنا السنه اللي فاتت مكنتش بفكر خالص أشترك في أي نموذج و ده لأني مغتربه و لكني مكنتش واخده سكن كنت بروح و برجع في نفس اليوم فمكنش عندي شغف ولا طاقه خالص لحد ما شوفت السنه اللي فاتت أصحابي اللي كانوا مشتركين في نماذج المحاكاه و خاصه نموذج مجلس النواب و أنهم أزاي في نهايه السنه حضروا مناقشه الميزانيه و أتشجعت أني أخد الخطوه و بدأت أهتم أكتر بنماذج المحاكاه و أنها فعلا ممكن تكون أول الخطوه في طريقي لتحقيق أهدافي و كمان أضافه كبيره لي خبرتي",
+      "notifiedAt": "2026-11-01T14:47:19.104Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -15601,6 +15649,7 @@
       "slotId": "slot_405_mvl4iv2u",
       "faculty": "سياسة والاقتصاد",
       "fullName": "Mariam Hussien Mohammad Hussien",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -15629,6 +15678,7 @@
         "communicationScore": 6
       },
       "motivation": "لتطوير مهارتي وخبرتي",
+      "notifiedAt": "2026-11-01T14:47:34.276Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -15660,6 +15710,7 @@
       "slotId": "slot_411_mvl4iv2u",
       "faculty": "سياسه و اقتصاد",
       "fullName": "Retag Ahmed Ali",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -15688,6 +15739,7 @@
         "communicationScore": 6
       },
       "motivation": "لاكتساب خبرات جديده وتطوير مهاراتي الشخصيه والأكاديمية والتعرف علي قضايا الإقتصاد والعلاقات الدوليه",
+      "notifiedAt": "2026-11-01T14:48:32.346Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -15777,6 +15829,7 @@
       "slotId": "slot_382_mvl26oa6",
       "faculty": "سياسة و اقتصاد",
       "fullName": "Joiria Osama Salama Mohamed Hashim Ramadan",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -15805,6 +15858,7 @@
         "communicationScore": null
       },
       "motivation": "تنمية مهاراتي الأكاديمية",
+      "notifiedAt": "2026-11-01T15:23:51.867Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -16157,6 +16211,7 @@
       "slotId": "slot_412_mvl4iv2u",
       "faculty": "سياسه واقتصاد",
       "fullName": "Amina Mohammed AbdElnaser Mohammed 9",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -16185,6 +16240,7 @@
         "communicationScore": 6
       },
       "motivation": "اكتساب مهاره العمل الجماعي وتوسيع شبكه علاقاتي",
+      "notifiedAt": "2026-11-01T14:48:43.297Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -16314,6 +16370,7 @@
       "slotId": "slot_264_mvl1awj9",
       "faculty": "السياسه والاقتصاد",
       "fullName": "Zyad sameh samir",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -16342,6 +16399,7 @@
         "communicationScore": 7
       },
       "motivation": "الفضول لما يمكن ان تئول اليه الامور",
+      "notifiedAt": "2026-11-01T14:48:51.552Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "booked",
@@ -16743,8 +16801,9 @@
       "slotId": "slot_373_mvl257w6",
       "faculty": "سياسه واقتصاد",
       "fullName": "yahia anwer Abdelfathi Meshref",
+      "notified": true,
       "priority": 1,
-      "roleType": null,
+      "roleType": "member",
       "slotInfo": {
         "date": "2026-10-24",
         "type": "online",
@@ -16761,8 +16820,8 @@
         "notes": "",
         "score": 6,
         "attended": true,
-        "decision": "pending",
-        "evaluatedAt": "2026-10-25T10:36:29.116Z",
+        "decision": "accepted",
+        "evaluatedAt": "2026-11-01T16:18:07.441Z",
         "englishScore": 4,
         "knowledgeScore": 7,
         "commitmentScore": 7,
@@ -16771,10 +16830,11 @@
         "communicationScore": 5
       },
       "motivation": "احب اكتساب الخبره",
+      "notifiedAt": "2026-11-01T15:24:17.151Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
-      "subDepartment": null,
+      "subDepartment": "media",
       "allPreferences": "الشئون الأمريكية، التعاون الاقتصادي متعدد الأطراف والإقليمي، البحث والتقديرات والتخطيط السياسي وإدارة الأزمات",
       "pastActivities": "نعم، كعضو في فريق",
       "referralSource": "اتحاد الطلاب أو الأنشطة الطلابية",
@@ -16783,6 +16843,7 @@
       "interviewStatus": "completed",
       "trackPreference": "الإعلامي",
       "transferHistory": [],
+      "delegatePassword": "1234",
       "activitiesDetails": "كنت عضو ف الإذاعه المدرسيه",
       "reasonsForSectors": "نا بحب اتكلم مع الناس وتكوين علاقات",
       "weeklyEvaluations": {},
@@ -16958,6 +17019,7 @@
       "slotId": "slot_274_mvl1nye3",
       "faculty": "سياسة و اقتصاد",
       "fullName": "Fatma Mohamed desoky Ibrahim",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -16986,6 +17048,7 @@
         "communicationScore": 8
       },
       "motivation": "اهتم بأن اكتسب الخبرات التي سوف تساعدني في مجالي الدراسي و قريبا في مجالي المهني",
+      "notifiedAt": "2026-11-01T14:49:04.455Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "booked",
@@ -17017,6 +17080,7 @@
       "slotId": "slot_275_mvl1nye3",
       "faculty": "سياسه واقتصاد",
       "fullName": "Mai hossam mahdy ali",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -17045,6 +17109,7 @@
         "communicationScore": 6
       },
       "motivation": "اكتساب الخبره",
+      "notifiedAt": "2026-11-01T14:49:15.105Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -17134,6 +17199,7 @@
       "slotId": "slot_288_mvl1bux5",
       "faculty": "اقتصاد و علوم سياسية",
       "fullName": "Salman Mohammad Elsayed Elsharkawy",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -17162,6 +17228,7 @@
         "communicationScore": 7
       },
       "motivation": "للتعلم واكتساب الخبرات",
+      "notifiedAt": "2026-11-01T14:49:25.877Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -17451,6 +17518,7 @@
       "slotId": "slot_296_mvl1p4m8",
       "faculty": "سياسة واقتصاد",
       "fullName": "Dina Abdalziz AL boraie",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -17479,6 +17547,7 @@
         "communicationScore": 6
       },
       "motivation": "نموذج مهم و حابه اشارك فيه كتجربة جديدة",
+      "notifiedAt": "2026-11-01T14:49:39.301Z",
       "university": "جامعة السويس",
       "englishLevel": "مبتدئ",
       "bookingStatus": "completed",
@@ -17684,6 +17753,7 @@
       "slotId": "slot_380_mvl2goae",
       "faculty": "الاعلام وتكنولوچيا الاتصال",
       "fullName": "Malak Wael Ezzat Ramadan",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -17712,6 +17782,7 @@
         "communicationScore": 10
       },
       "motivation": "مهتمة بالأنشطة الطلابية وتعلم المهارات والتجارب المفيدة",
+      "notifiedAt": "2026-11-01T15:24:33.800Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -17768,6 +17839,7 @@
       "slotId": "slot_365_mvl2fo7f",
       "faculty": "كلية الآداب، قسم اللغة الانجليزية والترجمة الفورية",
       "fullName": "Mennat Allah Sayed Mohamed Abd-Eldaiem",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -17793,6 +17865,7 @@
         "communicationScore": 9
       },
       "motivation": "يدفعني إلى التقديم لعضوية نموذج محاكاة وزارة الخارجية المصرية إيماني بأهمية إعداد جيل واعٍ بالقضايا الدولية، وقادر على فهم التحديات السياسية والتعامل معها بمنهجية وموضوعية، إلى جانب رغبتي في الانتقال من المعرفة الأكاديمية إلى التطبيق العملي من خلال محاكاة بيئة العمل الدبلوماسي.\n\nأسعى من خلال هذه التجربة إلى اكتساب فهم أعمق لآليات العمل بوزارة الخارجية، وتطوير مهاراتي في البحث والتحليل السياسي، وصياغة المواقف، والحوار والتفاوض، والعمل الجماعي، والتعامل مع القضايا الدولية من وجهات نظر متعددة.\n\nكما أطمح إلى توظيف خلفيتي في اللغة الإنجليزية والترجمة في تعزيز قدرتي على التواصل بين الثقافات وفهم الخطاب السياسي والدبلوماسي، بما يخدم هدفي المهني في التخصص في الترجمة الدبلوماسية والمشاركة مستقبلًا في مجالات التعاون والعمل الدولي.\n\nوأتطلع إلى أن تكون عضويتي في النموذج تجربة حقيقية للتعلم والمسؤولية، أستطيع من خلالها تبادل المعرفة مع زملائي، وتوسيع آفاقي الفكرية، وتنمية قدراتي البحثية والقيادية، والمساهمة بجدية في الأنشطة والمناقشات التي يقدمها النموذج، انطلاقًا من قناعتي بأن الدبلوماسية تبدأ بالمعرفة، وتعتمد على الحوار، وتستهدف تحقيق المصالح الوطنية وتعزيز التفاهم بين الشعوب.",
+      "notifiedAt": "2026-11-01T15:30:21.046Z",
       "university": "جامعة السويس",
       "englishLevel": "متقدم",
       "bookingStatus": "completed",
@@ -17971,6 +18044,7 @@
       "slotId": "slot_289_mvl1bux5",
       "faculty": "السياسه والاقتصاد",
       "fullName": "Mohamed roshdy",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -17999,6 +18073,7 @@
         "communicationScore": 8
       },
       "motivation": "اكتساب الخبره في مجال السياسه",
+      "notifiedAt": "2026-11-01T14:50:49.556Z",
       "university": "جامعة السويس",
       "englishLevel": "مبتدئ",
       "bookingStatus": "completed",
@@ -18361,8 +18436,9 @@
       "slotId": "slot_364_mvl2fo7f",
       "faculty": "كلية الطب البشري",
       "fullName": "Abdo Mohamed Abdo Abdo",
+      "notified": true,
       "priority": 1,
-      "roleType": "member",
+      "roleType": "delegate",
       "slotInfo": {
         "date": "2026-10-28",
         "type": "offline",
@@ -18389,10 +18465,11 @@
         "communicationScore": 10
       },
       "motivation": "المشاركه في الفعاليات والأحداث السياسيه",
+      "notifiedAt": "2026-11-01T15:49:38.142Z",
       "university": "جامعة السويس",
       "englishLevel": "متقدم",
       "bookingStatus": "completed",
-      "subDepartment": "academic",
+      "subDepartment": null,
       "allPreferences": "الشئون الأمريكية، التعاون الاقتصادي متعدد الأطراف والإقليمي، المناخ والبيئة والتنمية المستدامة",
       "pastActivities": "نعم، في منصب قيادي",
       "referralSource": "اتحاد الطلاب أو الأنشطة الطلابية",
@@ -18478,6 +18555,7 @@
       "slotId": "slot_284_mvl1bux5",
       "faculty": "سياسة واقتصاد",
       "fullName": "Mariam mohamed ali eldebsy",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -18506,6 +18584,7 @@
         "communicationScore": 8
       },
       "motivation": "رغبة في اكتساب مهارة وخبرة",
+      "notifiedAt": "2026-11-01T14:50:58.460Z",
       "university": "جامعة السويس",
       "englishLevel": "مبتدئ",
       "bookingStatus": "booked",
@@ -18926,6 +19005,7 @@
       "slotId": "slot_292_mvl1bux5",
       "faculty": "سياسه واقتصاد",
       "fullName": "‏mohamed khaled abdeltawab",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -18954,6 +19034,7 @@
         "communicationScore": 8
       },
       "motivation": "الخبره وممارسة المحاكاه للتعلم والتعود على البروتوكولات",
+      "notifiedAt": "2026-11-01T14:51:10.426Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -18985,6 +19066,7 @@
       "slotId": "slot_287_mvl1bux5",
       "faculty": "كلية سياسة و اقتصاد",
       "fullName": "Amira alaa abdullah",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -19013,6 +19095,7 @@
         "communicationScore": 9
       },
       "motivation": "اكتساب الخبرات ، اكتشاف بيئة العمل ، المشاركة لأننى احب ان اكون جزء من المكان الذى اخترته و التجربة الجديد حيث أن هذه أول مرة لى فى المشاركة فى نشاط",
+      "notifiedAt": "2026-11-01T14:51:19.358Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -19044,6 +19127,7 @@
       "slotId": "slot_368_mvl2fo7f",
       "faculty": "كليه السياسه والاقتصاد",
       "fullName": "Mina Fawzy Fahmy",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -19069,6 +19153,7 @@
         "communicationScore": 4
       },
       "motivation": "لكسب المعلومات والتطلع علي الخبرات الجديده وتجربه النموذج",
+      "notifiedAt": "2026-11-01T15:24:56.443Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -19158,6 +19243,7 @@
       "slotId": "slot_291_mvl1p4m8",
       "faculty": "سياسة واقتصاد",
       "fullName": "Menna Elsayed Elarby Mohamed",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -19186,6 +19272,7 @@
         "communicationScore": 6
       },
       "motivation": "عشان اكتسب خبرة",
+      "notifiedAt": "2026-11-01T14:51:28.849Z",
       "university": "جامعة السويس",
       "englishLevel": "مبتدئ",
       "bookingStatus": "completed",
@@ -19217,6 +19304,7 @@
       "slotId": "slot_367_mvl2ablf",
       "faculty": "كليه السياسه والاقتصاد",
       "fullName": "Abdalrhman Ahmed Attia Ahmed",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -19245,6 +19333,7 @@
         "communicationScore": 10
       },
       "motivation": "لدي شغف بالدبلوماسيه والشؤون الخارجيه وارى في هذه الفرصه بأنضمامي كعضو فرصه لصقل شغفي",
+      "notifiedAt": "2026-11-01T15:25:57.503Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -21500,6 +21589,7 @@
       "slotId": "slot_404_mvl4iv2u",
       "faculty": "كلية التجارة شعبه إنجليزية- جامعة القاهرة",
       "fullName": "Haya Khalil Younis Khalil Hemida",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -21528,6 +21618,7 @@
         "communicationScore": 7
       },
       "motivation": "يدفعني للتقديم رغبتي الحقيقية في خوض تجربة محاكاة واقعية تصقل مهاراتي في العمل الدبلوماسي والتفاوض والتحليل الاقتصادي والسياسي.",
+      "notifiedAt": "2026-11-01T14:51:44.192Z",
       "university": "جامعة أخرى",
       "englishLevel": "متقدم",
       "bookingStatus": "completed",
@@ -21938,6 +22029,7 @@
       "slotId": "slot_265_mvl1awj9",
       "faculty": "القانون",
       "fullName": "Mohamed Ayman Hassan Hassan Mohamed Elmahdy",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -21966,6 +22058,7 @@
         "communicationScore": 9
       },
       "motivation": "ما يدفعني للتقديم لعضوية نموذج محاكاة وزارة الخارجية بجامعة السويس هو رغبتي الحقيقية في خوض تجربة أتعلم منها وأتطور من خلالها، وليس مجرد الانضمام إلى كيان طلابي من أجل الصور أو المظاهر أو إضافة تجربة جديدة إلى سيرتي الذاتية. أبحث عن بيئة جادة تجمع أشخاصًا يمتلكون شغفًا مشابهًا لشغفي بالدبلوماسية والعلاقات الدولية والشؤون الأفريقية والتعاون الدولي، وتتيح لي تبادل الأفكار والخبرات معهم، والتعلم من تجاربهم ووجهات نظرهم المختلفة، لأنني أؤمن بأن جزءًا كبيرًا من التطور الحقيقي يأتي من الأشخاص الذين نتشارك معهم الأهداف والطموحات.\n\nوخلال الفترة الماضية، حرصت على استثمار وقتي في التدريبات والمؤتمرات والمحاكاة والأنشطة الطلابية التي ساعدتني على بناء معرفتي وتطوير مهاراتي، وأرى أن الخطوة الأهم الآن هي ألا تظل هذه الخبرات مجرد معلومات أو شهادات أحتفظ بها، بل أن أجد مساحة حقيقية لتطبيقها واختبار قدراتي وتطويرها من خلال العمل الجماعي والبحث والنقاش والتفاوض وصناعة المواقف.\n\nكما أطمح إلى أن أكون عضوًا يضيف إلى النموذج بقدر ما يستفيد منه، من خلال توظيف خبراتي السابقة، والمشاركة الفعالة في أنشطته، وتبادل المعرفة مع زملائي، والمساهمة في تحقيق أهدافه. بالنسبة لي، قيمة هذه التجربة لا تُقاس بمجرد الحصول على العضوية، بل بما سأتعلمه، وما سأقدمه، وكيف سأوظف كل ذلك في خطواتي الأكاديمية والمهنية المستقبلية.\n\nأنا أتقدم لأنني أريد أن أكون جزءًا من تجربة تصنع فارقًا حقيقيًا في شخصيتي وقدراتي، وأن أساهم في صنع هذا الفارق للآخرين أيضًا، لا أن أكون مجرد اسم ضمن أعضاء النموذج.",
+      "notifiedAt": "2026-11-01T14:51:55.393Z",
       "university": "جامعة أخرى",
       "englishLevel": "متقدم",
       "bookingStatus": "completed",
@@ -21997,6 +22090,7 @@
       "slotId": null,
       "faculty": "كلية لغات وترجمه قسم اسباني",
       "fullName": "Ahmed Mohammed Ahmed fouad",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": null,
@@ -22016,6 +22110,7 @@
         "communicationScore": 5
       },
       "motivation": "يدفعني إلى التقديم اهتمامي بالعلاقات الدولية والعمل الدبلوماسي، ورغبتي في فهم القضايا السياسية والإقليمية بشكل أعمق. كما أطمح إلى تطوير مهاراتي في البحث والتحليل والتفاوض، والاستفادة من هذه التجربة في بناء مساري المهني في مجال العلاقات الدولية والمنظمات الدولية.",
+      "notifiedAt": "2026-11-01T14:52:08.275Z",
       "university": "جامعة أخرى",
       "englishLevel": "متوسط",
       "bookingStatus": "pending",
@@ -22270,6 +22365,7 @@
       "slotId": "slot_403_mvl4iv2u",
       "faculty": "كلية الآداب والعلوم  الإنسانية  قسم اللغه الصينية",
       "fullName": "Soha Mohamed Ahmed Karar",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -22298,6 +22394,7 @@
         "communicationScore": 7.5
       },
       "motivation": "يدفعني إلى التقديم لعضوية نموذج وزارة الخارجية شغفي بالعلاقات الدولية والدبلوماسية، ورغبتي في فهم كيفية إدارة العلاقات بين الدول والتعامل مع القضايا الإقليمية والدولية. وبصفتي طالبة في قسم اللغة الصينية، أطمح إلى الاستفادة من دراستي للغة والثقافة الصينية في تعزيز التواصل الثقافي والتفاهم بين الشعوب، وخاصة بين مصر والصين. كما أسعى إلى تطوير مهاراتي في البحث والتحليل والتفاوض والعمل الجماعي، واكتساب خبرات عملية تساعدني على تحقيق هدفي المهني في العمل بمجال الدبلوماسية والعلاقات الدولية، والمساهمة بصورة إيجابية في تمثيل بلدي.",
+      "notifiedAt": "2026-11-01T14:52:24.546Z",
       "university": "جامعة أخرى",
       "englishLevel": "إجادة تامة أو شبه تامة",
       "bookingStatus": "completed",
@@ -22853,6 +22950,7 @@
       "slotId": "slot_268_mvl1awj9",
       "faculty": "كلية التجارة",
       "fullName": "Abdulrahman Mohamed Ahmed Ismail Algendi",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -22881,6 +22979,7 @@
         "communicationScore": 8
       },
       "motivation": "اكتساب الخبرات والمهارات التي تضعني على اول طريق العمل الدبلوماسي",
+      "notifiedAt": "2026-11-01T14:52:35.755Z",
       "university": "جامعة أخرى",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -23849,6 +23948,7 @@
       "slotId": "slot_274_mvl1awja",
       "faculty": "حقوق بنها",
       "fullName": "Asmaa Ahmed Ahmed Hussain",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -23874,6 +23974,7 @@
         "communicationScore": 3
       },
       "motivation": "الاكتساب الخبرات",
+      "notifiedAt": "2026-11-01T14:52:48.567Z",
       "university": "جامعة أخرى",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -25199,6 +25300,7 @@
       "slotId": "slot_385_mvl26oa6",
       "faculty": "صيدله وتصنيع دوائى",
       "fullName": "Randa elsayed abdou mohamed",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -25227,6 +25329,7 @@
         "communicationScore": 5
       },
       "motivation": "ما يدفعني للتقدم لهذا النموذج هو رغبتي في تطوير نفسي على المستويين الشخصي والمهني، وتوسيع معرفتي بالقضايا السياسية والعلاقات الدولية والتنمية المستدامة. ومن خلال خلفيتي كصيدلانية وخبرتي في الإدارة الصحية والعمل بالمكتب الفني لمساعد وزير الصحة، أدركت أهمية الربط بين المعرفة العلمية والتخطيط الاستراتيجي وصناعة القرار. وأسعى إلى الاستفادة من هذا النموذج لاكتساب خبرات جديدة، والتفاعل مع أشخاص لديهم اهتمامات متنوعة، وتطوير قدراتي القيادية والتحليلية، بما يمكنني من المساهمة بصورة أكثر فاعلية في خدمة المجتمع ودعم مسيرة التنمية في مصر",
+      "notifiedAt": "2026-11-01T15:26:50.735Z",
       "university": "جامعة أخرى",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -25628,6 +25731,7 @@
       "slotId": "slot_388_mvl26oa6",
       "faculty": "Faculty of Economics studies and Political sciences",
       "fullName": "Menna Mansour Ahmed Abdullah",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -25656,6 +25760,7 @@
         "communicationScore": null
       },
       "motivation": "To gain experience in my field",
+      "notifiedAt": "2026-11-01T15:28:50.781Z",
       "university": "جامعة أخرى",
       "englishLevel": "إجادة تامة أو شبه تامة",
       "bookingStatus": "completed",
@@ -26119,6 +26224,7 @@
       "slotId": "slot_378_mvl257w6",
       "faculty": "كليه اعلام",
       "fullName": "Hagar Khalil Hassan Ibrahim",
+      "notified": true,
       "priority": 3,
       "roleType": "member",
       "slotInfo": {
@@ -26147,6 +26253,7 @@
         "communicationScore": 7
       },
       "motivation": "رغبتى في الخروج من حدود الدراسه وخوض تجربه حقيقيه تساعدنى على اكتشاف قدراتى وتطوير نفسى",
+      "notifiedAt": "2026-11-01T15:35:16.641Z",
       "university": "جامعة أخرى",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "booked",
@@ -28109,6 +28216,7 @@
       "slotId": "slot_417_mvl4iv2u",
       "faculty": "Faculty of business \"Ain Shams University\"",
       "fullName": "Ahmed Hamdy Hassanein Abdel Halim",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -28137,6 +28245,7 @@
         "communicationScore": 6
       },
       "motivation": "I am interested in diplomatic work and i think this simulation will help me to gain more experience about diplomatic work",
+      "notifiedAt": "2026-11-01T14:53:02.681Z",
       "university": "جامعة أخرى",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -29140,6 +29249,7 @@
       "slotId": "slot_275_mvl1awja",
       "faculty": "Faculty of Law",
       "fullName": "Manar Rabei Abdurahman",
+      "notified": true,
       "priority": 3,
       "roleType": "member",
       "slotInfo": {
@@ -29168,6 +29278,7 @@
         "communicationScore": 8
       },
       "motivation": "اكتساب المعرفه وتنميه مهارتي حتي لا يعتمد كل علم تلقيته علي ان يكون أكاديمية فقت فهي فرصه ومساحه لعرض الافكار ومشاريع  البحثيه ومعرفه الواقع العملي للعمل في المؤسسات والقطاعات السياسيه في جميع  المجالات وفتح باب اخر لانخراطي في المجتمع الذي اسعي عليه وتعلم من وجهات النظر المختلفه الذي نخضع لها بالعمل كفريق",
+      "notifiedAt": "2026-11-01T14:53:19.887Z",
       "university": "جامعة أخرى",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "booked",
@@ -29852,6 +29963,7 @@
       "slotId": "slot_384_mvl26oa6",
       "faculty": "Al Alsun",
       "fullName": "Fares Imam Al Bakly Badr",
+      "notified": true,
       "priority": 3,
       "roleType": "member",
       "slotInfo": {
@@ -29880,6 +29992,7 @@
         "communicationScore": 10
       },
       "motivation": "يدفعني للتقديم رغبتي في تحويل المعرفه النظريه اللتي اعرفها إلى ممارسة عملية تساعدني على فهم آليات العمل الدبلوماسي وصنع السياسة الخارجية بشكل أعمق كما أطمح إلى تطوير مهاراتي في التحليل السياسي والبحث وإدارة النقاشات المتعلقة بالقضايا الدولية، واكتساب القدرة على التعامل مع الملفات السياسية من زوايا مختلفة. وأرى أن النموذج فرصة حقيقية لتوسيع مداركي، واختبار قدراتي، والمشاركة بفاعلية في بيئة تحاكي طبيعة العمل الدبلوماسي، بما يساعدني على بناء خبرة تتوافق مع طموحي الأكاديمي والمهني في مجال العلاقات الدولية.",
+      "notifiedAt": "2026-11-01T15:27:38.066Z",
       "university": "جامعة أخرى",
       "englishLevel": "إجادة تامة أو شبه تامة",
       "bookingStatus": "completed",
@@ -30299,6 +30412,7 @@
       "slotId": "slot_418_mvl4iv2u",
       "faculty": "كلية الإدارة والاقتصاد والعلوم السياسية",
       "fullName": "Mohab Mahmoud Ibrahim Fadl",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -30327,6 +30441,7 @@
         "communicationScore": 8
       },
       "motivation": "ما يدفعني للانضمام لنموذج محاكاة وزارة الخارجية بجامعة السويس هو البحث عن تجربة دبلوماسية متكاملة تجمع بين العمق الأكاديمي والتدريب الميداني.\nأمتلك شغفاً كبيراً بفهم كواليس صنع القرار الخارجي، وطرق إدارة الأزمات الإقليمية والدولية، وكيفية إعداد المذكرات الأوراق السياسية (Policy Papers) والمفاوضات متعددة الأطراف. كما أنني أرى في نموذج جامعة السويس بيئة خصبة وتبادلاً معرفياً ممتازاً يتيح لي الاحتكاك بخبرات أكاديمية وشبابية متميزة، وتطوير أدواتي الدبلوماسية بما يخدم مساري الأكاديمي والمهني.",
+      "notifiedAt": "2026-11-01T14:55:52.346Z",
       "university": "جامعة أخرى",
       "englishLevel": "متوسط",
       "bookingStatus": "booked",
@@ -30475,6 +30590,7 @@
       "slotId": "slot_423_mvl4iv2u",
       "faculty": "Law",
       "fullName": "Menna Allah Haythem Abd El Hamied Hassan",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -30503,6 +30619,7 @@
         "communicationScore": 6
       },
       "motivation": "اطور من نفسي واكتسب خبره واعرف اكتر عن المجالات المرتبطه بدراستي",
+      "notifiedAt": "2026-11-01T14:56:26.457Z",
       "university": "جامعة أخرى",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -30534,6 +30651,7 @@
       "slotId": "slot_381_mvl26oa6",
       "faculty": "حقوق شعبة اللغة الإنجليزية",
       "fullName": "Fahd Mohamed Raafat Ahmed Al Khuraibi",
+      "notified": true,
       "priority": 3,
       "roleType": "member",
       "slotInfo": {
@@ -30562,6 +30680,7 @@
         "communicationScore": 9
       },
       "motivation": "يدفعني للتقديم شغفي الكبير بالعمل الدبلوماسي.",
+      "notifiedAt": "2026-11-01T15:50:43.131Z",
       "university": "جامعة أخرى",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -30856,6 +30975,7 @@
       "slotId": "slot_424_mvl4iv2u",
       "faculty": "Faculty of Sharià and Law English Section",
       "fullName": "Sara Ashraf Khalil Hassan Elshiekh",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -30884,6 +31004,7 @@
         "communicationScore": 6
       },
       "motivation": "يدفعني إلى التقديم رغبتي في خوض تجربة تحاكي العمل الفعلي داخل وزارة الخارجية، وتطبيق ما اكتسبته من مهارات الترافع والبحث والتفاوض في إطار دبلوماسي. شاركتُ في مسابقات دولية للتحكيم وفي نماذج محاكاة قضائية، وتعلمتُ منها العمل ضمن فريق وصياغة المواقف وعرضها بإقناع. وأرى في النموذج فرصة لتنمية فهمي لآليات صنع القرار في السياسة الخارجية، وصقل مهاراتي في التحليل السياسي وإعداد الأوراق والتقديرات، والتعرف على زملاء يشاركونني الاهتمام نفسه، بما يدعم مسيرتي الأكاديمية والمهنية.",
+      "notifiedAt": "2026-11-01T14:57:38.613Z",
       "university": "جامعة أخرى",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -31548,6 +31669,7 @@
       "slotId": "slot_410_mvl4iv2u",
       "faculty": "طب الأسنان",
       "fullName": "Salma Ali Mohamed Ahmed",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -31576,6 +31698,7 @@
         "communicationScore": 7
       },
       "motivation": "أولًا لأني عايزة أعيش تجربة اني أكون في وزارة الخارجية، لأني بحب أجرب حاجات جديدة، و دي بالنسبة لي تجربة جديدة. ده غير اني حد اجتماعي، و بحب أتعرف على ناس مختلفة عني، فحابة أتعرف على ناس جديدة. أنا حابة كمان أطور مهاراتي زي الدبلوماسية و التفاوض، و حابة اتعرف على قضايا جديدة.",
+      "notifiedAt": "2026-11-01T14:58:26.226Z",
       "university": "جامعة أخرى",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -32474,6 +32597,7 @@
       "slotId": "slot_376_mvl257w6",
       "faculty": "كلية التربية النوعية جامعة عين شمس",
       "fullName": "Marwa Maher Abdelhaleim marouf",
+      "notified": true,
       "priority": 3,
       "roleType": "member",
       "slotInfo": {
@@ -32502,6 +32626,7 @@
         "communicationScore": 10
       },
       "motivation": "لدى شغف بالتعلم والممارسة العمليه والتدريب على العلاقات الدولية والاقتصاديه وتعلم المزيد من الخبرات المختلفه والتأثر بها وإنتاج مخرجات وحلول جديده ومتنوعه",
+      "notifiedAt": "2026-11-01T15:50:06.820Z",
       "university": "جامعة أخرى",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "booked",
@@ -32640,6 +32765,7 @@
       "slotId": "slot_409_mvl4iv2u",
       "faculty": "Faculty of Law, Beni Suef University – English Section",
       "fullName": "Mariam Mahmoud Helmy AbdElAziz",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -32668,6 +32794,7 @@
         "communicationScore": 7
       },
       "motivation": "I am applying because I want to gain practical experience in diplomacy and international relations and take a step toward my long-term career goals. Through my legal studies, moot court competitions, and Model United Nations experience, I have developed an interest in understanding how countries negotiate, protect their interests, and cooperate to address shared challenges.\n\nI want to expand my knowledge beyond the legal field, particularly in international economic cooperation and the role of technology in diplomacy. I see this model as an opportunity to strengthen my research, critical thinking, communication, and teamwork skills while learning from others and contributing to meaningful discussions on regional and international issues.",
+      "notifiedAt": "2026-11-01T15:05:36.533Z",
       "university": "جامعة أخرى",
       "englishLevel": "إجادة تامة أو شبه تامة",
       "bookingStatus": "completed",
@@ -32699,6 +32826,7 @@
       "slotId": "slot_506_mvtg4up8",
       "faculty": "آداب",
       "fullName": "Rewaa Abualsoud Kamal Abualsoud",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -32724,6 +32852,7 @@
         "communicationScore": 7
       },
       "motivation": "يدفعني للتقديم شغفي بالتطوير الذاتي والتعلم المستمر والرغبة في التواجد ضم بيئة تفاعلية تتيح لي تبادل الخبرات والمعارف مع أفراد يشاركونني نفس الاهتمامات بالإضافة إلى تطوير مهارتي القيادية والعمل الجماعي.",
+      "notifiedAt": "2026-11-01T15:06:04.925Z",
       "university": "جامعة أخرى",
       "englishLevel": "متقدم",
       "bookingStatus": "booked",
@@ -32919,6 +33048,7 @@
       "slotId": "slot_433_mvlbwje3",
       "faculty": "Business, English Section, Economics Department",
       "fullName": "Amani Mohammed Khedr",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -32944,6 +33074,7 @@
         "communicationScore": 7
       },
       "motivation": "I admire its work and would like to be a memeber and do beyond my best to achieve any of its decleared aims!",
+      "notifiedAt": "2026-11-01T15:07:40.720Z",
       "university": "جامعة أخرى",
       "englishLevel": "متقدم",
       "bookingStatus": "completed",
@@ -33365,8 +33496,9 @@
       "slotId": "slot_386_mvl26oa6",
       "faculty": "الحقوق",
       "fullName": "Toka Raafat Muhammad Hassan Ali Ayyad",
+      "notified": true,
       "priority": 3,
-      "roleType": "member",
+      "roleType": "delegate",
       "slotInfo": {
         "date": "2026-10-28",
         "type": "online",
@@ -33393,10 +33525,11 @@
         "communicationScore": 8
       },
       "motivation": "رغبتي الشديدة في تطوير ذاتي والخروج من منطقة الراحة (Comfort Zone)، بالإضافة إلى البيئة المحفزة والتطويرية التي يقدمها نموذج MOFA Lotus. يدفعني أيضاً شغفي بترك أثر إيجابي، وبناء شبكة علاقات مع أفراد يشاركونني نفس الشغف والتطلع للنمو.",
+      "notifiedAt": "2026-11-01T15:43:32.340Z",
       "university": "جامعة أخرى",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
-      "subDepartment": "academic",
+      "subDepartment": null,
       "allPreferences": "الشئون الأمريكية، التعاون الاقتصادي متعدد الأطراف والإقليمي، المناخ والبيئة والتنمية المستدامة، الشئون متعددة الأطراف والأمن الدولي",
       "pastActivities": "لا، لكنني مهتم باكتساب الخبرة",
       "referralSource": "صفحة النموذج على مواقع التواصل الاجتماعي",
@@ -33809,6 +33942,7 @@
       "slotId": "slot_407_mvl4iv2u",
       "faculty": "Political science and economics",
       "fullName": "Mostafa adel Mohamed ahmad",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -33837,6 +33971,7 @@
         "communicationScore": 5
       },
       "motivation": "اكتساب المهارات والخبرات والتي هي في مجال دراستي الأكاديمي",
+      "notifiedAt": "2026-11-01T15:08:30.517Z",
       "university": "جامعة أخرى",
       "englishLevel": "متوسط",
       "bookingStatus": "completed",
@@ -33868,6 +34003,7 @@
       "slotId": "slot_425_mvl4iv2u",
       "faculty": "الطب البشري",
       "fullName": "Mohamed Osama Lotfi Elshourbagy",
+      "notified": true,
       "priority": 3,
       "roleType": "delegate",
       "slotInfo": {
@@ -33896,6 +34032,7 @@
         "communicationScore": 7
       },
       "motivation": "متعلمو اليوم هم قادة الغد، لذلك وانا أود أن أكون قائد مجتمعي ناجح و سياسي مخضرم مستقبلا فأريد ان أتقدم لعل اكتسب من الخبرة و العلاقات و التبادل المعرفي ما يساعدني علي هذا .",
+      "notifiedAt": "2026-11-01T15:08:50.924Z",
       "university": "جامعة أخرى",
       "englishLevel": "متقدم",
       "bookingStatus": "completed",
@@ -34191,6 +34328,7 @@
       "slotId": "slot_380_mvl257w6",
       "faculty": "سياسه و اقتصاد",
       "fullName": "Mariem Mohamed",
+      "notified": true,
       "priority": 1,
       "roleType": "member",
       "slotInfo": {
@@ -34219,6 +34357,7 @@
         "communicationScore": 9
       },
       "motivation": "تمت الإضافة يدوياً من لوحة التحكم",
+      "notifiedAt": "2026-11-01T15:27:18.931Z",
       "university": "جامعة السويس",
       "englishLevel": "متوسط",
       "bookingStatus": "booked",
@@ -34302,6 +34441,7 @@
       "slotId": "slot_377_mvl2goae",
       "faculty": "Faculty of petroleum and mining engineering",
       "fullName": "Ismail Saeed",
+      "notified": true,
       "priority": 1,
       "roleType": "delegate",
       "slotInfo": {
@@ -34327,6 +34467,7 @@
         "communicationScore": 9
       },
       "motivation": "Delegate ",
+      "notifiedAt": "2026-11-01T15:27:08.541Z",
       "university": "جامعة السويس",
       "englishLevel": "فوق المتوسط",
       "bookingStatus": "completed",
@@ -34814,7 +34955,8 @@
       "password": "mofa1234",
       "shortName": "الأمن الدولي",
       "description": "المنظمات الدولية، الأمم المتحدة، قضايا حفظ السلام ونزع السلاح والأمن الإقليمي",
-      "headUsername": "security_head"
+      "headUsername": "security_head",
+      "whatsappGroupLink": "https://chat.whatsapp.com/Cr5CLbp8F5e59t1rYXlkLU?s=cl&p=i&mlu=4&ilr=4&iam=2"
     },
     {
       "id": "arab",
@@ -34879,7 +35021,8 @@
       "password": "mofa1234",
       "shortName": "الشئون الأمريكية",
       "description": "العلاقات الاستراتيجية الثنائية مع الولايات المتحدة الأمريكية ودول الأمريكتين",
-      "headUsername": "american_head"
+      "headUsername": "american_head",
+      "whatsappGroupLink": "https://chat.whatsapp.com/Ib4jMnmrW2w1zAuoDkv2w1?s=cl&p=a&mlu=4&ilr=4&iam=2"
     },
     {
       "id": "africa",

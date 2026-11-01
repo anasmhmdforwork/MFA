@@ -451,11 +451,18 @@
           error.value = null;
 
           try {
-            const res = await fetch('/api/delegate/my-profile');
+            const urlParams = new URLSearchParams(window.location.search);
+            const candId = urlParams.get('id') || localStorage.getItem('mfa_delegate_id');
+            const url = '/api/delegate/my-profile' + (candId ? '?id=' + encodeURIComponent(candId) : '');
+            
+            const res = await fetch(url);
             const data = await res.json();
 
             if (res.ok && data.success) {
               candidate.value = data.candidate;
+              if (data.candidate && data.candidate.id) {
+                localStorage.setItem('mfa_delegate_id', data.candidate.id);
+              }
             } else {
               error.value = data.message || 'يرجى تسجيل الدخول لعرض الملف الشخصي';
               // If unauthorized, redirect to login after a brief moment
@@ -485,6 +492,11 @@
         };
 
         const logout = async () => {
+          localStorage.removeItem('mofa_user');
+          localStorage.removeItem('mofa_role');
+          localStorage.removeItem('mfa_delegate_id');
+          document.cookie = "mfa_user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie = "mfa_delegate_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           try {
             await fetch('/api/auth/logout');
           } catch (e) {
