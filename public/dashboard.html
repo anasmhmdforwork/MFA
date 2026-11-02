@@ -3482,7 +3482,7 @@
           <!-- Action Buttons -->
           <div class="flex items-center gap-2.5 flex-wrap flex-shrink-0">
             <button 
-              @click="openCreateSessionModal"
+              @click="openCreateSessionModal()"
               class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black transition flex items-center gap-2 shadow-md cursor-pointer"
             >
               <i data-lucide="plus-circle" class="w-4 h-4"></i>
@@ -3622,7 +3622,7 @@
             </div>
             <h4 class="text-sm font-black text-white mb-1">لم يتم جدول أي أيام تشغيلية لهذا الشهر حتى الآن</h4>
             <p class="text-xs text-slate-400 mb-4">اضغط على زر إضافة يوم تشغيلي لتحديد خطة المحاضرات واحتياج الكوادر وتكليفات الأعضاء</p>
-            <button @click="openCreateSessionModal" class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-1.5 cursor-pointer">
+            <button @click="openCreateSessionModal()" class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-1.5 cursor-pointer">
               <i data-lucide="plus" class="w-4 h-4"></i>
               <span>إضافة يوم تشغيلي الآن</span>
             </button>
@@ -6874,6 +6874,266 @@
       </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- MODAL: CREATE OPERATIONS SESSION (يوم تشغيلي)    -->
+    <!-- ============================================== -->
+    <div v-if="showCreateSessionModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 text-right">
+      <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-5 sm:p-7 max-w-lg w-full max-h-[92vh] overflow-y-auto space-y-4 shadow-2xl text-slate-100">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30 shadow-inner">
+              <i data-lucide="calendar-plus" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-black text-white">إضافة يوم تشغيلي / محاضرة</h3>
+              <p class="text-xs text-amber-400/90 font-medium">جدولة فعاليات الخطة الشهرية وتوزيع احتياج الكوادر</p>
+            </div>
+          </div>
+          <button @click="showCreateSessionModal = false" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Form Body -->
+        <form @submit.prevent="createOperationsSession" class="space-y-4 text-xs">
+          
+          <!-- Date & Time -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-300 font-bold mb-1.5">تاريخ اليوم التشغيلي: *</label>
+              <input 
+                type="date" 
+                v-model="newSessionForm.date" 
+                required
+                class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white font-mono text-xs focus:outline-none transition"
+              >
+            </div>
+            <div>
+              <label class="block text-slate-300 font-bold mb-1.5">توقيت البدء: *</label>
+              <input 
+                type="time" 
+                v-model="newSessionForm.time" 
+                required
+                class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white font-mono text-xs focus:outline-none transition"
+              >
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">عنوان اليوم التشغيلي / موضوع المحاضرة: *</label>
+            <input 
+              type="text" 
+              v-model="newSessionForm.title" 
+              placeholder="مثال: محاضرة الدبلوماسية الوقائية وإدارة النزاعات الدولية" 
+              required
+              class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none transition"
+            >
+          </div>
+
+          <!-- Location -->
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">المقر / القاعة: *</label>
+            <input 
+              type="text" 
+              v-model="newSessionForm.location" 
+              placeholder="مثال: قاعة المؤتمرات الكبرى - مبنى كلية التجارة" 
+              required
+              class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none transition"
+            >
+          </div>
+
+          <!-- Sector & Required Members -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-300 font-bold mb-1.5">القطاع المسؤول: *</label>
+              <select 
+                v-model="newSessionForm.sector" 
+                class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none transition"
+              >
+                <option value="all">كافة القطاعات (مشترك)</option>
+                <option value="academic">القطاع الأكاديمي (Academic)</option>
+                <option value="organization">قطاع التنظيم والموارد البشرية (HR)</option>
+                <option value="media">قطاع الإعلام والعلاقات العامة (Media)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-300 font-bold mb-1.5">عدد الكوادر المطلوبة (أعضاء): *</label>
+              <input 
+                type="number" 
+                v-model.number="newSessionForm.requiredMembersCount" 
+                min="1" 
+                max="30"
+                required
+                class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white font-mono text-xs focus:outline-none transition"
+              >
+            </div>
+          </div>
+
+          <!-- Description / Agenda -->
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">تفاصيل وأجندة اليوم التشغيلي:</label>
+            <textarea 
+              v-model="newSessionForm.description" 
+              rows="3" 
+              placeholder="اكتب المحاور الرئيسية لليوم، المهام المطلوبة، والملاحظات التوجيهية للأعضاء..."
+              class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl p-3 text-white text-xs focus:outline-none transition resize-none"
+            ></textarea>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-800">
+            <button 
+              type="submit" 
+              class="btn-gold flex-1 py-2.5 px-4 rounded-xl text-xs font-black inline-flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            >
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>حفظ وإدراج في التقويم الشهري</span>
+            </button>
+            <button 
+              type="button" 
+              @click="showCreateSessionModal = false" 
+              class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition cursor-pointer"
+            >
+              إلغاء
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: ASSIGN OPERATIONS TASK (إسناد تكليف)      -->
+    <!-- ============================================== -->
+    <div v-if="showAssignTaskModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 text-right">
+      <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-5 sm:p-7 max-w-lg w-full max-h-[92vh] overflow-y-auto space-y-4 shadow-2xl text-slate-100">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30 shadow-inner">
+              <i data-lucide="user-check" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-black text-white">إسناد تكليف تشغيلي لعضو</h3>
+              <p class="text-xs text-amber-400/90 font-medium">تكليف الأعضاء وتوثيق الإنجاز ضمن مؤشر الأداء التراكمي</p>
+            </div>
+          </div>
+          <button @click="showAssignTaskModal = false" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Form Body -->
+        <form @submit.prevent="createOperationsTask" class="space-y-4 text-xs">
+          
+          <!-- Associated Session (Optional) -->
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">ربط باليوم التشغيلي / المحاضرة (اختياري):</label>
+            <select 
+              v-model="newTaskForm.sessionId" 
+              class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none transition"
+            >
+              <option :value="null">-- تكليف عام مستقل (غير مرتبط بمحاضرة محددة) --</option>
+              <option v-for="s in operationsSessions" :key="s.id" :value="s.id">
+                {{ s.date }} • {{ s.title }} ({{ s.time }})
+              </option>
+            </select>
+          </div>
+
+          <!-- Assignee Selection -->
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">اختيار العضو المكلف: *</label>
+            <select 
+              v-model="newTaskForm.assignedToCandidateId" 
+              required
+              class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none transition"
+            >
+              <option value="" disabled>-- اختر عضواً من الهيكل التنظيمي --</option>
+              <option v-for="mem in assignableMembers" :key="mem.id" :value="mem.id">
+                {{ mem.name }} • [{{ mem.diplomaticId || mem.id }}] - ({{ mem.subDepartment ? ('قطاع ' + mem.subDepartment) : 'عضو' }})
+              </option>
+            </select>
+            <p v-if="assignableMembers.length === 0" class="text-[11px] text-rose-400 mt-1">
+              لا يوجد أعضاء هيكل متاحين حالياً في هذا التصنيف.
+            </p>
+          </div>
+
+          <!-- Task Title -->
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">عنوان التكليف المطلوب: *</label>
+            <input 
+              type="text" 
+              v-model="newTaskForm.title" 
+              placeholder="مثال: إعداد الأسئلة التفاعلية وتسجيل حضور القاعة" 
+              required
+              class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none transition"
+            >
+          </div>
+
+          <!-- Due Date & Sector -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-300 font-bold mb-1.5">تاريخ الاستحقاق والتسليم: *</label>
+              <input 
+                type="date" 
+                v-model="newTaskForm.dueDate" 
+                required
+                class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white font-mono text-xs focus:outline-none transition"
+              >
+            </div>
+            <div>
+              <label class="block text-slate-300 font-bold mb-1.5">القطاع التابع له التكليف:</label>
+              <select 
+                v-model="newTaskForm.sector" 
+                class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none transition"
+              >
+                <option value="hr">التنظيم والموارد البشرية (HR)</option>
+                <option value="media">الإعلام والتغطية (Media)</option>
+                <option value="academic">الأكاديمي والتوثيق (Academic)</option>
+                <option value="organization">العمليات واللوجستيات</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">تفاصيل ومعايير تسليم التكليف:</label>
+            <textarea 
+              v-model="newTaskForm.description" 
+              rows="3" 
+              placeholder="اكتب المعايير والمخرجات المتوقعة من العضو بالتفصيل..."
+              class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl p-3 text-white text-xs focus:outline-none transition resize-none"
+            ></textarea>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-800">
+            <button 
+              type="submit" 
+              class="btn-gold flex-1 py-2.5 px-4 rounded-xl text-xs font-black inline-flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            >
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>إسناد التكليف فوراً وتنبيه العضو</span>
+            </button>
+            <button 
+              type="button" 
+              @click="showAssignTaskModal = false" 
+              class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition cursor-pointer"
+            >
+              إلغاء
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -9638,33 +9898,20 @@
 
         const loadOperationsCalendar = async () => {
           try {
-            const [sessRes, taskRes, memberRes] = await Promise.all([
-              fetch('/api/operations/sessions').then(r => r.json()).catch(() => ({ success: false })),
-              fetch('/api/operations/tasks').then(r => r.json()).catch(() => ({ success: false })),
-              fetch('/api/candidates?committeeId=all').then(r => r.json()).catch(() => ({ success: false }))
-            ]);
-
-            if (sessRes && sessRes.success) {
-              operationsSessions.value = sessRes.sessions || [];
+            const commParam = selectedCommitteeId.value && selectedCommitteeId.value !== 'all' ? `?committeeId=${selectedCommitteeId.value}` : '';
+            const res = await fetch(`/api/operations/calendar${commParam}`);
+            const data = await res.json();
+            if (data.success) {
+              operationsSessions.value = data.sessions || [];
+              operationsTasks.value = data.tasks || [];
+              assignableMembers.value = data.assignableMembers || [];
+              operationsStats.value = data.stats || {
+                totalSessions: (data.sessions || []).length,
+                totalTasks: (data.tasks || []).length,
+                completedTasks: (data.tasks || []).filter(t => t.status === 'completed').length,
+                pendingTasks: (data.tasks || []).filter(t => t.status !== 'completed').length
+              };
             }
-            if (taskRes && taskRes.success) {
-              operationsTasks.value = taskRes.tasks || [];
-            }
-            if (memberRes && memberRes.success) {
-              assignableMembers.value = (memberRes.candidates || []).filter(c => 
-                c.roleType === 'member' || ['hr', 'media', 'academic', 'organization'].includes(c.subDepartment)
-              );
-            }
-
-            const totalSess = operationsSessions.value.length;
-            const totalT = operationsTasks.value.length;
-            const compT = operationsTasks.value.filter(t => t.status === 'completed').length;
-            operationsStats.value = {
-              totalSessions: totalSess,
-              totalTasks: totalT,
-              completedTasks: compT,
-              pendingTasks: totalT - compT
-            };
           } catch (e) {
             console.error('loadOperationsCalendar error:', e);
           } finally {
@@ -9678,8 +9925,11 @@
         };
 
         const openCreateSessionModal = (dateStr) => {
+          const validDate = (typeof dateStr === 'string' && dateStr.length === 10) 
+            ? dateStr 
+            : new Date().toISOString().split('T')[0];
           newSessionForm.value = {
-            date: dateStr || new Date().toISOString().split('T')[0],
+            date: validDate,
             title: '',
             committeeId: selectedCommitteeId.value !== 'all' ? selectedCommitteeId.value : 'crises',
             sector: 'all',
@@ -9733,14 +9983,15 @@
         };
 
         const openAssignTaskModal = (session) => {
+          const validSession = (session && typeof session === 'object' && session.id) ? session : null;
           newTaskForm.value = {
-            sessionId: session ? session.id : null,
+            sessionId: validSession ? validSession.id : null,
             title: '',
             description: '',
             assignedToCandidateId: '',
-            committeeId: session?.committeeId || 'all',
-            sector: session?.sector || 'hr',
-            dueDate: session ? session.date : new Date().toISOString().split('T')[0]
+            committeeId: validSession?.committeeId || (selectedCommitteeId.value !== 'all' ? selectedCommitteeId.value : 'all'),
+            sector: validSession?.sector || 'hr',
+            dueDate: validSession?.date ? validSession.date : new Date().toISOString().split('T')[0]
           };
           showAssignTaskModal.value = true;
           nextTick(() => { if (window.lucide) lucide.createIcons(); });
