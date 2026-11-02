@@ -2515,6 +2515,7 @@ app.get('/api/events', (req, res) => {
       myBooking: myBooking ? {
         id: myBooking.id,
         ticketCode: myBooking.ticketCode || `TKT-${evt.id.slice(-4).toUpperCase()}-${tktSuffix.toUpperCase()}`,
+        qrPayload: myBooking.qrPayload || `MFA_EVENT_PASS:${evt.id}:${candUser ? (candUser.diplomaticId || candUser.id) : String(currentUserId)}:${myBooking.ticketCode || tktSuffix}`,
         bookedAt: myBooking.bookedAt,
         status: myBooking.status,
         roleTitle: myBooking.roleTitle,
