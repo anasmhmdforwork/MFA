@@ -3648,26 +3648,51 @@
                     <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">
                       {{ sess.location }}
                     </span>
+                    <!-- Cadres Source Badge -->
+                    <span v-if="sess.cadresSource === 'central'" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center gap-1">
+                      <i data-lucide="shield" class="w-3 h-3"></i>
+                      طلب دعم من اللجنة المركزية
+                    </span>
+                    <span v-else class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
+                      <i data-lucide="users" class="w-3 h-3"></i>
+                      كوادر اللجنة الداخلية ({{ getSessionTasks(sess.id).length }} مكلفين)
+                    </span>
                   </div>
                   <h3 class="text-base font-black text-white mt-1">{{ sess.title }}</h3>
                   <p v-if="sess.description" class="text-xs text-slate-400 mt-0.5">{{ sess.description }}</p>
+
+                  <!-- Multi-Sector Cadres Breakdown Pills -->
+                  <div v-if="sess.cadresPlan" class="flex items-center gap-2 mt-2 flex-wrap text-[11px]">
+                    <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-amber-500/30 text-amber-300 font-bold flex items-center gap-1">
+                      <i data-lucide="graduation-cap" class="w-3 h-3 text-amber-400"></i>
+                      {{ sess.cadresPlan.academic || 0 }} أكاديمي
+                    </span>
+                    <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-sky-500/30 text-sky-300 font-bold flex items-center gap-1">
+                      <i data-lucide="user-check" class="w-3 h-3 text-sky-400"></i>
+                      {{ sess.cadresPlan.hr || 0 }} تنظيم (HR)
+                    </span>
+                    <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-purple-500/30 text-purple-300 font-bold flex items-center gap-1">
+                      <i data-lucide="camera" class="w-3 h-3 text-purple-400"></i>
+                      {{ sess.cadresPlan.media || 0 }} إعلام (Media)
+                    </span>
+                    <span class="text-slate-400 font-bold text-[10px]">
+                      (الإجمالي: {{ sess.requiredMembersCount }} كوادر)
+                    </span>
+                  </div>
                 </div>
               </div>
 
               <!-- Staff Count Badge & Actions -->
               <div class="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
-                <span class="px-3 py-1.5 rounded-xl bg-slate-950 text-amber-300 border border-amber-500/30 text-xs font-bold font-mono">
-                  احتياج الكوادر: {{ sess.requiredMembersCount }} أعضاء
-                </span>
                 <button 
                   @click="openAssignTaskModal(sess)"
                   class="btn-gold px-3 py-1.5 rounded-xl text-xs font-bold inline-flex items-center gap-1 cursor-pointer shadow-sm"
                 >
                   <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                  <span>تكليف عضو</span>
+                  <span>تكليف عضو إضافي</span>
                 </button>
                 <button 
-                  @click="deleteOperationsSession(sess.id)"
+                  @click="deleteOperationsSession(sess)"
                   class="p-2 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-500/30 transition cursor-pointer"
                   title="حذف الجلسة"
                 >
@@ -3676,14 +3701,26 @@
               </div>
             </div>
 
-            <!-- Tasks Assigned for this Session -->
+            <!-- Tasks Assigned for this Session & Live Performance Tracker -->
             <div>
-              <span class="text-xs font-black text-slate-300 block mb-2.5">
-                التكليفات الميدانية المسندة لهذه الجلسة ({{ getSessionTasks(sess.id).length }}):
-              </span>
+              <div class="flex items-center justify-between gap-3 mb-2">
+                <span class="text-xs font-black text-slate-300 flex items-center gap-1.5">
+                  <i data-lucide="list-checks" class="w-4 h-4 text-amber-400"></i>
+                  <span>التكليفات المسندة ومتابعة الأداء الميداني ({{ getSessionTasks(sess.id).length }}):</span>
+                </span>
+                <span v-if="getSessionTasks(sess.id).length > 0" class="text-[11px] font-bold text-amber-300 font-mono">
+                  نسبة الإنجاز: {{ getSessionCompletedCount(sess.id) }} / {{ getSessionTasks(sess.id).length }} ({{ getSessionProgressPercent(sess.id) }}%)
+                </span>
+              </div>
 
-              <div v-if="getSessionTasks(sess.id).length === 0" class="text-center py-4 bg-slate-950/50 rounded-2xl border border-dashed border-slate-800 text-xs text-slate-500">
-                لم يتم إسناد أي تكليفات لأعضاء اللجنة في هذه الجلسة بعد. اضغط على زر "تكليف عضو" لتوزيع المهام.
+              <!-- Mini Progress Bar -->
+              <div v-if="getSessionTasks(sess.id).length > 0" class="w-full bg-slate-950 rounded-full h-1.5 mb-3 border border-slate-800 overflow-hidden">
+                <div class="bg-gradient-to-r from-amber-500 to-emerald-500 h-1.5 transition-all duration-500" :style="{ width: getSessionProgressPercent(sess.id) + '%' }"></div>
+              </div>
+
+              <div v-if="getSessionTasks(sess.id).length === 0" class="text-center py-5 bg-slate-950/50 rounded-2xl border border-dashed border-slate-800 text-xs text-slate-500 space-y-1">
+                <p>لم يتم إسناد تكليفات بعد لأعضاء اللجنة في هذه الجلسة.</p>
+                <p class="text-[11px] text-slate-600">يمكنك الضغط على "تكليف عضو إضافي" بالأعلى لإسناد مهام جديدة.</p>
               </div>
 
               <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -3695,16 +3732,24 @@
                 >
                   <div class="space-y-1">
                     <div class="flex items-center justify-between gap-2">
-                      <span class="text-xs font-black text-amber-300">{{ task.assignedToCandidateName }}</span>
-                      <span 
-                        class="px-2 py-0.5 rounded-full text-[9px] font-bold"
-                        :class="task.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'"
-                      >
-                        {{ task.status === 'completed' ? 'تم الإنجاز' : 'قيد التنفيذ' }}
-                      </span>
+                      <div>
+                        <span class="text-xs font-black text-amber-300 block">{{ task.assignedToCandidateName }}</span>
+                        <span class="text-[10px] text-slate-500 font-mono">{{ task.assignedToDiplomaticId }}</span>
+                      </div>
+                      <div class="flex flex-col items-end gap-1">
+                        <span 
+                          class="px-2 py-0.5 rounded-full text-[9px] font-bold"
+                          :class="task.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'"
+                        >
+                          {{ task.status === 'completed' ? 'تم الإنجاز ✓' : 'قيد التنفيذ' }}
+                        </span>
+                        <span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800">
+                          {{ task.sector === 'academic' ? 'أكاديمي' : (task.sector === 'hr' ? 'تنظيم (HR)' : (task.sector === 'media' ? 'إعلام' : 'تشغيل')) }}
+                        </span>
+                      </div>
                     </div>
-                    <h5 class="text-xs font-bold text-white">{{ task.title }}</h5>
-                    <p v-if="task.description" class="text-[11px] text-slate-400">{{ task.description }}</p>
+                    <h5 class="text-xs font-bold text-white mt-1">{{ task.title }}</h5>
+                    <p v-if="task.description" class="text-[11px] text-slate-400 line-clamp-2">{{ task.description }}</p>
                   </div>
 
                   <div class="pt-2 border-t border-slate-900 flex items-center justify-between">
@@ -3716,9 +3761,9 @@
                       <button 
                         @click="toggleTaskStatus(task)"
                         class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer"
-                        :class="task.status === 'completed' ? 'bg-slate-800 text-slate-300' : 'btn-gold'"
+                        :class="task.status === 'completed' ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : 'btn-gold'"
                       >
-                        {{ task.status === 'completed' ? 'إعادة فتح' : 'تأكيد الإنجاز' }}
+                        {{ task.status === 'completed' ? 'إعادة فتح' : 'تأكيد الإنجاز وتقييم العضو' }}
                       </button>
                       <button 
                         @click="deleteOperationsTask(task.id)"
@@ -6877,8 +6922,8 @@
     <!-- ============================================== -->
     <!-- MODAL: CREATE OPERATIONS SESSION (يوم تشغيلي)    -->
     <!-- ============================================== -->
-    <div v-if="showCreateSessionModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 text-right">
-      <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-5 sm:p-7 max-w-lg w-full max-h-[92vh] overflow-y-auto space-y-4 shadow-2xl text-slate-100">
+    <div v-if="showCreateSessionModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 text-right">
+      <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-5 sm:p-7 max-w-2xl sm:max-w-3xl w-full max-h-[92vh] overflow-y-auto space-y-4 shadow-2xl text-slate-100">
         
         <!-- Header -->
         <div class="flex items-center justify-between pb-3 border-b border-slate-800">
@@ -6887,8 +6932,8 @@
               <i data-lucide="calendar-plus" class="w-5 h-5"></i>
             </div>
             <div>
-              <h3 class="text-base sm:text-lg font-black text-white">إضافة يوم تشغيلي / محاضرة</h3>
-              <p class="text-xs text-amber-400/90 font-medium">جدولة فعاليات الخطة الشهرية وتوزيع احتياج الكوادر</p>
+              <h3 class="text-base sm:text-lg font-black text-white">إضافة يوم تشغيلي / محاضرة رسمية</h3>
+              <p class="text-xs text-amber-400/90 font-medium">تحديد خطة الكوادر، توزيع القطاعات، وإسناد التكليفات لأعضاء الهيكل</p>
             </div>
           </div>
           <button @click="showCreateSessionModal = false" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition cursor-pointer">
@@ -6945,42 +6990,324 @@
             >
           </div>
 
-          <!-- Sector & Required Members -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-slate-300 font-bold mb-1.5">القطاع المسؤول: *</label>
-              <select 
-                v-model="newSessionForm.sector" 
-                class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none transition"
-              >
-                <option value="all">كافة القطاعات (مشترك)</option>
-                <option value="academic">القطاع الأكاديمي (Academic)</option>
-                <option value="organization">قطاع التنظيم والموارد البشرية (HR)</option>
-                <option value="media">قطاع الإعلام والعلاقات العامة (Media)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-slate-300 font-bold mb-1.5">عدد الكوادر المطلوبة (أعضاء): *</label>
-              <input 
-                type="number" 
-                v-model.number="newSessionForm.requiredMembersCount" 
-                min="1" 
-                max="30"
-                required
-                class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-white font-mono text-xs focus:outline-none transition"
-              >
-            </div>
-          </div>
-
           <!-- Description / Agenda -->
           <div>
             <label class="block text-slate-300 font-bold mb-1.5">تفاصيل وأجندة اليوم التشغيلي:</label>
             <textarea 
               v-model="newSessionForm.description" 
-              rows="3" 
+              rows="2" 
               placeholder="اكتب المحاور الرئيسية لليوم، المهام المطلوبة، والملاحظات التوجيهية للأعضاء..."
               class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl p-3 text-white text-xs focus:outline-none transition resize-none"
             ></textarea>
+          </div>
+
+          <!-- ===================================== -->
+          <!-- SECTION: MULTI-SECTOR CADRES QUOTA    -->
+          <!-- ===================================== -->
+          <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="users" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-black text-white text-xs">خطة الكوادر وتوزيع الاحتياج حسب القطاعات</span>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">
+                الإجمالي المطلوب: {{ totalRequiredCadres }} كوادر
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400">حدد عدد الكوادر المطلوبة من كل قطاع لإدارة وتشغيل المحاضرة بكفاءة:</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <!-- Academic Quota -->
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="graduation-cap" class="w-4 h-4 text-amber-400"></i>
+                    <span class="font-bold text-white text-xs">القطاع الأكاديمي</span>
+                  </div>
+                  <span class="text-[10px] text-amber-400 font-mono font-bold">{{ newSessionForm.cadresPlan.academic || 0 }} كادر</span>
+                </div>
+                <p class="text-[10px] text-slate-400">المحتوى العلمي وإدارة النقاش</p>
+                <div class="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    v-model.number="newSessionForm.cadresPlan.academic" 
+                    min="0" 
+                    max="20"
+                    required
+                    class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-lg px-2.5 py-1.5 text-center text-white font-mono text-xs font-bold focus:outline-none transition"
+                  >
+                </div>
+              </div>
+
+              <!-- HR / Organization Quota -->
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="user-check" class="w-4 h-4 text-sky-400"></i>
+                    <span class="font-bold text-white text-xs">التنظيم و HR</span>
+                  </div>
+                  <span class="text-[10px] text-sky-400 font-mono font-bold">{{ newSessionForm.cadresPlan.hr || 0 }} كادر</span>
+                </div>
+                <p class="text-[10px] text-slate-400">تحضير الـ QR وضبط القاعة</p>
+                <div class="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    v-model.number="newSessionForm.cadresPlan.hr" 
+                    min="0" 
+                    max="20"
+                    required
+                    class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-lg px-2.5 py-1.5 text-center text-white font-mono text-xs font-bold focus:outline-none transition"
+                  >
+                </div>
+              </div>
+
+              <!-- Media Quota -->
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="camera" class="w-4 h-4 text-purple-400"></i>
+                    <span class="font-bold text-white text-xs">الإعلام و PR</span>
+                  </div>
+                  <span class="text-[10px] text-purple-400 font-mono font-bold">{{ newSessionForm.cadresPlan.media || 0 }} كادر</span>
+                </div>
+                <p class="text-[10px] text-slate-400">التوثيق الفوتوغرافي والنشر</p>
+                <div class="flex items-center gap-2">
+                  <input 
+                    type="number" 
+                    v-model.number="newSessionForm.cadresPlan.media" 
+                    min="0" 
+                    max="20"
+                    required
+                    class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-lg px-2.5 py-1.5 text-center text-white font-mono text-xs font-bold focus:outline-none transition"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===================================== -->
+          <!-- SECTION: CADRES SOURCE SELECTION      -->
+          <!-- ===================================== -->
+          <div class="space-y-2">
+            <label class="block text-slate-300 font-bold">مصدر توفير الكوادر المطلوبة: *</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              
+              <!-- Option A: Internal Committee Cadres -->
+              <div 
+                @click="newSessionForm.cadresSource = 'internal'"
+                class="p-3.5 rounded-2xl border cursor-pointer transition flex items-start gap-3"
+                :class="newSessionForm.cadresSource === 'internal' ? 'border-amber-500 bg-amber-500/10 shadow-md' : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'"
+              >
+                <input 
+                  type="radio" 
+                  value="internal" 
+                  v-model="newSessionForm.cadresSource" 
+                  class="mt-1 accent-amber-500"
+                >
+                <div class="space-y-0.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-black text-white text-xs">من أعضاء لجنتي (كوادر اللجنة)</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300">تشغيل مباشر</span>
+                  </div>
+                  <p class="text-[10px] text-slate-400 leading-relaxed">
+                    تسكين وتكليف أعضاء الهيكل التنظيمي التابعين للجنة مباشرة، وإسقاط التكليفات في حساباتهم فوراً
+                  </p>
+                </div>
+              </div>
+
+              <!-- Option B: Central Committee Support -->
+              <div 
+                @click="newSessionForm.cadresSource = 'central'"
+                class="p-3.5 rounded-2xl border cursor-pointer transition flex items-start gap-3"
+                :class="newSessionForm.cadresSource === 'central' ? 'border-purple-500 bg-purple-500/10 shadow-md' : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'"
+              >
+                <input 
+                  type="radio" 
+                  value="central" 
+                  v-model="newSessionForm.cadresSource" 
+                  class="mt-1 accent-purple-500"
+                >
+                <div class="space-y-0.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-black text-white text-xs">طلب دعم من اللجنة المركزية</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-purple-500/20 text-purple-300">تنسيق مركزي</span>
+                  </div>
+                  <p class="text-[10px] text-slate-400 leading-relaxed">
+                    رفع برقية احتياج كوادر للأمانة العامة ولجنة التنظيم المركزية لتوفير الدعم الميداني من الاحتياطي العام
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ===================================== -->
+          <!-- IF INTERNAL: MEMBER ASSIGNMENT PICKER -->
+          <!-- ===================================== -->
+          <div v-if="newSessionForm.cadresSource === 'internal'" class="bg-slate-950/90 rounded-2xl p-4 border border-amber-500/30 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-800">
+              <div>
+                <h4 class="font-black text-white text-xs flex items-center gap-1.5">
+                  <i data-lucide="check-square" class="w-4 h-4 text-amber-400"></i>
+                  <span>تحديد الأعضاء المكلفين باليوم التشغيلي</span>
+                </h4>
+                <p class="text-[10px] text-slate-400">انقر على العضو لتكليفه بالمهام (سيظهر التكليف في حسابه بتبويب المهام):</p>
+              </div>
+              <span class="text-[11px] font-bold text-amber-300 font-mono">
+                تم اختيار: {{ (newSessionForm.assignedMemberIds || []).length }} عضو
+              </span>
+            </div>
+
+            <!-- Sector 1: Academic Members -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between bg-slate-900 p-2 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span class="font-bold text-white text-[11px]">أعضاء القطاع الأكاديمي</span>
+                  <span 
+                    class="px-2 py-0.2 rounded-full text-[9px] font-bold"
+                    :class="getSelectedCountBySector('academic') === (newSessionForm.cadresPlan.academic || 0) ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'"
+                  >
+                    تم اختيار {{ getSelectedCountBySector('academic') }} من {{ newSessionForm.cadresPlan.academic || 0 }} مطلوب
+                  </span>
+                </div>
+                <button 
+                  type="button" 
+                  @click.prevent="autoSelectCadresForSector('academic', newSessionForm.cadresPlan.academic)"
+                  class="text-[10px] font-bold text-amber-400 hover:text-amber-300 underline cursor-pointer"
+                >
+                  اختيار تلقائي ({{ newSessionForm.cadresPlan.academic || 0 }})
+                </button>
+              </div>
+
+              <div v-if="committeeAcademicMembers.length === 0" class="text-center py-2 text-[10px] text-slate-500">
+                لا يوجد أعضاء أكاديميين مسكنين باللجنة حالياً
+              </div>
+              <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div 
+                  v-for="m in committeeAcademicMembers" 
+                  :key="m.id"
+                  @click="toggleMemberAssignment(m.id)"
+                  class="p-2.5 rounded-xl border cursor-pointer transition flex items-center justify-between gap-2"
+                  :class="isMemberAssigned(m.id) ? 'bg-amber-500/15 border-amber-400 text-white' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'"
+                >
+                  <div class="min-w-0">
+                    <span class="font-bold text-xs block truncate">{{ m.name }}</span>
+                    <span class="text-[10px] text-slate-400 font-mono block">{{ m.diplomaticId }}</span>
+                  </div>
+                  <div class="w-5 h-5 rounded-lg flex items-center justify-center border" :class="isMemberAssigned(m.id) ? 'bg-amber-500 border-amber-400 text-slate-950 font-black' : 'border-slate-700 text-transparent'">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sector 2: HR Members -->
+            <div class="space-y-2 pt-2 border-t border-slate-900">
+              <div class="flex items-center justify-between bg-slate-900 p-2 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="user-check" class="w-3.5 h-3.5 text-sky-400"></i>
+                  <span class="font-bold text-white text-[11px]">أعضاء قطاع التنظيم والموارد البشرية (HR)</span>
+                  <span 
+                    class="px-2 py-0.2 rounded-full text-[9px] font-bold"
+                    :class="getSelectedCountBySector('hr') === (newSessionForm.cadresPlan.hr || 0) ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'"
+                  >
+                    تم اختيار {{ getSelectedCountBySector('hr') }} من {{ newSessionForm.cadresPlan.hr || 0 }} مطلوب
+                  </span>
+                </div>
+                <button 
+                  type="button" 
+                  @click.prevent="autoSelectCadresForSector('hr', newSessionForm.cadresPlan.hr)"
+                  class="text-[10px] font-bold text-sky-400 hover:text-sky-300 underline cursor-pointer"
+                >
+                  اختيار تلقائي ({{ newSessionForm.cadresPlan.hr || 0 }})
+                </button>
+              </div>
+
+              <div v-if="committeeHrMembers.length === 0" class="text-center py-2 text-[10px] text-slate-500">
+                لا يوجد أعضاء تنظيم مسكنين باللجنة حالياً
+              </div>
+              <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div 
+                  v-for="m in committeeHrMembers" 
+                  :key="m.id"
+                  @click="toggleMemberAssignment(m.id)"
+                  class="p-2.5 rounded-xl border cursor-pointer transition flex items-center justify-between gap-2"
+                  :class="isMemberAssigned(m.id) ? 'bg-sky-500/15 border-sky-400 text-white' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'"
+                >
+                  <div class="min-w-0">
+                    <span class="font-bold text-xs block truncate">{{ m.name }}</span>
+                    <span class="text-[10px] text-slate-400 font-mono block">{{ m.diplomaticId }}</span>
+                  </div>
+                  <div class="w-5 h-5 rounded-lg flex items-center justify-center border" :class="isMemberAssigned(m.id) ? 'bg-sky-500 border-sky-400 text-slate-950 font-black' : 'border-slate-700 text-transparent'">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sector 3: Media Members -->
+            <div class="space-y-2 pt-2 border-t border-slate-900">
+              <div class="flex items-center justify-between bg-slate-900 p-2 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="camera" class="w-3.5 h-3.5 text-purple-400"></i>
+                  <span class="font-bold text-white text-[11px]">أعضاء قطاع الإعلام والعلاقات العامة (Media)</span>
+                  <span 
+                    class="px-2 py-0.2 rounded-full text-[9px] font-bold"
+                    :class="getSelectedCountBySector('media') === (newSessionForm.cadresPlan.media || 0) ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'"
+                  >
+                    تم اختيار {{ getSelectedCountBySector('media') }} من {{ newSessionForm.cadresPlan.media || 0 }} مطلوب
+                  </span>
+                </div>
+                <button 
+                  type="button" 
+                  @click.prevent="autoSelectCadresForSector('media', newSessionForm.cadresPlan.media)"
+                  class="text-[10px] font-bold text-purple-400 hover:text-purple-300 underline cursor-pointer"
+                >
+                  اختيار تلقائي ({{ newSessionForm.cadresPlan.media || 0 }})
+                </button>
+              </div>
+
+              <div v-if="committeeMediaMembers.length === 0" class="text-center py-2 text-[10px] text-slate-500">
+                لا يوجد أعضاء إعلام مسكنين باللجنة حالياً
+              </div>
+              <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div 
+                  v-for="m in committeeMediaMembers" 
+                  :key="m.id"
+                  @click="toggleMemberAssignment(m.id)"
+                  class="p-2.5 rounded-xl border cursor-pointer transition flex items-center justify-between gap-2"
+                  :class="isMemberAssigned(m.id) ? 'bg-purple-500/15 border-purple-400 text-white' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'"
+                >
+                  <div class="min-w-0">
+                    <span class="font-bold text-xs block truncate">{{ m.name }}</span>
+                    <span class="text-[10px] text-slate-400 font-mono block">{{ m.diplomaticId }}</span>
+                  </div>
+                  <div class="w-5 h-5 rounded-lg flex items-center justify-center border" :class="isMemberAssigned(m.id) ? 'bg-purple-500 border-purple-400 text-slate-950 font-black' : 'border-slate-700 text-transparent'">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ===================================== -->
+          <!-- IF CENTRAL: OFFICIAL REQUEST BANNER   -->
+          <!-- ===================================== -->
+          <div v-if="newSessionForm.cadresSource === 'central'" class="bg-gradient-to-r from-purple-950/40 via-slate-900 to-purple-950/40 border border-purple-500/40 rounded-2xl p-4 sm:p-5 space-y-2">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center justify-center">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-black text-white">برقية طلب دعم كوادر من اللجنة المركزية</h4>
+                <p class="text-xs text-purple-300">الأمانة العامة ولجنة التنظيم المركزية</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              سيتم تسجيل الجلسة كطلب دعم رسمي موجه للأمانة العامة والتنظيم المركزي لتوفير <strong>{{ totalRequiredCadres }} كوادر مساعدة</strong> ({{ newSessionForm.cadresPlan.academic || 0 }} أكاديمي، {{ newSessionForm.cadresPlan.hr || 0 }} تنظيم، {{ newSessionForm.cadresPlan.media || 0 }} ميديا) من الاحتياطي العام للنموذج لتغطية فعاليات هذه المحاضرة.
+            </p>
           </div>
 
           <!-- Actions -->
@@ -7168,10 +7495,77 @@
           committeeId: 'all',
           sector: 'all',
           description: '',
-          requiredMembersCount: 3,
+          requiredMembersCount: 7,
           time: '14:00',
-          location: 'مقر الجامعة / قاعة المحاكاة'
+          location: 'مقر الجامعة / قاعة المحاكاة',
+          cadresPlan: {
+            academic: 4,
+            hr: 2,
+            media: 1
+          },
+          cadresSource: 'internal',
+          assignedMemberIds: []
         });
+
+        const totalRequiredCadres = computed(() => {
+          const p = newSessionForm.value.cadresPlan || {};
+          return (parseInt(p.academic, 10) || 0) + (parseInt(p.hr, 10) || 0) + (parseInt(p.media, 10) || 0);
+        });
+
+        const committeeAcademicMembers = computed(() => {
+          return (assignableMembers.value || []).filter(m => m.subDepartment === 'academic');
+        });
+
+        const committeeHrMembers = computed(() => {
+          return (assignableMembers.value || []).filter(m => m.subDepartment === 'hr');
+        });
+
+        const committeeMediaMembers = computed(() => {
+          return (assignableMembers.value || []).filter(m => m.subDepartment === 'media');
+        });
+
+        const isMemberAssigned = (memberId) => {
+          return (newSessionForm.value.assignedMemberIds || []).includes(memberId);
+        };
+
+        const toggleMemberAssignment = (memberId) => {
+          if (!newSessionForm.value.assignedMemberIds) {
+            newSessionForm.value.assignedMemberIds = [];
+          }
+          const idx = newSessionForm.value.assignedMemberIds.indexOf(memberId);
+          if (idx > -1) {
+            newSessionForm.value.assignedMemberIds.splice(idx, 1);
+          } else {
+            newSessionForm.value.assignedMemberIds.push(memberId);
+          }
+        };
+
+        const getSelectedCountBySector = (sectorKey) => {
+          const assignedIds = newSessionForm.value.assignedMemberIds || [];
+          return (assignableMembers.value || []).filter(m => assignedIds.includes(m.id) && m.subDepartment === sectorKey).length;
+        };
+
+        const autoSelectCadresForSector = (sectorKey, requiredCount) => {
+          if (!newSessionForm.value.assignedMemberIds) newSessionForm.value.assignedMemberIds = [];
+          const sectorMembers = (assignableMembers.value || []).filter(m => m.subDepartment === sectorKey);
+          const sectorMemberIds = sectorMembers.map(m => m.id);
+          newSessionForm.value.assignedMemberIds = newSessionForm.value.assignedMemberIds.filter(id => !sectorMemberIds.includes(id));
+          const count = parseInt(requiredCount, 10) || 0;
+          const toAdd = sectorMemberIds.slice(0, count);
+          newSessionForm.value.assignedMemberIds.push(...toAdd);
+        };
+
+        const getSessionCompletedCount = (sessionId) => {
+          return (operationsTasks.value || []).filter(t => t.sessionId === sessionId && t.status === 'completed').length;
+        };
+
+        const getSessionProgressPercent = (sessionId) => {
+          const tasks = (operationsTasks.value || []).filter(t => t.sessionId === sessionId);
+          if (!tasks.length) return 0;
+          const completed = tasks.filter(t => t.status === 'completed').length;
+          return Math.round((completed / tasks.length) * 100);
+        };
+
         const showAssignTaskModal = ref(false);
         const newTaskForm = ref({
           sessionId: null,
@@ -9924,20 +10318,30 @@
           openCreateSessionModal(day.dateStr);
         };
 
-        const openCreateSessionModal = (dateStr) => {
+        const openCreateSessionModal = async (dateStr) => {
           const validDate = (typeof dateStr === 'string' && dateStr.length === 10) 
             ? dateStr 
             : new Date().toISOString().split('T')[0];
           newSessionForm.value = {
             date: validDate,
             title: '',
-            committeeId: selectedCommitteeId.value !== 'all' ? selectedCommitteeId.value : 'crises',
+            committeeId: selectedCommitteeId.value !== 'all' ? selectedCommitteeId.value : 'economic',
             sector: 'all',
             description: '',
-            requiredMembersCount: 3,
+            requiredMembersCount: 7,
             time: '14:00',
-            location: 'مقر الجامعة / قاعة المحاكاة'
+            location: 'مقر الجامعة / قاعة المحاكاة',
+            cadresPlan: {
+              academic: 4,
+              hr: 2,
+              media: 1
+            },
+            cadresSource: 'internal',
+            assignedMemberIds: []
           };
+          if (!assignableMembers.value || assignableMembers.value.length === 0) {
+            await loadOperationsCalendar();
+          }
           showCreateSessionModal.value = true;
           nextTick(() => { if (window.lucide) lucide.createIcons(); });
         };
@@ -9947,6 +10351,7 @@
             alert('يرجى ملء عنوان وتاريخ الجلسة أو المحاضرة');
             return;
           }
+          newSessionForm.value.requiredMembersCount = totalRequiredCadres.value;
           try {
             const res = await fetch('/api/operations/sessions', {
               method: 'POST',
@@ -9957,7 +10362,7 @@
             if (data.success) {
               showCreateSessionModal.value = false;
               await loadOperationsCalendar();
-              alert('تمت إضافة الجلسة بنجاح');
+              alert(data.message || 'تمت إضافة الجلسة بنجاح');
             } else {
               alert(data.message || 'تعذر إضافة الجلسة');
             }
@@ -9966,11 +10371,13 @@
           }
         };
 
-        const deleteOperationsSession = async (session) => {
-          if (!session || !session.id) return;
-          if (!confirm(`هل أنت متأكد من حذف الجلسة التشغيلية "${session.title}"؟`)) return;
+        const deleteOperationsSession = async (sessionOrId) => {
+          const sessionId = typeof sessionOrId === 'object' ? sessionOrId?.id : sessionOrId;
+          const sessionTitle = typeof sessionOrId === 'object' ? sessionOrId?.title : 'هذه الجلسة';
+          if (!sessionId) return;
+          if (!confirm(`هل أنت متأكد من حذف الجلسة التشغيلية "${sessionTitle}"؟`)) return;
           try {
-            const res = await fetch(`/api/operations/sessions/${session.id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/operations/sessions/${sessionId}`, { method: 'DELETE' });
             const data = await res.json();
             if (data.success) {
               await loadOperationsCalendar();
@@ -10276,6 +10683,16 @@
           createOperationsTask,
           toggleTaskStatus,
           deleteOperationsTask,
+          totalRequiredCadres,
+          committeeAcademicMembers,
+          committeeHrMembers,
+          committeeMediaMembers,
+          isMemberAssigned,
+          toggleMemberAssignment,
+          getSelectedCountBySector,
+          autoSelectCadresForSector,
+          getSessionCompletedCount,
+          getSessionProgressPercent,
           loadAuditLogs,
           formatAuditTime,
           showBoardTicketModal,

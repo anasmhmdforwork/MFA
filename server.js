@@ -3089,11 +3089,31 @@ app.get('/api/operations/calendar', (req, res) => {
 app.post('/api/operations/sessions', async (req, res) => {
   const db = getDB();
   db.operationsSessions = db.operationsSessions || [];
+  db.operationsTasks = db.operationsTasks || [];
+  db.candidates = db.candidates || [];
 
-  const { date, title, committeeId, sector, description, requiredMembersCount, time, location } = req.body;
+  const {
+    date,
+    title,
+    committeeId,
+    sector,
+    description,
+    requiredMembersCount,
+    time,
+    location,
+    cadresPlan,
+    cadresSource,
+    assignedMemberIds
+  } = req.body;
+
   if (!date || !title) {
-    return res.status(400).json({ success: false, message: 'يرجى إدخال تاريخ وعنوان الجلسة' });
+    return res.status(400).json({ success: false, message: 'يرجى إدخال تاريخ وعنوان الجلسة أو المحاضرة' });
   }
+
+  const academicReq = parseInt(cadresPlan?.academic, 10) || 0;
+  const hrReq = parseInt(cadresPlan?.hr, 10) || 0;
+  const mediaReq = parseInt(cadresPlan?.media, 10) || 0;
+  const calculatedTotal = (academicReq + hrReq + mediaReq) || parseInt(requiredMembersCount, 10) || 3;
 
   const newSession = {
     id: 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
@@ -3102,7 +3122,14 @@ app.post('/api/operations/sessions', async (req, res) => {
     committeeId: committeeId || 'all',
     sector: sector || 'all',
     description: (description || '').trim(),
-    requiredMembersCount: parseInt(requiredMembersCount, 10) || 3,
+    requiredMembersCount: calculatedTotal,
+    cadresPlan: {
+      academic: academicReq,
+      hr: hrReq,
+      media: mediaReq
+    },
+    cadresSource: cadresSource || (Array.isArray(assignedMemberIds) && assignedMemberIds.length > 0 ? 'internal' : 'central'),
+    assignedMemberIds: Array.isArray(assignedMemberIds) ? assignedMemberIds : [],
     time: time || '14:00',
     location: (location || 'مقر الجامعة / قاعة المحاكاة').trim(),
     createdAt: new Date().toISOString(),
@@ -3110,26 +3137,86 @@ app.post('/api/operations/sessions', async (req, res) => {
   };
 
   db.operationsSessions.push(newSession);
-  logActivity(req, 'إضافة جلسة تشغيلية', `إضافة يوم تشغيلي: "${newSession.title}" بتاريخ ${newSession.date}`, newSession.id);
+
+  // If internal committee members were selected, automatically create individual operations tasks!
+  let createdTasksCount = 0;
+  if (Array.isArray(assignedMemberIds) && assignedMemberIds.length > 0) {
+    for (const memId of assignedMemberIds) {
+      const cand = db.candidates.find(c => c.id === memId || c.diplomaticId === memId);
+      if (cand) {
+        let sectorArabic = 'تشغيل ميداني';
+        if (cand.subDepartment === 'academic') sectorArabic = 'تنظيم أكاديمي وإدارة محتوى';
+        else if (cand.subDepartment === 'hr') sectorArabic = 'إدارة الحضور والتنظيم الميداني';
+        else if (cand.subDepartment === 'media') sectorArabic = 'توثيق وتغطية إعلامية';
+
+        const newTask = {
+          id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+          sessionId: newSession.id,
+          title: `تشغيل (${sectorArabic}): ${newSession.title}`,
+          description: `تكليف رسمي صادر للمحاضرة في ${newSession.location} (الساعة ${newSession.time}). المطلوب: التواجد الميداني وتنفيذ مهام ${sectorArabic}.`,
+          assignedToCandidateId: cand.id,
+          assignedToDiplomaticId: cand.diplomaticId || generateDiplomaticId(cand),
+          assignedToCandidateName: cand.arabicName || cand.fullName,
+          committeeId: newSession.committeeId || cand.assignedCommitteeId || cand.originalCommitteeId || 'general',
+          sector: cand.subDepartment || 'general',
+          dueDate: newSession.date,
+          status: 'pending',
+          createdAt: new Date().toISOString(),
+          completedAt: null
+        };
+        db.operationsTasks.push(newTask);
+        createdTasksCount++;
+
+        // Update member continuous evaluation
+        if (!cand.memberEvaluation) {
+          cand.memberEvaluation = { notes: '', score: 8.0, commitment: 'متميز', tasks: 'منتظم' };
+        }
+        const memberTasks = db.operationsTasks.filter(t => t.assignedToCandidateId === cand.id);
+        const completedTasks = memberTasks.filter(t => t.status === 'completed').length;
+        cand.memberEvaluation.totalTasksCount = memberTasks.length;
+        cand.memberEvaluation.completedTasksCount = completedTasks;
+        cand.memberEvaluation.taskCompletionRate = memberTasks.length > 0 ? Math.round((completedTasks / memberTasks.length) * 100) : 100;
+        cand.memberEvaluation.updatedAt = new Date().toISOString();
+      }
+    }
+  }
+
+  logActivity(
+    req,
+    'إضافة يوم تشغيلي',
+    `إضافة محاضرة: "${newSession.title}" بتاريخ ${newSession.date} [المصدر: ${newSession.cadresSource === 'central' ? 'طلب دعم من اللجنة المركزية' : 'كوادر اللجنة الداخلية'}] مع إسناد ${createdTasksCount} تكليفات للأعضاء`,
+    newSession.id
+  );
   await saveDB(db);
 
-  res.json({ success: true, message: 'تمت إضافة الجلسة التشغيلية بنجاح إلى التقويم', session: newSession });
+  res.json({
+    success: true,
+    message: createdTasksCount > 0 
+      ? `تمت إضافة المحاضرة وإسناد ${createdTasksCount} تكليفات لأعضاء اللجنة تلقائياً`
+      : 'تمت إضافة المحاضرة بنجاح إلى جدول التشغيل الشهري',
+    session: newSession,
+    createdTasksCount
+  });
 });
 
 // DELETE /api/operations/sessions/:id - Remove a session from the calendar
 app.delete('/api/operations/sessions/:id', async (req, res) => {
   const db = getDB();
   db.operationsSessions = db.operationsSessions || [];
+  db.operationsTasks = db.operationsTasks || [];
   const idx = db.operationsSessions.findIndex(s => s.id === req.params.id);
   if (idx === -1) {
     return res.status(404).json({ success: false, message: 'الجلسة غير موجودة' });
   }
 
   const removed = db.operationsSessions.splice(idx, 1)[0];
+  // Clean up linked tasks
+  db.operationsTasks = db.operationsTasks.filter(t => t.sessionId !== req.params.id);
+
   logActivity(req, 'حذف جلسة تشغيلية', `حذف الجلسة: "${removed.title}"`, removed.id);
   await saveDB(db);
 
-  res.json({ success: true, message: 'تم حذف الجلسة التشغيلية بنجاح' });
+  res.json({ success: true, message: 'تم حذف الجلسة التشغيلية والتكليفات المرتبطة بها بنجاح' });
 });
 
 // POST /api/operations/tasks - Assign a task to a member
