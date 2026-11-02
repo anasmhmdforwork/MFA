@@ -807,7 +807,7 @@ app.get('/api/candidates', (req, res) => {
   res.json({ success: true, count: list.length, candidates: list });
 });
 
-app.get('/api/candidates/:id', (req, res) => {
+app.get(['/api/candidates/:id', '/api/candidate/:id'], (req, res) => {
   const db = getDB();
   const cand = db.candidates.find(c => c.id === req.params.id);
   if (!cand) {
@@ -1405,6 +1405,9 @@ app.get('/api/public/committee/:slug', (req, res) => {
         num: c.num,
         arabicName: c.arabicName,
         fullName: c.fullName,
+        roleType: c.roleType || 'delegate',
+        diplomaticId: c.diplomaticId || null,
+        subDepartment: c.subDepartment || null,
         university: c.university,
         faculty: c.faculty,
         grade: c.grade,
@@ -1973,34 +1976,49 @@ app.put('/api/candidates/:id/lecture-eval', async (req, res) => {
 // POST /api/delegate/submit-assignment - Delegate submits assignment research link
 app.post('/api/delegate/submit-assignment', async (req, res) => {
   const db = getDB();
-  const { candidateId, quizId, link, notes } = req.body;
-  if (!candidateId || !quizId || !link) {
+  const { candidateId, quizId, link, notes, assignmentTitle, fileUrl } = req.body;
+  const effectiveLink = link || fileUrl;
+  if (!candidateId || !effectiveLink) {
     return res.status(400).json({ success: false, message: 'يرجى إرفاق رابط البحث أو التكليف المطلوب' });
   }
   const cand = (db.candidates || []).find(c => c.id === candidateId || c.diplomaticId === candidateId);
   if (!cand) return res.status(404).json({ success: false, message: 'المندوب غير موجود' });
 
+  const effectiveQuizId = quizId || ('general_paper_' + Date.now());
   cand.weeklyEvaluations = cand.weeklyEvaluations || {};
-  if (!cand.weeklyEvaluations[quizId]) {
-    cand.weeklyEvaluations[quizId] = {};
+  if (!cand.weeklyEvaluations[effectiveQuizId]) {
+    cand.weeklyEvaluations[effectiveQuizId] = {};
   }
-  cand.weeklyEvaluations[quizId].assignmentStatus = 'submitted';
-  cand.weeklyEvaluations[quizId].submissionLink = String(link).trim();
-  cand.weeklyEvaluations[quizId].submissionNotes = (notes || '').trim();
-  cand.weeklyEvaluations[quizId].submittedAt = new Date().toISOString();
+  cand.weeklyEvaluations[effectiveQuizId].assignmentStatus = 'submitted';
+  cand.weeklyEvaluations[effectiveQuizId].submissionLink = String(effectiveLink).trim();
+  cand.weeklyEvaluations[effectiveQuizId].submissionNotes = (notes || assignmentTitle || '').trim();
+  cand.weeklyEvaluations[effectiveQuizId].submittedAt = new Date().toISOString();
+
+  // Ensure candidate.assignmentSubmissions array exists for tracking
+  cand.assignmentSubmissions = cand.assignmentSubmissions || [];
+  const submissionRecord = {
+    id: 'sub_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+    quizId: effectiveQuizId,
+    title: assignmentTitle || (cand.weeklyEvaluations[effectiveQuizId]?.quizTitle) || 'ورقة موقف / تكليف أكاديمي',
+    link: String(effectiveLink).trim(),
+    notes: (notes || '').trim(),
+    submittedAt: new Date().toISOString(),
+    status: 'submitted'
+  };
+  cand.assignmentSubmissions.unshift(submissionRecord);
 
   if (db.quizSubmissions) {
-    const sub = db.quizSubmissions.find(s => s.quizId === quizId && (s.candidateId === cand.id || s.candidateEmail === cand.email));
+    const sub = db.quizSubmissions.find(s => s.quizId === effectiveQuizId && (s.candidateId === cand.id || s.candidateEmail === cand.email));
     if (sub) {
       sub.assignmentStatus = 'submitted';
-      sub.submissionLink = String(link).trim();
+      sub.submissionLink = String(effectiveLink).trim();
       sub.assignmentNotes = (notes || '').trim();
     }
   }
 
   logActivity(req, 'تسليم تكليف وبحث', `قام المندوب ${cand.arabicName || cand.fullName} بتسليم تكليف المحاضرة`, cand.id);
   await saveDB(db);
-  res.json({ success: true, message: 'تم تسليم التكليف والبحث بنجاح وإرساله للمراجعة الأكاديمية' });
+  res.json({ success: true, message: 'تم تسليم التكليف والبحث بنجاح وإرساله للمراجعة الأكاديمية', assignment: submissionRecord, candidate: cand });
 });
 
 // GET /api/members/monthly-evaluations
