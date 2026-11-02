@@ -46,6 +46,15 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
+  <script>
+    // Safety Watchdog: Prevent dark blank screen if mobile network is slow
+    setTimeout(function() {
+      var appEl = document.getElementById('app');
+      if (appEl && appEl.hasAttribute('v-cloak')) {
+        appEl.removeAttribute('v-cloak');
+      }
+    }, 3500);
+  </script>
 </head>
 <body class="min-h-screen text-slate-100 antialiased selection:bg-amber-500/30 selection:text-amber-200">
 
@@ -1064,6 +1073,22 @@
 
       </template>
 
+      <!-- Fallback Empty / Not Logged In State -->
+      <div v-else class="py-20 text-center max-w-md mx-auto space-y-4">
+        <div class="w-14 h-14 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+          <i data-lucide="shield-alert" class="w-7 h-7"></i>
+        </div>
+        <h3 class="text-base font-black text-white">لم يتم العثور على بيانات الحساب الدبلوماسي</h3>
+        <p class="text-xs text-slate-400">يرجى تسجيل الدخول بكود العضوية وكلمة المرور للوصول إلى لوحة المتابعة وتصاريح الفعاليات.</p>
+        <button 
+          @click="redirectToLogin" 
+          class="btn-gold px-6 py-2.5 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-lg"
+        >
+          <span>تسجيل الدخول الآن</span>
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        </button>
+      </div>
+
     </main>
 
     <!-- ============================================== -->
@@ -1515,6 +1540,9 @@
             error.value = 'حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة لاحقاً';
           } finally {
             loading.value = false;
+            if (!candidate.value && !error.value) {
+              error.value = 'يرجى تسجيل الدخول للوصول إلى ملفك الدبلوماسي.';
+            }
             nextTick(() => { if (window.lucide) lucide.createIcons(); });
           }
         };

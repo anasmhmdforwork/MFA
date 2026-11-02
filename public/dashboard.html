@@ -228,6 +228,15 @@
       scrollbar-width: none;
     }
   </style>
+  <script>
+    // Safety Watchdog: Prevent dark blank screen if mobile network is slow
+    setTimeout(function() {
+      var appEl = document.getElementById('app');
+      if (appEl && appEl.hasAttribute('v-cloak')) {
+        appEl.removeAttribute('v-cloak');
+      }
+    }, 3500);
+  </script>
 </head>
 <body class="royal-bg min-h-screen text-slate-100 antialiased flex flex-col selection:bg-amber-400 selection:text-slate-950 relative overflow-x-hidden">
 
@@ -319,7 +328,15 @@
 
     <!-- Main Content Area -->
     <main class="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-1">
-      <!-- High Board / Committee Head 1-Click Event Booking Banner -->
+      
+      <!-- Unauthenticated Redirecting State -->
+      <div v-if="!currentUser" class="py-24 text-center">
+        <div class="w-12 h-12 border-3 border-amber-400/30 border-t-amber-400 rounded-full animate-spin mx-auto mb-4"></div>
+        <p class="text-sm text-slate-300 font-bold">جاري التحقق من الصلاحيات والتحويل...</p>
+      </div>
+
+      <template v-else>
+        <!-- High Board / Committee Head 1-Click Event Booking Banner -->
       <div v-if="activeUpcomingEvent" class="mb-6 bg-gradient-to-r from-amber-950/60 via-slate-900 to-slate-900 border border-amber-500/40 rounded-3xl p-4 sm:p-6 shadow-xl relative overflow-hidden">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
           <div class="flex items-center gap-3.5">
@@ -4209,7 +4226,7 @@
 
       </section>
 
-
+      </template>
     </main>
 
     <!-- ============================================== -->
@@ -8103,25 +8120,37 @@
         }
 
         async function fetchCandidates() {
-          const commId = selectedCommitteeId.value;
-          const res = await fetch(`/api/candidates?committeeId=${commId}`).then(r => r.json());
-          if (res.success) {
-            candidates.value = res.candidates;
+          try {
+            const commId = selectedCommitteeId.value;
+            const res = await fetch(`/api/candidates?committeeId=${commId}`).then(r => r.json());
+            if (res && res.success) {
+              candidates.value = res.candidates || [];
+            }
+          } catch (e) {
+            console.warn('fetchCandidates error:', e);
           }
         }
 
         async function fetchSlots() {
-          const commId = selectedCommitteeId.value;
-          const res = await fetch(`/api/slots?committeeId=${commId}`).then(r => r.json());
-          if (res.success) {
-            slots.value = res.slots;
+          try {
+            const commId = selectedCommitteeId.value;
+            const res = await fetch(`/api/slots?committeeId=${commId}`).then(r => r.json());
+            if (res && res.success) {
+              slots.value = res.slots || [];
+            }
+          } catch (e) {
+            console.warn('fetchSlots error:', e);
           }
         }
 
         async function fetchStats() {
-          const res = await fetch('/api/stats/overview').then(r => r.json());
-          if (res.success) {
-            transferAuditLogs.value = res.recentTransfers || [];
+          try {
+            const res = await fetch('/api/stats/overview').then(r => r.json());
+            if (res && res.success) {
+              transferAuditLogs.value = res.recentTransfers || [];
+            }
+          } catch (e) {
+            console.warn('fetchStats error:', e);
           }
         }
 
@@ -10447,11 +10476,14 @@
           }
         };
 
-        const deleteOperationsTask = async (task) => {
-          if (!task || !task.id) return;
-          if (!confirm(`هل أنت متأكد من حذف تكليف "${task.title}"؟`)) return;
+        const deleteOperationsTask = async (taskOrId) => {
+          const taskId = typeof taskOrId === 'object' ? taskOrId?.id : taskOrId;
+          const taskObj = (operationsTasks.value || []).find(t => t.id === taskId) || (typeof taskOrId === 'object' ? taskOrId : null);
+          const taskTitle = taskObj?.title || 'هذا التكليف';
+          if (!taskId) return;
+          if (!confirm(`هل أنت متأكد من حذف التكليف "${taskTitle}"؟`)) return;
           try {
-            const res = await fetch(`/api/operations/tasks/${task.id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/operations/tasks/${taskId}`, { method: 'DELETE' });
             const data = await res.json();
             if (data.success) {
               await loadOperationsCalendar();
@@ -10459,7 +10491,7 @@
               alert(data.message || 'تعذر حذف التكليف');
             }
           } catch (e) {
-            alert('حدث خطأ أثناء الحذف');
+            alert('حدث خطأ أثناء حذف التكليف');
           }
         };
 

@@ -804,7 +804,12 @@ app.get('/api/candidates', (req, res) => {
     list = list.filter(c => c.trackPreference.includes(track));
   }
 
-  res.json({ success: true, count: list.length, candidates: list });
+  const safeCandidates = list.map(c => {
+    const { delegatePassword, ...rest } = c;
+    return rest;
+  });
+
+  res.json({ success: true, count: safeCandidates.length, candidates: safeCandidates });
 });
 
 app.get(['/api/candidates/:id', '/api/candidate/:id'], (req, res) => {
@@ -820,7 +825,8 @@ app.get(['/api/candidates/:id', '/api/candidate/:id'], (req, res) => {
     slot = db.slots.find(s => s.id === cand.slotId);
   }
 
-  res.json({ success: true, candidate: { ...cand, slot } });
+  const { delegatePassword, ...safeCand } = cand;
+  res.json({ success: true, candidate: { ...safeCand, slot } });
 });
 
 // Update candidate interview evaluation & notes
@@ -2876,14 +2882,15 @@ app.put('/api/events/:id/attendees/:bookingId/status', async (req, res) => {
 // 9. LIVE QR CAMERA CHECK-IN DESK API
 // ==========================================
 
-app.post('/api/checkin/qr', async (req, res) => {
+app.post(['/api/checkin/qr', '/api/governance/checkin'], async (req, res) => {
   const db = getDB();
   db.candidates = db.candidates || [];
   db.eventBookings = db.eventBookings || [];
   db.events = db.events || [];
   db.operationsSessions = db.operationsSessions || [];
 
-  const { qrPayload, eventId, sessionId } = req.body;
+  const qrPayload = req.body.qrPayload || req.body.rawCode || req.body.code;
+  const { eventId, sessionId } = req.body;
   if (!qrPayload) {
     return res.status(400).json({ success: false, message: 'يرجى تقديم كود الـ QR أو كود العضوية الدبلوماسي' });
   }
@@ -3323,6 +3330,40 @@ app.put('/api/operations/tasks/:id/status', async (req, res) => {
   res.json({ success: true, message: 'تم تحديث حالة التكليف بنجاح', task });
 });
 
+// DELETE /api/operations/tasks/:id - Delete an operations task
+app.delete('/api/operations/tasks/:id', async (req, res) => {
+  const db = getDB();
+  db.operationsTasks = db.operationsTasks || [];
+  const taskId = req.params.id;
+  const idx = db.operationsTasks.findIndex(t => t.id === taskId);
+  if (idx === -1) {
+    return res.status(404).json({ success: false, message: 'التكليف غير موجود' });
+  }
+
+  const [removedTask] = db.operationsTasks.splice(idx, 1);
+
+  // Recalculate member continuous evaluation if assigned
+  if (removedTask.assignedToCandidateId) {
+    const cand = (db.candidates || []).find(c => c.id === removedTask.assignedToCandidateId || c.diplomaticId === removedTask.assignedToCandidateId);
+    if (cand && cand.memberEvaluation) {
+      const memberTasks = db.operationsTasks.filter(t => t.assignedToCandidateId === cand.id);
+      const completedTasks = memberTasks.filter(t => t.status === 'completed').length;
+      cand.memberEvaluation.completedTasksCount = completedTasks;
+      cand.memberEvaluation.totalTasksCount = memberTasks.length;
+      cand.memberEvaluation.taskCompletionRate = memberTasks.length > 0 ? Math.round((completedTasks / memberTasks.length) * 100) : 100;
+      if (memberTasks.length > 0) {
+        cand.memberEvaluation.score = Math.min(10, Number((7.0 + (completedTasks / memberTasks.length) * 3.0).toFixed(1)));
+      }
+      cand.memberEvaluation.updatedAt = new Date().toISOString();
+    }
+  }
+
+  logActivity(req, 'حذف تكليف تشغيلي', `حذف التكليف: "${removedTask.title}"`, removedTask.id);
+  await saveDB(db);
+
+  res.json({ success: true, message: 'تم حذف التكليف بنجاح وتحديث مؤشر العضو' });
+});
+
 // GET /api/members/:id/tasks - Tasks assigned to a specific member
 app.get('/api/members/:id/tasks', (req, res) => {
   const db = getDB();
@@ -3350,7 +3391,7 @@ app.get('/api/members/:id/tasks', (req, res) => {
 // 11. AUDIT TRAIL API
 // ==========================================
 
-app.get('/api/audit-logs', (req, res) => {
+app.get(['/api/audit-logs', '/api/governance/audit-logs'], (req, res) => {
   const db = getDB();
   const logs = (db.auditLogs || []).slice(0, 100);
   res.json({ success: true, logs });
