@@ -2,51 +2,52 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>الملف التعريفي وسجل الأداء | نموذج محاكاة وزارة الخارجية</title>
-  <link rel="icon" type="image/jpeg" href="/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Cinzel:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
   <style>
-    body { 
+    body {
       font-family: 'Cairo', sans-serif;
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
       background-color: #070e1e;
+      color: #f8fafc;
+      background-image: 
+        radial-gradient(at 100% 0%, rgba(212, 175, 55, 0.08) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(14, 165, 233, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
     }
-    .royal-bg {
-      background: radial-gradient(circle at 50% 10%, #112240 0%, #070e1e 75%, #030712 100%);
-    }
-    .gold-gradient-text {
-      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .cinzel {
+      font-family: 'Cinzel', serif;
     }
     .gold-card-border {
-      border: 1px solid rgba(197, 160, 89, 0.28);
+      border: 1px solid rgba(212, 175, 55, 0.25);
     }
     .gold-card-border:hover {
-      border-color: rgba(197, 160, 89, 0.5);
+      border-color: rgba(212, 175, 55, 0.5);
     }
     .btn-gold {
-      background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #a87e2b 100%);
+      background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
       color: #070e1e;
-      transition: all 0.25s ease;
+      font-weight: 800;
+      transition: all 0.2s ease;
     }
     .btn-gold:hover {
-      background: linear-gradient(135deg, #e5be4a 0%, #d4af37 50%, #b88a32 100%);
-      box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.35);
+      background: linear-gradient(135deg, #e5c158 0%, #be9316 100%);
       transform: translateY(-1px);
     }
     [v-cloak] { display: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="royal-bg min-h-screen text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950">
+<body class="min-h-screen text-slate-100 antialiased selection:bg-amber-500/30 selection:text-amber-200">
 
   <div id="app" v-cloak class="flex flex-col min-h-screen">
 
@@ -64,7 +65,7 @@
                 جامعة السويس
               </span>
             </div>
-            <p class="text-[10px] sm:text-xs text-amber-400 font-medium">الملف الشخصي وسجل الأداء</p>
+            <p class="text-[10px] sm:text-xs text-amber-400 font-medium">الملف الشخصي وسجل الأداء الدبلوماسي</p>
           </div>
         </div>
 
@@ -75,7 +76,7 @@
           </span>
           <button 
             @click="logout"
-            class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+            class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
             <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-400"></i>
             <span>خروج</span>
@@ -86,7 +87,7 @@
     </header>
 
     <!-- Main Content Area -->
-    <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 py-6 sm:py-10 space-y-6">
+    <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 py-6 sm:py-8 space-y-6">
 
       <!-- Loading State -->
       <div v-if="loading" class="py-24 text-center">
@@ -103,7 +104,7 @@
         <p class="text-xs text-rose-300 mb-5">{{ error }}</p>
         <button 
           @click="redirectToLogin" 
-          class="btn-gold px-6 py-2.5 rounded-xl text-xs font-black inline-flex items-center gap-2"
+          class="btn-gold px-6 py-2.5 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer"
         >
           <span>الانتقال لصفحة تسجيل الدخول</span>
           <i data-lucide="arrow-left" class="w-4 h-4"></i>
@@ -113,11 +114,11 @@
       <!-- Main Profile Dashboard (When Loaded) -->
       <template v-else-if="candidate">
 
-        <!-- 1. Hero Identity Banner -->
-        <div class="bg-gradient-to-r from-slate-900/90 via-slate-900/80 to-slate-950/90 backdrop-blur-xl rounded-3xl p-5 sm:p-8 gold-card-border shadow-2xl relative overflow-hidden">
+        <!-- 1. Hero Identity Banner (Always Visible) -->
+        <div class="bg-gradient-to-r from-slate-900/90 via-slate-900/80 to-slate-950/90 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-card-border shadow-2xl relative overflow-hidden">
           <div class="absolute top-0 right-0 w-80 h-40 bg-amber-500/5 blur-3xl pointer-events-none"></div>
 
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 relative z-10">
             
             <div class="flex items-center gap-4 sm:gap-6">
               <!-- Avatar Ring -->
@@ -144,7 +145,7 @@
                     class="px-2.5 py-1 rounded-full text-[11px] font-bold border"
                     :class="candidate.roleType === 'member' ? 'bg-purple-500/20 text-purple-300 border-purple-500/40' : 'bg-amber-500/20 text-amber-300 border-amber-500/40'"
                   >
-                    {{ candidate.roleType === 'member' ? ('عضو هيكل: ' + (candidate.subDepartment || 'لجنة')) : 'مندوب (Delegate)' }}
+                    {{ candidate.roleType === 'member' ? ('عضو هيكل: قطاع ' + (candidate.subDepartment || 'التنظيم')) : 'مندوب دبلوماسي (Delegate)' }}
                   </span>
                 </div>
 
@@ -200,346 +201,208 @@
         </div>
 
         <!-- ============================================== -->
-        <!-- ACTIVE EVENT BOARDING PASSES & QR TICKETS (Shown ONLY When Booked) -->
+        <!-- PROFILE TAB NAVIGATION (ROLE-TAILORED)         -->
         <!-- ============================================== -->
-        <div v-if="myBookedEvents.length > 0" class="bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-slate-950/95 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-card-border shadow-2xl relative overflow-hidden space-y-4">
+        <div class="bg-slate-900/90 backdrop-blur-xl p-1.5 sm:p-2 rounded-2xl border border-slate-800 shadow-xl flex items-center gap-1.5 overflow-x-auto no-scrollbar sticky top-[65px] z-30">
           
-          <!-- Header & Switcher (if multiple booked events) -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[11px] font-black border border-amber-500/30 flex items-center gap-1.5">
-                <i data-lucide="ticket" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>تصريح دخول وتذكرة فعالية رسمية (Event Boarding Pass)</span>
-              </span>
-              
-              <span v-if="activeBookedEvent.myBooking?.attendanceStatus === 'attended'" class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1">
-                <i data-lucide="badge-check" class="w-3 h-3"></i>
-                <span>تم تسجيل الحضور وتأكيد الدخول رسمياً</span>
-              </span>
-              <span v-else class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30 flex items-center gap-1">
-                <i data-lucide="clock" class="w-3 h-3"></i>
-                <span>حجز مؤكد • صالحة للدخول بالبوابة</span>
-              </span>
-            </div>
+          <!-- TAB 1: OVERVIEW (FOR ALL) -->
+          <button 
+            @click="activeProfileTab = 'overview'" 
+            class="px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer flex-shrink-0"
+            :class="activeProfileTab === 'overview' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'"
+          >
+            <i data-lucide="compass" class="w-4 h-4"></i>
+            <span>{{ candidate.roleType === 'member' ? 'الرئيسية والصفة بالهيكل' : 'الرئيسية والفعاليات' }}</span>
+          </button>
 
-            <!-- Multi-pass switcher if candidate has more than 1 booked event -->
-            <div v-if="myBookedEvents.length > 1" class="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-xs">
-              <span class="text-slate-400 text-[11px] px-1.5 font-bold">التصاريح ({{ myBookedEvents.length }}):</span>
-              <button 
-                v-for="(bkEvt, idx) in myBookedEvents" 
-                :key="bkEvt.id"
-                @click="selectedPassIndex = idx"
-                class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer"
-                :class="selectedPassIndex === idx ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-300 hover:text-white'"
-              >
-                تذكرة {{ idx + 1 }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Active Pass Card Body -->
-          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            
-            <div class="space-y-3.5 flex-1">
-              <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono">
-                    {{ activeBookedEvent.type === 'visit' ? 'زيارة رسمية ميدانية' : (activeBookedEvent.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}
-                  </span>
-                  <span class="font-mono text-xs font-black text-amber-400">
-                    {{ activeBookedEvent.myBooking?.ticketCode || ('TKT-' + activeBookedEvent.id.slice(-4).toUpperCase()) }}
-                  </span>
-                </div>
-                <h3 class="text-lg sm:text-2xl font-black text-white leading-snug">
-                  {{ activeBookedEvent.title }}
-                </h3>
-                <p v-if="activeBookedEvent.description" class="text-xs text-slate-300 mt-1 line-clamp-2">
-                  {{ activeBookedEvent.description }}
-                </p>
-              </div>
-
-              <!-- Logistics Grid -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
-                  <i data-lucide="calendar" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                  <span>{{ activeBookedEvent.date }} (الساعة {{ activeBookedEvent.time }})</span>
-                </div>
-                <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
-                  <i data-lucide="map-pin" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                  <span class="truncate">{{ activeBookedEvent.location }}</span>
-                </div>
-              </div>
-
-              <div v-if="activeBookedEvent.dressCode" class="text-[11px] text-amber-200/90 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 flex items-center gap-2">
-                <i data-lucide="shirt" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0"></i>
-                <span>الزي المطلوب: {{ activeBookedEvent.dressCode }}</span>
-              </div>
-
-              <!-- Action Buttons -->
-              <div class="flex items-center gap-2.5 pt-1 flex-wrap">
-                <button 
-                  @click="openEventTicketModal(activeBookedEvent)"
-                  class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md"
-                >
-                  <i data-lucide="maximize-2" class="w-4 h-4"></i>
-                  <span>تكبير وطباعة التصريح الرسمي (Boarding Pass)</span>
-                </button>
-
-                <a 
-                  :href="'/verify?code=' + encodeURIComponent(candidate.diplomaticId || candidate.id) + '&event=' + encodeURIComponent(activeBookedEvent.id) + '&ticket=' + encodeURIComponent(activeBookedEvent.myBooking?.ticketCode || '')" 
-                  target="_blank"
-                  class="px-3.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                >
-                  <i data-lucide="shield-check" class="w-4 h-4"></i>
-                  <span>التحقق من التذكرة بالبوابة</span>
-                </a>
-
-                <button 
-                  v-if="activeBookedEvent.myBooking?.attendanceStatus !== 'attended'"
-                  @click="cancelEventBooking(activeBookedEvent)"
-                  class="text-[11px] font-bold text-rose-300 hover:text-rose-200 hover:underline px-3 py-2 rounded-xl bg-rose-950/60 border border-rose-500/30 transition cursor-pointer"
-                >
-                  إلغاء الحجز
-                </button>
-              </div>
-            </div>
-
-            <!-- Dedicated Event QR Code Box -->
-            <div class="flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl bg-slate-950 border border-amber-500/40 shadow-2xl flex-shrink-0 self-center text-center">
-              <div class="p-2.5 bg-white rounded-xl shadow-inner mb-2 border-2 border-amber-400/70">
-                <div id="active-event-qr" class="w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center"></div>
-              </div>
-              <span class="text-[11px] font-mono font-black text-amber-300 tracking-wider">
-                {{ activeBookedEvent.myBooking?.ticketCode }}
-              </span>
-              <span class="text-[10px] text-slate-400 mt-0.5">كود QR مخصص لدخول هذه الفعالية</span>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- ============================================== -->
-        <!-- ASSIGNED OPERATIONAL TASKS (For Members) -->
-        <!-- ============================================== -->
-        <div v-if="tasks && tasks.length > 0" class="bg-slate-900/90 backdrop-blur-md rounded-3xl p-5 sm:p-7 gold-card-border shadow-xl space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div class="flex items-center gap-2">
-                <i data-lucide="check-square" class="w-5 h-5 text-amber-400"></i>
-                <h3 class="text-base sm:text-lg font-black text-white">مهامي وتكليفاتي التشغيلية الشهرية</h3>
-              </div>
-              <p class="text-xs text-slate-400 mt-0.5">
-                التكليفات والمهام المسندة إليك من قِبل رئيس اللجنة أو إدارة القطاع خلال الشهر
-              </p>
-            </div>
-
-            <!-- Task Progress Indicator -->
-            <div class="flex items-center gap-3 bg-slate-950/70 px-4 py-2 rounded-2xl border border-slate-800 self-start sm:self-auto">
-              <span class="text-xs font-bold text-slate-300">نسبة الإنجاز:</span>
-              <div class="w-24 sm:w-32 bg-slate-800 rounded-full h-2 overflow-hidden">
-                <div 
-                  class="bg-gradient-to-r from-emerald-500 to-teal-400 h-2 rounded-full transition-all duration-500" 
-                  :style="{ width: taskProgressPercent + '%' }"
-                ></div>
-              </div>
-              <span class="text-xs font-black text-emerald-400 font-mono">{{ taskProgressPercent }}%</span>
-            </div>
-          </div>
-
-          <!-- Tasks List -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-2">
-            <div 
-              v-for="t in tasks" 
-              :key="t.id"
-              class="p-4 rounded-2xl bg-slate-950/70 border transition flex flex-col justify-between gap-3"
-              :class="t.status === 'completed' ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800 hover:border-slate-700'"
-            >
-              <div class="space-y-1.5">
-                <div class="flex items-center justify-between gap-2">
-                  <span 
-                    class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border"
-                    :class="t.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border-amber-500/30'"
-                  >
-                    {{ t.status === 'completed' ? 'تم الإنجاز بنجاح' : 'قيد التنفيذ المطلوب' }}
-                  </span>
-                  <span v-if="t.dueDate" class="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-                    <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i>
-                    <span>موعد التسليم: {{ t.dueDate }}</span>
-                  </span>
-                </div>
-
-                <h4 class="text-sm font-black text-white" :class="{ 'line-through text-slate-400': t.status === 'completed' }">
-                  {{ t.title }}
-                </h4>
-                <p v-if="t.description" class="text-xs text-slate-300 leading-relaxed">
-                  {{ t.description }}
-                </p>
-              </div>
-
-              <div class="pt-2 border-t border-slate-900 flex items-center justify-between">
-                <span class="text-[10px] text-slate-500 font-mono">
-                  {{ t.status === 'completed' ? 'تم التسجيل في تقييمك' : 'ينعكس الإنجاز في تقييم الأداء' }}
-                </span>
-                <button 
-                  @click="toggleTaskStatus(t)"
-                  class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                  :class="t.status === 'completed' ? 'bg-slate-900 text-slate-400 hover:text-rose-300' : 'btn-gold'"
-                >
-                  <i :data-lucide="t.status === 'completed' ? 'rotate-ccw' : 'check'" class="w-3.5 h-3.5"></i>
-                  <span>{{ t.status === 'completed' ? 'إعادة فتح' : 'تأكيد إنجاز المهمة' }}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ============================================== -->
-        <!-- UPCOMING EVENTS & VISITS (1-Click Booking) -->
-        <!-- ============================================== -->
-        <div id="events-section" v-if="events && events.length > 0" class="space-y-4">
-          <div class="flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-              <h3 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
-                <i data-lucide="compass" class="w-5 h-5 text-amber-400"></i>
-                <span>الفعاليات والزيارات الميدانية الرسمية المتاحة</span>
-              </h3>
-            </div>
-            <span class="text-[11px] font-bold text-amber-300 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
-              حجز فوري بنقرة واحدة
+          <!-- TAB 2: TASKS (FOR MEMBERS ONLY) -->
+          <button 
+            v-if="candidate.roleType === 'member'"
+            @click="activeProfileTab = 'tasks'" 
+            class="px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer flex-shrink-0"
+            :class="activeProfileTab === 'tasks' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'"
+          >
+            <i data-lucide="check-square" class="w-4 h-4"></i>
+            <span>التكليفات والمهام الشهرية</span>
+            <span v-if="tasks && tasks.length > 0" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-black" :class="activeProfileTab === 'tasks' ? 'bg-slate-950 text-amber-300' : 'bg-amber-500/20 text-amber-300'">
+              {{ tasks.filter(t => t.status !== 'completed').length }}
             </span>
-          </div>
+          </button>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div 
-              v-for="evt in events" 
-              :key="evt.id"
-              class="bg-slate-900/90 backdrop-blur-md rounded-3xl p-5 sm:p-6 gold-card-border shadow-xl flex flex-col justify-between relative overflow-hidden"
-            >
-              <div class="space-y-3">
-                <div class="flex items-start justify-between gap-2 flex-wrap">
-                  <div class="flex items-center gap-1.5 flex-wrap">
-                    <span class="px-2.5 py-1 rounded-full text-xs font-black"
-                          :class="evt.type === 'visit' ? 'bg-amber-400/20 text-amber-300 border border-amber-400/30' : (evt.type === 'seminar' ? 'bg-sky-400/20 text-sky-300 border border-sky-400/30' : 'bg-purple-400/20 text-purple-300 border border-purple-400/30')">
-                      {{ evt.type === 'visit' ? 'زيارة رسمية' : (evt.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}
-                    </span>
-                    <span 
-                      v-if="evt.targetAudience && evt.targetAudience.scope === 'custom'"
-                      class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/10 text-amber-300 border border-amber-400/20"
-                    >
-                      مخصصة لفئتك
-                    </span>
-                  </div>
-                  
-                  <span class="text-xs font-mono font-bold"
-                        :class="evt.isFull ? 'text-rose-400' : 'text-emerald-400'">
-                    {{ evt.isFull ? 'المقاعد مكتملة' : 'متبقي ' + evt.availableSeats + ' من ' + evt.capacity + ' مقعد' }}
-                  </span>
-                </div>
+          <!-- TAB 2: ACADEMIC & QUIZZES (FOR DELEGATES ONLY) -->
+          <button 
+            v-if="candidate.roleType !== 'member'"
+            @click="activeProfileTab = 'academic'" 
+            class="px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer flex-shrink-0"
+            :class="activeProfileTab === 'academic' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'"
+          >
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+            <span>درجات المحاضرات</span>
+            <span v-if="candidate.stats && candidate.stats.avgScore !== null" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-black" :class="activeProfileTab === 'academic' ? 'bg-slate-950 text-amber-300' : 'bg-sky-500/20 text-sky-300'">
+              {{ candidate.stats.avgScore }}%
+            </span>
+          </button>
 
-                <h4 class="text-base font-black text-white leading-snug">{{ evt.title }}</h4>
-                <p v-if="evt.description" class="text-xs text-slate-300 leading-relaxed">{{ evt.description }}</p>
+          <!-- TAB 3: ATTENDANCE (FOR ALL) -->
+          <button 
+            @click="activeProfileTab = 'attendance'" 
+            class="px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer flex-shrink-0"
+            :class="activeProfileTab === 'attendance' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'"
+          >
+            <i data-lucide="calendar-check" class="w-4 h-4"></i>
+            <span>سجل الحضور والغياب</span>
+            <span v-if="candidate.stats" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-black" :class="activeProfileTab === 'attendance' ? 'bg-slate-950 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'">
+              {{ candidate.stats.attendanceRate }}%
+            </span>
+          </button>
 
-                <!-- Logistics Details -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1 text-slate-300">
-                  <div class="flex items-center gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                    <i data-lucide="calendar" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                    <span>{{ evt.date }} ({{ evt.time }})</span>
-                  </div>
-                  <div class="flex items-center gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                    <i data-lucide="map-pin" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                    <span class="truncate">{{ evt.location }}</span>
-                  </div>
-                </div>
+          <!-- TAB 4: ASSIGNMENTS / POLICY PAPERS (FOR DELEGATES) -->
+          <button 
+            v-if="candidate.roleType !== 'member'"
+            @click="activeProfileTab = 'assignments'" 
+            class="px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer flex-shrink-0"
+            :class="activeProfileTab === 'assignments' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'"
+          >
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            <span>التكليفات والأوراق البحثية</span>
+          </button>
 
-                <div v-if="evt.dressCode" class="text-[11px] text-amber-200/90 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 flex items-center gap-2">
-                  <i data-lucide="shirt" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0"></i>
-                  <span>الزي المطلوب: {{ evt.dressCode }}</span>
-                </div>
+          <!-- TAB 4: FIELD PERFORMANCE (FOR MEMBERS) -->
+          <button 
+            v-if="candidate.roleType === 'member'"
+            @click="activeProfileTab = 'performance'" 
+            class="px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer flex-shrink-0"
+            :class="activeProfileTab === 'performance' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'"
+          >
+            <i data-lucide="award" class="w-4 h-4"></i>
+            <span>تقييم الأداء الميداني</span>
+          </button>
 
-                <div v-if="evt.notes" class="text-[11px] text-slate-400 italic">
-                  {{ evt.notes }}
-                </div>
-              </div>
-
-              <!-- Action Booking Button -->
-              <div class="pt-4 mt-3 border-t border-slate-800">
-                <!-- If Already Booked -->
-                <div v-if="evt.myBooking" class="space-y-3 bg-emerald-950/40 border border-emerald-500/40 p-4 rounded-2xl">
-                  <div class="flex items-center justify-between gap-2 flex-wrap">
-                    <div class="flex items-center gap-2 text-xs font-bold text-emerald-300">
-                      <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 flex-shrink-0"></i>
-                      <div>
-                        <span>تم تأكيد حجز مقعدك بالفعالية</span>
-                        <span class="block text-[11px] text-emerald-400/80 font-mono">حجز مؤكد • {{ evt.myBooking.roleTitle }}</span>
-                      </div>
-                    </div>
-
-                    <span v-if="evt.myBooking.attendanceStatus === 'attended'" class="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
-                      <i data-lucide="badge-check" class="w-3.5 h-3.5 text-emerald-400"></i>
-                      <span>تم تسجيل الحضور رسمياً</span>
-                    </span>
-                    <span v-else class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
-                      <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
-                      <span>بانتظار التحضير بالبوابة</span>
-                    </span>
-                  </div>
-
-                  <!-- Ticket Code info -->
-                  <div class="flex items-center justify-between bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 text-xs">
-                    <div class="flex items-center gap-2">
-                      <i data-lucide="ticket" class="w-4 h-4 text-amber-400"></i>
-                      <span class="text-slate-300">رقم التذكرة:</span>
-                      <span class="font-mono font-bold text-amber-300">{{ evt.myBooking.ticketCode }}</span>
-                    </div>
-                    <span class="text-[10px] text-slate-400">تصريح دخول رسمي بالـ QR</span>
-                  </div>
-
-                  <!-- Action Buttons -->
-                  <div class="flex items-center gap-2 pt-1">
-                    <button 
-                      @click="openEventTicketModal(evt)" 
-                      class="btn-gold flex-1 py-2.5 px-3 rounded-xl text-xs font-black shadow-md flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <i data-lucide="qr-code" class="w-4 h-4"></i>
-                      <span>عرض تصريح وتذكرة الدخول الرسمية (QR Ticket)</span>
-                    </button>
-
-                    <button 
-                      v-if="evt.myBooking.attendanceStatus !== 'attended'"
-                      @click="cancelEventBooking(evt)" 
-                      class="text-[11px] font-bold text-rose-300 hover:text-rose-200 hover:underline px-3 py-2.5 rounded-xl bg-rose-950/60 border border-rose-500/30 transition flex-shrink-0 cursor-pointer"
-                    >
-                      إلغاء الحجز
-                    </button>
-                  </div>
-                </div>
-
-                <!-- If Open for Booking -->
-                <button 
-                  v-else-if="!evt.isFull && evt.isOpen"
-                  @click="bookEvent(evt)" 
-                  :disabled="bookingEventId === evt.id"
-                  class="btn-gold w-full py-3 px-4 rounded-2xl text-xs font-black shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <i v-if="bookingEventId === evt.id" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
-                  <i v-else data-lucide="ticket" class="w-4 h-4"></i>
-                  <span>{{ bookingEventId === evt.id ? 'جاري حجز المقعد...' : 'حجز مقعدي في الفعالية الآن (بنقرة واحدة)' }}</span>
-                </button>
-
-                <!-- If Full -->
-                <div v-else class="text-center py-2.5 px-4 rounded-2xl bg-slate-800/80 text-slate-400 text-xs font-bold border border-slate-700">
-                  <span>عذراً، اكتملت جميع المقاعد المتاحة لهذه الفعالية</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- 3. Key Performance Metric Cards & CPI -->
-        <div class="space-y-4">
-          <!-- Featured CPI Meter Banner -->
+        <!-- ============================================== -->
+        <!-- TAB 1: OVERVIEW & EVENTS (الرئيسية)            -->
+        <!-- ============================================== -->
+        <div v-show="activeProfileTab === 'overview'" class="space-y-6">
+          
+          <!-- 1.1 Active Event Boarding Pass & QR Ticket (Shown ONLY When Booked) -->
+          <div v-if="myBookedEvents.length > 0" class="bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-slate-950/95 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-card-border shadow-2xl relative overflow-hidden space-y-4">
+            
+            <!-- Header & Switcher (if multiple booked events) -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[11px] font-black border border-amber-500/30 flex items-center gap-1.5">
+                  <i data-lucide="ticket" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>تصريح دخول وتذكرة فعالية رسمية (Event Boarding Pass)</span>
+                </span>
+                
+                <span v-if="activeBookedEvent.myBooking?.attendanceStatus === 'attended'" class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1">
+                  <i data-lucide="badge-check" class="w-3 h-3"></i>
+                  <span>تم تسجيل الحضور وتأكيد الدخول رسمياً</span>
+                </span>
+                <span v-else class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30 flex items-center gap-1">
+                  <i data-lucide="clock" class="w-3 h-3"></i>
+                  <span>حجز مؤكد • صالحة للدخول بالبوابة</span>
+                </span>
+              </div>
+
+              <!-- Multi-pass switcher if candidate has more than 1 booked event -->
+              <div v-if="myBookedEvents.length > 1" class="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-xs">
+                <span class="text-slate-400 text-[11px] px-1.5 font-bold">التصاريح ({{ myBookedEvents.length }}):</span>
+                <button 
+                  v-for="(bkEvt, idx) in myBookedEvents" 
+                  :key="bkEvt.id"
+                  @click="selectedPassIndex = idx"
+                  class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer"
+                  :class="selectedPassIndex === idx ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-300 hover:text-white'"
+                >
+                  تذكرة {{ idx + 1 }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Pass Card Body -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              
+              <div class="space-y-3.5 flex-1">
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono">
+                      {{ activeBookedEvent.type === 'visit' ? 'زيارة رسمية ميدانية' : (activeBookedEvent.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}
+                    </span>
+                    <span class="font-mono text-xs font-black text-amber-400">
+                      {{ activeBookedEvent.myBooking?.ticketCode || ('TKT-' + activeBookedEvent.id.slice(-4).toUpperCase()) }}
+                    </span>
+                  </div>
+                  <h3 class="text-lg sm:text-2xl font-black text-white leading-snug">
+                    {{ activeBookedEvent.title }}
+                  </h3>
+                  <p v-if="activeBookedEvent.description" class="text-xs text-slate-300 mt-1 line-clamp-2">
+                    {{ activeBookedEvent.description }}
+                  </p>
+                </div>
+
+                <!-- Logistics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+                    <span>{{ activeBookedEvent.date }} (الساعة {{ activeBookedEvent.time }})</span>
+                  </div>
+                  <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+                    <span class="truncate">{{ activeBookedEvent.location }}</span>
+                  </div>
+                </div>
+
+                <div v-if="activeBookedEvent.dressCode" class="text-[11px] text-amber-200/90 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 flex items-center gap-2">
+                  <i data-lucide="shirt" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0"></i>
+                  <span>الزي المطلوب: {{ activeBookedEvent.dressCode }}</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2.5 pt-1 flex-wrap">
+                  <button 
+                    @click="openEventTicketModal(activeBookedEvent)"
+                    class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md"
+                  >
+                    <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                    <span>تكبير وطباعة التصريح الرسمي (Boarding Pass)</span>
+                  </button>
+
+                  <a 
+                    :href="'/verify?code=' + encodeURIComponent(candidate.diplomaticId || candidate.id) + '&event=' + encodeURIComponent(activeBookedEvent.id) + '&ticket=' + encodeURIComponent(activeBookedEvent.myBooking?.ticketCode || '')" 
+                    target="_blank"
+                    class="px-3.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  >
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>التحقق من التذكرة بالبوابة</span>
+                  </a>
+
+                  <button 
+                    v-if="activeBookedEvent.myBooking?.attendanceStatus !== 'attended'"
+                    @click="cancelEventBooking(activeBookedEvent)"
+                    class="text-[11px] font-bold text-rose-300 hover:text-rose-200 hover:underline px-3 py-2 rounded-xl bg-rose-950/60 border border-rose-500/30 transition cursor-pointer"
+                  >
+                    إلغاء الحجز
+                  </button>
+                </div>
+              </div>
+
+              <!-- Dedicated Event QR Code Box -->
+              <div class="flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl bg-slate-950 border border-amber-500/40 shadow-2xl flex-shrink-0 self-center text-center">
+                <div class="p-2.5 bg-white rounded-xl shadow-inner mb-2 border-2 border-amber-400/70">
+                  <div id="active-event-qr" class="w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center"></div>
+                </div>
+                <span class="text-[11px] font-mono font-black text-amber-300 tracking-wider">
+                  {{ activeBookedEvent.myBooking?.ticketCode }}
+                </span>
+                <span class="text-[10px] text-slate-400 mt-0.5">كود QR مخصص لدخول هذه الفعالية</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 1.2 Featured CPI Meter Banner -->
           <div class="bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-950 rounded-3xl p-5 sm:p-6 gold-card-border shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
               <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
@@ -549,14 +412,14 @@
                 <div class="flex items-center gap-2">
                   <span class="text-xs font-bold text-amber-400">مؤشر الجدارة التراكمي الشامل (360° CPI)</span>
                   <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                    {{ candidate.cpi ? candidate.cpi.standing : 'امتياز' }}
+                    {{ candidate.cpi ? candidate.cpi.standing : 'امتياز مع مرتبة الشرف' }}
                   </span>
                 </div>
                 <h3 class="text-lg sm:text-xl font-black text-white mt-0.5">
                   التقدير الدبلوماسي العام: {{ candidate.cpi ? candidate.cpi.score : 85 }} / 100
                 </h3>
                 <p class="text-[11px] text-slate-400">
-                  مؤشر تراكمي محايد يجمع بين الحضور (35%) والاختبارات (35%) وتقييم الأداء الميداني والتكليفات (30%)
+                  مؤشر تراكمي محايد يجمع بين الحضور والالتزام (35%)، متوسط الاختبارات (35%)، وتقييم الأداء والتكليفات (30%)
                 </p>
               </div>
             </div>
@@ -567,213 +430,634 @@
                 <span class="text-[10px] text-slate-400 block font-sans">الأهلية للاعتماد</span>
                 <span class="text-xs font-bold text-emerald-400 flex items-center gap-1">
                   <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
-                  <span>مرشح للتمثيل الدبلوماسي المتميز</span>
+                  <span>مرشح رسمي للتمثيل الدبلوماسي</span>
                 </span>
               </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          
-          <!-- Metric 1: Attendance Rate -->
-          <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-bold text-slate-400">معدل الحضور</span>
-              <div class="w-7 h-7 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
-                <i data-lucide="calendar-check" class="w-4 h-4"></i>
+          <!-- 1.3 Upcoming Events & Visits (1-Click Booking) -->
+          <div id="events-section" v-if="events && events.length > 0" class="space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+                <h3 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
+                  <i data-lucide="compass" class="w-5 h-5 text-amber-400"></i>
+                  <span>الفعاليات والزيارات الميدانية الرسمية المتاحة للحجز</span>
+                </h3>
               </div>
+              <span class="text-[11px] font-bold text-amber-300 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
+                حجز فوري بنقرة واحدة
+              </span>
             </div>
-            <div class="text-xl sm:text-3xl font-black text-white mb-2">
-              {{ candidate.stats ? candidate.stats.attendanceRate : 100 }}%
-            </div>
-            <!-- Progress Bar -->
-            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div 
-                class="bg-gradient-to-r from-amber-500 to-amber-300 h-1.5 rounded-full" 
-                :style="{ width: (candidate.stats ? candidate.stats.attendanceRate : 100) + '%' }"
-              ></div>
-            </div>
-            <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium">
-              حضور {{ candidate.stats ? candidate.stats.attendedCount : 0 }} من إجمالي {{ candidate.stats ? candidate.stats.totalQuizzes : 0 }} محاضرات
-            </span>
-          </div>
-
-          <!-- Metric 2: Average Quiz Score -->
-          <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-bold text-slate-400">متوسط الاختبارات</span>
-              <div class="w-7 h-7 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center">
-                <i data-lucide="award" class="w-4 h-4"></i>
-              </div>
-            </div>
-            <div class="text-xl sm:text-3xl font-black text-white mb-2">
-              {{ candidate.stats && candidate.stats.avgScore !== null ? candidate.stats.avgScore + '%' : '—' }}
-            </div>
-            <!-- Progress Bar -->
-            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-              <div 
-                class="bg-gradient-to-r from-sky-500 to-sky-300 h-1.5 rounded-full" 
-                :style="{ width: (candidate.stats && candidate.stats.avgScore !== null ? candidate.stats.avgScore : 0) + '%' }"
-              ></div>
-            </div>
-            <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium">
-              {{ candidate.stats && candidate.stats.avgScore !== null ? 'متوسط الدرجات المحققة' : 'لا توجد اختبارات مسجلة بعد' }}
-            </span>
-          </div>
-
-          <!-- Metric 3: Bonus Points -->
-          <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-bold text-slate-400">نقاط التميز والبونص</span>
-              <div class="w-7 h-7 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-                <i data-lucide="zap" class="w-4 h-4"></i>
-              </div>
-            </div>
-            <div class="text-xl sm:text-3xl font-black text-emerald-400 mb-2">
-              +{{ candidate.totalBonus || 0 }}
-            </div>
-            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-              <div class="bg-emerald-500 h-1.5 rounded-full" :style="{ width: Math.min(100, (candidate.totalBonus || 0) * 10) + '%' }"></div>
-            </div>
-            <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium">
-              نقاط إضافية عن المشاركة والتكليفات
-            </span>
-          </div>
-
-          <!-- Metric 4: Interview Rating -->
-          <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-bold text-slate-400">تقييم المقابلة الشخصية</span>
-              <div class="w-7 h-7 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
-                <i data-lucide="user-check" class="w-4 h-4"></i>
-              </div>
-            </div>
-            <div class="text-xl sm:text-3xl font-black text-amber-300 mb-2">
-              {{ candidate.interviewScore !== null ? candidate.interviewScore + ' / 10' : 'مقبول' }}
-            </div>
-            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-              <div class="bg-amber-400 h-1.5 rounded-full" :style="{ width: ((candidate.interviewScore || 10) * 10) + '%' }"></div>
-            </div>
-            <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium truncate">
-              {{ candidate.interviewNotes ? ('ملاحظة: ' + candidate.interviewNotes) : 'تم اجتياز المقابلة والقبول' }}
-            </span>
-          </div>
-
-        </div>
-      </div>
-
-        <!-- 4. Member Evaluation (if candidate is a structure member) -->
-        <div v-if="candidate.roleType === 'member' && candidate.memberEvaluation" class="bg-slate-900/85 backdrop-blur-md rounded-3xl p-5 sm:p-6 gold-card-border shadow-xl">
-          <div class="flex items-center gap-2 mb-4">
-            <i data-lucide="clipboard-list" class="w-5 h-5 text-amber-400"></i>
-            <h3 class="text-base font-black text-white">تقييم الأداء التنظيمي لعضو اللجنة</h3>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div class="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800">
-              <span class="text-[11px] text-slate-400 font-bold block mb-1">الالتزام والحضور</span>
-              <span class="text-sm font-black text-amber-300">{{ candidate.memberEvaluation.commitment || 'ممتاز' }}</span>
-            </div>
-            <div class="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800">
-              <span class="text-[11px] text-slate-400 font-bold block mb-1">إنجاز المهام والتكليفات</span>
-              <span class="text-sm font-black text-amber-300">{{ candidate.memberEvaluation.tasks || 'منتظم ومتميز' }}</span>
-            </div>
-            <div class="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800">
-              <span class="text-[11px] text-slate-400 font-bold block mb-1">ملاحظات رئيس اللجنة</span>
-              <span class="text-sm font-medium text-slate-200">{{ candidate.memberEvaluation.notes || 'أداء إيجابي ومستمر' }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. Lectures & Quizzes Detailed History -->
-        <div class="bg-slate-900/85 backdrop-blur-md rounded-3xl p-5 sm:p-7 gold-card-border shadow-xl">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-            <div>
-              <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                <i data-lucide="book-open" class="w-5 h-5 text-amber-400"></i>
-                <span>سجل المحاضرات والاختبارات الدورية</span>
-              </h3>
-              <p class="text-xs text-slate-400 mt-0.5">
-                كشف تفصيلي بحضور المحاضرات ودرجات الاختبارات المنعقدة داخل اللجنة
-              </p>
-            </div>
-            <span class="px-3 py-1 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold self-start sm:self-auto">
-              إجمالي المحاضرات: {{ candidate.quizzes ? candidate.quizzes.length : 0 }}
-            </span>
-          </div>
-
-          <!-- Empty Quizzes State -->
-          <div v-if="!candidate.quizzes || candidate.quizzes.length === 0" class="py-12 text-center border border-dashed border-slate-800 rounded-2xl">
-            <div class="w-10 h-10 rounded-2xl bg-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-2">
-              <i data-lucide="file-question" class="w-5 h-5"></i>
-            </div>
-            <p class="text-xs text-slate-400 font-bold">لم تُسجل أي محاضرات أو اختبارات لهذه اللجنة حتى الآن</p>
-            <p class="text-[11px] text-slate-500 mt-1">سيتم إتاحة الاختبارات وسجل الحضور تباعًا وفق جدول اللجنة</p>
-          </div>
-
-          <!-- Quizzes List / Cards -->
-          <div v-else class="space-y-3">
-            <div 
-              v-for="(quiz, index) in candidate.quizzes" 
-              :key="quiz.quizId"
-              class="p-4 sm:p-5 rounded-2xl bg-slate-950/60 border border-slate-800 hover:border-slate-700 transition flex flex-col md:flex-row md:items-center justify-between gap-4"
-            >
-              <div class="flex items-start gap-3.5">
-                <div 
-                  class="w-10 h-10 rounded-2xl flex items-center justify-center text-xs font-black flex-shrink-0"
-                  :class="quiz.attended ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'"
-                >
-                  <span v-if="quiz.lectureNumber">#{{ quiz.lectureNumber }}</span>
-                  <span v-else>#{{ index + 1 }}</span>
-                </div>
-                <div>
-                  <h4 class="text-sm font-bold text-white mb-1">
-                    {{ quiz.title }}
-                  </h4>
-                  <div class="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
-                    <span v-if="quiz.submittedAt" class="flex items-center gap-1 font-mono text-[11px]">
-                      <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i>
-                      <span>{{ formatDate(quiz.submittedAt) }}</span>
+                v-for="evt in events" 
+                :key="evt.id"
+                class="bg-slate-900/90 backdrop-blur-md rounded-3xl p-5 sm:p-6 gold-card-border shadow-xl flex flex-col justify-between relative overflow-hidden"
+              >
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border"
+                          :class="evt.type === 'visit' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : (evt.type === 'seminar' ? 'bg-sky-500/20 text-sky-300 border-sky-500/30' : 'bg-purple-500/20 text-purple-300 border-purple-500/30')">
+                      {{ evt.type === 'visit' ? 'زيارة ميدانية رسمية' : (evt.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}
                     </span>
-                    <span v-if="quiz.evaluation && quiz.evaluation.notes" class="text-amber-300 text-[11px]">
-                      ملاحظة: {{ quiz.evaluation.notes }}
+                    <span class="text-xs font-mono font-bold"
+                          :class="(evt.capacity - (evt.attendees ? evt.attendees.length : 0)) > 5 ? 'text-emerald-400' : 'text-rose-400'">
+                      متبقي {{ Math.max(0, evt.capacity - (evt.attendees ? evt.attendees.length : 0)) }} مقعد
                     </span>
                   </div>
+
+                  <div>
+                    <h4 class="text-base font-bold text-white mb-1">{{ evt.title }}</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">{{ evt.description }}</p>
+                  </div>
+
+                  <div class="space-y-1.5 text-xs text-slate-400 bg-slate-950/60 p-3 rounded-2xl border border-slate-800 font-mono">
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i>
+                      <span>{{ evt.date }} • {{ evt.time }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i>
+                      <span class="truncate">{{ evt.location }}</span>
+                    </div>
+                    <div v-if="evt.dressCode" class="flex items-center gap-2 text-amber-200">
+                      <i data-lucide="shirt" class="w-3.5 h-3.5 text-amber-400"></i>
+                      <span>{{ evt.dressCode }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Booking Action Button -->
+                <div class="pt-4 mt-3 border-t border-slate-800">
+                  <div v-if="evt.myBooking">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold"
+                            :class="evt.myBooking.attendanceStatus === 'attended' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'">
+                        <i :data-lucide="evt.myBooking.attendanceStatus === 'attended' ? 'badge-check' : 'clock'" class="w-3.5 h-3.5"></i>
+                        <span>{{ evt.myBooking.attendanceStatus === 'attended' ? 'تم تسجيل حضورك بنجاح' : 'حجزك مؤكد بالبوابة' }}</span>
+                      </span>
+                      <span class="text-[11px] font-mono text-amber-300 font-black">{{ evt.myBooking.ticketCode }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                      <button 
+                        @click="openEventTicketModal(evt)" 
+                        class="btn-gold flex-1 py-2 px-3 rounded-xl text-xs font-black shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <i data-lucide="ticket" class="w-4 h-4"></i>
+                        <span>استعراض تذكرة الدخول الرسمية</span>
+                      </button>
+                      <button 
+                        v-if="evt.myBooking.attendanceStatus !== 'attended'"
+                        @click="cancelEventBooking(evt)" 
+                        class="text-[11px] font-bold text-rose-300 hover:text-rose-200 px-3 py-2 rounded-xl bg-rose-950/60 border border-rose-500/30 transition cursor-pointer"
+                      >
+                        إلغاء
+                      </button>
+                    </div>
+                  </div>
+
+                  <div v-else-if="!evt.eligibility || evt.eligibility.eligible">
+                    <button 
+                      @click="bookEvent(evt)"
+                      :disabled="bookingEventId === evt.id"
+                      class="btn-gold w-full py-2.5 px-4 rounded-xl text-xs font-black shadow-lg flex items-center justify-center gap-2 cursor-pointer transition active:scale-[0.98]"
+                    >
+                      <span v-if="bookingEventId === evt.id" class="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></span>
+                      <i v-else data-lucide="ticket" class="w-4 h-4"></i>
+                      <span>حجز مقعد رسمي الآن (توليد تصريح QR)</span>
+                    </button>
+                  </div>
+
+                  <div v-else class="text-center py-2.5 px-4 rounded-2xl bg-slate-950/80 text-rose-300 text-xs font-bold border border-rose-500/30 space-y-1">
+                    <div class="flex items-center justify-center gap-1 text-rose-400 font-black">
+                      <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                      <span>الفعالية مشروطة بمعايير الجدارة والحضور</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 font-normal">{{ evt.eligibility.reason }}</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: ACADEMIC & QUIZZES (درجات المحاضرات)    -->
+        <!-- ============================================== -->
+        <div v-show="activeProfileTab === 'academic'" class="space-y-6">
+          
+          <!-- Academic Metric Cards -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            
+            <!-- Metric 1: Average Quiz Score -->
+            <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-400">متوسط الاختبارات</span>
+                <div class="w-7 h-7 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center">
+                  <i data-lucide="award" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-xl sm:text-3xl font-black text-white mb-2">
+                {{ candidate.stats && candidate.stats.avgScore !== null ? candidate.stats.avgScore + '%' : '—' }}
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div 
+                  class="bg-gradient-to-r from-sky-500 to-sky-300 h-1.5 rounded-full" 
+                  :style="{ width: (candidate.stats && candidate.stats.avgScore !== null ? candidate.stats.avgScore : 0) + '%' }"
+                ></div>
+              </div>
+              <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium">
+                {{ candidate.stats && candidate.stats.avgScore !== null ? 'متوسط الدرجات المحققة' : 'لا توجد اختبارات مسجلة بعد' }}
+              </span>
+            </div>
+
+            <!-- Metric 2: Attended Lectures -->
+            <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-400">المحاضرات المحضورة</span>
+                <div class="w-7 h-7 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                  <i data-lucide="book-check" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-xl sm:text-3xl font-black text-amber-300 mb-2">
+                {{ candidate.stats ? candidate.stats.attendedCount : 0 }} / {{ candidate.stats ? candidate.stats.totalQuizzes : 0 }}
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div 
+                  class="bg-gradient-to-r from-amber-500 to-amber-300 h-1.5 rounded-full" 
+                  :style="{ width: (candidate.stats ? candidate.stats.attendanceRate : 100) + '%' }"
+                ></div>
+              </div>
+              <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium">
+                نسبة الالتزام الأكاديمي
+              </span>
+            </div>
+
+            <!-- Metric 3: Bonus Points -->
+            <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-400">نقاط التميز والبونص</span>
+                <div class="w-7 h-7 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                  <i data-lucide="zap" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-xl sm:text-3xl font-black text-emerald-400 mb-2">
+                +{{ candidate.totalBonus || 0 }}
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-emerald-500 h-1.5 rounded-full" :style="{ width: Math.min(100, (candidate.totalBonus || 0) * 10) + '%' }"></div>
+              </div>
+              <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium">
+                نقاط إضافية عن المشاركة والتكليفات
+              </span>
+            </div>
+
+            <!-- Metric 4: Interview Score -->
+            <div class="bg-slate-900/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 gold-card-border shadow-lg">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-400">تقييم المقابلة الشخصية</span>
+                <div class="w-7 h-7 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                  <i data-lucide="user-check" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-xl sm:text-3xl font-black text-amber-300 mb-2">
+                {{ candidate.interviewScore !== null ? candidate.interviewScore + ' / 10' : 'مقبول' }}
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-amber-400 h-1.5 rounded-full" :style="{ width: ((candidate.interviewScore || 10) * 10) + '%' }"></div>
+              </div>
+              <span class="text-[10px] sm:text-xs text-slate-400 mt-2 block font-medium truncate">
+                {{ candidate.interviewNotes ? ('ملاحظة: ' + candidate.interviewNotes) : 'تم اجتياز المقابلة والقبول' }}
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Lectures & Quizzes Detailed History -->
+          <div class="bg-slate-900/85 backdrop-blur-md rounded-3xl p-5 sm:p-7 gold-card-border shadow-xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  <i data-lucide="book-open" class="w-5 h-5 text-amber-400"></i>
+                  <span>سجل اختبارات المحاضرات التراكمية</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  كشف تفصيلي بدرجات الاختبارات المنعقدة داخل اللجنة والتقييم الأكاديمي
+                </p>
+              </div>
+              <span class="px-3 py-1 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold self-start sm:self-auto font-mono">
+                إجمالي الاختبارات: {{ candidate.quizzes ? candidate.quizzes.length : 0 }}
+              </span>
+            </div>
+
+            <!-- Empty Quizzes State -->
+            <div v-if="!candidate.quizzes || candidate.quizzes.length === 0" class="py-12 text-center border border-dashed border-slate-800 rounded-2xl">
+              <div class="w-10 h-10 rounded-2xl bg-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-2">
+                <i data-lucide="file-question" class="w-5 h-5"></i>
+              </div>
+              <p class="text-xs text-slate-400 font-bold">لم تُسجل أي محاضرات أو اختبارات لهذه اللجنة حتى الآن</p>
+              <p class="text-[11px] text-slate-500 mt-1">سيتم إتاحة الاختبارات وسجل الحضور تباعًا وفق جدول اللجنة الأكاديمي</p>
+            </div>
+
+            <!-- Quizzes List -->
+            <div v-else class="space-y-3">
+              <div 
+                v-for="(quiz, index) in candidate.quizzes" 
+                :key="quiz.quizId"
+                class="p-4 sm:p-5 rounded-2xl bg-slate-950/60 border border-slate-800 hover:border-slate-700 transition flex flex-col md:flex-row md:items-center justify-between gap-4"
+              >
+                <div class="flex items-start gap-3.5">
+                  <div 
+                    class="w-10 h-10 rounded-2xl flex items-center justify-center text-xs font-black flex-shrink-0"
+                    :class="quiz.attended ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'"
+                  >
+                    <span v-if="quiz.lectureNumber">#{{ quiz.lectureNumber }}</span>
+                    <span v-else>#{{ index + 1 }}</span>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white mb-1">
+                      {{ quiz.title }}
+                    </h4>
+                    <div class="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
+                      <span v-if="quiz.submittedAt" class="flex items-center gap-1 font-mono text-[11px]">
+                        <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i>
+                        <span>تاريخ الاختبار: {{ formatDate(quiz.submittedAt) }}</span>
+                      </span>
+                      <span v-if="quiz.evaluation && quiz.evaluation.notes" class="text-amber-300 text-[11px]">
+                        ملاحظة الأستاذ/المشرف: {{ quiz.evaluation.notes }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Status & Score Badges -->
+                <div class="flex items-center gap-3 self-end md:self-auto flex-wrap">
+                  
+                  <!-- Attendance Pill -->
+                  <span 
+                    class="px-2.5 py-1 rounded-xl text-xs font-bold inline-flex items-center gap-1"
+                    :class="quiz.attended ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'"
+                  >
+                    <i :data-lucide="quiz.attended ? 'check' : 'x'" class="w-3.5 h-3.5"></i>
+                    <span>{{ quiz.attended ? 'تم أداء الاختبار' : 'لم يؤدَ / غائب' }}</span>
+                  </span>
+
+                  <!-- Score Pill -->
+                  <span 
+                    v-if="quiz.score !== null"
+                    class="px-3 py-1 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-black font-mono"
+                  >
+                    {{ quiz.score }} / {{ quiz.totalPoints }} ({{ quiz.percentage }}%)
+                  </span>
+
+                  <!-- Action Button if Quiz is Currently Open -->
+                  <a 
+                    v-if="quiz.isOpen && !quiz.attended" 
+                    :href="'/quiz.html?id=' + quiz.quizId"
+                    class="btn-gold px-3.5 py-1.5 rounded-xl text-xs font-black inline-flex items-center gap-1 shadow-md"
+                  >
+                    <span>أداء الاختبار الآن</span>
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                  </a>
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 2 (FOR MEMBERS): OPERATIONAL TASKS         -->
+        <!-- ============================================== -->
+        <div v-show="activeProfileTab === 'tasks'" class="space-y-6">
+          <div class="bg-slate-900/90 backdrop-blur-md rounded-3xl p-5 sm:p-7 gold-card-border shadow-xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <i data-lucide="check-square" class="w-5 h-5 text-amber-400"></i>
+                  <h3 class="text-base sm:text-lg font-black text-white">التكليفات والمهام التشغيلية الشهرية</h3>
+                </div>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  المهام الميدانية والتنظيمية المسندة إليك من قِبل إدارة القطاع أو رئيس اللجنة
+                </p>
+              </div>
+
+              <!-- Task Progress Indicator -->
+              <div class="flex items-center gap-3 bg-slate-950/70 px-4 py-2 rounded-2xl border border-slate-800 self-start sm:self-auto">
+                <span class="text-xs font-bold text-slate-300">نسبة الإنجاز:</span>
+                <div class="w-24 sm:w-32 bg-slate-800 rounded-full h-2 overflow-hidden">
+                  <div 
+                    class="bg-gradient-to-r from-emerald-500 to-teal-400 h-2 rounded-full transition-all duration-500" 
+                    :style="{ width: taskProgressPercent + '%' }"
+                  ></div>
+                </div>
+                <span class="text-xs font-black text-emerald-400 font-mono">{{ taskProgressPercent }}%</span>
+              </div>
+            </div>
+
+            <!-- Empty Tasks -->
+            <div v-if="!tasks || tasks.length === 0" class="py-12 text-center border border-dashed border-slate-800 rounded-2xl">
+              <div class="w-10 h-10 rounded-2xl bg-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-2">
+                <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+              </div>
+              <p class="text-xs text-slate-400 font-bold">لا توجد تكليفات جديدة مسندة إليك حالياً</p>
+              <p class="text-[11px] text-slate-500 mt-1">سيتم إشعارك فور إسناد أي تكليف تنظيمي أو لوجستي جديد</p>
+            </div>
+
+            <!-- Tasks List -->
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-2">
+              <div 
+                v-for="t in tasks" 
+                :key="t.id"
+                class="p-4 rounded-2xl bg-slate-950/70 border transition flex flex-col justify-between gap-3"
+                :class="t.status === 'completed' ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800 hover:border-slate-700'"
+              >
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between gap-2">
+                    <span 
+                      class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border"
+                      :class="t.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border-amber-500/30'"
+                    >
+                      {{ t.status === 'completed' ? 'تم الإنجاز بنجاح' : 'قيد التنفيذ المطلوب' }}
+                    </span>
+                    <span v-if="t.dueDate" class="text-[11px] font-mono text-slate-400 flex items-center gap-1">
+                      <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i>
+                      <span>موعد التسليم: {{ t.dueDate }}</span>
+                    </span>
+                  </div>
+
+                  <h4 class="text-sm font-black text-white" :class="{ 'line-through text-slate-400': t.status === 'completed' }">
+                    {{ t.title }}
+                  </h4>
+                  <p v-if="t.description" class="text-xs text-slate-300 leading-relaxed">
+                    {{ t.description }}
+                  </p>
+                </div>
+
+                <div class="pt-2 border-t border-slate-900 flex items-center justify-between">
+                  <span class="text-[10px] text-slate-500 font-mono">
+                    {{ t.status === 'completed' ? 'تم التوثيق في تقييمك التراكمي' : 'ينعكس الإنجاز في تقييم الأداء' }}
+                  </span>
+                  <button 
+                    @click="toggleTaskStatus(t)"
+                    class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                    :class="t.status === 'completed' ? 'bg-slate-900 text-slate-400 hover:text-rose-300' : 'btn-gold'"
+                  >
+                    <i :data-lucide="t.status === 'completed' ? 'rotate-ccw' : 'check'" class="w-3.5 h-3.5"></i>
+                    <span>{{ t.status === 'completed' ? 'إعادة فتح' : 'تأكيد إنجاز المهمة' }}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 3: ATTENDANCE & DISCIPLINE (سجل الحضور)    -->
+        <!-- ============================================== -->
+        <div v-show="activeProfileTab === 'attendance'" class="space-y-6">
+          
+          <!-- Attendance Analytics Card -->
+          <div class="bg-slate-900/90 backdrop-blur-md rounded-3xl p-5 sm:p-7 gold-card-border shadow-xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-3xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 flex-shrink-0">
+                  <i data-lucide="calendar-check-2" class="w-8 h-8"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg sm:text-xl font-black text-white">سجل الالتزام والانضباط الميداني</h3>
+                  <p class="text-xs text-slate-400 mt-1">
+                    توثيق رسمي آلي للحضور في الندوات والمحاضرات والزيارات الدبلوماسية عبر بوابات الـ QR
+                  </p>
                 </div>
               </div>
 
-              <!-- Status & Score Badges -->
-              <div class="flex items-center gap-3 self-end md:self-auto">
-                
-                <!-- Attendance Pill -->
+              <!-- Gauge -->
+              <div class="bg-slate-950 px-5 py-3 rounded-2xl border border-slate-800 text-center sm:text-right">
+                <span class="text-[11px] text-slate-400 block font-bold">نسبة الحضور الإجمالية:</span>
+                <span class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">{{ candidate.stats ? candidate.stats.attendanceRate : 100 }}%</span>
+                <span class="text-[10px] text-slate-500 block">حضور {{ candidate.stats ? candidate.stats.attendedCount : 0 }} من أصل {{ candidate.stats ? candidate.stats.totalQuizzes : 0 }} نشاط</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lectures Attendance Breakdown -->
+          <div class="bg-slate-900/85 backdrop-blur-md rounded-3xl p-5 sm:p-7 border border-slate-800 shadow-xl space-y-4">
+            <h4 class="text-sm font-black text-white flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4 text-amber-400"></i>
+              <span>تفاصيل حضور الجلسات والمحاضرات الأكاديمية</span>
+            </h4>
+
+            <div v-if="!candidate.quizzes || candidate.quizzes.length === 0" class="py-8 text-center text-xs text-slate-500">
+              لا توجد جلسات مسجلة حتى الآن
+            </div>
+
+            <div v-else class="divide-y divide-slate-800/80">
+              <div 
+                v-for="(quiz, idx) in candidate.quizzes" 
+                :key="quiz.quizId"
+                class="py-3 flex items-center justify-between gap-3 text-xs"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="w-7 h-7 rounded-lg bg-slate-950 flex items-center justify-center font-mono font-bold text-slate-400 text-[11px] border border-slate-800">
+                    {{ quiz.lectureNumber || (idx + 1) }}
+                  </span>
+                  <div>
+                    <span class="font-bold text-white block">{{ quiz.title }}</span>
+                    <span v-if="quiz.submittedAt" class="text-[10px] text-slate-500 font-mono">{{ formatDate(quiz.submittedAt) }}</span>
+                  </div>
+                </div>
+
                 <span 
-                  class="px-2.5 py-1 rounded-xl text-xs font-bold inline-flex items-center gap-1"
+                  class="px-2.5 py-1 rounded-xl text-xs font-bold inline-flex items-center gap-1.5"
                   :class="quiz.attended ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'"
                 >
                   <i :data-lucide="quiz.attended ? 'check' : 'x'" class="w-3.5 h-3.5"></i>
-                  <span>{{ quiz.attended ? 'حاضر' : 'لم يحضر / غائب' }}</span>
+                  <span>{{ quiz.attended ? 'حاضر ومعتمد' : 'غائب' }}</span>
                 </span>
+              </div>
+            </div>
+          </div>
 
-                <!-- Score Pill -->
+          <!-- Official Events & Visits Attendance -->
+          <div v-if="myBookedEvents.length > 0" class="bg-slate-900/85 backdrop-blur-md rounded-3xl p-5 sm:p-7 border border-slate-800 shadow-xl space-y-4">
+            <h4 class="text-sm font-black text-white flex items-center gap-2">
+              <i data-lucide="map-pin" class="w-4 h-4 text-amber-400"></i>
+              <span>الزيارات الميدانية والندوات الكبرى المحجوزة</span>
+            </h4>
+
+            <div class="divide-y divide-slate-800/80">
+              <div 
+                v-for="evt in myBookedEvents" 
+                :key="evt.id"
+                class="py-3 flex items-center justify-between gap-3 text-xs"
+              >
+                <div>
+                  <span class="font-bold text-white block">{{ evt.title }}</span>
+                  <span class="text-[10px] text-slate-400">{{ evt.date }} • {{ evt.location }}</span>
+                </div>
+
                 <span 
-                  v-if="quiz.score !== null"
-                  class="px-3 py-1 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-black font-mono"
+                  class="px-2.5 py-1 rounded-xl text-xs font-bold inline-flex items-center gap-1.5"
+                  :class="evt.myBooking?.attendanceStatus === 'attended' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'"
                 >
-                  {{ quiz.score }} / {{ quiz.totalPoints }} ({{ quiz.percentage }}%)
+                  <i :data-lucide="evt.myBooking?.attendanceStatus === 'attended' ? 'badge-check' : 'clock'" class="w-3.5 h-3.5"></i>
+                  <span>{{ evt.myBooking?.attendanceStatus === 'attended' ? 'تم تسجيل الدخول بالبوابة' : 'حجز مؤكد بانتظار الحضور' }}</span>
                 </span>
+              </div>
+            </div>
+          </div>
 
-                <!-- Action Button if Quiz is Currently Open -->
-                <a 
-                  v-if="quiz.isOpen && !quiz.attended" 
-                  :href="'/quiz.html?id=' + quiz.quizId"
-                  class="btn-gold px-3 py-1 rounded-xl text-xs font-black inline-flex items-center gap-1"
-                >
-                  <span>أداء الاختبار</span>
-                  <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
-                </a>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 4 (FOR DELEGATES): ASSIGNMENTS & RESEARCH  -->
+        <!-- ============================================== -->
+        <div v-show="activeProfileTab === 'assignments'" class="space-y-6">
+          
+          <!-- Instructions Banner -->
+          <div class="bg-gradient-to-r from-amber-950/30 via-slate-900 to-slate-950 rounded-3xl p-5 sm:p-6 gold-card-border shadow-xl">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
+                <i data-lucide="file-text" class="w-6 h-6"></i>
+              </div>
+              <div class="space-y-1">
+                <h3 class="text-base font-black text-white">منصة تسليم التكليفات وأوراق السياسات (Policy Papers)</h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  يُطلب من المندوب الدبلوماسي تسليم أوراق السياسات والتكليفات الأكاديمية بعد كل محاضرة. يتم تقييم الأبحاث من قِبل اللجنة الأكاديمية ورئاسة النموذج وتُحسب درجاتها ضمن مؤشر الجدارة التراكمي (CPI).
+                </p>
+                <div class="pt-1 flex items-center gap-2 text-[11px] text-amber-300 font-medium">
+                  <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                  <span>تأكد من فتح صلاحية المشاهدة (Anyone with the link can view) لرابط Google Docs قبل التسليم.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Assignments List -->
+          <div class="bg-slate-900/85 backdrop-blur-md rounded-3xl p-5 sm:p-7 gold-card-border shadow-xl space-y-4">
+            <h4 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
+              <i data-lucide="layers" class="w-5 h-5 text-amber-400"></i>
+              <span>تكليفات وأبحاث محاضرات اللجنة</span>
+            </h4>
+
+            <div v-if="!candidate.quizzes || candidate.quizzes.length === 0" class="py-12 text-center border border-dashed border-slate-800 rounded-2xl text-xs text-slate-400">
+              لا توجد تكليفات مطلوبة مسجلة حتى الآن
+            </div>
+
+            <div v-else class="space-y-3.5">
+              <div 
+                v-for="quiz in candidate.quizzes" 
+                :key="'assign_' + quiz.quizId"
+                class="p-4 sm:p-5 rounded-2xl bg-slate-950/70 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4"
+              >
+                <div class="space-y-1.5 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-300 text-[10px] font-bold border border-amber-500/20 font-mono">
+                      تكليف محاضرة #{{ quiz.lectureNumber || 1 }}
+                    </span>
+                    <h5 class="text-sm font-bold text-white">{{ quiz.title }}</h5>
+                  </div>
+
+                  <!-- Status Banner -->
+                  <div class="flex items-center gap-2 text-xs">
+                    <span 
+                      class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border"
+                      :class="quiz.assignmentStatus === 'reviewed' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : (quiz.assignmentStatus === 'submitted' ? 'bg-sky-500/20 text-sky-300 border-sky-500/30' : 'bg-amber-500/20 text-amber-300 border-amber-500/30')"
+                    >
+                      {{ quiz.assignmentStatus === 'reviewed' ? 'تمت المراجعة والاعتماد' : (quiz.assignmentStatus === 'submitted' ? 'تم التسليم بانتظار الاعتماد' : 'بانتظار التسليم') }}
+                    </span>
+
+                    <span v-if="quiz.assignmentScore !== null" class="font-mono text-amber-300 font-bold text-xs">
+                      الدرجة الأكاديمية: {{ quiz.assignmentScore }} / 10
+                    </span>
+                  </div>
+
+                  <!-- Notes or submission link -->
+                  <div v-if="quiz.submissionLink" class="text-xs pt-1">
+                    <a :href="quiz.submissionLink" target="_blank" class="text-sky-400 hover:underline inline-flex items-center gap-1 font-mono text-[11px]">
+                      <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                      <span>معاينة الرابط المسلم</span>
+                    </a>
+                  </div>
+
+                  <p v-if="quiz.assignmentNotes" class="text-[11px] text-amber-200/90 italic bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                    ملاحظات المشرف: {{ quiz.assignmentNotes }}
+                  </p>
+                </div>
+
+                <!-- Submit / Re-submit Button -->
+                <div class="flex-shrink-0 self-start md:self-center">
+                  <button 
+                    @click="openSubmitAssignmentModal(quiz)"
+                    class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-1.5 shadow-md cursor-pointer"
+                  >
+                    <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                    <span>{{ quiz.assignmentStatus === 'submitted' ? 'تعديل الرابط' : 'تسليم التكليف' }}</span>
+                  </button>
+                </div>
 
               </div>
-
             </div>
+
+          </div>
+
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 4 (FOR MEMBERS): FIELD PERFORMANCE         -->
+        <!-- ============================================== -->
+        <div v-show="activeProfileTab === 'performance'" class="space-y-6">
+          
+          <div class="bg-slate-900/85 backdrop-blur-md rounded-3xl p-5 sm:p-7 gold-card-border shadow-xl space-y-4">
+            <div class="flex items-center gap-3 pb-3 border-b border-slate-800">
+              <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+                <i data-lucide="award" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h3 class="text-base sm:text-lg font-black text-white">تقييم الأداء التنظيمي والميداني للعضو</h3>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  سجل التقييم الشامل للانضباط وسرعة الاستجابة اللوجستية وجودة إنجاز المهام
+                </p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
+              <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
+                <span class="text-xs text-slate-400 font-bold block mb-1">الالتزام والحضور الميداني</span>
+                <span class="text-base font-black text-amber-300">
+                  {{ candidate.memberEvaluation ? candidate.memberEvaluation.commitment || 'ممتاز ومستمر' : 'ممتاز' }}
+                </span>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
+                <span class="text-xs text-slate-400 font-bold block mb-1">إنجاز التكليفات والمهام</span>
+                <span class="text-base font-black text-emerald-400">
+                  {{ candidate.memberEvaluation ? candidate.memberEvaluation.tasks || 'منضبط ومتميز' : 'منضبط ومتميز' }}
+                </span>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
+                <span class="text-xs text-slate-400 font-bold block mb-1">نقاط التميز الإضافية</span>
+                <span class="text-base font-black text-amber-300 font-mono">+{{ candidate.totalBonus || 0 }} نقطة</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 text-xs text-slate-300 space-y-1">
+              <span class="text-slate-400 font-bold block">ملاحظات وتوجيهات رئيس اللجنة / الإدارة:</span>
+              <p class="italic text-slate-200">
+                {{ candidate.memberEvaluation && candidate.memberEvaluation.notes ? candidate.memberEvaluation.notes : 'أداء إيجابي ومستمر، ومساهمة فعالة في نجاح فعاليات النموذج.' }}
+              </p>
+            </div>
+
           </div>
 
         </div>
@@ -782,38 +1066,34 @@
 
     </main>
 
-    <!-- Official Event Boarding Pass & QR Ticket Modal -->
+    <!-- ============================================== -->
+    <!-- MODAL: EVENT BOARDING PASS & TICKET            -->
+    <!-- ============================================== -->
     <div v-if="showEventTicketModal && selectedEventTicket" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
       <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl p-6 sm:p-8 gold-card-border shadow-2xl max-w-lg w-full relative overflow-hidden text-center space-y-5">
         
         <button 
-          @click="showEventTicketModal = false"
-          class="absolute top-4 left-4 w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition cursor-pointer"
+          @click="showEventTicketModal = false" 
+          class="absolute top-4 left-4 text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition cursor-pointer"
         >
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
 
-        <!-- Header -->
+        <!-- Brand Crest & Header -->
         <div class="space-y-1.5">
-          <img src="/logo.jpg" alt="Logo" class="w-14 h-14 rounded-full mx-auto border-2 border-amber-400 shadow-lg object-cover">
-          <span class="text-[10px] font-black text-amber-400 block uppercase tracking-wider">جمهورية مصر العربية • نموذج محاكاة وزارة الخارجية</span>
-          <h2 class="text-lg sm:text-xl font-black text-white">تصريح دخول رسمي وتذكرة حضور</h2>
-          <span class="text-[11px] text-slate-400 font-mono">Official Event Entry Boarding Pass</span>
+          <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-14 h-14 rounded-full border-2 border-amber-400/80 mx-auto shadow-lg object-cover">
+          <h2 class="text-xs sm:text-sm font-black text-amber-400 tracking-wider">نموذج محاكاة وزارة الخارجية المصرية</h2>
+          <p class="text-[10px] text-slate-400">تصريح دخول رسمي • بوردنج باس الدخول الإلكتروني</p>
         </div>
 
         <!-- Ticket Card Box -->
-        <div class="p-5 rounded-2xl bg-slate-950/90 border border-amber-500/40 text-right space-y-4">
-          <!-- Event Title & Category -->
-          <div class="border-b border-slate-800/80 pb-3">
-            <div class="flex items-center justify-between gap-2 mb-1">
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">
-                {{ selectedEventTicket.type === 'visit' ? 'زيارة رسمية ميدانية' : (selectedEventTicket.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}
-              </span>
-              <span class="font-mono text-[11px] font-black text-amber-400">
-                {{ selectedEventTicket.myBooking?.ticketCode || 'TKT-' + selectedEventTicket.id.slice(-4).toUpperCase() }}
-              </span>
+        <div class="bg-slate-950 p-4 rounded-2xl border border-amber-500/30 text-right space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[10px] font-mono font-bold text-amber-400 pb-1 border-b border-slate-800">
+              <span>{{ selectedEventTicket.type === 'visit' ? 'زيارة رسمية ميدانية' : (selectedEventTicket.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}</span>
+              <span>{{ selectedEventTicket.myBooking?.ticketCode || 'TKT-' + selectedEventTicket.id.slice(-4).toUpperCase() }}</span>
             </div>
-            <h3 class="text-base font-black text-white leading-snug">{{ selectedEventTicket.title }}</h3>
+            <h3 class="text-base font-black text-white leading-snug mt-1.5">{{ selectedEventTicket.title }}</h3>
           </div>
 
           <!-- Dedicated QR Code Section -->
@@ -853,10 +1133,6 @@
             <i data-lucide="shirt" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0"></i>
             <span>الزي المطلوب: {{ selectedEventTicket.dressCode }}</span>
           </div>
-
-          <div v-if="selectedEventTicket.notes" class="text-[11px] text-slate-400 italic">
-            {{ selectedEventTicket.notes }}
-          </div>
         </div>
 
         <!-- Actions -->
@@ -880,15 +1156,72 @@
       </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- MODAL: SUBMIT ASSIGNMENT RESEARCH LINK         -->
+    <!-- ============================================== -->
+    <div v-if="showSubmitAssignmentModal && selectedAssignmentQuiz" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+      <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-6 sm:p-7 max-w-lg w-full space-y-4 shadow-2xl text-right">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+              <i data-lucide="file-up" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-black text-white">تسليم التكليف الأكاديمي والبحث</h3>
+              <p class="text-xs text-amber-400/90 font-mono">{{ selectedAssignmentQuiz.title }}</p>
+            </div>
+          </div>
+          <button @click="showSubmitAssignmentModal = false" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
 
+        <form @submit.prevent="handleAssignmentSubmit" class="space-y-4 text-xs">
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">رابط البحث / ورقة السياسات (Google Docs أو Drive): *</label>
+            <input 
+              type="url" 
+              v-model="assignmentForm.link" 
+              placeholder="https://docs.google.com/document/d/..." 
+              required
+              class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs focus:outline-none transition"
+            >
+            <span class="text-[10px] text-slate-400 mt-1 block">تأكد من تفعيل صلاحية العرض لأي شخص يملك الرابط (Anyone with the link can view).</span>
+          </div>
 
-    <!-- Footer -->
-    <footer class="py-4 px-6 border-t border-slate-800/80 bg-slate-950/40 text-center text-xs text-slate-500">
-      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-        <span>نموذج محاكاة وزارة الخارجية – جامعة السويس © 2026</span>
-        <span class="text-amber-400 font-medium">بوابة شؤون المندوبين والأعضاء</span>
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">ملاحظات أو تعليقات توضيحية للمشرف (اختياري):</label>
+            <textarea 
+              v-model="assignmentForm.notes" 
+              rows="3" 
+              placeholder="اكتب أي ملاحظة أو ملخص سريع للبحث..."
+              class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl p-3 text-white text-xs focus:outline-none transition resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-800">
+            <button 
+              type="submit" 
+              :disabled="isSubmittingAssignment"
+              class="btn-gold flex-1 py-2.5 px-4 rounded-xl text-xs font-black inline-flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            >
+              <span v-if="isSubmittingAssignment" class="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></span>
+              <i v-else data-lucide="check" class="w-4 h-4"></i>
+              <span>تأكيد التسليم للمراجعة الأكاديمية</span>
+            </button>
+            <button 
+              type="button" 
+              @click="showSubmitAssignmentModal = false" 
+              class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition cursor-pointer"
+            >
+              إلغاء
+            </button>
+          </div>
+        </form>
+
       </div>
-    </footer>
+    </div>
 
   </div>
 
@@ -905,8 +1238,16 @@
         const tasks = ref([]);
         const taskProgressPercent = ref(100);
         const selectedPassIndex = ref(0);
+        const activeProfileTab = ref('overview');
+
+        // Modals State
         const showEventTicketModal = ref(false);
         const selectedEventTicket = ref(null);
+
+        const showSubmitAssignmentModal = ref(false);
+        const selectedAssignmentQuiz = ref(null);
+        const assignmentForm = ref({ link: '', notes: '' });
+        const isSubmittingAssignment = ref(false);
 
         const openEventTicketModal = (evt) => {
           selectedEventTicket.value = evt;
@@ -933,6 +1274,48 @@
             }
             if (window.lucide) lucide.createIcons();
           });
+        };
+
+        const openSubmitAssignmentModal = (quiz) => {
+          selectedAssignmentQuiz.value = quiz;
+          assignmentForm.value = {
+            link: quiz.submissionLink || '',
+            notes: quiz.assignmentNotes || ''
+          };
+          showSubmitAssignmentModal.value = true;
+          nextTick(() => { if (window.lucide) lucide.createIcons(); });
+        };
+
+        const handleAssignmentSubmit = async () => {
+          if (!assignmentForm.value.link || !assignmentForm.value.link.trim()) {
+            alert('يرجى إدخال رابط البحث أو التكليف');
+            return;
+          }
+          isSubmittingAssignment.value = true;
+          try {
+            const res = await fetch('/api/delegate/submit-assignment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                candidateId: candidate.value.id,
+                quizId: selectedAssignmentQuiz.value.quizId,
+                link: assignmentForm.value.link.trim(),
+                notes: assignmentForm.value.notes.trim()
+              })
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert(data.message || 'تم تسليم التكليف بنجاح');
+              showSubmitAssignmentModal.value = false;
+              await fetchProfile();
+            } else {
+              alert(data.message || 'تعذر تسليم التكليف');
+            }
+          } catch (e) {
+            alert('حدث خطأ أثناء الاتصال بالخادم');
+          } finally {
+            isSubmittingAssignment.value = false;
+          }
         };
 
         const myBookedEvents = computed(() => {
@@ -971,10 +1354,19 @@
           if (val) {
             nextTick(() => {
               generateActivePassQR();
-              lucide.createIcons();
+              if (window.lucide) lucide.createIcons();
             });
           }
         }, { immediate: true });
+
+        watch(activeProfileTab, () => {
+          nextTick(() => {
+            if (window.lucide) lucide.createIcons();
+            if (activeProfileTab.value === 'overview') {
+              generateActivePassQR();
+            }
+          });
+        });
 
         const fetchTasks = async () => {
           if (!candidate.value) return;
@@ -989,7 +1381,7 @@
           } catch (e) {
             console.error('Fetch tasks error:', e);
           } finally {
-            nextTick(() => lucide.createIcons());
+            nextTick(() => { if (window.lucide) lucide.createIcons(); });
           }
         };
 
@@ -1010,11 +1402,9 @@
           } catch (e) {
             alert('تعذر تحديث حالة التكليف');
           } finally {
-            nextTick(() => lucide.createIcons());
+            nextTick(() => { if (window.lucide) lucide.createIcons(); });
           }
         };
-
-        // Legacy QR helper replaced by event-tied generateActivePassQR
 
         const copyText = (txt) => {
           if (!txt) return;
@@ -1036,7 +1426,7 @@
           } catch (e) {
             console.error('Fetch events error:', e);
           } finally {
-            nextTick(() => lucide.createIcons());
+            nextTick(() => { if (window.lucide) lucide.createIcons(); });
           }
         };
 
@@ -1065,7 +1455,7 @@
             alert('حدث خطأ أثناء الاتصال بالخادم');
           } finally {
             bookingEventId.value = null;
-            nextTick(() => lucide.createIcons());
+            nextTick(() => { if (window.lucide) lucide.createIcons(); });
           }
         };
 
@@ -1088,7 +1478,7 @@
           } catch (e) {
             alert('حدث خطأ أثناء الاتصال بالخادم');
           } finally {
-            nextTick(() => lucide.createIcons());
+            nextTick(() => { if (window.lucide) lucide.createIcons(); });
           }
         };
 
@@ -1114,7 +1504,6 @@
               nextTick(() => generateActivePassQR());
             } else {
               error.value = data.message || 'يرجى تسجيل الدخول لعرض الملف الشخصي';
-              // If unauthorized, redirect to login after a brief moment
               if (res.status === 401) {
                 setTimeout(() => {
                   window.location.href = '/login';
@@ -1126,7 +1515,7 @@
             error.value = 'حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة لاحقاً';
           } finally {
             loading.value = false;
-            nextTick(() => lucide.createIcons());
+            nextTick(() => { if (window.lucide) lucide.createIcons(); });
           }
         };
 
@@ -1176,11 +1565,18 @@
           tasks,
           taskProgressPercent,
           selectedPassIndex,
-          myBookedEvents,
-          activeBookedEvent,
+          activeProfileTab,
           showEventTicketModal,
           selectedEventTicket,
           openEventTicketModal,
+          showSubmitAssignmentModal,
+          selectedAssignmentQuiz,
+          assignmentForm,
+          isSubmittingAssignment,
+          openSubmitAssignmentModal,
+          handleAssignmentSubmit,
+          myBookedEvents,
+          activeBookedEvent,
           fetchEvents,
           fetchTasks,
           toggleTaskStatus,

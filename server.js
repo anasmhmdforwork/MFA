@@ -482,6 +482,7 @@ app.get('/api/delegate/my-profile', (req, res) => {
   const quizRecords = commQuizzes.map(q => {
     const sub = (db.quizSubmissions || []).find(s => s.quizId === q.id && s.candidateId === cand.id);
     const evalData = (cand.lectureEvaluations && cand.lectureEvaluations[q.id]) ? cand.lectureEvaluations[q.id] : null;
+    const weeklyData = (cand.weeklyEvaluations && cand.weeklyEvaluations[q.id]) ? cand.weeklyEvaluations[q.id] : null;
 
     return {
       quizId: q.id,
@@ -494,7 +495,11 @@ app.get('/api/delegate/my-profile', (req, res) => {
       score: sub ? sub.score : null,
       percentage: sub ? sub.percentage : null,
       submittedAt: sub ? sub.submittedAt : null,
-      evaluation: evalData
+      evaluation: evalData,
+      assignmentStatus: weeklyData?.assignmentStatus || sub?.assignmentStatus || (evalData?.assignmentStatus || 'pending'),
+      assignmentScore: weeklyData?.assignmentScore !== undefined ? weeklyData.assignmentScore : (sub?.assignmentScore !== undefined ? sub.assignmentScore : (evalData?.assignmentScore || null)),
+      assignmentNotes: weeklyData?.submissionNotes || sub?.assignmentNotes || (evalData?.notes || ''),
+      submissionLink: weeklyData?.submissionLink || sub?.submissionLink || null
     };
   });
 
@@ -1963,6 +1968,39 @@ app.put('/api/candidates/:id/lecture-eval', async (req, res) => {
 
   await saveDB(db);
   res.json({ success: true, message: 'تم حفظ تقييم المحاضرة والأسينمنت بنجاح', candidate: cand });
+});
+
+// POST /api/delegate/submit-assignment - Delegate submits assignment research link
+app.post('/api/delegate/submit-assignment', async (req, res) => {
+  const db = getDB();
+  const { candidateId, quizId, link, notes } = req.body;
+  if (!candidateId || !quizId || !link) {
+    return res.status(400).json({ success: false, message: 'يرجى إرفاق رابط البحث أو التكليف المطلوب' });
+  }
+  const cand = (db.candidates || []).find(c => c.id === candidateId || c.diplomaticId === candidateId);
+  if (!cand) return res.status(404).json({ success: false, message: 'المندوب غير موجود' });
+
+  cand.weeklyEvaluations = cand.weeklyEvaluations || {};
+  if (!cand.weeklyEvaluations[quizId]) {
+    cand.weeklyEvaluations[quizId] = {};
+  }
+  cand.weeklyEvaluations[quizId].assignmentStatus = 'submitted';
+  cand.weeklyEvaluations[quizId].submissionLink = String(link).trim();
+  cand.weeklyEvaluations[quizId].submissionNotes = (notes || '').trim();
+  cand.weeklyEvaluations[quizId].submittedAt = new Date().toISOString();
+
+  if (db.quizSubmissions) {
+    const sub = db.quizSubmissions.find(s => s.quizId === quizId && (s.candidateId === cand.id || s.candidateEmail === cand.email));
+    if (sub) {
+      sub.assignmentStatus = 'submitted';
+      sub.submissionLink = String(link).trim();
+      sub.assignmentNotes = (notes || '').trim();
+    }
+  }
+
+  logActivity(req, 'تسليم تكليف وبحث', `قام المندوب ${cand.arabicName || cand.fullName} بتسليم تكليف المحاضرة`, cand.id);
+  await saveDB(db);
+  res.json({ success: true, message: 'تم تسليم التكليف والبحث بنجاح وإرساله للمراجعة الأكاديمية' });
 });
 
 // GET /api/members/monthly-evaluations
