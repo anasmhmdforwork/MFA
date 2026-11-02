@@ -2571,7 +2571,7 @@
                   <span class="font-bold text-amber-700 text-[11px]">{{ getCandidatePositionTitle(cand) }}</span>
                 </div>
               </div>
-
+            </div>
 
             <!-- Card Action Buttons -->
             <div class="space-y-2 pt-3 border-t border-slate-100">
@@ -9566,6 +9566,403 @@
           });
         }
 
+        // ==========================================
+        // OPERATIONS CALENDAR COMPUTED & METHODS
+        // ==========================================
+        const calendarDays = computed(() => {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = now.getMonth();
+          const firstDay = new Date(year, month, 1);
+          const lastDay = new Date(year, month + 1, 0);
+          const totalDays = lastDay.getDate();
+          const startDayOfWeek = firstDay.getDay(); // 0 = Sunday
+
+          const days = [];
+          const pad = (n) => String(n).padStart(2, '0');
+          const todayStr = `${year}-${pad(month + 1)}-${pad(now.getDate())}`;
+
+          // Previous month leading days
+          const prevMonthLastDay = new Date(year, month, 0).getDate();
+          for (let i = startDayOfWeek - 1; i >= 0; i--) {
+            const d = prevMonthLastDay - i;
+            const prevMonth = month === 0 ? 12 : month;
+            const prevYear = month === 0 ? year - 1 : year;
+            const dateStr = `${prevYear}-${pad(prevMonth)}-${pad(d)}`;
+            days.push({
+              dayNum: d,
+              dateStr,
+              isToday: dateStr === todayStr,
+              isOtherMonth: true,
+              sessions: (operationsSessions.value || []).filter(s => s.date === dateStr),
+              tasks: (operationsTasks.value || []).filter(t => t.dueDate === dateStr)
+            });
+          }
+
+          // Current month days
+          for (let d = 1; d <= totalDays; d++) {
+            const dateStr = `${year}-${pad(month + 1)}-${pad(d)}`;
+            days.push({
+              dayNum: d,
+              dateStr,
+              isToday: dateStr === todayStr,
+              isOtherMonth: false,
+              sessions: (operationsSessions.value || []).filter(s => s.date === dateStr),
+              tasks: (operationsTasks.value || []).filter(t => t.dueDate === dateStr)
+            });
+          }
+
+          // Next month trailing days to complete full grid
+          const remaining = (7 - (days.length % 7)) % 7;
+          for (let d = 1; d <= remaining; d++) {
+            const nextMonth = month + 2 > 12 ? 1 : month + 2;
+            const nextYear = month + 2 > 12 ? year + 1 : year;
+            const dateStr = `${nextYear}-${pad(nextMonth)}-${pad(d)}`;
+            days.push({
+              dayNum: d,
+              dateStr,
+              isToday: dateStr === todayStr,
+              isOtherMonth: true,
+              sessions: (operationsSessions.value || []).filter(s => s.date === dateStr),
+              tasks: (operationsTasks.value || []).filter(t => t.dueDate === dateStr)
+            });
+          }
+
+          return days;
+        });
+
+        const getSessionTasks = (sessionId) => {
+          if (!sessionId) return [];
+          return (operationsTasks.value || []).filter(t => t.sessionId === sessionId);
+        };
+
+        const loadOperationsCalendar = async () => {
+          try {
+            const [sessRes, taskRes, memberRes] = await Promise.all([
+              fetch('/api/operations/sessions').then(r => r.json()).catch(() => ({ success: false })),
+              fetch('/api/operations/tasks').then(r => r.json()).catch(() => ({ success: false })),
+              fetch('/api/candidates?committeeId=all').then(r => r.json()).catch(() => ({ success: false }))
+            ]);
+
+            if (sessRes && sessRes.success) {
+              operationsSessions.value = sessRes.sessions || [];
+            }
+            if (taskRes && taskRes.success) {
+              operationsTasks.value = taskRes.tasks || [];
+            }
+            if (memberRes && memberRes.success) {
+              assignableMembers.value = (memberRes.candidates || []).filter(c => 
+                c.roleType === 'member' || ['hr', 'media', 'academic', 'organization'].includes(c.subDepartment)
+              );
+            }
+
+            const totalSess = operationsSessions.value.length;
+            const totalT = operationsTasks.value.length;
+            const compT = operationsTasks.value.filter(t => t.status === 'completed').length;
+            operationsStats.value = {
+              totalSessions: totalSess,
+              totalTasks: totalT,
+              completedTasks: compT,
+              pendingTasks: totalT - compT
+            };
+          } catch (e) {
+            console.error('loadOperationsCalendar error:', e);
+          } finally {
+            nextTick(() => { if (window.lucide) lucide.createIcons(); });
+          }
+        };
+
+        const handleDayClick = (day) => {
+          if (!day || !day.dateStr) return;
+          openCreateSessionModal(day.dateStr);
+        };
+
+        const openCreateSessionModal = (dateStr) => {
+          newSessionForm.value = {
+            date: dateStr || new Date().toISOString().split('T')[0],
+            title: '',
+            committeeId: selectedCommitteeId.value !== 'all' ? selectedCommitteeId.value : 'crises',
+            sector: 'all',
+            description: '',
+            requiredMembersCount: 3,
+            time: '14:00',
+            location: 'مقر الجامعة / قاعة المحاكاة'
+          };
+          showCreateSessionModal.value = true;
+          nextTick(() => { if (window.lucide) lucide.createIcons(); });
+        };
+
+        const createOperationsSession = async () => {
+          if (!newSessionForm.value.title || !newSessionForm.value.date) {
+            alert('يرجى ملء عنوان وتاريخ الجلسة أو المحاضرة');
+            return;
+          }
+          try {
+            const res = await fetch('/api/operations/sessions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(newSessionForm.value)
+            });
+            const data = await res.json();
+            if (data.success) {
+              showCreateSessionModal.value = false;
+              await loadOperationsCalendar();
+              alert('تمت إضافة الجلسة بنجاح');
+            } else {
+              alert(data.message || 'تعذر إضافة الجلسة');
+            }
+          } catch (e) {
+            alert('حدث خطأ أثناء الاتصال بالخادم');
+          }
+        };
+
+        const deleteOperationsSession = async (session) => {
+          if (!session || !session.id) return;
+          if (!confirm(`هل أنت متأكد من حذف الجلسة التشغيلية "${session.title}"؟`)) return;
+          try {
+            const res = await fetch(`/api/operations/sessions/${session.id}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+              await loadOperationsCalendar();
+            } else {
+              alert(data.message || 'تعذر حذف الجلسة');
+            }
+          } catch (e) {
+            alert('حدث خطأ أثناء حذف الجلسة');
+          }
+        };
+
+        const openAssignTaskModal = (session) => {
+          newTaskForm.value = {
+            sessionId: session ? session.id : null,
+            title: '',
+            description: '',
+            assignedToCandidateId: '',
+            committeeId: session?.committeeId || 'all',
+            sector: session?.sector || 'hr',
+            dueDate: session ? session.date : new Date().toISOString().split('T')[0]
+          };
+          showAssignTaskModal.value = true;
+          nextTick(() => { if (window.lucide) lucide.createIcons(); });
+        };
+
+        const createOperationsTask = async () => {
+          if (!newTaskForm.value.title || !newTaskForm.value.assignedToCandidateId) {
+            alert('يرجى اختيار العضو وكتابة عنوان التكليف');
+            return;
+          }
+          try {
+            const res = await fetch('/api/operations/tasks', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(newTaskForm.value)
+            });
+            const data = await res.json();
+            if (data.success) {
+              showAssignTaskModal.value = false;
+              await loadOperationsCalendar();
+              alert('تم إسناد التكليف بنجاح');
+            } else {
+              alert(data.message || 'تعذر إسناد التكليف');
+            }
+          } catch (e) {
+            alert('حدث خطأ أثناء حفظ التكليف');
+          }
+        };
+
+        const toggleTaskStatus = async (task) => {
+          if (!task || !task.id) return;
+          try {
+            const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+            const res = await fetch(`/api/operations/tasks/${task.id}/status`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: newStatus })
+            });
+            const data = await res.json();
+            if (data.success) {
+              task.status = newStatus;
+              await loadOperationsCalendar();
+            }
+          } catch (e) {
+            alert('تعذر تحديث حالة التكليف');
+          }
+        };
+
+        const deleteOperationsTask = async (task) => {
+          if (!task || !task.id) return;
+          if (!confirm(`هل أنت متأكد من حذف تكليف "${task.title}"؟`)) return;
+          try {
+            const res = await fetch(`/api/operations/tasks/${task.id}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+              await loadOperationsCalendar();
+            } else {
+              alert(data.message || 'تعذر حذف التكليف');
+            }
+          } catch (e) {
+            alert('حدث خطأ أثناء الحذف');
+          }
+        };
+
+        const loadAuditLogs = async () => {
+          try {
+            const res = await fetch('/api/governance/audit-logs');
+            const data = await res.json();
+            if (data.success) {
+              auditLogs.value = data.logs || [];
+            }
+          } catch (e) {
+            console.error('loadAuditLogs error:', e);
+          } finally {
+            nextTick(() => { if (window.lucide) lucide.createIcons(); });
+          }
+        };
+
+        const formatAuditTime = (timestamp) => {
+          if (!timestamp) return '';
+          try {
+            const d = new Date(timestamp);
+            return d.toLocaleDateString('ar-EG', {
+              day: 'numeric',
+              month: 'short',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+          } catch (e) {
+            return timestamp;
+          }
+        };
+
+        const showBoardTicketModal = ref(false);
+        const selectedBoardTicket = ref(null);
+        const openBoardEventTicket = (evt) => {
+          selectedBoardTicket.value = evt;
+          showBoardTicketModal.value = true;
+          nextTick(() => {
+            const container = document.getElementById('board-ticket-qr');
+            if (!container || !selectedBoardTicket.value) return;
+            container.innerHTML = '';
+            const tktEvt = selectedBoardTicket.value;
+            const codeVal = tktEvt.diplomaticId || tktEvt.candidateId || 'MFA-26-BOARD';
+            const tktCode = tktEvt.ticketCode || ('TKT-' + (tktEvt.id || 'EVT').slice(-4).toUpperCase());
+            const verifyUrl = `${window.location.origin}/verify?code=${encodeURIComponent(codeVal)}&event=${encodeURIComponent(tktEvt.id || '')}&ticket=${encodeURIComponent(tktCode)}`;
+            try {
+              new QRCode(container, {
+                text: verifyUrl,
+                width: 140,
+                height: 140,
+                colorDark: '#070e1e',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+              });
+            } catch (e) {
+              console.error('Board ticket QR generation error:', e);
+            }
+            if (window.lucide) lucide.createIcons();
+          });
+        };
+
+        const openQrScannerModal = (targetEventId, targetSessionId) => {
+          qrCheckinTargetEventId.value = targetEventId || '';
+          qrCheckinTargetSessionId.value = targetSessionId || '';
+          qrCheckinResult.value = null;
+          qrCheckinError.value = null;
+          qrScannerInput.value = '';
+          showQrScannerModal.value = true;
+          nextTick(() => {
+            if (window.lucide) lucide.createIcons();
+            startQrScannerCamera();
+          });
+        };
+
+        const closeQrScannerModal = () => {
+          showQrScannerModal.value = false;
+          if (html5QrScanner) {
+            try {
+              html5QrScanner.stop().catch(() => {}).finally(() => {
+                html5QrScanner.clear();
+                html5QrScanner = null;
+                isCameraScanning.value = false;
+              });
+            } catch (e) {
+              html5QrScanner = null;
+              isCameraScanning.value = false;
+            }
+          }
+        };
+
+        const performQrCheckin = async (rawCode) => {
+          if (!rawCode || !rawCode.trim()) return;
+          qrCheckinResult.value = null;
+          qrCheckinError.value = null;
+
+          try {
+            const res = await fetch('/api/governance/checkin', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                rawCode: rawCode.trim(),
+                eventId: qrCheckinTargetEventId.value || undefined,
+                sessionId: qrCheckinTargetSessionId.value || undefined
+              })
+            });
+            const data = await res.json();
+            if (data.success) {
+              qrCheckinResult.value = data;
+              await fetchDashboardEvents();
+              await loadOperationsCalendar();
+            } else {
+              qrCheckinError.value = data.message || 'فشل التحقق من الكود أو تسجيل الحضور';
+            }
+          } catch (e) {
+            qrCheckinError.value = 'حدث خطأ في الاتصال بالخادم';
+          } finally {
+            nextTick(() => { if (window.lucide) lucide.createIcons(); });
+          }
+        };
+
+        const handleManualQrCheckin = async () => {
+          if (!qrScannerInput.value || !qrScannerInput.value.trim()) return;
+          await performQrCheckin(qrScannerInput.value.trim());
+          qrScannerInput.value = '';
+        };
+
+        const startQrScannerCamera = () => {
+          if (!window.Html5Qrcode) {
+            qrCheckinError.value = 'مكتبة الكاميرا غير متوفرة في المتصفح، يرجى استخدام الإدخال اليدوي';
+            return;
+          }
+          const readerEl = document.getElementById('qr-camera-reader');
+          if (!readerEl) return;
+
+          try {
+            if (html5QrScanner) {
+              html5QrScanner.stop().catch(() => {}).finally(() => {
+                html5QrScanner.clear();
+                html5QrScanner = null;
+              });
+            }
+            html5QrScanner = new Html5Qrcode('qr-camera-reader');
+            html5QrScanner.start(
+              { facingMode: 'environment' },
+              { fps: 10, qrbox: { width: 220, height: 220 } },
+              (decodedText) => {
+                performQrCheckin(decodedText);
+              },
+              () => {}
+            ).then(() => {
+              isCameraScanning.value = true;
+            }).catch((err) => {
+              console.warn('Camera start error:', err);
+              isCameraScanning.value = false;
+            });
+          } catch (e) {
+            console.warn('Html5Qrcode init error:', e);
+            isCameraScanning.value = false;
+          }
+        };
+
         watch(activeTab, (newTab) => {
           if (newTab === 'gradebook') {
             loadGradebook();
@@ -9574,6 +9971,8 @@
           } else if (newTab === 'analytics') {
             loadGradebook();
             renderOperationalCharts();
+          } else if (newTab === 'operations') {
+            loadOperationsCalendar();
           }
           nextTick(() => {
             if (window.lucide) lucide.createIcons();

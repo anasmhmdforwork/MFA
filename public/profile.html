@@ -947,6 +947,35 @@
         const tasks = ref([]);
         const taskProgressPercent = ref(100);
         const selectedPassIndex = ref(0);
+        const showEventTicketModal = ref(false);
+        const selectedEventTicket = ref(null);
+
+        const openEventTicketModal = (evt) => {
+          selectedEventTicket.value = evt;
+          showEventTicketModal.value = true;
+          nextTick(() => {
+            const container = document.getElementById('event-ticket-qr');
+            if (!container || !candidate.value || !selectedEventTicket.value) return;
+            container.innerHTML = '';
+            const ticketEvt = selectedEventTicket.value;
+            const codeVal = candidate.value.diplomaticId || candidate.value.id;
+            const tktCode = ticketEvt.myBooking?.ticketCode || ('TKT-' + ticketEvt.id.slice(-4).toUpperCase());
+            const verifyUrl = window.location.origin + '/verify?code=' + encodeURIComponent(codeVal) + '&event=' + encodeURIComponent(ticketEvt.id) + '&ticket=' + encodeURIComponent(tktCode);
+            try {
+              new QRCode(container, {
+                text: verifyUrl,
+                width: 150,
+                height: 150,
+                colorDark: '#070e1e',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+              });
+            } catch (e) {
+              console.error('Modal ticket QR generation error:', e);
+            }
+            if (window.lucide) lucide.createIcons();
+          });
+        };
 
         const myBookedEvents = computed(() => {
           return (events.value || []).filter(e => e.myBooking && e.myBooking.status !== 'cancelled');
