@@ -200,163 +200,121 @@
         </div>
 
         <!-- ============================================== -->
-        <!-- ACTIVE EVENT BOARDING PASSES & QR TICKETS      -->
+        <!-- ACTIVE EVENT BOARDING PASSES & QR TICKETS (Shown ONLY When Booked) -->
         <!-- ============================================== -->
-        <div class="bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-slate-950/95 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-card-border shadow-2xl relative overflow-hidden">
+        <div v-if="myBookedEvents.length > 0" class="bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-slate-950/95 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-card-border shadow-2xl relative overflow-hidden space-y-4">
           
-          <!-- State 1: Candidate has booked one or more events -->
-          <div v-if="myBookedEvents.length > 0" class="space-y-4">
+          <!-- Header & Switcher (if multiple booked events) -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[11px] font-black border border-amber-500/30 flex items-center gap-1.5">
+                <i data-lucide="ticket" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>تصريح دخول وتذكرة فعالية رسمية (Event Boarding Pass)</span>
+              </span>
+              
+              <span v-if="activeBookedEvent.myBooking?.attendanceStatus === 'attended'" class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1">
+                <i data-lucide="badge-check" class="w-3 h-3"></i>
+                <span>تم تسجيل الحضور وتأكيد الدخول رسمياً</span>
+              </span>
+              <span v-else class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30 flex items-center gap-1">
+                <i data-lucide="clock" class="w-3 h-3"></i>
+                <span>حجز مؤكد • صالحة للدخول بالبوابة</span>
+              </span>
+            </div>
+
+            <!-- Multi-pass switcher if candidate has more than 1 booked event -->
+            <div v-if="myBookedEvents.length > 1" class="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-xs">
+              <span class="text-slate-400 text-[11px] px-1.5 font-bold">التصاريح ({{ myBookedEvents.length }}):</span>
+              <button 
+                v-for="(bkEvt, idx) in myBookedEvents" 
+                :key="bkEvt.id"
+                @click="selectedPassIndex = idx"
+                class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer"
+                :class="selectedPassIndex === idx ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-300 hover:text-white'"
+              >
+                تذكرة {{ idx + 1 }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Pass Card Body -->
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             
-            <!-- Header & Switcher (if multiple booked events) -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[11px] font-black border border-amber-500/30 flex items-center gap-1.5">
-                  <i data-lucide="ticket" class="w-3.5 h-3.5 text-amber-400"></i>
-                  <span>تصريح دخول وتذكرة فعالية رسمية (Event Boarding Pass)</span>
-                </span>
-                
-                <span v-if="activeBookedEvent.myBooking?.attendanceStatus === 'attended'" class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1">
-                  <i data-lucide="badge-check" class="w-3 h-3"></i>
-                  <span>تم تسجيل الحضور وتأكيد الدخول رسمياً</span>
-                </span>
-                <span v-else class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30 flex items-center gap-1">
-                  <i data-lucide="clock" class="w-3 h-3"></i>
-                  <span>حجز مؤكد • صالحة للدخول بالبوابة</span>
-                </span>
+            <div class="space-y-3.5 flex-1">
+              <div>
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono">
+                    {{ activeBookedEvent.type === 'visit' ? 'زيارة رسمية ميدانية' : (activeBookedEvent.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}
+                  </span>
+                  <span class="font-mono text-xs font-black text-amber-400">
+                    {{ activeBookedEvent.myBooking?.ticketCode || ('TKT-' + activeBookedEvent.id.slice(-4).toUpperCase()) }}
+                  </span>
+                </div>
+                <h3 class="text-lg sm:text-2xl font-black text-white leading-snug">
+                  {{ activeBookedEvent.title }}
+                </h3>
+                <p v-if="activeBookedEvent.description" class="text-xs text-slate-300 mt-1 line-clamp-2">
+                  {{ activeBookedEvent.description }}
+                </p>
               </div>
 
-              <!-- Multi-pass switcher if candidate has more than 1 booked event -->
-              <div v-if="myBookedEvents.length > 1" class="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-xs">
-                <span class="text-slate-400 text-[11px] px-1.5 font-bold">التصاريح ({{ myBookedEvents.length }}):</span>
+              <!-- Logistics Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <i data-lucide="calendar" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+                  <span>{{ activeBookedEvent.date }} (الساعة {{ activeBookedEvent.time }})</span>
+                </div>
+                <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+                  <span class="truncate">{{ activeBookedEvent.location }}</span>
+                </div>
+              </div>
+
+              <div v-if="activeBookedEvent.dressCode" class="text-[11px] text-amber-200/90 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 flex items-center gap-2">
+                <i data-lucide="shirt" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0"></i>
+                <span>الزي المطلوب: {{ activeBookedEvent.dressCode }}</span>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex items-center gap-2.5 pt-1 flex-wrap">
                 <button 
-                  v-for="(bkEvt, idx) in myBookedEvents" 
-                  :key="bkEvt.id"
-                  @click="selectedPassIndex = idx"
-                  class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer"
-                  :class="selectedPassIndex === idx ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-300 hover:text-white'"
+                  @click="openEventTicketModal(activeBookedEvent)"
+                  class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md"
                 >
-                  تذكرة {{ idx + 1 }}
+                  <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                  <span>تكبير وطباعة التصريح الرسمي (Boarding Pass)</span>
+                </button>
+
+                <a 
+                  :href="'/verify?code=' + encodeURIComponent(candidate.diplomaticId || candidate.id) + '&event=' + encodeURIComponent(activeBookedEvent.id) + '&ticket=' + encodeURIComponent(activeBookedEvent.myBooking?.ticketCode || '')" 
+                  target="_blank"
+                  class="px-3.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                >
+                  <i data-lucide="shield-check" class="w-4 h-4"></i>
+                  <span>التحقق من التذكرة بالبوابة</span>
+                </a>
+
+                <button 
+                  v-if="activeBookedEvent.myBooking?.attendanceStatus !== 'attended'"
+                  @click="cancelEventBooking(activeBookedEvent)"
+                  class="text-[11px] font-bold text-rose-300 hover:text-rose-200 hover:underline px-3 py-2 rounded-xl bg-rose-950/60 border border-rose-500/30 transition cursor-pointer"
+                >
+                  إلغاء الحجز
                 </button>
               </div>
             </div>
 
-            <!-- Active Pass Card Body -->
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-              
-              <div class="space-y-3.5 flex-1">
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono">
-                      {{ activeBookedEvent.type === 'visit' ? 'زيارة رسمية ميدانية' : (activeBookedEvent.type === 'seminar' ? 'ندوة علمية' : 'مؤتمر / ورشة عمل') }}
-                    </span>
-                    <span class="font-mono text-xs font-black text-amber-400">
-                      {{ activeBookedEvent.myBooking?.ticketCode || ('TKT-' + activeBookedEvent.id.slice(-4).toUpperCase()) }}
-                    </span>
-                  </div>
-                  <h3 class="text-lg sm:text-2xl font-black text-white leading-snug">
-                    {{ activeBookedEvent.title }}
-                  </h3>
-                  <p v-if="activeBookedEvent.description" class="text-xs text-slate-300 mt-1 line-clamp-2">
-                    {{ activeBookedEvent.description }}
-                  </p>
-                </div>
-
-                <!-- Logistics Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
-                    <i data-lucide="calendar" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                    <span>{{ activeBookedEvent.date }} (الساعة {{ activeBookedEvent.time }})</span>
-                  </div>
-                  <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center gap-2">
-                    <i data-lucide="map-pin" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                    <span class="truncate">{{ activeBookedEvent.location }}</span>
-                  </div>
-                </div>
-
-                <div v-if="activeBookedEvent.dressCode" class="text-[11px] text-amber-200/90 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 flex items-center gap-2">
-                  <i data-lucide="shirt" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0"></i>
-                  <span>الزي المطلوب: {{ activeBookedEvent.dressCode }}</span>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex items-center gap-2.5 pt-1 flex-wrap">
-                  <button 
-                    @click="openEventTicketModal(activeBookedEvent)"
-                    class="btn-gold px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md"
-                  >
-                    <i data-lucide="maximize-2" class="w-4 h-4"></i>
-                    <span>تكبير وطباعة التصريح الرسمي (Boarding Pass)</span>
-                  </button>
-
-                  <a 
-                    :href="'/verify?code=' + encodeURIComponent(candidate.diplomaticId || candidate.id) + '&event=' + encodeURIComponent(activeBookedEvent.id) + '&ticket=' + encodeURIComponent(activeBookedEvent.myBooking?.ticketCode || '')" 
-                    target="_blank"
-                    class="px-3.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                  >
-                    <i data-lucide="shield-check" class="w-4 h-4"></i>
-                    <span>التحقق من التذكرة بالبوابة</span>
-                  </a>
-
-                  <button 
-                    v-if="activeBookedEvent.myBooking?.attendanceStatus !== 'attended'"
-                    @click="cancelEventBooking(activeBookedEvent)"
-                    class="text-[11px] font-bold text-rose-300 hover:text-rose-200 hover:underline px-3 py-2 rounded-xl bg-rose-950/60 border border-rose-500/30 transition cursor-pointer"
-                  >
-                    إلغاء الحجز
-                  </button>
-                </div>
+            <!-- Dedicated Event QR Code Box -->
+            <div class="flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl bg-slate-950 border border-amber-500/40 shadow-2xl flex-shrink-0 self-center text-center">
+              <div class="p-2.5 bg-white rounded-xl shadow-inner mb-2 border-2 border-amber-400/70">
+                <div id="active-event-qr" class="w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center"></div>
               </div>
-
-              <!-- Dedicated Event QR Code Box -->
-              <div class="flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl bg-slate-950 border border-amber-500/40 shadow-2xl flex-shrink-0 self-center text-center">
-                <div class="p-2.5 bg-white rounded-xl shadow-inner mb-2 border-2 border-amber-400/70">
-                  <div id="active-event-qr" class="w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center"></div>
-                </div>
-                <span class="text-[11px] font-mono font-black text-amber-300 tracking-wider">
-                  {{ activeBookedEvent.myBooking?.ticketCode }}
-                </span>
-                <span class="text-[10px] text-slate-400 mt-0.5">كود QR مخصص لدخول هذه الفعالية</span>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- State 2: Candidate has NOT booked any event yet -->
-          <div v-else class="flex flex-col sm:flex-row items-center justify-between gap-6 text-right py-2">
-            <div class="space-y-3 flex-1">
-              <div class="flex items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded-md bg-amber-500/10 text-amber-300 text-[11px] font-black border border-amber-500/20 flex items-center gap-1.5">
-                  <i data-lucide="ticket" class="w-3.5 h-3.5 text-amber-400"></i>
-                  <span>تصاريح وتذاكر الفعاليات الرسمية (Event QR Passes)</span>
-                </span>
-              </div>
-
-              <h3 class="text-base sm:text-xl font-black text-white">
-                لا توجد تصاريح أو تذاكر فعاليات نشطة حالياً
-              </h3>
-              <p class="text-xs text-slate-300 leading-relaxed max-w-xl">
-                عند قيامك بحجز مقعدك في أي ندوة، مؤتمر، أو زيارة ميدانية رسمية (مثل زيارة ديوان وزارة الخارجية) من جدول الفعاليات بالأسفل، سيتولد لك تلقائياً تصريح دخول رسمي وكود QR مخصص للفعالية لإبرازها عند البوابة وتأكيد حضورك فورياً.
-              </p>
-
-              <div class="pt-2">
-                <a 
-                  href="#events-section" 
-                  class="btn-gold px-5 py-2.5 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md"
-                >
-                  <i data-lucide="arrow-down" class="w-4 h-4"></i>
-                  <span>استعراض الفعاليات والزيارات المتاحة للحجز الآن</span>
-                </a>
-              </div>
+              <span class="text-[11px] font-mono font-black text-amber-300 tracking-wider">
+                {{ activeBookedEvent.myBooking?.ticketCode }}
+              </span>
+              <span class="text-[10px] text-slate-400 mt-0.5">كود QR مخصص لدخول هذه الفعالية</span>
             </div>
 
-            <!-- Empty State Graphic -->
-            <div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-slate-950/80 border border-slate-800 text-center flex-shrink-0 self-center">
-              <div class="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 mb-2">
-                <i data-lucide="qr-code" class="w-8 h-8 opacity-60"></i>
-              </div>
-              <span class="text-xs font-bold text-slate-400">توليد تلقائي للـ QR</span>
-              <span class="text-[10px] text-slate-500 font-mono mt-0.5">عند حجز أي حدث جديد</span>
-            </div>
           </div>
 
         </div>
