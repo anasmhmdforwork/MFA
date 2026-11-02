@@ -9891,281 +9891,9 @@
       "directorateType": "academic"
     }
   ],
-  "events": [
-    {
-      "id": "evt_mfa_diplomatic_hq",
-      "title": "الزيارة الميدانية الرسمية لديوان عام وزارة الخارجية (العاصمة الإدارية)",
-      "type": "visit",
-      "description": "زيارة رسمية رفيعة المستوى لديوان عام وزارة الخارجية المصرية بالعاصمة الإدارية الجديدة، تتضمن جولة تفقدية بالقطاعات الدبلوماسية والمراسم، ولقاء مفتوح مع قيادات العمل الدبلوماسي.",
-      "date": "2026-11-28",
-      "time": "09:00",
-      "location": "ديوان عام وزارة الخارجية - الحي الدبلوماسي، العاصمة الإدارية الجديدة",
-      "capacity": 150,
-      "isOpen": true,
-      "dressCode": "زي دبلوماسي رسمي كامل (Formal Suit / Dark Blue or Black)",
-      "notes": "يرجى إبراز بطاقة الرقم القومي وكارت الهوية الدبلوماسية الإلكتروني الصادر من المنصة عند البوابة الرئيسية.",
-      "targetAudience": {
-        "scope": "all"
-      },
-      "eligibilityCriteria": null,
-      "createdBy": "hr",
-      "createdByName": "اللجنة المركزية لإدارة التنظيم والمراسم",
-      "createdAt": "2026-11-01T12:00:00.000Z"
-    },
-    {
-      "id": "evt_mfa_annual_conference",
-      "title": "المؤتمر الدبلوماسي السنوي الموسع - الجلسة الافتتاحية الكبرى",
-      "type": "conference",
-      "description": "الجلسة الافتتاحية للمؤتمر السنوي لنموذج محاكاة وزارة الخارجية بحضور نخبة من السفراء والدبلوماسيين وأعضاء السلك القنصلي لمناقشة أوراق السياسات وأولويات الدبلوماسية المصرية.",
-      "date": "2026-12-05",
-      "time": "10:00",
-      "location": "مركز القاهرة الدولي للمؤتمرات - القاعة الملكية",
-      "capacity": 300,
-      "isOpen": true,
-      "dressCode": "بدلة رسمية كاملة (Business Formal)",
-      "notes": "الدخول ببطاقة الهوية والباركود الرقمي المشفر المعتمد عبر المنصة.",
-      "targetAudience": {
-        "scope": "all"
-      },
-      "eligibilityCriteria": null,
-      "createdBy": "hr",
-      "createdByName": "الأمانة العامة لنموذج محاكاة وزارة الخارجية",
-      "createdAt": "2026-11-01T12:00:00.000Z"
-    },
-    {
-      "id": "evt_mfa_crisis_workshop",
-      "title": "ورشة عمل المحاكاة الدبلوماسية للأزمات الدولية وإدارة التفاوض",
-      "type": "workshop",
-      "description": "محاكاة تفاعلية حية لإدارة أزمة إقليمية معقدة وفق قواعد البروتوكول الدبلوماسي، وتطبيق عملي على تكتيكات التفاوض وصياغة البيانات والقرارات الدبلوماسية المشتركة.",
-      "date": "2026-11-22",
-      "time": "14:00",
-      "location": "قاعة المؤتمرات والمحاكاة الدبلوماسية - مجمع الكليات",
-      "capacity": 100,
-      "isOpen": true,
-      "dressCode": "رسمي / سيمي فورمال أنيق",
-      "notes": "تشمل الورشة جلسة تفاوض جماعية وتكليفات فرق عمل فورية.",
-      "targetAudience": {
-        "scope": "all"
-      },
-      "eligibilityCriteria": null,
-      "createdBy": "academic",
-      "createdByName": "الإدارة الأكاديمية المركزية",
-      "createdAt": "2026-11-01T12:00:00.000Z"
-    }
-  ],
-  "quizzes": [
-    {
-      "id": "quiz_1792760791043_go9d7",
-      "title": "محاضرة تجريبية E2E: إدارة التفاوض الدبلوماسي",
-      "isOpen": true,
-      "createdAt": "2026-10-23T13:06:31.044Z",
-      "questions": [
-        {
-          "id": "q_1",
-          "type": "mcq",
-          "points": 5,
-          "prompt": "ما هي الركيزة الأساسية في الدبلوماسية الوقائية؟",
-          "options": [
-            "التحكيم الدولي",
-            "الوساطة والمفاوضات المباشرة",
-            "العقوبات الاقتصادية",
-            "التدخل العسكري"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "id": "q_2",
-          "type": "true_false",
-          "points": 5,
-          "prompt": "تعتبر إدارة الأزمات جزءاً لا يتجزأ من التخطيط السياسي الاستراتيجي.",
-          "options": [
-            "صح",
-            "خطأ"
-          ],
-          "correctAnswer": 0
-        }
-      ],
-      "committeeId": "crises",
-      "description": "اختبار الفهم الشامل لمحاضرة التفاوض وتسجيل الحضور التلقائي",
-      "totalPoints": 10,
-      "committeeName": "البحث والتقديرات والتخطيط السياسي وإدارة الأزمات",
-      "lectureNumber": 99,
-      "durationMinutes": 10
-    }
-  ],
-  "auditLogs": [
-    {
-      "id": "log_1793575612811_1xc2",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "تسجيل حضور عبر QR",
-      "target": "c_2",
-      "details": "تم تسجيل حضور ندي عبدالله ابراهيم علي عزب في (فعالية: Test event)",
-      "timestamp": "2026-11-01T23:26:52.811Z"
-    },
-    {
-      "id": "log_1793575273319_9mub",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "تسجيل حضور عبر QR",
-      "target": "c_2",
-      "details": "تم تسجيل حضور ندي عبدالله ابراهيم علي عزب في (حضور عام للمقر)",
-      "timestamp": "2026-11-01T23:21:13.319Z"
-    },
-    {
-      "id": "log_1793573181308_fbpb",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "حذف جلسة تشغيلية",
-      "target": "sess_1793573120493_q25jij",
-      "details": "حذف الجلسة: \"ندوة اختبارية: الدبلوماسية الوقائية وإدارة الأزمات الدولية\"",
-      "timestamp": "2026-11-01T22:46:21.308Z"
-    },
-    {
-      "id": "log_1793573165513_sr69",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "تسجيل حضور عبر QR",
-      "target": "c_2",
-      "details": "تم تسجيل حضور ندي عبدالله ابراهيم علي عزب في (جلسة: ندوة اختبارية: الدبلوماسية الوقائية وإدارة الأزمات الدولية)",
-      "timestamp": "2026-11-01T22:46:05.513Z"
-    },
-    {
-      "id": "log_1793573142974_izu3",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "تحديث تكليف تشغيلي",
-      "target": "c_3",
-      "details": "تم تحويل حالة التكليف \"إدارة منصة الحضور وضبط القاعة\" إلى (مكتمل) للعضو مصطفى محمد علي",
-      "timestamp": "2026-11-01T22:45:42.974Z"
-    },
-    {
-      "id": "log_1793573128096_9f2v",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "إسناد تكليف تشغيلي",
-      "target": "c_3",
-      "details": "إسناد التكليف \"إدارة منصة الحضور وضبط القاعة\" إلى مصطفى محمد علي",
-      "timestamp": "2026-11-01T22:45:28.096Z"
-    },
-    {
-      "id": "log_1793573120493_hean",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "إضافة جلسة تشغيلية",
-      "target": "sess_1793573120493_q25jij",
-      "details": "إضافة يوم تشغيلي: \"ندوة اختبارية: الدبلوماسية الوقائية وإدارة الأزمات الدولية\" بتاريخ 2026-11-15",
-      "timestamp": "2026-11-01T22:45:20.493Z"
-    },
-    {
-      "id": "log_1793572999057_twpr",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "حذف جلسة تشغيلية",
-      "target": "sess_1793572916860_elp8lf",
-      "details": "حذف الجلسة: \"ندوة اختبارية: الدبلوماسية الوقائية وإدارة الأزمات الدولية\"",
-      "timestamp": "2026-11-01T22:43:19.057Z"
-    },
-    {
-      "id": "log_1793572986065_1tk5",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "تسجيل حضور عبر QR",
-      "target": "c_2",
-      "details": "تم تسجيل حضور ندي عبدالله ابراهيم علي عزب في (جلسة: ندوة اختبارية: الدبلوماسية الوقائية وإدارة الأزمات الدولية)",
-      "timestamp": "2026-11-01T22:43:06.065Z"
-    },
-    {
-      "id": "log_1793572964600_sfxk",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "حجز مقعد بفعالية",
-      "target": "c_1",
-      "details": "حجز مقعد في \"زيارة رفيعة المستوى لجامعة الدول العربية (تتطلب 99% حضور)\" لـ مي هاني منشاوي شحاته (مندوب (Delegate))",
-      "timestamp": "2026-11-01T22:42:44.600Z"
-    },
-    {
-      "id": "log_1793572937845_c1b8",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "تحديث تكليف تشغيلي",
-      "target": "c_3",
-      "details": "تم تحويل حالة التكليف \"إدارة منصة الحضور وضبط القاعة\" إلى (مكتمل) للعضو مصطفى محمد علي",
-      "timestamp": "2026-11-01T22:42:17.845Z"
-    },
-    {
-      "id": "log_1793572924112_g6wa",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "إسناد تكليف تشغيلي",
-      "target": "c_3",
-      "details": "إسناد التكليف \"إدارة منصة الحضور وضبط القاعة\" إلى مصطفى محمد علي",
-      "timestamp": "2026-11-01T22:42:04.112Z"
-    },
-    {
-      "id": "log_1793572916860_1kkn",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "إضافة جلسة تشغيلية",
-      "target": "sess_1793572916860_elp8lf",
-      "details": "إضافة يوم تشغيلي: \"ندوة اختبارية: الدبلوماسية الوقائية وإدارة الأزمات الدولية\" بتاريخ 2026-11-15",
-      "timestamp": "2026-11-01T22:41:56.860Z"
-    },
-    {
-      "id": "log_1793572870465_1ip9",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "حذف جلسة تشغيلية",
-      "target": "sess_1793572770901_fibjl1",
-      "details": "حذف الجلسة: \"ندوة اختبارية: الدبلوماسية الوقائية وإدارة الأزمات الدولية\"",
-      "timestamp": "2026-11-01T22:41:10.465Z"
-    },
-    {
-      "id": "log_1793572856871_qmbj",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "تسجيل حضور عبر QR",
-      "target": "c_2",
-      "details": "تم تسجيل حضور ندي عبدالله ابراهيم علي عزب في (جلسة: ندوة اختبارية: الدبلوماسية الوقائية وإدارة الأزمات الدولية)",
-      "timestamp": "2026-11-01T22:40:56.871Z"
-    },
-    {
-      "id": "log_1793572842421_uvgi",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "حجز مقعد بفعالية",
-      "target": "c_2",
-      "details": "حجز مقعد في \"زيارة رفيعة المستوى لجامعة الدول العربية (تتطلب 99% حضور)\" لـ ندي عبدالله ابراهيم علي عزب (مندوب (Delegate))",
-      "timestamp": "2026-11-01T22:40:42.421Z"
-    },
-    {
-      "id": "log_1793572795553_c33j",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "تحديث تكليف تشغيلي",
-      "target": "c_3",
-      "details": "تم تحويل حالة التكليف \"إدارة منصة الحضور وضبط القاعة\" إلى (مكتمل) للعضو مصطفى محمد علي",
-      "timestamp": "2026-11-01T22:39:55.553Z"
-    },
-    {
-      "id": "log_1793572779900_x84e",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "إسناد تكليف تشغيلي",
-      "target": "c_3",
-      "details": "إسناد التكليف \"إدارة منصة الحضور وضبط القاعة\" إلى مصطفى محمد علي",
-      "timestamp": "2026-11-01T22:39:39.900Z"
-    },
-    {
-      "id": "log_1793572770901_01oi",
-      "ip": "::ffff:127.0.0.1",
-      "actor": "System",
-      "action": "إضافة جلسة تشغيلية",
-      "target": "sess_1793572770901_fibjl1",
-      "details": "إضافة يوم تشغيلي: \"ندوة اختبارية: الدبلوماسية الوقائية وإدارة الأزمات الدولية\" بتاريخ 2026-11-15",
-      "timestamp": "2026-11-01T22:39:30.901Z"
-    }
-  ],
+  "events": [],
+  "quizzes": [],
+  "auditLogs": [],
   "candidates": [
     {
       "id": "c_1",
@@ -10283,19 +10011,7 @@
       "activitiesDetails": "لا",
       "reasonsForSectors": ".",
       "weeklyEvaluations": {},
-      "lectureEvaluations": {
-        "quiz_1792760791043_go9d7": {
-          "notes": "تحليل دقيق لأزمة قناة السويس ومبادئ اتفاقية فيينا",
-          "quizId": "quiz_1792760791043_go9d7",
-          "bonusScore": 2,
-          "bonusReason": "مداخلة دبلوماسية استثنائية أثناء المحاضرة",
-          "evaluatedAt": "2026-10-23T13:06:48.626Z",
-          "lectureNumber": 99,
-          "assignmentScore": 9,
-          "taskDescription": "",
-          "assignmentStatus": "submitted"
-        }
-      },
+      "lectureEvaluations": {},
       "assignedCommitteeId": "crises",
       "originalCommitteeId": "crises",
       "attendanceCommitment": "نعم"
@@ -10378,12 +10094,9 @@
       ],
       "delegatePassword": "1234",
       "memberEvaluation": {
+        "score": 9.5,
         "notes": "مسؤول تنظيم ملتزم جداً ومتميز في إدارة القاعة",
-        "score": 10,
-        "updatedAt": "2026-11-01T22:45:42.974Z",
-        "totalTasksCount": 3,
-        "taskCompletionRate": 100,
-        "completedTasksCount": 3
+        "updatedAt": "2026-11-01T13:50:16.780Z"
       },
       "activitiesDetails": "مجلس نواب hr",
       "reasonsForSectors": "مهتم جدا بمجال الاقتصاد وتعاون الدول فيه وايضا مجال الاتصالات هو من أهم المجالات في الوقت الحالي",
@@ -10561,31 +10274,8 @@
       },
       "activitiesDetails": "لا يوجد",
       "reasonsForSectors": "أرغب في الانضمام إلى هذه القطاعات لأنها تتوافق مع دراستي في كلية السياسة والاقتصاد واهتماماتي بالقضايا السياسية والاقتصادية. وأسعى إلى تطوير مهاراتي في البحث والتحليل والتفكير النقدي، واكتساب فهم أعمق للقضايا الإقليمية والدولية، والتعرف على سبل التعاون الاقتصادي بين الدول. كما أطمح إلى اكتساب خبرة عملية تساعدني على تطوير قدراتي والاستعداد لمستقبلي المهني.",
-      "weeklyEvaluations": {
-        "week_1": {
-          "notes": "التزام كامل وانضباط بروتوكولي رفيع",
-          "score": 9.5,
-          "quizId": "quiz_1792760791043_go9d7",
-          "weekKey": "week_1",
-          "evaluatedAt": "2026-10-23T13:06:54.989Z",
-          "lectureNumber": 1,
-          "taskDescription": "تنظيم قاعة المؤتمرات وإدارة حضور المحاضرة الأولى",
-          "assignmentStatus": "submitted"
-        }
-      },
-      "lectureEvaluations": {
-        "quiz_1792760791043_go9d7": {
-          "notes": "التزام كامل وانضباط بروتوكولي رفيع",
-          "quizId": "quiz_1792760791043_go9d7",
-          "bonusScore": 0,
-          "bonusReason": "",
-          "evaluatedAt": "2026-10-23T13:06:54.989Z",
-          "lectureNumber": 1,
-          "assignmentScore": 9.5,
-          "taskDescription": "تنظيم قاعة المؤتمرات وإدارة حضور المحاضرة الأولى",
-          "assignmentStatus": "submitted"
-        }
-      },
+      "weeklyEvaluations": {},
+      "lectureEvaluations": {},
       "assignedCommitteeId": "crises",
       "originalCommitteeId": "crises",
       "attendanceCommitment": "نعم"
@@ -34962,19 +34652,7 @@
       "delegatePassword": "1234",
       "activitiesDetails": "",
       "reasonsForSectors": "",
-      "lectureEvaluations": {
-        "quiz_1792756541236_sq5i9": {
-          "notes": "",
-          "quizId": "quiz_1792756541236_sq5i9",
-          "bonusScore": 2,
-          "bonusReason": "",
-          "evaluatedAt": "2026-10-23T11:58:08.999Z",
-          "lectureNumber": 1,
-          "assignmentScore": 9.5,
-          "taskDescription": "",
-          "assignmentStatus": "submitted"
-        }
-      },
+      "lectureEvaluations": {},
       "assignedCommitteeId": "economic",
       "originalCommitteeId": "economic",
       "attendanceCommitment": "نعم"
@@ -37427,87 +37105,8 @@
   ],
   "certificates": [],
   "eventBookings": [],
-  "operationsTasks": [
-    {
-      "id": "task_1793572779900_2k9rkm",
-      "title": "إدارة منصة الحضور وضبط القاعة",
-      "sector": "hr",
-      "status": "completed",
-      "dueDate": "2026-11-15",
-      "createdAt": "2026-11-01T22:39:39.900Z",
-      "sessionId": "sess_1793572770901_fibjl1",
-      "updatedAt": "2026-11-01T22:39:55.552Z",
-      "committeeId": "climate",
-      "completedAt": "2026-11-01T22:39:55.552Z",
-      "description": "تنظيم مقاعد الوفود واستقبال المحاضر",
-      "assignedToCandidateId": "c_3",
-      "assignedToDiplomaticId": "MFA-26-ORG-M-003",
-      "assignedToCandidateName": "مصطفى محمد علي"
-    },
-    {
-      "id": "task_1793572924112_2ldksh",
-      "title": "إدارة منصة الحضور وضبط القاعة",
-      "sector": "hr",
-      "status": "completed",
-      "dueDate": "2026-11-15",
-      "createdAt": "2026-11-01T22:42:04.112Z",
-      "sessionId": "sess_1793572916860_elp8lf",
-      "updatedAt": "2026-11-01T22:42:17.845Z",
-      "committeeId": "climate",
-      "completedAt": "2026-11-01T22:42:17.845Z",
-      "description": "تنظيم مقاعد الوفود واستقبال المحاضر",
-      "assignedToCandidateId": "c_3",
-      "assignedToDiplomaticId": "MFA-26-ORG-M-003",
-      "assignedToCandidateName": "مصطفى محمد علي"
-    },
-    {
-      "id": "task_1793573128096_ef2p9w",
-      "title": "إدارة منصة الحضور وضبط القاعة",
-      "sector": "hr",
-      "status": "completed",
-      "dueDate": "2026-11-15",
-      "createdAt": "2026-11-01T22:45:28.096Z",
-      "sessionId": "sess_1793573120493_q25jij",
-      "updatedAt": "2026-11-01T22:45:42.974Z",
-      "committeeId": "climate",
-      "completedAt": "2026-11-01T22:45:42.974Z",
-      "description": "تنظيم مقاعد الوفود واستقبال المحاضر",
-      "assignedToCandidateId": "c_3",
-      "assignedToDiplomaticId": "MFA-26-ORG-M-003",
-      "assignedToCandidateName": "مصطفى محمد علي"
-    }
-  ],
-  "quizSubmissions": [
-    {
-      "id": "sub_1792760801736_qqcfr",
-      "score": 10,
-      "quizId": "quiz_1792760791043_go9d7",
-      "answers": {
-        "q_1": 1,
-        "q_2": 0
-      },
-      "quizTitle": "محاضرة تجريبية E2E: إدارة التفاوض الدبلوماسي",
-      "attendance": true,
-      "bonusScore": 2,
-      "percentage": 100,
-      "bonusReason": "مداخلة دبلوماسية استثنائية أثناء المحاضرة",
-      "candidateId": "c_2",
-      "committeeId": "crises",
-      "evaluatedAt": "2026-10-23T13:06:48.626Z",
-      "submittedAt": "2026-10-23T13:06:41.736Z",
-      "totalPoints": 10,
-      "candidateName": "ندي عبدالله ابراهيم علي عزب",
-      "lectureNumber": 99,
-      "candidateEmail": "delegate.verified@mofa2026.org",
-      "candidatePhone": "01099887766",
-      "assignmentNotes": "تحليل دقيق لأزمة قناة السويس ومبادئ اتفاقية فيينا",
-      "assignmentScore": 9,
-      "taskDescription": "",
-      "assignmentStatus": "submitted",
-      "candidateFaculty": "كلية السياسة والاقتصاد",
-      "timeTakenSeconds": 95
-    }
-  ],
+  "operationsTasks": [],
+  "quizSubmissions": [],
   "transferAuditLogs": [
     {
       "id": "transfer_1792760826986",
