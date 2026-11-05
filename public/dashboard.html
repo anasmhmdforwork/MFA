@@ -263,6 +263,34 @@
       .to-[#0e0703] { --tw-gradient-to: #120803 var(--tw-gradient-to-position) !important; }
       .to-[#0c0602] { --tw-gradient-to: #0c0502 var(--tw-gradient-to-position) !important; }
 
+      
+      /* Universal Fallback Overrides for Clashing Pastels */
+      .bg-blue-50, .bg-blue-100, .bg-blue-200 {
+        background-color: rgba(38, 22, 12, 0.85) !important;
+        border-color: rgba(197, 160, 89, 0.35) !important;
+        color: #fde68a !important;
+      }
+      .bg-pink-50, .bg-pink-100, .bg-pink-200 {
+        background-color: rgba(38, 22, 12, 0.85) !important;
+        border-color: rgba(197, 160, 89, 0.35) !important;
+        color: #eedcc6 !important;
+      }
+      .bg-purple-50, .bg-purple-100, .bg-purple-200 {
+        background-color: rgba(38, 22, 12, 0.85) !important;
+        border-color: rgba(197, 160, 89, 0.35) !important;
+        color: #eedcc6 !important;
+      }
+      .bg-emerald-50, .bg-emerald-100 {
+        background-color: rgba(18, 45, 28, 0.8) !important;
+        border-color: rgba(16, 185, 129, 0.35) !important;
+        color: #6ee7b7 !important;
+      }
+      .text-blue-800, .text-blue-900, .text-blue-700 { color: #fde68a !important; }
+      .text-pink-800, .text-pink-900, .text-pink-700 { color: #eedcc6 !important; }
+      .text-purple-800, .text-purple-900, .text-purple-700 { color: #eedcc6 !important; }
+      .text-emerald-800, .text-emerald-900, .text-emerald-700 { color: #6ee7b7 !important; }
+      .text-amber-800, .text-amber-900, .text-amber-700 { color: #dfb147 !important; }
+
       /* Dedicated Diplomatic Button Classes */
       .btn-action-view {
         background: rgba(45, 27, 14, 0.8) !important;
@@ -278,16 +306,16 @@
       }
 
       .btn-action-slot {
-        background: rgba(30, 58, 138, 0.45) !important;
-        border: 1px solid rgba(59, 130, 246, 0.45) !important;
-        color: #93c5fd !important;
+        background: rgba(38, 22, 12, 0.85) !important;
+        border: 1px solid rgba(223, 177, 71, 0.45) !important;
+        color: #fde68a !important;
         transition: all 0.2s ease;
       }
       .btn-action-slot:hover {
-        background: rgba(30, 58, 138, 0.8) !important;
-        border-color: #60a5fa !important;
+        background: rgba(65, 38, 20, 0.95) !important;
+        border-color: #dfb147 !important;
         color: #ffffff !important;
-        box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 0 12px rgba(223, 177, 71, 0.4);
       }
 
       .btn-action-eval {
@@ -307,29 +335,29 @@
       }
 
       .btn-action-transfer {
-        background: rgba(88, 28, 135, 0.45) !important;
-        border: 1px solid rgba(168, 85, 247, 0.45) !important;
-        color: #d8b4fe !important;
+        background: rgba(38, 22, 12, 0.85) !important;
+        border: 1px solid rgba(197, 160, 89, 0.4) !important;
+        color: #eedcc6 !important;
         transition: all 0.2s ease;
       }
       .btn-action-transfer:hover {
-        background: rgba(88, 28, 135, 0.8) !important;
-        border-color: #c084fc !important;
+        background: rgba(65, 38, 20, 0.95) !important;
+        border-color: #dfb147 !important;
         color: #ffffff !important;
-        box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+        box-shadow: 0 0 12px rgba(223, 177, 71, 0.4);
       }
 
       .btn-action-delete {
-        background: rgba(136, 19, 55, 0.45) !important;
-        border: 1px solid rgba(244, 63, 94, 0.45) !important;
-        color: #fecdd3 !important;
+        background: rgba(60, 15, 15, 0.75) !important;
+        border: 1px solid rgba(239, 68, 68, 0.4) !important;
+        color: #fca5a5 !important;
         transition: all 0.2s ease;
       }
       .btn-action-delete:hover {
-        background: rgba(159, 18, 57, 0.9) !important;
-        border-color: #fb7185 !important;
+        background: rgba(90, 20, 20, 0.95) !important;
+        border-color: #ef4444 !important;
         color: #ffffff !important;
-        box-shadow: 0 0 14px rgba(244, 63, 94, 0.5);
+        box-shadow: 0 0 14px rgba(239, 68, 68, 0.4);
       }
 
       .btn-action-whatsapp {
@@ -769,12 +797,12 @@
         <!-- Directorate Hero Banner -->
         <div class="bg-gradient-to-r from-[#2c170b] via-[#1a0d05] to-[#0c0602] text-white rounded-3xl p-6 sm:p-8 border border-amber-500/30 shadow-xl relative overflow-hidden">
           <div class="absolute -left-10 -bottom-10 w-48 h-48 rounded-full blur-3xl pointer-events-none"
-               :class="currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-500/15' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-500/15' : 'bg-emerald-500/15')"></div>
+               :class="currentUser && 'bg-amber-500/15'"></div>
 
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
             <div class="flex items-center gap-4">
               <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-black text-2xl shadow-lg flex-shrink-0"
-                   :class="currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-600 text-white' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-600 text-white' : 'bg-emerald-600 text-white')">
+                   :class="currentUser && 'btn-gold'">
                 <i :data-lucide="currentUser && currentUser.directorateType === 'hr' ? 'users' : (currentUser && currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-8 h-8"></i>
               </div>
               <div>
@@ -811,7 +839,7 @@
 
               <button 
                 @click="activeTab = 'directorate_members'" 
-                class="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-xs font-black transition flex items-center gap-2 shadow-md"
+                class="btn-gold px-4 py-2.5 rounded-xl text-xs font-black transition cursor-pointer flex items-center gap-2 shadow-md"
               >
                 <i data-lucide="user-check" class="w-4 h-4 text-emerald-600"></i>
                 <span>فتح كشف التقييمات</span>
@@ -823,9 +851,9 @@
         <!-- KPI Metric Cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <!-- Card 1: Total Members -->
-          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div class="bg-[#180d05]/95 p-5 rounded-3xl border border-amber-600/30 text-amber-100 shadow-sm flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-                 :class="currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-100 text-pink-700' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-100 text-purple-700' : 'bg-emerald-100 text-emerald-700')">
+                 :class="currentUser && 'bg-amber-950/50 text-amber-300 border border-amber-600/30'">
               <i :data-lucide="currentUser && currentUser.directorateType === 'hr' ? 'users' : (currentUser && currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-6 h-6"></i>
             </div>
             <div>
@@ -837,7 +865,7 @@
           </div>
 
           <!-- Card 2: Committees Covered -->
-          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div class="bg-[#180d05]/95 p-5 rounded-3xl border border-amber-600/30 text-amber-100 shadow-sm flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
               <i data-lucide="landmark" class="w-6 h-6"></i>
             </div>
@@ -850,7 +878,7 @@
           </div>
 
           <!-- Card 3: Average Evaluation -->
-          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div class="bg-[#180d05]/95 p-5 rounded-3xl border border-amber-600/30 text-amber-100 shadow-sm flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
               <i data-lucide="star" class="w-6 h-6"></i>
             </div>
@@ -863,7 +891,7 @@
           </div>
 
           <!-- Card 4: Evaluated Count -->
-          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div class="bg-[#180d05]/95 p-5 rounded-3xl border border-amber-600/30 text-amber-100 shadow-sm flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0">
               <i data-lucide="clipboard-check" class="w-6 h-6"></i>
             </div>
@@ -899,7 +927,7 @@
             <div 
               v-for="comm in committees" 
               :key="comm.id" 
-              class="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-slate-300"
+              class="bg-[#180d05]/95 rounded-3xl p-5 border border-amber-600/30 text-amber-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-slate-300"
             >
               <div>
                 <!-- Header: Comm Badge & Name -->
@@ -921,7 +949,7 @@
                   
                   <span 
                     class="text-xs font-black px-2.5 py-1 rounded-full"
-                    :class="getDirectorateMembersInCommittee(comm.id).length > 0 ? (currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-100 text-pink-800' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-100 text-purple-800' : 'bg-emerald-100 text-emerald-800')) : 'bg-slate-100 text-slate-500'"
+                    :class="getDirectorateMembersInCommittee(comm.id).length > 0 ? (currentUser && 'bg-amber-950/50 text-amber-200 border border-amber-600/30') : 'bg-slate-100 text-slate-500'"
                   >
                     {{ getDirectorateMembersInCommittee(comm.id).length }} كادر
                   </span>
@@ -978,7 +1006,7 @@
         </div>
 
         <!-- Academic Directorate Only: Cross-Committees Lectures & Attendance Table -->
-        <div v-if="currentUser && currentUser.directorateType === 'academic'" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+        <div v-if="currentUser && currentUser.directorateType === 'academic'" class="bg-[#180d05]/95 rounded-3xl p-6 sm:p-8 border border-amber-600/30 text-amber-100 shadow-md">
           <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
             <div>
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-800 text-xs font-bold mb-1 border border-purple-200">
@@ -1021,19 +1049,19 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 text-xs mb-3">
-                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                  <div class="bg-[#180d05]/95 p-2.5 rounded-xl border border-amber-600/30 text-amber-100 text-center">
                     <span class="text-[10px] text-slate-400 block">المناديب (Delegates)</span>
                     <span class="font-black text-sm text-blue-700">{{ comm.delegatesCount }}</span>
                   </div>
-                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                  <div class="bg-[#180d05]/95 p-2.5 rounded-xl border border-amber-600/30 text-amber-100 text-center">
                     <span class="text-[10px] text-slate-400 block">أعضاء الهيكل</span>
                     <span class="font-black text-sm text-purple-700">{{ comm.membersCount }}</span>
                   </div>
-                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                  <div class="bg-[#180d05]/95 p-2.5 rounded-xl border border-amber-600/30 text-amber-100 text-center">
                     <span class="text-[10px] text-slate-400 block">الاختبارات المنعقدة</span>
                     <span class="font-black text-sm text-slate-900">{{ comm.quizzesCount }} اختبارات</span>
                   </div>
-                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                  <div class="bg-[#180d05]/95 p-2.5 rounded-xl border border-amber-600/30 text-amber-100 text-center">
                     <span class="text-[10px] text-slate-400 block">نسبة الحضور</span>
                     <span class="font-black text-sm" :class="comm.attendanceRate >= 70 ? 'text-emerald-700' : 'text-amber-700'">
                       {{ comm.attendanceRate }}%
@@ -1061,7 +1089,7 @@
       <section v-show="activeTab === 'directorate_members'" class="space-y-6">
 
         <!-- Members Filter & Search Header -->
-        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm">
+        <div class="bg-[#180d05]/95 rounded-3xl p-5 sm:p-6 border border-amber-600/30 text-amber-100 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div>
               <h4 class="font-black text-slate-900 text-lg flex items-center gap-2">
@@ -1121,7 +1149,7 @@
           <div 
             v-for="cand in directorateMembersList" 
             :key="cand.id" 
-            class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+            class="bg-[#180d05]/95 rounded-3xl p-5 border border-amber-600/30 text-amber-100 shadow-sm hover:shadow-md transition flex flex-col justify-between"
           >
             <div>
               <!-- Top row: Avatar & Committee Badge -->
@@ -1205,7 +1233,7 @@
           </div>
 
           <!-- Empty State -->
-          <div v-if="directorateMembersList.length === 0" class="col-span-full py-12 text-center bg-white rounded-3xl border border-slate-200">
+          <div v-if="directorateMembersList.length === 0" class="col-span-full py-12 text-center bg-[#180d05]/95 rounded-3xl border border-amber-600/30 text-amber-100">
             <i :data-lucide="currentUser && currentUser.directorateType === 'hr' ? 'users' : (currentUser && currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
             <h5 class="font-bold text-slate-800 text-sm">لا توجد كوادر مطابقة لخيارات البحث أو التصفية الحالية</h5>
             <p class="text-xs text-slate-400 mt-1">جرّب تغيير اللجنة المحددة أو إزالة نص البحث</p>
@@ -1255,7 +1283,7 @@
           <div 
             v-for="evt in dashboardEvents" 
             :key="evt.id"
-            class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-sm hover:shadow-xl transition flex flex-col justify-between"
+            class="bg-[#180d05]/95 rounded-3xl p-5 sm:p-6 border border-amber-600/30 text-amber-100 shadow-sm hover:shadow-xl transition flex flex-col justify-between"
           >
             <div class="space-y-3">
               <!-- Top Row Badges -->
@@ -1364,7 +1392,7 @@
           </div>
 
           <!-- Empty Events State -->
-          <div v-if="dashboardEvents.length === 0" class="col-span-full py-16 text-center bg-white rounded-3xl border border-slate-200">
+          <div v-if="dashboardEvents.length === 0" class="col-span-full py-16 text-center bg-[#180d05]/95 rounded-3xl border border-amber-600/30 text-amber-100">
             <i data-lucide="compass" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
             <h5 class="font-bold text-slate-800 text-sm">لا توجد فعاليات أو زيارات مضافة حتى الآن</h5>
             <p class="text-xs text-slate-400 mt-1 mb-4">انقر فوق الزر بالأعلى لإطلاق أول زيارة أو ندوة رسميًا</p>
@@ -1431,7 +1459,7 @@
             <div 
               v-for="comm in committees" 
               :key="comm.id" 
-              class="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-slate-300"
+              class="bg-[#180d05]/95 rounded-3xl p-5 border border-amber-600/30 text-amber-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-slate-300"
             >
               <div>
                 <!-- Top Badge & Icon -->
@@ -1524,7 +1552,7 @@
         <!-- Cross-Committees Quizzes, Attendance & Structure Overview -->
 
 
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+        <div class="bg-[#180d05]/95 rounded-3xl p-6 sm:p-8 border border-amber-600/30 text-amber-100 shadow-md">
           <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
             <div>
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-800 text-xs font-bold mb-1 border border-purple-200">
@@ -1568,19 +1596,19 @@
 
                 <!-- Metrics Grid -->
                 <div class="grid grid-cols-2 gap-2 text-xs mb-3">
-                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                  <div class="bg-[#180d05]/95 p-2.5 rounded-xl border border-amber-600/30 text-amber-100 text-center">
                     <span class="text-[10px] text-slate-400 block">المناديب (Delegates)</span>
                     <span class="font-black text-sm text-blue-700">{{ comm.delegatesCount }}</span>
                   </div>
-                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                  <div class="bg-[#180d05]/95 p-2.5 rounded-xl border border-amber-600/30 text-amber-100 text-center">
                     <span class="text-[10px] text-slate-400 block">أعضاء الهيكل</span>
                     <span class="font-black text-sm text-purple-700">{{ comm.membersCount }} (HR: {{ comm.hrCount }})</span>
                   </div>
-                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                  <div class="bg-[#180d05]/95 p-2.5 rounded-xl border border-amber-600/30 text-amber-100 text-center">
                     <span class="text-[10px] text-slate-400 block">الاختبارات المنعقدة</span>
                     <span class="font-black text-sm text-slate-900">{{ comm.quizzesCount }} اختبارات</span>
                   </div>
-                  <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
+                  <div class="bg-[#180d05]/95 p-2.5 rounded-xl border border-amber-600/30 text-amber-100 text-center">
                     <span class="text-[10px] text-slate-400 block">نسبة الحضور</span>
                     <span class="font-black text-sm" :class="comm.attendanceRate >= 70 ? 'text-emerald-700' : 'text-amber-700'">
                       {{ comm.attendanceRate }}%
@@ -1603,7 +1631,7 @@
 
 
         <!-- Leaderboard: Top Rated Candidates Across All Sectors -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+        <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 shadow-md text-amber-100">
           <div class="flex items-center justify-between mb-4">
             <div>
               <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
@@ -1675,7 +1703,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 mb-4 sm:mb-6">
           
           <!-- Total Candidates -->
-          <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200 shadow-sm">
+          <div class="bg-[#1c0f08]/90 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-amber-600/30 shadow-md text-amber-100">
             <div class="flex items-center justify-between text-slate-500 text-[11px] sm:text-xs font-bold mb-1">
               <span>إجمالي المرشحين</span>
               <i data-lucide="users" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400"></i>
@@ -1685,7 +1713,7 @@
           </div>
 
           <!-- Booked Slots -->
-          <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200 shadow-sm">
+          <div class="bg-[#1c0f08]/90 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-amber-600/30 shadow-md text-amber-100">
             <div class="flex items-center justify-between text-blue-600 text-[11px] sm:text-xs font-bold mb-1">
               <span>حجزوا الموعد</span>
               <i data-lucide="calendar-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500"></i>
@@ -1695,7 +1723,7 @@
           </div>
 
           <!-- Pending Booking -->
-          <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200 shadow-sm">
+          <div class="bg-[#1c0f08]/90 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-amber-600/30 shadow-md text-amber-100">
             <div class="flex items-center justify-between text-amber-600 text-[11px] sm:text-xs font-bold mb-1">
               <span>لم يحجزوا بعد</span>
               <i data-lucide="clock" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500"></i>
@@ -1705,7 +1733,7 @@
           </div>
 
           <!-- Completed Interviews -->
-          <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200 shadow-sm">
+          <div class="bg-[#1c0f08]/90 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-amber-600/30 shadow-md text-amber-100">
             <div class="flex items-center justify-between text-emerald-600 text-[11px] sm:text-xs font-bold mb-1">
               <span>تمت المقابلة</span>
               <i data-lucide="check-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500"></i>
@@ -1715,7 +1743,7 @@
           </div>
 
           <!-- Average Rating -->
-          <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200 shadow-sm col-span-2 sm:col-span-1">
+          <div class="bg-[#180d05]/95 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-amber-600/30 text-amber-100 shadow-sm col-span-2 sm:col-span-1">
             <div class="flex items-center justify-between text-purple-600 text-[11px] sm:text-xs font-bold mb-1">
               <span>متوسط التقييم</span>
               <i data-lucide="star" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500"></i>
@@ -1731,7 +1759,7 @@
         </div>
 
         <!-- Quick Toolbar -->
-        <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+        <div class="bg-[#1c0f08]/90 rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-amber-600/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
           
           <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
             <!-- Add Candidate Manually Button -->
@@ -1788,7 +1816,7 @@
 
         
         <!-- Filters Bar -->
-        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm no-print">
+        <div class="bg-[#1c0f08]/90 rounded-2xl p-4 sm:p-5 border border-amber-600/30 shadow-md no-print text-amber-100">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             
             <!-- Search Input -->
@@ -1877,7 +1905,7 @@
         </div>
 
         <!-- Candidates Table Card -->
-        <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="bg-[#180d05]/95 rounded-2xl sm:rounded-3xl border border-amber-600/30 shadow-xl overflow-hidden text-amber-100">
           
           <!-- Desktop Table View (Hidden on mobile < md) -->
           <div class="hidden md:block overflow-x-auto">
@@ -1974,25 +2002,25 @@
                         </span>
                         <span 
                           v-if="cand.evaluation.decision === 'accepted' && (cand.roleType || 'delegate') === 'delegate'"
-                          class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"
+                          class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-950/50 text-amber-200 border border-amber-600/30"
                         >
                           مندوب
                         </span>
                         <span 
                           v-else-if="cand.evaluation.decision === 'accepted' && cand.subDepartment === 'hr'"
-                          class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-pink-50 text-pink-700 border border-pink-200"
+                          class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-950/50 text-amber-200 border border-amber-600/30"
                         >
                           عضو HR
                         </span>
                         <span 
                           v-else-if="cand.evaluation.decision === 'accepted' && cand.subDepartment === 'media'"
-                          class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200"
+                          class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30"
                         >
                           عضو ميديا
                         </span>
                         <span 
                           v-else-if="cand.evaluation.decision === 'accepted' && cand.subDepartment === 'academic'"
-                          class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-950/50 text-amber-200 border border-amber-600/30"
                         >
                           عضو أكاديمي
                         </span>
@@ -2079,7 +2107,7 @@
             <div 
               v-for="(cand, idx) in filteredCandidates" 
               :key="cand.id" 
-              class="p-4 bg-white hover:bg-slate-50 transition-colors space-y-3"
+              class="p-4 bg-[#180d05]/95 hover:bg-[#221207] border-b border-amber-600/20 transition-colors space-y-3 text-amber-100"
             >
               <!-- Card Top: Index + Name + Badges + WhatsApp -->
               <div class="flex items-start justify-between gap-2">
@@ -2228,7 +2256,7 @@
       <section v-show="activeTab === 'slots'" class="space-y-6">
         
         <!-- Slot Controls Header -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 flex flex-wrap items-center justify-between gap-4 shadow-sm">
+        <div class="bg-[#180d05]/95 rounded-2xl p-5 border border-amber-600/30 text-amber-100 flex flex-wrap items-center justify-between gap-4 shadow-sm">
           <div>
             <h3 class="font-black text-slate-900 text-base">جدول المقابلات ومواعيد القطاع</h3>
             <p class="text-xs text-slate-500">إدارة المواعيد المتاحة، الحجوزات، وتوليد فترات مقابلات جديدة</p>
@@ -2249,36 +2277,36 @@
         <div class="flex flex-wrap items-center gap-2">
           <button 
             @click="slotFilterType = 'all'" 
-            :class="slotFilterType === 'all' ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+            :class="slotFilterType === 'all' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer"
           >
             جميع المواعيد ({{ slots.length }})
           </button>
           <button 
             @click="slotFilterType = 'available'" 
-            :class="slotFilterType === 'available' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+            :class="slotFilterType === 'available' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer"
           >
             المتاحة للحجز ({{ slots.filter(s => s.status === 'available').length }})
           </button>
           <button 
             @click="slotFilterType = 'booked'" 
-            :class="slotFilterType === 'booked' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+            :class="slotFilterType === 'booked' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer"
           >
             المحجوزة ({{ slots.filter(s => s.status === 'booked').length }})
           </button>
           <button 
             @click="slotFilterType = 'online'" 
-            :class="slotFilterType === 'online' ? 'bg-slate-800 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+            :class="slotFilterType === 'online' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer"
           >
              أونلاين فقط
           </button>
           <button 
             @click="slotFilterType = 'offline'" 
-            :class="slotFilterType === 'offline' ? 'bg-slate-800 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition"
+            :class="slotFilterType === 'offline' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer"
           >
              حضوري فقط
           </button>
@@ -2289,7 +2317,7 @@
           <div 
             v-for="slot in filteredSlots" 
             :key="slot.id" 
-            class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between"
+            class="bg-[#180d05]/95 rounded-2xl p-4 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col justify-between"
           >
             <div>
               <div class="flex items-center justify-between mb-2">
@@ -2364,7 +2392,7 @@
       <section v-show="activeTab === 'notices'" class="space-y-6">
 
         <!-- Top Header & Broadcast Controls -->
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+        <div class="bg-[#180d05]/95 rounded-3xl p-6 sm:p-8 border border-amber-600/30 text-amber-100 shadow-md">
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-6 pb-6 border-b border-slate-100">
             <div>
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold mb-2 border border-emerald-200">
@@ -2413,73 +2441,73 @@
 
           <!-- Summary Metric Counters & Progress -->
           <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
-              <span class="block text-xs font-bold text-slate-500 mb-1">إجمالي المقبولين</span>
-              <span class="text-2xl font-black text-slate-900">{{ acceptedMembersList.length }}</span>
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">إجمالي المقبولين</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-300 font-mono">{{ acceptedMembersList.length }}</span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-center">
-              <div class="flex items-center justify-center gap-1.5 mb-1 text-emerald-800 text-xs font-bold">
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
+              <div class="flex items-center justify-center gap-1.5 mb-1 text-emerald-400 text-xs font-bold">
                 <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
                 <span>تم إبلاغهم</span>
               </div>
-              <span class="text-2xl font-black text-emerald-700">{{ notifiedAcceptedCount }}</span>
-              <span class="block text-[10px] text-emerald-600 font-bold mt-0.5">({{ noticeProgressPercent }}%)</span>
+              <span class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">{{ notifiedAcceptedCount }}</span>
+              <span class="block text-[10px] text-emerald-300/80 font-bold mt-0.5">({{ noticeProgressPercent }}%)</span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-center">
-              <div class="flex items-center justify-center gap-1.5 mb-1 text-amber-800 text-xs font-bold">
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
+              <div class="flex items-center justify-center gap-1.5 mb-1 text-amber-400 text-xs font-bold">
                 <i data-lucide="clock" class="w-3.5 h-3.5"></i>
                 <span>بانتظار الإبلاغ</span>
               </div>
-              <span class="text-2xl font-black text-amber-700">{{ pendingNoticeCount }}</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-400 font-mono">{{ pendingNoticeCount }}</span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-center">
-              <span class="block text-xs font-bold text-blue-700 mb-1">المناديب (Delegates)</span>
-              <span class="text-2xl font-black text-blue-900">{{ delegatesCount }}</span>
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">المناديب (Delegates)</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-200 font-mono">{{ delegatesCount }}</span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200 text-center col-span-2 sm:col-span-1">
-              <span class="block text-xs font-bold text-purple-700 mb-1">أعضاء الهيكل (لجان)</span>
-              <span class="text-2xl font-black text-purple-900">{{ hrCount + mediaCount + academicCount }}</span>
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center col-span-2 sm:col-span-1 shadow-md hover:border-amber-500/50 transition">
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">أعضاء الهيكل (لجان)</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-100 font-mono">{{ hrCount + mediaCount + academicCount }}</span>
             </div>
           </div>
 
           <!-- Progress Bar -->
-          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center gap-3">
-            <span class="text-xs font-bold text-slate-500 whitespace-nowrap">نسبة إنجاز الإبلاغ:</span>
-            <div class="flex-1 h-3 rounded-full bg-slate-100 overflow-hidden relative">
+          <div class="mt-4 pt-4 border-t border-amber-600/25 flex items-center gap-3">
+            <span class="text-xs font-bold text-amber-200/80 whitespace-nowrap">نسبة إنجاز الإبلاغ:</span>
+            <div class="flex-1 h-3 rounded-full bg-[#100703] border border-amber-600/30 overflow-hidden relative">
               <div 
-                class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500" 
+                class="h-full bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-400 transition-all duration-500" 
                 :style="{ width: noticeProgressPercent + '%' }"
               ></div>
             </div>
-            <span class="text-xs font-bold text-emerald-700 font-mono">{{ notifiedAcceptedCount }} / {{ acceptedMembersList.length }}</span>
+            <span class="text-xs font-bold text-amber-300 font-mono">{{ notifiedAcceptedCount }} / {{ acceptedMembersList.length }}</span>
           </div>
         </div>
 
         <!-- Committee WhatsApp Group Link Config Card -->
-        <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 rounded-3xl p-6 border border-emerald-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div class="bg-gradient-to-r from-[#2c170b] via-[#1a0d05] to-[#0c0602] rounded-3xl p-6 border border-amber-600/40 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-5 text-amber-100">
           <div class="flex items-start sm:items-center gap-3.5">
-            <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
+            <div class="w-11 h-11 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center shrink-0 shadow-md">
               <i data-lucide="message-circle" class="w-5 h-5"></i>
             </div>
             <div>
               <div class="flex flex-wrap items-center gap-2">
-                <h3 class="text-sm font-bold text-slate-900">
+                <h3 class="text-sm font-bold text-amber-100">
                   رابط جروب واتساب المقبولين - {{ targetCommitteeForLink ? targetCommitteeForLink.name : (currentCommittee ? currentCommittee.name : 'اللجنة') }}
                 </h3>
-                <span v-if="targetCommitteeGroupLink" class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold border border-emerald-200 flex items-center gap-1">
-                  <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i>
+                <span v-if="targetCommitteeGroupLink" class="px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-300 text-[10px] font-bold border border-emerald-600/40 flex items-center gap-1">
+                  <i data-lucide="check" class="w-3 h-3 text-emerald-400"></i>
                   <span>مُفعل تلقائياً بالرسائل</span>
                 </span>
-                <span v-else class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold border border-amber-200 flex items-center gap-1">
-                  <i data-lucide="alert-circle" class="w-3 h-3 text-amber-600"></i>
+                <span v-else class="px-2 py-0.5 rounded-full bg-amber-950/60 text-amber-300 text-[10px] font-bold border border-amber-600/40 flex items-center gap-1">
+                  <i data-lucide="alert-circle" class="w-3 h-3 text-amber-400"></i>
                   <span>لم يتم ضبطه بعد</span>
                 </span>
               </div>
-              <p class="text-xs text-slate-500 mt-1 max-w-xl">
+              <p class="text-xs text-amber-200/70 mt-1 max-w-xl">
                 أدخل رابط جروب الواتساب الخاص باللجنة ليتم إدراجه تلقائياً داخل نص رسالة القبول لكل متقدم مقبول.
               </p>
             </div>
@@ -2490,7 +2518,7 @@
             <select 
               v-if="selectedCommitteeId === 'all'" 
               v-model="adminSelectedCommitteeForLink" 
-              class="px-3 py-2 rounded-xl border border-emerald-300 bg-white text-xs text-slate-800 font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+              class="px-3 py-2 rounded-xl border border-amber-600/40 bg-[#0e0703] text-xs text-amber-200 font-bold outline-none focus:border-amber-400"
             >
               <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.name }}</option>
             </select>
@@ -2501,15 +2529,15 @@
                 v-model="committeeGroupLinkInput" 
                 placeholder="https://chat.whatsapp.com/..." 
                 dir="ltr"
-                class="w-full pl-3 pr-8 py-2.5 rounded-xl border border-emerald-300 text-xs font-mono text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500 bg-white shadow-inner"
+                class="w-full pl-3 pr-8 py-2.5 rounded-xl border border-amber-600/40 text-xs font-mono text-amber-100 outline-none focus:border-amber-400 bg-[#0e0703] shadow-inner"
               />
-              <i data-lucide="link" class="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-3 pointer-events-none"></i>
+              <i data-lucide="link" class="w-3.5 h-3.5 text-amber-500 absolute right-2.5 top-3 pointer-events-none"></i>
             </div>
 
             <button 
               @click="saveCommitteeGroupLink"
               :disabled="isSavingGroupLink"
-              class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm whitespace-nowrap"
+              class="btn-gold px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm whitespace-nowrap cursor-pointer"
             >
               <i data-lucide="check" class="w-3.5 h-3.5"></i>
               <span>{{ isSavingGroupLink ? 'جاري الحفظ...' : (groupLinkSavedSuccess ? 'تم الحفظ!' : 'حفظ الرابط') }}</span>
@@ -2519,7 +2547,7 @@
               v-if="committeeGroupLinkInput" 
               :href="committeeGroupLinkInput" 
               target="_blank" 
-              class="p-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-emerald-200 transition flex items-center justify-center" 
+              class="p-2.5 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40 transition flex items-center justify-center cursor-pointer" 
               title="تجربة فتح رابط الجروب"
             >
               <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
@@ -2528,11 +2556,11 @@
         </div>
 
         <!-- Collapsible Template Editor & Customizer -->
-        <div v-show="showTemplateEditor" class="bg-gradient-to-br from-amber-50/70 to-orange-50/40 rounded-3xl p-6 border border-amber-200 shadow-sm transition-all space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-amber-200/60">
+        <div v-show="showTemplateEditor" class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-3xl p-6 border border-amber-600/40 shadow-xl transition-all space-y-4 text-amber-100">
+          <div class="flex items-center justify-between pb-3 border-b border-amber-600/30">
             <div class="flex items-center gap-2">
               <i data-lucide="message-square" class="w-4 h-4 text-amber-700"></i>
-              <h3 class="font-bold text-sm text-slate-900">صيغة رسالة الواتساب الموحدة للمقبولين</h3>
+              <h3 class="font-bold text-sm text-amber-100">صيغة رسالة الواتساب الموحدة للمقبولين</h3>
             </div>
             <div class="flex items-center gap-2">
               <button 
@@ -2543,7 +2571,7 @@
               </button>
               <button 
                 @click="saveNoticeTemplate" 
-                class="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5"
+                class="btn-gold px-3.5 py-1.5 rounded-xl text-xs font-bold transition shadow-md flex items-center gap-1.5 cursor-pointer"
               >
                 <i data-lucide="check" class="w-3.5 h-3.5"></i>
                 <span>حفظ التعديلات</span>
@@ -2554,17 +2582,17 @@
           <!-- Variable Tags -->
           <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
             <span class="text-slate-500 font-bold ml-1">المتغيرات التلقائية المتاحة:</span>
-            <span class="px-2 py-0.5 rounded-lg bg-white border border-amber-300 font-mono text-amber-900 font-bold">{الاسم}</span>
-            <span class="px-2 py-0.5 rounded-lg bg-white border border-amber-300 font-mono text-amber-900 font-bold">{البوزيشن}</span>
-            <span class="px-2 py-0.5 rounded-lg bg-white border border-amber-300 font-mono text-amber-900 font-bold">{اللجنة}</span>
-            <span class="px-2 py-0.5 rounded-lg bg-white border border-amber-300 font-mono text-amber-900 font-bold">{الكلية}</span>
-            <span class="px-2 py-0.5 rounded-lg bg-white border border-amber-300 font-mono text-amber-900 font-bold">{رابط_الجروب}</span>
+            <span class="px-2 py-0.5 rounded-lg bg-amber-950/60 border border-amber-600/40 font-mono text-amber-300 font-bold">{الاسم}</span>
+            <span class="px-2 py-0.5 rounded-lg bg-amber-950/60 border border-amber-600/40 font-mono text-amber-300 font-bold">{البوزيشن}</span>
+            <span class="px-2 py-0.5 rounded-lg bg-amber-950/60 border border-amber-600/40 font-mono text-amber-300 font-bold">{اللجنة}</span>
+            <span class="px-2 py-0.5 rounded-lg bg-amber-950/60 border border-amber-600/40 font-mono text-amber-300 font-bold">{الكلية}</span>
+            <span class="px-2 py-0.5 rounded-lg bg-amber-950/60 border border-amber-600/40 font-mono text-amber-300 font-bold">{رابط_الجروب}</span>
           </div>
 
           <textarea 
             v-model="noticeTemplate" 
             rows="7"
-            class="w-full p-4 rounded-2xl border border-amber-300 bg-white text-slate-800 text-xs font-sans leading-relaxed outline-none focus:ring-2 focus:ring-amber-500 shadow-inner"
+            class="w-full p-4 rounded-2xl border border-amber-600/40 bg-[#0e0703] text-amber-100 text-xs font-sans leading-relaxed outline-none focus:border-amber-400 shadow-inner"
             placeholder="اكتب صيغة الرسالة هنا..."
           ></textarea>
         </div>
@@ -2575,7 +2603,7 @@
           <div class="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0">
             <button 
               @click="noticeRoleFilter = 'all'"
-              :class="noticeRoleFilter === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="noticeRoleFilter === 'all' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap"
             >
               الكل ({{ acceptedMembersList.length }})
@@ -2583,7 +2611,7 @@
 
             <button 
               @click="noticeRoleFilter = 'delegate'"
-              :class="noticeRoleFilter === 'delegate' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="noticeRoleFilter === 'delegate' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
@@ -2592,7 +2620,7 @@
 
             <button 
               @click="noticeRoleFilter = 'hr'"
-              :class="noticeRoleFilter === 'hr' ? 'bg-pink-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="noticeRoleFilter === 'hr' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <span>HR ({{ hrCount }})</span>
@@ -2600,7 +2628,7 @@
 
             <button 
               @click="noticeRoleFilter = 'media'"
-              :class="noticeRoleFilter === 'media' ? 'bg-purple-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="noticeRoleFilter === 'media' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <span>ميديا ({{ mediaCount }})</span>
@@ -2608,18 +2636,18 @@
 
             <button 
               @click="noticeRoleFilter = 'academic'"
-              :class="noticeRoleFilter === 'academic' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="noticeRoleFilter === 'academic' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <span>أكاديمي ({{ academicCount }})</span>
             </button>
 
-            <div class="h-5 w-px bg-slate-300 mx-1"></div>
+            <div class="h-5 w-px bg-amber-600/30 mx-1"></div>
 
             <!-- Status Filter -->
             <button 
               @click="noticeStatusFilter = 'pending'"
-              :class="noticeStatusFilter === 'pending' ? 'bg-amber-600 text-white shadow-sm' : 'bg-white text-amber-700 hover:bg-amber-50 border border-amber-200'"
+              :class="noticeStatusFilter === 'pending' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-2.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <i data-lucide="clock" class="w-3 h-3"></i>
@@ -2628,7 +2656,7 @@
 
             <button 
               @click="noticeStatusFilter = 'notified'"
-              :class="noticeStatusFilter === 'notified' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-emerald-700 hover:bg-emerald-50 border border-emerald-200'"
+              :class="noticeStatusFilter === 'notified' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-2.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
@@ -2661,7 +2689,7 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="filteredNoticeMembers.length === 0" class="bg-white rounded-3xl p-12 text-center border border-slate-200 text-slate-500">
+        <div v-if="filteredNoticeMembers.length === 0" class="bg-[#180d05]/95 rounded-3xl p-12 text-center border border-amber-600/30 text-amber-100 text-slate-500">
           <i data-lucide="message-circle" class="w-12 h-12 mx-auto text-slate-300 mb-3"></i>
           <p class="font-bold text-sm">لا يوجد أعضاء مطابقين للفلتر أو البحث المحدد</p>
           <p class="text-xs text-slate-400 mt-1">تأكد من اختيار فلتر آخر أو كتابة الاسم بشكل صحيح.</p>
@@ -2672,109 +2700,87 @@
           <div 
             v-for="cand in filteredNoticeMembers" 
             :key="cand.id"
-            :class="cand.notified ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-200 bg-white'"
-            class="rounded-2xl p-5 border shadow-sm hover:shadow-md transition flex flex-col justify-between"
+            class="bg-[#180d05]/95 rounded-2xl p-5 border border-amber-600/30 hover:border-amber-500/50 shadow-md hover:shadow-xl transition flex flex-col justify-between"
           >
             <div>
               <!-- Card Header -->
               <div class="flex items-start justify-between gap-3 mb-3">
                 <div class="flex items-center gap-2.5">
                   <div 
-                    :class="cand.notified ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white'"
-                    class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shadow-sm"
+                    class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300 flex items-center justify-center font-black text-sm shadow-sm"
                   >
                     {{ (cand.arabicName || cand.fullName).charAt(0) }}
                   </div>
                   <div>
-                  <div class="flex items-center gap-1.5 flex-wrap">
-                    <h4 class="font-black text-sm text-slate-900 leading-tight">{{ cand.arabicName || cand.fullName }}</h4>
-                    <span 
-                      :class="isFemaleCandidate(cand) ? 'bg-pink-50 text-pink-700 border-pink-200' : 'bg-slate-100 text-slate-600 border-slate-200'"
-                      class="px-1.5 py-0.5 rounded-md text-[10px] font-bold border"
-                    >
-                      {{ isFemaleCandidate(cand) ? 'عزيزتي' : 'عزيزي' }}
-                    </span>
-                  </div>
-                    <p class="text-[11px] text-slate-500 mt-0.5">{{ cand.faculty }} • {{ cand.university }}</p>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <h4 class="font-black text-sm text-amber-100 leading-tight">{{ cand.arabicName || cand.fullName }}</h4>
+                      <span 
+                        class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950/50 text-amber-300 border border-amber-600/30"
+                      >
+                        {{ isFemaleCandidate(cand) ? 'عزيزتي' : 'عزيزي' }}
+                      </span>
+                    </div>
+                    <p class="text-[11px] text-amber-200/70 mt-0.5">{{ cand.faculty }} • {{ cand.university }}</p>
                   </div>
                 </div>
 
                 <!-- Role Badge -->
                 <span 
-                  v-if="(cand.roleType || 'delegate') === 'delegate'"
-                  class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-bold"
+                  class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold"
                 >
-                  مندوب (Delegate)
-                </span>
-                <span 
-                  v-else-if="cand.subDepartment === 'hr'"
-                  class="px-2.5 py-1 rounded-full bg-pink-50 text-pink-800 border border-pink-200 text-[10px] font-bold"
-                >
-                  عضو HR
-                </span>
-                <span 
-                  v-else-if="cand.subDepartment === 'media'"
-                  class="px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200 text-[10px] font-bold"
-                >
-                  عضو ميديا
-                </span>
-                <span 
-                  v-else
-                  class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold"
-                >
-                  عضو أكاديمي
+                  {{ (cand.roleType || 'delegate') === 'delegate' ? 'مندوب (Delegate)' : (cand.subDepartment === 'hr' ? 'عضو HR' : (cand.subDepartment === 'media' ? 'عضو ميديا' : (cand.subDepartment === 'academic' ? 'عضو أكاديمي' : 'عضو تنظيم'))) }}
                 </span>
               </div>
 
               <!-- Status Banner -->
               <div class="flex items-center justify-between mb-3 text-xs">
-                <span class="text-slate-500 font-medium text-[11px]">حالة الإبلاغ:</span>
+                <span class="text-amber-200/70 font-medium text-[11px]">حالة الإبلاغ:</span>
                 <div 
                   v-if="cand.notified" 
-                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold border border-emerald-200"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/60 text-emerald-300 text-[11px] font-bold border border-emerald-600/40"
                 >
-                  <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-400"></i>
                   <span>تم الإبلاغ بنجاح</span>
                 </div>
                 <div 
                   v-else 
-                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 text-[11px] font-bold border border-amber-200"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-950/60 text-amber-300 text-[11px] font-bold border border-amber-600/40"
                 >
-                  <i data-lucide="clock" class="w-3 h-3 text-amber-600"></i>
+                  <i data-lucide="clock" class="w-3 h-3 text-amber-400"></i>
                   <span>بانتظار الإرسال</span>
                 </div>
               </div>
 
               <!-- Candidate Info -->
-              <div class="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl mb-3 border border-slate-100">
+              <div class="space-y-1.5 text-xs bg-[#100703]/80 p-3 rounded-xl mb-3 border border-amber-600/25">
                 <div class="flex items-center justify-between">
-                  <span class="text-slate-400">الهاتف:</span>
-                  <a :href="'https://wa.me/2' + cand.phone" target="_blank" class="font-mono text-emerald-600 font-bold hover:underline flex items-center gap-1">
+                  <span class="text-amber-200/60">الهاتف:</span>
+                  <a :href="'https://wa.me/2' + cand.phone" target="_blank" class="font-mono text-emerald-400 font-bold hover:underline flex items-center gap-1">
                     <span>{{ cand.phone }}</span>
                     <i data-lucide="phone" class="w-3 h-3"></i>
                   </a>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-slate-400">اللجنة:</span>
-                  <span class="font-bold text-slate-800 text-[11px] truncate max-w-[190px]">{{ getCandidateCommitteeTitle(cand) }}</span>
+                  <span class="text-amber-200/60">اللجنة:</span>
+                  <span class="font-bold text-amber-100 text-[11px] truncate max-w-[190px]">{{ getCandidateCommitteeTitle(cand) }}</span>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-slate-400">الصفة بالهيكل:</span>
-                  <span class="font-bold text-amber-700 text-[11px]">{{ getCandidatePositionTitle(cand) }}</span>
+                  <span class="text-amber-200/60">الصفة بالهيكل:</span>
+                  <span class="font-bold text-amber-300 text-[11px]">{{ getCandidatePositionTitle(cand) }}</span>
                 </div>
               </div>
             </div>
 
             <!-- Card Action Buttons -->
-            <div class="space-y-2 pt-3 border-t border-slate-100">
+            <div class="space-y-2 pt-3 border-t border-amber-600/25">
               <!-- Send on WhatsApp (Main Action) -->
               <a 
                 :href="getCandidateWhatsAppUrl(cand)" 
                 @click="onSendWhatsAppClick(cand)"
                 target="_blank"
-                class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm"
+                class="w-full py-2.5 px-4 rounded-xl btn-action-whatsapp text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
               >
-                <i data-lucide="send" class="w-4 h-4"></i>
+                <i data-lucide="send" class="w-4 h-4 text-emerald-400"></i>
                 <span>إرسال عبر واتساب فوراً</span>
               </a>
 
@@ -2782,30 +2788,30 @@
                 <!-- Copy Message Button -->
                 <button 
                   @click="copyCandidateMessage(cand)"
-                  class="flex-1 py-2 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-1"
+                  class="flex-1 py-2 px-2 rounded-xl btn-action-view text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
                   title="نسخ نص الرسالة للحافظة"
                 >
-                  <i data-lucide="copy" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  <i data-lucide="copy" class="w-3.5 h-3.5 text-amber-400"></i>
                   <span>{{ copiedCandidateId === cand.id ? 'تم النسخ!' : 'نسخ الرسالة' }}</span>
                 </button>
                 <!-- Toggle Notified Checkbox/Button -->
                 <button 
                   @click="toggleCandidateNotified(cand)"
-                  :class="cand.notified ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'"
-                  class="flex-1 py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1"
+                  :class="cand.notified ? 'btn-action-view' : 'btn-action-slot'"
+                  class="flex-1 py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <i :data-lucide="cand.notified ? 'rotate-ccw' : 'check'" class="w-3.5 h-3.5"></i>
-                  <span>{{ cand.notified ? 'إلغاء التحديد' : 'تحديد كـ تم الإبلاغ' }}</span>
+                  <span>{{ cand.notified ? 'إلغاء التحديد' : 'تحديد كـ تم' }}</span>
                 </button>
 
                 <!-- Quick Edit Role -->
                 <button 
                   @click="openEditRoleModal(cand)"
-                  class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-1"
+                  class="py-2 px-3 rounded-xl btn-action-view text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
                   title="تعديل صفة العضو في الهيكل"
                 >
-                  <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-                  <span>تعديل البوزيشن</span>
+                  <i data-lucide="sliders" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>تعديل الصفة</span>
                 </button>
               </div>
             </div>
@@ -2862,10 +2868,10 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           
           <!-- KPI 1: Active Delegates Roster -->
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-purple-300 transition">
+          <div class="bg-[#180d05]/95 rounded-2xl p-4 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col justify-between hover:border-purple-300 transition">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[11px] font-bold text-slate-500">قوة المناديب المقيدين</span>
-              <span class="p-1.5 bg-purple-50 text-purple-600 rounded-lg">
+              <span class="p-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-lg">
                 <i data-lucide="users" class="w-4 h-4"></i>
               </span>
             </div>
@@ -2880,7 +2886,7 @@
           </div>
 
           <!-- KPI 2: Executive Committee Members -->
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-blue-300 transition">
+          <div class="bg-[#180d05]/95 rounded-2xl p-4 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col justify-between hover:border-blue-300 transition">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[11px] font-bold text-slate-500">أعضاء اللجان التنفيذية</span>
               <span class="p-1.5 bg-blue-50 text-blue-600 rounded-lg">
@@ -2899,7 +2905,7 @@
           </div>
 
           <!-- KPI 3: Overall Lecture Attendance Rate -->
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition">
+          <div class="bg-[#180d05]/95 rounded-2xl p-4 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[11px] font-bold text-slate-500">نسبة حضور المحاضرات</span>
               <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg">
@@ -2917,7 +2923,7 @@
           </div>
 
           <!-- KPI 4: Delegate Quiz Performance Avg -->
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-amber-300 transition">
+          <div class="bg-[#180d05]/95 rounded-2xl p-4 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col justify-between hover:border-amber-300 transition">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[11px] font-bold text-slate-500">متوسط درجات الاختبارات</span>
               <span class="p-1.5 bg-amber-50 text-amber-600 rounded-lg">
@@ -2935,7 +2941,7 @@
           </div>
 
           <!-- KPI 5: Member Evaluation Index -->
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-indigo-300 transition">
+          <div class="bg-[#180d05]/95 rounded-2xl p-4 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col justify-between hover:border-indigo-300 transition">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[11px] font-bold text-slate-500">مؤشر تقييم الأعضاء</span>
               <span class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
@@ -2956,7 +2962,7 @@
           </div>
 
           <!-- KPI 6: Perfect Attendance (Zero Absence) -->
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-teal-300 transition">
+          <div class="bg-[#180d05]/95 rounded-2xl p-4 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col justify-between hover:border-teal-300 transition">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[11px] font-bold text-slate-500">الالتزام الكامل بالحضور</span>
               <span class="p-1.5 bg-teal-50 text-teal-600 rounded-lg">
@@ -2979,7 +2985,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           <!-- Chart 1: Lecture Attendance Trend (7 cols) -->
-          <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col">
+          <div class="lg:col-span-7 bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
               <div>
                 <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
@@ -3004,7 +3010,7 @@
           </div>
 
           <!-- Chart 2: Lecture Academic Performance Trend (5 cols) -->
-          <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col">
+          <div class="lg:col-span-5 bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
               <div>
                 <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
@@ -3034,7 +3040,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           <!-- Chart 3: Operational Structure Roster (Doughnut) -->
-          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col">
+          <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col">
             <div class="pb-3 border-b border-slate-100 mb-3">
               <h4 class="font-black text-slate-900 text-sm flex items-center gap-2">
                 <i data-lucide="pie-chart" class="w-4 h-4 text-purple-600"></i>
@@ -3048,7 +3054,7 @@
           </div>
 
           <!-- Chart 4: Delegate Academic Grades Brackets (Bar) -->
-          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col">
+          <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col">
             <div class="pb-3 border-b border-slate-100 mb-3">
               <h4 class="font-black text-slate-900 text-sm flex items-center gap-2">
                 <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-600"></i>
@@ -3062,7 +3068,7 @@
           </div>
 
           <!-- Chart 5: Member Performance Rating Brackets (Doughnut) -->
-          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col">
+          <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col">
             <div class="pb-3 border-b border-slate-100 mb-3">
               <h4 class="font-black text-slate-900 text-sm flex items-center gap-2">
                 <i data-lucide="award" class="w-4 h-4 text-amber-500"></i>
@@ -3081,7 +3087,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           <!-- Table 1: Top Performing Delegates (لوحة الشرف) -->
-          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col">
+          <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
               <div>
                 <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
@@ -3159,7 +3165,7 @@
           </div>
 
           <!-- Table 2: At-Risk Delegates Alert List (رادار الإنذار والمخاطر) -->
-          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col">
+          <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
               <div>
                 <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
@@ -3229,7 +3235,7 @@
         </div>
 
         <!-- Table 3: Committee Members Performance Table (تقييم أعضاء اللجان) -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+        <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 shadow-md text-amber-100">
           <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
             <div>
               <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
@@ -3317,7 +3323,7 @@
       <!-- ============================================== -->
       <section v-show="activeTab === 'transfers'" class="space-y-6">
         
-        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+        <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 shadow-md text-amber-100">
           <h4 class="font-black text-slate-900 text-base mb-2 flex items-center gap-2">
             <i data-lucide="arrow-left-right" class="w-5 h-5 text-purple-600"></i>
             <span>سجل التحويلات بين اللجان والقطاعات</span>
@@ -3359,7 +3365,7 @@
       <!-- ============================================== -->
       <section v-show="activeTab === 'secondary'" class="space-y-6">
         
-        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+        <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 shadow-md text-amber-100">
           <div class="flex items-center justify-between mb-4">
             <div>
               <h4 class="font-black text-slate-900 text-base">مرشحو الرغبة الثانية للجنة</h4>
@@ -3408,7 +3414,7 @@
       <section v-show="activeTab === 'structure'" class="space-y-6">
 
         <!-- Header & Stats Cards -->
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+        <div class="bg-[#180d05]/95 rounded-3xl p-6 sm:p-8 border border-amber-600/30 text-amber-100 shadow-md">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-100">
             <div>
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold mb-1 border border-emerald-200">
@@ -3435,29 +3441,29 @@
 
           <!-- Summary Metric Counters -->
           <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
-              <span class="block text-xs font-bold text-slate-500 mb-1">إجمالي المقبولين</span>
-              <span class="text-2xl font-black text-slate-900">{{ acceptedMembersList.length }}</span>
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">إجمالي المقبولين</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-300 font-mono">{{ acceptedMembersList.length }}</span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-center">
-              <span class="block text-xs font-bold text-blue-700 mb-1">المناديب (Delegates)</span>
-              <span class="text-2xl font-black text-blue-900">{{ delegatesCount }}</span>
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">المناديب (Delegates)</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-200 font-mono">{{ delegatesCount }}</span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-pink-50 border border-pink-200 text-center">
-              <span class="block text-xs font-bold text-pink-700 mb-1">موارد بشرية (HR)</span>
-              <span class="text-2xl font-black text-pink-900">{{ hrCount }}</span>
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">موارد بشرية (HR)</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-400 font-mono">{{ hrCount }}</span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200 text-center">
-              <span class="block text-xs font-bold text-purple-700 mb-1">ميديا وإعلام (Media)</span>
-              <span class="text-2xl font-black text-purple-900">{{ mediaCount }}</span>
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">ميديا وإعلام (Media)</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-100 font-mono">{{ mediaCount }}</span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-center col-span-2 sm:col-span-1">
-              <span class="block text-xs font-bold text-emerald-700 mb-1">أكاديمي وتدريب</span>
-              <span class="text-2xl font-black text-emerald-900">{{ academicCount }}</span>
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center col-span-2 sm:col-span-1 shadow-md hover:border-amber-500/50 transition">
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">أكاديمي وتدريب</span>
+              <span class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">{{ academicCount }}</span>
             </div>
           </div>
         </div>
@@ -3468,7 +3474,7 @@
           <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
             <button 
               @click="structureFilter = 'all'"
-              :class="structureFilter === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="structureFilter === 'all' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap"
             >
               الكل ({{ acceptedMembersList.length }})
@@ -3476,7 +3482,7 @@
 
             <button 
               @click="structureFilter = 'delegate'"
-              :class="structureFilter === 'delegate' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="structureFilter === 'delegate' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
@@ -3485,7 +3491,7 @@
 
             <button 
               @click="structureFilter = 'hr'"
-              :class="structureFilter === 'hr' ? 'bg-pink-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="structureFilter === 'hr' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <span>HR ({{ hrCount }})</span>
@@ -3493,7 +3499,7 @@
 
             <button 
               @click="structureFilter = 'media'"
-              :class="structureFilter === 'media' ? 'bg-purple-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="structureFilter === 'media' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <span>ميديا ({{ mediaCount }})</span>
@@ -3501,7 +3507,7 @@
 
             <button 
               @click="structureFilter = 'academic'"
-              :class="structureFilter === 'academic' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+              :class="structureFilter === 'academic' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
               class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
             >
               <span>أكاديمي ({{ academicCount }})</span>
@@ -3521,8 +3527,8 @@
         </div>
 
         <!-- Members Grid -->
-        <div v-if="filteredStructureMembers.length === 0" class="bg-white rounded-3xl p-12 text-center border border-slate-200 text-slate-500">
-          <i data-lucide="users" class="w-12 h-12 mx-auto text-slate-300 mb-3"></i>
+        <div v-if="filteredStructureMembers.length === 0" class="bg-[#180d05]/95 rounded-3xl p-12 text-center border border-amber-600/30 text-amber-200/70">
+          <i data-lucide="users" class="w-12 h-12 mx-auto text-amber-500/40 mb-3"></i>
           <p class="font-bold text-sm">لا يوجد أعضاء مطابقين للفلتر المحدد</p>
           <p class="text-xs text-slate-400 mt-1">يمكنك قبول المرشحين من تبويب "المرشحون والمقابلات" وتحديد صفتهم ليظهروا هنا.</p>
         </div>
@@ -3531,50 +3537,30 @@
           <div 
             v-for="cand in filteredStructureMembers" 
             :key="cand.id"
-            class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+            class="bg-[#180d05]/95 rounded-2xl p-5 border border-amber-600/30 hover:border-amber-500/50 shadow-md hover:shadow-xl transition flex flex-col justify-between text-amber-100"
           >
             <div>
               <!-- Top Card Info -->
               <div class="flex items-start justify-between gap-3 mb-3">
                 <div class="flex items-center gap-2.5">
-                  <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm">
+                  <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300 flex items-center justify-center font-black text-sm">
                     {{ (cand.arabicName || cand.fullName).charAt(0) }}
                   </div>
                   <div>
-                    <h4 class="font-black text-sm text-slate-900 leading-tight">{{ cand.arabicName || cand.fullName }}</h4>
+                    <h4 class="font-black text-sm text-amber-100 leading-tight">{{ cand.arabicName || cand.fullName }}</h4>
                     <p class="text-[11px] text-slate-500 mt-0.5">{{ cand.faculty }} • {{ cand.university }}</p>
                   </div>
                 </div>
 
                 <!-- Role Badge -->
-                <span 
-                  v-if="(cand.roleType || 'delegate') === 'delegate'"
-                  class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-bold"
-                >
-                  مندوب (Delegate)
-                </span>
-                <span 
-                  v-else-if="cand.subDepartment === 'hr'"
-                  class="px-2.5 py-1 rounded-full bg-pink-50 text-pink-800 border border-pink-200 text-[10px] font-bold"
-                >
-                  عضو HR
-                </span>
-                <span 
-                  v-else-if="cand.subDepartment === 'media'"
-                  class="px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200 text-[10px] font-bold"
-                >
-                  عضو ميديا
-                </span>
-                <span 
-                  v-else
-                  class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold"
-                >
-                  عضو أكاديمي
-                </span>
+                <span v-if="(cand.roleType || 'delegate') === 'delegate'" class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold">مندوب (Delegate)</span>
+                <span v-else-if="cand.subDepartment === 'hr'" class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold">عضو HR</span>
+                <span v-else-if="cand.subDepartment === 'media'" class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold">عضو ميديا</span>
+                <span v-else class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold">عضو أكاديمي</span>
               </div>
 
               <!-- Contact & Details -->
-              <div class="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl mb-3">
+              <div class="space-y-1.5 text-xs bg-[#100703]/80 p-3 rounded-xl mb-3 border border-amber-600/25">
                 <div class="flex items-center justify-between">
                   <span class="text-slate-400">الهاتف:</span>
                   <a :href="'https://wa.me/2' + cand.phone" target="_blank" class="font-mono text-emerald-600 font-bold hover:underline flex items-center gap-1">
@@ -3593,7 +3579,7 @@
               </div>
 
               <!-- Continuous Evaluation Note if Member -->
-              <div v-if="cand.memberEvaluation && cand.memberEvaluation.notes" class="text-[11px] p-2.5 rounded-xl bg-amber-50/60 border border-amber-200 text-amber-900 mb-3">
+              <div v-if="cand.memberEvaluation && cand.memberEvaluation.notes" class="text-[11px] p-2.5 rounded-xl bg-amber-950/50 border border-amber-600/30 text-amber-200 mb-3">
                 <span class="font-bold">ملاحظات الأداء:</span> {{ cand.memberEvaluation.notes }}
                 <span v-if="cand.memberEvaluation.score" class="font-bold block mt-0.5 text-amber-700">تقييم المهام: {{ cand.memberEvaluation.score }} / 10</span>
               </div>
@@ -4120,7 +4106,7 @@
 
           <button 
             @click="openCreateQuizModal"
-            class="py-3 px-6 rounded-2xl bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-black text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 flex-shrink-0"
+            class="py-3 px-6 rounded-2xl btn-gold text-white font-black text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 flex-shrink-0"
           >
             <i data-lucide="plus-circle" class="w-5 h-5"></i>
             <span>إنشاء اختبار محاضرة جديد</span>
@@ -4128,15 +4114,15 @@
         </div>
 
         <!-- Quizzes List -->
-        <div v-if="committeeQuizzes.length === 0" class="bg-white rounded-3xl p-12 text-center border border-slate-200">
-          <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4">
+        <div v-if="committeeQuizzes.length === 0" class="bg-[#180d05]/95 rounded-3xl p-12 text-center border border-amber-600/30 text-amber-100">
+          <div class="w-16 h-16 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-3xl flex items-center justify-center mx-auto mb-4">
             <i data-lucide="file-question" class="w-8 h-8"></i>
           </div>
           <h3 class="font-black text-base text-slate-900 mb-1">لم يتم إنشاء أي اختبارات لهذه اللجنة بعد</h3>
           <p class="text-xs text-slate-500 mb-6">اضغط على زر "إنشاء اختبار محاضرة جديد" للبدء في إضافة أسئلة وتوليد QR Code المحاضرة لقطاعك.</p>
           <button 
             @click="openCreateQuizModal"
-            class="px-5 py-2.5 rounded-xl bg-purple-600 text-white font-bold text-xs hover:bg-purple-700 transition"
+            class="px-5 py-2.5 rounded-xl btn-gold transition"
           >
             + إنشاء أول اختبار
           </button>
@@ -4146,13 +4132,13 @@
           <div 
             v-for="quiz in committeeQuizzes" 
             :key="quiz.id"
-            class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-md hover:shadow-lg transition-all"
+            class="bg-[#180d05]/95 rounded-3xl p-5 sm:p-6 border border-amber-600/30 text-amber-100 shadow-md hover:shadow-lg transition-all"
           >
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               
               <!-- Quiz Info -->
               <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-700 border border-purple-200 flex flex-col items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/30 flex flex-col items-center justify-center flex-shrink-0">
                   <span class="text-[10px] font-bold">محاضرة</span>
                   <span class="text-base font-black leading-none">{{ quiz.lectureNumber }}</span>
                 </div>
@@ -4275,7 +4261,7 @@
       <section v-show="activeTab === 'gradebook'" class="space-y-6">
 
         <!-- Header -->
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="bg-[#180d05]/95 rounded-3xl p-6 sm:p-8 border border-amber-600/30 text-amber-100 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold mb-1 border border-emerald-200">
               <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
@@ -4301,7 +4287,7 @@
         </div>
 
         <!-- Gradebook Matrix Table -->
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="bg-[#180d05]/95 rounded-3xl border border-amber-600/30 text-amber-100 shadow-sm overflow-hidden">
           
           <div v-if="gradebookLoading" class="p-12 text-center text-slate-500">
             <div class="w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
@@ -4416,7 +4402,7 @@
     <!-- MODAL 1: BATCH SLOT GENERATOR -->
     <!-- ============================================== -->
     <div v-if="showBatchModal" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-xl w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-xl w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
           <div class="flex items-center gap-3">
@@ -4438,7 +4424,7 @@
           <!-- Committee picker (if admin) -->
           <div v-if="currentUser && currentUser.role === 'admin'">
             <label class="block text-xs font-bold text-slate-700 mb-1">اللجنة المستهدفة:</label>
-            <select v-model="batchForm.committeeId" class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white outline-none">
+            <select v-model="batchForm.committeeId" class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
               <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.name }}</option>
             </select>
           </div>
@@ -4518,7 +4504,7 @@
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">مدة كل مقابلة (بالدقائق):</label>
-              <select v-model="batchForm.durationMinutes" class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white outline-none">
+              <select v-model="batchForm.durationMinutes" class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option :value="10">10 دقائق</option>
                 <option :value="15">15 دقيقة (موصى بها)</option>
                 <option :value="20">20 دقيقة</option>
@@ -4527,7 +4513,7 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">استراحة بين المقابلات:</label>
-              <select v-model="batchForm.breakMinutes" class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white outline-none">
+              <select v-model="batchForm.breakMinutes" class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option :value="0">بدون استراحة (مباشر)</option>
                 <option :value="5">5 دقائق</option>
                 <option :value="10">10 دقائق</option>
@@ -4581,7 +4567,7 @@
     <!-- MODAL 2: CANDIDATE EVALUATION & GRADING -->
     <!-- ============================================== -->
     <div v-if="evalCandidate" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-xl w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-xl w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
           <div>
@@ -4689,7 +4675,7 @@
           <!-- Committee Decision -->
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">القرار المبدئي للجنة:</label>
-            <select v-model="evalForm.decision" class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 outline-none">
+            <select v-model="evalForm.decision" class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
               <option value="pending">قيد المراجعة والمفاضلة</option>
               <option value="accepted">مقبول في اللجنة</option>
               <option value="reserve">قائمة الانتظار / احتياطي</option>
@@ -4704,7 +4690,7 @@
               <label class="block text-xs font-black text-slate-900 mb-1.5">تحديد الصفة والدور في اللجنة:</label>
               <div class="grid grid-cols-2 gap-2">
                 <label 
-                  :class="evalForm.roleType === 'delegate' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200'"
+                  :class="evalForm.roleType === 'delegate' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30'"
                   class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-bold cursor-pointer transition"
                 >
                   <input type="radio" v-model="evalForm.roleType" value="delegate" class="hidden">
@@ -4713,7 +4699,7 @@
                 </label>
 
                 <label 
-                  :class="evalForm.roleType === 'member' ? 'bg-amber-600 text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200'"
+                  :class="evalForm.roleType === 'member' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30'"
                   class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-bold cursor-pointer transition"
                 >
                   <input type="radio" v-model="evalForm.roleType" value="member" class="hidden">
@@ -4728,7 +4714,7 @@
               <label class="block text-[11px] font-bold text-slate-800 mb-1.5">اختر القسم الداخلي للعضو في القطاع:</label>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <label 
-                  :class="evalForm.subDepartment === 'organization' ? 'bg-amber-600 text-slate-950 font-black shadow-sm' : 'bg-white text-slate-700 border border-slate-200'"
+                  :class="evalForm.subDepartment === 'organization' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30 font-bold'"
                   class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="organization" class="hidden">
@@ -4736,7 +4722,7 @@
                 </label>
 
                 <label 
-                  :class="evalForm.subDepartment === 'hr' ? 'bg-pink-600 text-white shadow-sm font-black' : 'bg-white text-slate-700 border border-slate-200'"
+                  :class="evalForm.subDepartment === 'hr' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30 font-bold'"
                   class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="hr" class="hidden">
@@ -4744,7 +4730,7 @@
                 </label>
 
                 <label 
-                  :class="evalForm.subDepartment === 'media' ? 'bg-purple-600 text-white shadow-sm font-black' : 'bg-white text-slate-700 border border-slate-200'"
+                  :class="evalForm.subDepartment === 'media' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30 font-bold'"
                   class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="media" class="hidden">
@@ -4752,7 +4738,7 @@
                 </label>
 
                 <label 
-                  :class="evalForm.subDepartment === 'academic' ? 'bg-emerald-600 text-white shadow-sm font-black' : 'bg-white text-slate-700 border border-slate-200'"
+                  :class="evalForm.subDepartment === 'academic' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30 font-bold'"
                   class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="academic" class="hidden">
@@ -4791,7 +4777,7 @@
     <!-- MODAL 3: CANDIDATE DOSSIER / FULL DETAILS -->
     <!-- ============================================== -->
     <div v-if="dossierCandidate" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
           <div>
@@ -4890,7 +4876,7 @@
     <!-- MODAL 4: TRANSFER CANDIDATE TO ANOTHER COMMITTEE -->
     <!-- ============================================== -->
     <div v-if="transferCandidate" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-7 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-7 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right">
         
         <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
           <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
@@ -4906,7 +4892,7 @@
           
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">القطاع / اللجنة المحول إليها:</label>
-            <select v-model="transferForm.targetCommitteeId" required class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 outline-none">
+            <select v-model="transferForm.targetCommitteeId" required class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
               <option value="" disabled>اختر اللجنة المناسبة للمرشح...</option>
               <option 
                 v-for="c in committees.filter(c => c.id !== transferCandidate.assignedCommitteeId)" 
@@ -4958,7 +4944,7 @@
     <!-- MODAL 5: ASSIGN / CHANGE SLOT MANUALLY -->
     <!-- ============================================== -->
     <div v-if="assignSlotCandidate" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-7 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-7 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
         
         <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
           <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
@@ -5000,7 +4986,7 @@
             <button 
               @click="confirmSlotAssignment" 
               :disabled="!selectedSlotIdForAssign"
-              class="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition disabled:opacity-50"
+              class="btn-gold flex-1 py-3 px-4 rounded-xl text-xs font-bold shadow-md transition cursor-pointer disabled:opacity-50"
             >
               تأكيد تسكين الموعد
             </button>
@@ -5020,7 +5006,7 @@
     <!-- MODAL 6: ADD CANDIDATE MANUALLY -->
     <!-- ============================================== -->
     <div v-if="showAddCandidateModal" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-xl w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-xl w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
           <div class="flex items-center gap-3">
@@ -5089,7 +5075,7 @@
             <select 
               v-model="newCandidateForm.committeeId" 
               required
-              class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 outline-none focus:border-emerald-500"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400 focus:border-emerald-500"
             >
               <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.name }}</option>
             </select>
@@ -5098,7 +5084,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة:</label>
-              <select v-model="newCandidateForm.university" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-medium bg-white outline-none">
+              <select v-model="newCandidateForm.university" class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option value="جامعة السويس">جامعة السويس</option>
                 <option value="جامعة السويس الأهلية">جامعة السويس الأهلية</option>
                 <option value="جامعة أخرى">جامعة أخرى</option>
@@ -5110,7 +5096,7 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">الفرقة الدراسية:</label>
-              <select v-model="newCandidateForm.grade" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-medium bg-white outline-none">
+              <select v-model="newCandidateForm.grade" class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option value="الفرقة الأولى">الفرقة الأولى</option>
                 <option value="الفرقة الثانية">الفرقة الثانية</option>
                 <option value="الفرقة الثالثة">الفرقة الثالثة</option>
@@ -5123,7 +5109,7 @@
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">المسار المفضل:</label>
-              <select v-model="newCandidateForm.trackPreference" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-medium bg-white outline-none">
+              <select v-model="newCandidateForm.trackPreference" class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option value="الأكاديمي">المسار الأكاديمي</option>
                 <option value="التنظيمي">المسار التنظيمي واللوجستي</option>
                 <option value="الإعلامي">المسار الإعلامي والميديا</option>
@@ -5131,7 +5117,7 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">مستوى الإنجليزية:</label>
-              <select v-model="newCandidateForm.englishLevel" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-medium bg-white outline-none">
+              <select v-model="newCandidateForm.englishLevel" class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option value="مبتدئ">مبتدئ</option>
                 <option value="متوسط">متوسط</option>
                 <option value="فوق المتوسط">فوق المتوسط</option>
@@ -5179,7 +5165,7 @@
     <!-- QR CODE DISPLAY MODAL (FOR PROJECTOR) -->
     <!-- ============================================== -->
     <div v-if="showQRModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-center relative animate-fade-in">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-center relative animate-fade-in">
         
         <button @click="showQRModal = null" class="absolute left-5 top-5 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
           <i data-lucide="x" class="w-5 h-5"></i>
@@ -5227,7 +5213,7 @@
     <!-- CREATE QUIZ MODAL -->
     <!-- ============================================== -->
     <div v-if="showCreateQuizModal" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
           <div>
@@ -5257,7 +5243,7 @@
             </div>
 
             <!-- For General Admin only: select committee -->
-            <select v-else v-model="newQuizForm.committeeId" class="w-full p-3 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-800 outline-none">
+            <select v-else v-model="newQuizForm.committeeId" class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
               <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.name }}</option>
             </select>
           </div>
@@ -5373,7 +5359,7 @@
                   v-model="q.prompt" 
                   required 
                   :placeholder="q.type === 'true_false' ? 'اكتب عبارة السؤال هنا (مثال: تم توقيع ميثاق الأمم المتحدة عام 1945)...' : 'اكتب نص السؤال هنا (مثال: ما هي عاصمة الدولة المقررة في المحاضرة؟)...'" 
-                  class="w-full p-2.5 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white outline-none focus:border-purple-500 font-bold"
+                  class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs text-amber-100 bg-[#0e0703] outline-none focus:border-amber-400 focus:border-purple-500 font-bold"
                 >
               </div>
 
@@ -5418,7 +5404,7 @@
                     v-model="q.options[oIdx]" 
                     required 
                     :placeholder="'اكتب الخيار رقم ' + (oIdx + 1) + ' هنا...'" 
-                    class="flex-1 p-2.5 rounded-xl border text-xs text-slate-800 bg-white outline-none transition"
+                    class="flex-1 p-2.5 rounded-xl border border-amber-600/40 text-xs text-amber-100 bg-[#0e0703] outline-none focus:border-amber-400 transition"
                     :class="q.correctAnswer === oIdx ? 'border-emerald-500 ring-2 ring-emerald-500/20 font-bold' : 'border-slate-200 focus:border-purple-400'"
                   >
 
@@ -5480,7 +5466,7 @@
     <!-- LECTURE-SPECIFIC SUBMISSIONS & ATTENDANCE MODAL -->
     <!-- ============================================== -->
     <div v-if="showQuizSubmissionsModal" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-4xl w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right max-h-[92vh] overflow-y-auto">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-4xl w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[92vh] overflow-y-auto">
         
         <!-- Header -->
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
@@ -5573,7 +5559,7 @@
                   <div>
                     <div class="flex items-center gap-2">
                       <span class="font-bold text-sm text-slate-900">{{ sub.candidateName }}</span>
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                         مندوب (Delegate)
                       </span>
                     </div>
@@ -5859,7 +5845,7 @@
     <!-- ASSIGNMENT, BONUS & WEEKLY TASK EVALUATION MODAL -->
     <!-- ============================================== -->
     <div v-if="evaluatingAssignmentCandidate" class="fixed inset-0 z-[60] bg-[#180d05]/85 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right animate-in fade-in duration-200 max-h-[92vh] overflow-y-auto">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right animate-in fade-in duration-200 max-h-[92vh] overflow-y-auto">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
           <div>
@@ -6037,7 +6023,7 @@
     <!-- EDIT CANDIDATE / DELEGATE / MEMBER PROFILE MODAL -->
     <!-- ============================================== -->
     <div v-if="editingCandidateModal" class="fixed inset-0 z-[70] bg-[#180d05]/85 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right animate-in fade-in duration-200">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right animate-in fade-in duration-200">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
           <div>
@@ -6118,7 +6104,7 @@
           <button 
             @click="saveCandidateProfileUpdates()" 
             :disabled="isSavingCandidateEdit"
-            class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+            class="btn-gold flex-1 py-3 disabled:opacity-50 font-bold rounded-xl cursor-pointer text-xs transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>{{ isSavingCandidateEdit ? 'جاري حفظ التعديلات...' : 'حفظ التعديلات' }}</span>
@@ -6140,7 +6126,7 @@
     <!-- DELEGATE ACADEMIC PROFILE & EVALUATION MODAL -->
     <!-- ============================================== -->
     <div v-if="selectedDelegateProfile" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right max-h-[92vh] overflow-y-auto animate-fade-in">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[92vh] overflow-y-auto animate-fade-in">
         
         <!-- Header -->
         <div class="flex items-start justify-between pb-4 border-b border-slate-100 mb-6">
@@ -6309,7 +6295,7 @@
     <!-- EDIT ROLE MODAL -->
     <!-- ============================================== -->
     <div v-if="editingRoleCandidate" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
           <div>
@@ -6328,7 +6314,7 @@
             <label class="block text-xs font-bold text-slate-700 mb-2">الصفة داخل اللجنة:</label>
             <div class="grid grid-cols-2 gap-2">
               <label 
-                :class="editingRoleForm.roleType === 'delegate' ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-50 text-slate-700 border border-slate-200'"
+                :class="editingRoleForm.roleType === 'delegate' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30'"
                 class="flex items-center justify-center gap-1.5 p-3 rounded-xl text-xs font-bold cursor-pointer transition"
               >
                 <input type="radio" v-model="editingRoleForm.roleType" value="delegate" class="hidden">
@@ -6410,7 +6396,7 @@
     <!-- MEMBER CONTINUOUS EVALUATION MODAL -->
     <!-- ============================================== -->
     <div v-if="memberEvalCandidate" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
           <div>
@@ -6475,7 +6461,7 @@
     <!-- MODAL 1: CREATE NEW EVENT MODAL -->
     <!-- ============================================== -->
     <div v-if="showCreateEventModal" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-8 border border-slate-200 shadow-2xl max-h-[92vh] overflow-y-auto text-right">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right">
         
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
           <div class="flex items-center gap-3">
@@ -6714,7 +6700,7 @@
                   </button>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-36 overflow-y-auto p-1 bg-white rounded-xl border border-slate-200">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-36 overflow-y-auto p-1 bg-[#180d05]/95 rounded-xl border border-amber-600/30 text-amber-100">
                   <label 
                     v-for="comm in officialCommitteesList" 
                     :key="comm.id"
@@ -6760,7 +6746,7 @@
     <!-- MODAL 2: ATTENDEES ROSTER & REAL-TIME ANALYTICS -->
     <!-- ============================================== -->
     <div v-if="showAttendeesModal" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-4xl w-full p-5 sm:p-8 border border-slate-200 shadow-2xl max-h-[94vh] overflow-y-auto text-right">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-4xl w-full p-5 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[94vh] overflow-y-auto text-right">
         
         <!-- Modal Header -->
         <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
@@ -6898,7 +6884,7 @@
                   <td class="py-2.5 px-3 font-bold text-slate-900">{{ bk.name }}</td>
                   <td class="py-2.5 px-3">
                     <span class="px-2 py-0.5 rounded-md text-[10px] font-bold"
-                          :class="bk.userType === 'delegate' ? 'bg-blue-100 text-blue-800' : (bk.userType === 'member' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800')">
+                          :class="bk.userType === 'delegate' ? 'bg-amber-950/60 text-amber-200 border border-amber-600/30' : (bk.userType === 'member' ? 'bg-amber-950/60 text-amber-300 border border-amber-600/30' : 'bg-amber-950/60 text-amber-100 border border-amber-600/30')">
                       {{ bk.roleTitle }}
                     </span>
                   </td>
@@ -7346,7 +7332,7 @@
                 <div class="space-y-0.5">
                   <div class="flex items-center gap-1.5">
                     <span class="font-black text-white text-xs">طلب دعم من اللجنة المركزية</span>
-                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-purple-500/20 text-purple-300">تنسيق مركزي</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">تنسيق مركزي</span>
                   </div>
                   <p class="text-[10px] text-slate-400 leading-relaxed">
                     رفع برقية احتياج كوادر للأمانة العامة ولجنة التنظيم المركزية لتوفير الدعم الميداني من الاحتياطي العام
@@ -7513,7 +7499,7 @@
           <!-- ===================================== -->
           <div v-if="newSessionForm.cadresSource === 'central'" class="bg-gradient-to-r from-purple-950/40 via-[#1a0d05] to-purple-950/40 border border-purple-500/40 rounded-2xl p-4 sm:p-5 space-y-2">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center justify-center">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-300 border border-amber-500/40 flex items-center justify-center">
                 <i data-lucide="shield-alert" class="w-5 h-5"></i>
               </div>
               <div>
@@ -9108,11 +9094,11 @@
         }
 
         function getDecisionBadge(dec) {
-          if (dec === 'accepted') return 'bg-emerald-100 text-emerald-800';
-          if (dec === 'reserve') return 'bg-amber-100 text-amber-800';
-          if (dec === 'rejected') return 'bg-rose-100 text-rose-800';
-          if (dec === 'transferred') return 'bg-purple-100 text-purple-800';
-          return 'bg-slate-100 text-slate-700';
+          if (dec === 'accepted') return 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/40';
+          if (dec === 'reserve') return 'bg-amber-950/70 text-amber-300 border border-amber-500/40';
+          if (dec === 'rejected') return 'bg-rose-950/70 text-rose-300 border border-rose-500/40';
+          if (dec === 'transferred') return 'bg-amber-950/60 text-amber-200 border border-amber-500/40';
+          return 'bg-amber-950/40 text-amber-200/70 border border-amber-600/30';
         }
 
         // ===================================
