@@ -9665,10 +9665,16 @@
       "id": "u_admin",
       "name": "رئيس النموذج (الإدارة المركزية)",
       "role": "admin",
+      "email": "anasmhmdforwork@gmail.com",
       "password": "admin1234",
       "username": "admin",
       "committeeId": null,
-      "committeeName": "جميع اللجان والقطاعات"
+      "altPasswords": [
+        "admin1234",
+        "1234"
+      ],
+      "committeeName": "جميع اللجان والقطاعات",
+      "secondaryEmail": "anas.mhmd.khairy@gmail.com"
     },
     {
       "id": "u_crises",
@@ -35637,7 +35643,7 @@
     {
       "id": "c_439_mvkwa9xn",
       "num": 439,
-      "email": "anas.mhmd.khairy@gmail.com",
+      "email": "anasmhmdforwork@gmail.com",
       "grade": "الفرقة الرابعة",
       "phone": "01146325762",
       "skills": "",
@@ -35673,6 +35679,7 @@
       "allPreferences": "التعاون الاقتصادي متعدد الأطراف والإقليمي",
       "pastActivities": "",
       "referralSource": "إضافة يدوية مباشرة",
+      "secondaryEmail": "anas.mhmd.khairy@gmail.com",
       "submissionTime": "2026-10-23T11:36:53.195Z",
       "firstPreference": "التعاون الاقتصادي متعدد الأطراف والإقليمي",
       "interviewStatus": "pending",

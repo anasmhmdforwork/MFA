@@ -554,6 +554,17 @@
             </select>
           </div>
 
+          <!-- Delegate Profile Link (Quick access to Anas delegate profile) -->
+          <a 
+            v-if="currentUser && currentUser.role === 'admin'"
+            href="/profile?id=c_439_mvkwa9xn"
+            class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-amber-900/40 hover:bg-amber-800/60 text-amber-200 border border-amber-600/40 text-xs font-bold flex items-center gap-1.5 transition"
+            title="فتح بروفايل المندوب أنس محمد"
+          >
+            <i data-lucide="user-check" class="w-4 h-4 text-amber-400"></i>
+            <span class="hidden md:inline">بروفايل أنس</span>
+          </a>
+
           <!-- Logout Button -->
           <button 
             @click="logout"

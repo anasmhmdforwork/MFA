@@ -128,6 +128,16 @@
         </a>
 
         <!-- User Logout Action -->
+        <!-- Quick Return to Admin Dashboard for Owner / Admin -->
+        <a 
+          v-if="isAdminOrAnas"
+          href="/dashboard"
+          class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+          title="الانتقال إلى لوحة تحكم رئيس النموذج"
+        >
+          <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="hidden sm:inline">لوحة تحكم الإدارة</span>
+        </a>
         <div class="flex items-center gap-2 sm:gap-3">
           <span v-if="candidate" class="hidden md:inline-block text-xs font-semibold text-amber-200/90">
             مرحبًا بك، <strong class="text-amber-300">{{ candidate.arabicName || candidate.fullName }}</strong>
@@ -1350,6 +1360,12 @@
         const taskProgressPercent = ref(100);
         const selectedPassIndex = ref(0);
         const activeProfileTab = ref('overview');
+        const isAdminOrAnas = computed(() => {
+          if (!candidate.value) return false;
+          const isAnas = candidate.value.id === 'c_439_mvkwa9xn' || candidate.value.email === 'anasmhmdforwork@gmail.com' || candidate.value.email === 'anas.mhmd.khairy@gmail.com';
+          const hasAdminCookie = document.cookie.includes('mfa_user') || localStorage.getItem('mofa_role') === 'admin';
+          return isAnas || hasAdminCookie;
+        });
 
         // Modals State
         const showEventTicketModal = ref(false);
@@ -1470,7 +1486,8 @@
           }
         }, { immediate: true });
 
-        watch(activeProfileTab, () => {
+        watch(activeProfileTab,
+        isAdminOrAnas, () => {
           nextTick(() => {
             if (window.lucide) lucide.createIcons();
             if (activeProfileTab.value === 'overview') {
