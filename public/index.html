@@ -761,17 +761,24 @@
       overflow: visible !important;
     }
 
-    /* Floating Diplomatic Contact Widget (Direct Speed Dial) */
+    /* Floating Diplomatic Contact Widget (Direct Speed Dial - Fixed to the Right) */
     #diplomaticContactWidget {
       position: fixed !important;
-      bottom: 24px;
-      right: 28px;
+      bottom: 24px !important;
+      right: 24px !important;
+      left: auto !important;
       z-index: 99999 !important;
+      direction: ltr !important; /* Locks physical right-docking in both AR & EN */
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-end !important;
+      pointer-events: auto !important;
     }
     @media (max-width: 640px) {
       #diplomaticContactWidget {
-        bottom: max(18px, env(safe-area-inset-bottom, 18px)) !important;
-        right: 16px !important;
+        bottom: max(16px, env(safe-area-inset-bottom, 16px)) !important;
+        right: 14px !important;
+        left: auto !important;
       }
     }
 
@@ -781,11 +788,11 @@
       pointer-events: none;
       transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       width: calc(100vw - 32px);
-      max-width: 320px;
+      max-width: 310px;
     }
     @media (min-width: 641px) {
       .diplomatic-contact-popup {
-        width: 330px;
+        width: 320px;
       }
     }
     .diplomatic-contact-popup.active {
@@ -794,20 +801,20 @@
       pointer-events: auto !important;
     }
 
-    /* Radiant High-Contrast Yellow Diplomatic FAB Button */
+    /* Soft Dignified Diplomatic Gold Button (Toned-down elegant contrast) */
     .contact-fab-btn {
-      background: linear-gradient(135deg, #fde047 0%, #facc15 45%, #eab308 100%) !important;
-      color: #1a0f00 !important;
-      border: 2px solid #b45309 !important;
-      box-shadow: 0 8px 25px rgba(234, 179, 8, 0.45), 0 0 16px rgba(250, 204, 21, 0.55), 0 4px 10px rgba(0, 0, 0, 0.25) !important;
+      background: linear-gradient(135deg, #f3d685 0%, #dfb147 50%, #c08d24 100%) !important;
+      color: #231508 !important;
+      border: 1.5px solid #8a5e12 !important;
+      box-shadow: 0 6px 20px rgba(160, 110, 25, 0.38), 0 2px 6px rgba(0, 0, 0, 0.18) !important;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
       cursor: pointer;
     }
     .contact-fab-btn:hover {
-      background: linear-gradient(135deg, #fef08a 0%, #fde047 50%, #facc15 100%) !important;
-      transform: translateY(-2px) scale(1.05) !important;
-      box-shadow: 0 12px 30px rgba(234, 179, 8, 0.65), 0 0 25px rgba(253, 224, 71, 0.8), 0 6px 14px rgba(0, 0, 0, 0.3) !important;
-      border-color: #78350f !important;
+      background: linear-gradient(135deg, #fae29f 0%, #e9bf57 50%, #ce9b32 100%) !important;
+      transform: translateY(-2px) scale(1.04) !important;
+      box-shadow: 0 10px 25px rgba(160, 110, 25, 0.5), 0 0 16px rgba(233, 191, 87, 0.5) !important;
+      border-color: #694406 !important;
     }
     .contact-fab-btn:active {
       transform: translateY(0) scale(0.97) !important;
@@ -816,12 +823,12 @@
     .contact-item-card {
       transition: all 0.22s ease;
       background: rgba(20, 14, 10, 0.96);
-      border: 1.5px solid rgba(234, 179, 8, 0.45);
+      border: 1.5px solid rgba(223, 177, 71, 0.4);
     }
     .contact-item-card:hover {
       background: rgba(38, 26, 16, 0.98);
-      border-color: #facc15;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.55), 0 0 15px rgba(250, 204, 21, 0.25);
+      border-color: #dfb147;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.55), 0 0 15px rgba(223, 177, 71, 0.25);
       transform: translateY(-2px);
     }
 
@@ -2174,9 +2181,9 @@
 
     </div>
 
-    <!-- Floating Toggle Button (Radiant Yellow Contrast - Perfectly visible on Phone & Desktop) -->
+    <!-- Floating Toggle Button (Soft Gold Contrast - Right Pinned) -->
     <button id="contactToggleBtn" onclick="toggleContactMenu()" 
-            class="contact-fab-btn flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-2xl select-none group focus:outline-none"
+            class="contact-fab-btn flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl select-none group focus:outline-none"
             aria-expanded="false"
             aria-haspopup="true"
             aria-label="تواصل معنا">
@@ -2184,16 +2191,16 @@
       <!-- State: Closed -->
       <div id="contactIconClosed" class="flex items-center gap-2">
         <div class="relative flex items-center">
-          <i data-lucide="message-circle" class="w-5 h-5 text-stone-950 shrink-0 stroke-[2.5]"></i>
-          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-600 border border-stone-950 animate-pulse"></span>
+          <i data-lucide="message-circle" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-950 shrink-0 stroke-[2.2]"></i>
+          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-600 border border-amber-900 animate-pulse"></span>
         </div>
-        <span class="font-amiri font-black text-sm sm:text-base text-stone-950 tracking-wide" data-i18n="contact_btn">تواصل معنا</span>
+        <span class="font-amiri font-bold text-sm sm:text-base text-amber-950 tracking-wide" data-i18n="contact_btn">تواصل معنا</span>
       </div>
 
       <!-- State: Open -->
       <div id="contactIconOpen" class="hidden items-center gap-2">
-        <i data-lucide="x" class="w-5 h-5 text-stone-950 shrink-0 stroke-[3]"></i>
-        <span class="font-amiri font-black text-sm sm:text-base text-stone-950 tracking-wide" data-i18n="contact_btn_close">تواصل معنا</span>
+        <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-950 shrink-0 stroke-[2.8]"></i>
+        <span class="font-amiri font-bold text-sm sm:text-base text-amber-950 tracking-wide" data-i18n="contact_btn_close">تواصل معنا</span>
       </div>
 
     </button>
@@ -2765,6 +2772,16 @@
 
       // Update live scroll tracker with new language
       updateScrollState();
+
+      // Update Contact Widget state & direction
+      const contactMenu = document.getElementById('contactMenu');
+      if (contactMenu) {
+        contactMenu.dir = isAr ? 'rtl' : 'ltr';
+      }
+      const contactBtn = document.getElementById('contactToggleBtn');
+      if (contactBtn && translations[lang] && translations[lang].contact_btn) {
+        contactBtn.setAttribute('aria-label', translations[lang].contact_btn);
+      }
     }
 
     function toggleLanguage() {
