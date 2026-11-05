@@ -2091,15 +2091,36 @@ app.get('/api/quizzes', (req, res) => {
   let quizzes = db.quizzes || [];
   const { committeeId } = req.query;
   if (committeeId && committeeId !== 'all') {
-    quizzes = quizzes.filter(q => q.committeeId === committeeId || q.committeeId === 'all');
+    if (committeeId === 'general') {
+      quizzes = quizzes.filter(q => q.committeeId === 'all' || q.committeeId === 'academic' || q.isGeneralLecture);
+    } else {
+      quizzes = quizzes.filter(q => q.committeeId === committeeId);
+    }
   }
   const submissions = db.quizSubmissions || [];
+  const candidates = db.candidates || [];
+  const acceptedDelegates = candidates.filter(c => c.evaluation && c.evaluation.decision === 'accepted' && (c.roleType || 'delegate') === 'delegate');
+
   const enriched = quizzes.map(q => {
     const subs = submissions.filter(s => s.quizId === q.id);
     const avgScore = subs.length > 0 ? (subs.reduce((acc, s) => acc + (s.score || 0), 0) / subs.length).toFixed(1) : 0;
+    
+    let totalTargetDelegates = 0;
+    if (q.committeeId === 'all' || q.committeeId === 'academic' || q.isGeneralLecture) {
+      totalTargetDelegates = acceptedDelegates.length;
+    } else {
+      totalTargetDelegates = acceptedDelegates.filter(c => c.assignedCommitteeId === q.committeeId).length;
+    }
+    const attendeesCount = subs.length;
+    const absenteesCount = Math.max(0, totalTargetDelegates - attendeesCount);
+    const attendanceRate = totalTargetDelegates > 0 ? Math.round((attendeesCount / totalTargetDelegates) * 100) : 100;
+
     return {
       ...q,
       submissionsCount: subs.length,
+      absenteesCount,
+      totalTargetDelegates,
+      attendanceRate,
       averageScore: parseFloat(avgScore)
     };
   });
@@ -2681,11 +2702,14 @@ app.get('/api/admin/all-committees-performance', (req, res) => {
     const academicMembers = members.filter(c => c.subDepartment === 'academic');
 
     const commQuizzes = quizzes.filter(q => q.committeeId === comm.id);
+    const generalQuizzes = quizzes.filter(q => q.committeeId === 'all' || q.committeeId === 'academic' || q.isGeneralLecture);
+    const totalLecturesCount = commQuizzes.length + generalQuizzes.length;
     const commSubs = submissions.filter(s => s.committeeId === comm.id);
 
-    const potentialAttendances = delegates.length * commQuizzes.length;
+    const potentialAttendances = delegates.length * totalLecturesCount;
     const actualAttendances = commSubs.length;
-    const attendanceRate = potentialAttendances > 0 ? Math.round((actualAttendances / potentialAttendances) * 100) : (commQuizzes.length === 0 ? 100 : 0);
+    const absentCount = Math.max(0, potentialAttendances - actualAttendances);
+    const attendanceRate = potentialAttendances > 0 ? Math.min(100, Math.round((actualAttendances / potentialAttendances) * 100)) : (totalLecturesCount === 0 ? 100 : 0);
 
     const averageScore = commSubs.length > 0 ? Math.round(commSubs.reduce((acc, s) => acc + (s.percentage || 0), 0) / commSubs.length) : 0;
 
@@ -2702,8 +2726,12 @@ app.get('/api/admin/all-committees-performance', (req, res) => {
       hrCount: hrMembers.length,
       mediaCount: mediaMembers.length,
       academicCount: academicMembers.length,
-      quizzesCount: commQuizzes.length,
+      quizzesCount: totalLecturesCount,
+      specificQuizzesCount: commQuizzes.length,
+      generalQuizzesCount: generalQuizzes.length,
       submissionsCount: commSubs.length,
+      attendedCount: actualAttendances,
+      absentCount,
       attendanceRate,
       averageScore
     };

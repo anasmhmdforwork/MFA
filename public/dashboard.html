@@ -142,6 +142,28 @@
       }
 
       /* Modals */
+      
+      /* Custom Luxury Dark Scrollbars */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #140a04;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3d210f;
+        border-radius: 4px;
+        border: 1px solid rgba(197, 160, 89, 0.3);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #c5a059;
+      }
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: #3d210f #140a04;
+      }
+
       .fixed.inset-0 .bg-white {
         background-color: rgba(22, 13, 7, 0.98) !important;
         backdrop-filter: blur(24px) !important;
@@ -771,7 +793,7 @@
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="qr-code" class="w-4 h-4 text-amber-400"></i>
-              <span>الاختبارات والـ QR ({{ committeeQuizzes.length }})</span>
+              <span>{{ currentUser && currentUser.role === 'admin' ? 'متابعة الاختبارات والغياب (' + quizzes.length + ')' : 'الاختبارات والـ QR (' + committeeQuizzes.length + ')' }}</span>
             </button>
 
             <!-- 6. Gradebook & Excel Sheet -->
@@ -4288,52 +4310,312 @@
       <!-- ============================================== -->
       <section v-show="activeTab === 'quizzes'" class="space-y-6">
 
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-[#2c170b] via-[#1a0d05] to-[#0c0602] text-amber-100 rounded-3xl p-6 sm:p-8 border border-amber-500/40 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold mb-2 border border-amber-500/30">
-              <i data-lucide="qr-code" class="w-4 h-4 text-amber-400"></i>
-              <span>نظام الاختبارات وتسجيل الحضور الذكي</span>
+        <!-- Header: Adaptive for Admin vs Committee Head -->
+        <div class="bg-gradient-to-r from-[#2c170b] via-[#1a0d05] to-[#0c0602] text-amber-100 rounded-3xl p-6 sm:p-8 border border-amber-500/40 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+          <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
+              <span v-if="currentUser && currentUser.role === 'admin'">منظومة الرقابة الأكاديمية والتقييم المركزي • رئاسة النموذج</span>
+              <span v-else>نظام الاختبارات وتسجيل الحضور والغياب الذكي</span>
             </div>
+            
+            <!-- Title -->
             <h2 class="text-xl sm:text-2xl font-black text-white">
-              اختبارات محاضرات {{ currentCommittee ? currentCommittee.name : 'اللجنة' }}
+              <template v-if="currentUser && currentUser.role === 'admin'">
+                متابعة اختبارات المحاضرات ورصد الغياب ونسب التحصيل لجميع اللجان
+              </template>
+              <template v-else>
+                اختبارات محاضرات {{ currentCommittee ? currentCommittee.name : 'اللجنة' }}
+              </template>
             </h2>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
-              أنشئ اختبار لكل محاضرة خاصة بقطاعك فقط، وصدّر رمز QR كود لعرضه على شاشة القاعة بنهاية المحاضرة ليسجل المناديب حضورهم فوراً.
+
+            <!-- Subtitle -->
+            <p class="text-xs sm:text-sm text-amber-200/70 max-w-2xl leading-relaxed">
+              <template v-if="currentUser && currentUser.role === 'admin'">
+                لوحة الرقابة والمتابعة العليا: رصد كافة الاختبارات التي تعقدها لجان النموذج الـ 9 واللجنة الأكاديمية للمحاضرات العامة، ومتابعة كشوف الحضور والغياب الفوري ونسب التحصيل العلمي لكافة القطاعات.
+              </template>
+              <template v-else>
+                أنشئ اختبار لكل محاضرة خاصة بقطاعك فقط، وصدّر رمز QR كود لعرضه على شاشة القاعة بنهاية المحاضرة ليسجل المناديب حضورهم فوراً.
+              </template>
             </p>
           </div>
 
-          <button 
-            @click="openCreateQuizModal"
-            class="py-3 px-6 rounded-2xl btn-gold text-white font-black text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 flex-shrink-0"
-          >
-            <i data-lucide="plus-circle" class="w-5 h-5"></i>
-            <span>إنشاء اختبار محاضرة جديد</span>
-          </button>
+          <!-- Header Actions -->
+          <div class="flex items-center gap-2.5 flex-wrap flex-shrink-0">
+            <!-- If NOT Admin: Button to create quiz -->
+            <button 
+              v-if="currentUser && currentUser.role !== 'admin'"
+              @click="openCreateQuizModal"
+              class="py-3 px-6 rounded-2xl btn-gold text-white font-black text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer"
+            >
+              <i data-lucide="plus-circle" class="w-5 h-5"></i>
+              <span>إنشاء اختبار محاضرة جديد</span>
+            </button>
+
+            <!-- If Admin: Executive Actions -->
+            <template v-else>
+              <button 
+                @click="exportAdminQuizzesReport"
+                class="btn-gold py-2.5 px-4 rounded-xl font-black text-xs shadow-md hover:shadow-lg transition flex items-center gap-2 cursor-pointer"
+                title="تصدير تقرير إكسل شامل لجميع الاختبارات وحالات الحضور والغياب لكافة اللجان"
+              >
+                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                <span>تقرير الغياب والاختبارات (Excel)</span>
+              </button>
+
+              <button 
+                @click="activeTab = 'gradebook'; loadGradebook()"
+                class="px-4 py-2.5 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-500/40 hover:border-amber-400 text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer"
+                title="الانتقال إلى سجل الدرجات والغياب التراكمي الشامل"
+              >
+                <i data-lucide="book-open-check" class="w-4 h-4 text-amber-400"></i>
+                <span>السجل التراكمي للدرجات</span>
+              </button>
+
+              <button 
+                @click="refreshQuizzesData"
+                class="p-2.5 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-300 border border-amber-500/30 hover:border-amber-400 transition cursor-pointer"
+                title="تحديث البيانات الفورية"
+              >
+                <i data-lucide="refresh-cw" class="w-4 h-4" :class="isRefreshingQuizzes ? 'animate-spin' : ''"></i>
+              </button>
+            </template>
+          </div>
         </div>
 
-        <!-- Quizzes List -->
-        <div v-if="committeeQuizzes.length === 0" class="bg-[#180d05]/95 rounded-3xl p-12 text-center border border-amber-600/30 text-amber-100">
+        <!-- ============================================== -->
+        <!-- ADMIN ONLY: EXECUTIVE METRICS & ATTENDANCE MATRIX -->
+        <!-- ============================================== -->
+        <template v-if="currentUser && currentUser.role === 'admin'">
+          
+          <!-- 4 Executive KPI Cards -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            
+            <div class="bg-[#180d05]/95 rounded-2xl p-4 sm:p-5 border border-amber-600/30 shadow-md hover:border-amber-500/50 transition">
+              <span class="text-xs font-bold text-amber-200/70 block mb-1">إجمالي الاختبارات المعقودة</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl sm:text-3xl font-black text-amber-300 font-mono">{{ quizzes.length }}</span>
+                <span class="text-xs text-amber-200/60 font-bold">محاضرة واختبار</span>
+              </div>
+              <span class="text-[10px] text-amber-400/80 block mt-1">عامة وتخصصية لكافة اللجان</span>
+            </div>
+
+            <div class="bg-[#180d05]/95 rounded-2xl p-4 sm:p-5 border border-amber-600/30 shadow-md hover:border-amber-500/50 transition">
+              <span class="text-xs font-bold text-amber-200/70 block mb-1">متوسط نسبة الحضور العام</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">{{ overallQuizzesAttendanceRate }}%</span>
+                <span class="text-xs text-emerald-300/80 font-bold">التزام عام</span>
+              </div>
+              <div class="w-full bg-[#100703] h-1.5 rounded-full overflow-hidden mt-2 border border-amber-600/20">
+                <div class="bg-gradient-to-r from-amber-500 to-emerald-400 h-full rounded-full transition-all duration-700" :style="{ width: overallQuizzesAttendanceRate + '%' }"></div>
+              </div>
+            </div>
+
+            <div class="bg-[#180d05]/95 rounded-2xl p-4 sm:p-5 border border-amber-600/30 shadow-md hover:border-amber-500/50 transition">
+              <span class="text-xs font-bold text-amber-200/70 block mb-1">إجمالي الحضور المسجل</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl sm:text-3xl font-black text-amber-300 font-mono">{{ totalAttendedSubmissions }}</span>
+                <span class="text-xs text-amber-200/60 font-bold">تسليم موثق</span>
+              </div>
+              <span class="text-[10px] text-emerald-400 block mt-1">حضور إلكتروني عبر الـ QR</span>
+            </div>
+
+            <div class="bg-[#180d05]/95 rounded-2xl p-4 sm:p-5 border border-amber-600/30 shadow-md hover:border-amber-500/50 transition">
+              <span class="text-xs font-bold text-amber-200/70 block mb-1">إجمالي حالات الغياب المرصودة</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl sm:text-3xl font-black text-rose-400 font-mono">{{ totalAbsencesCount }}</span>
+                <span class="text-xs text-rose-300/80 font-bold">حالة غياب</span>
+              </div>
+              <span class="text-[10px] text-rose-300/70 block mt-1">متاح تنبيههم عبر الواتساب فوراً</span>
+            </div>
+
+          </div>
+
+          <!-- Committee Attendance Matrix Table (رصد غياب والتزام لجان النموذج الـ 9) -->
+          <div class="bg-[#180d05]/95 rounded-3xl p-5 sm:p-7 border border-amber-600/30 shadow-xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-600/30">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center">
+                  <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm sm:text-base font-black text-white">رصد غياب والتزام لجان النموذج الـ 9</h3>
+                  <p class="text-[11px] text-amber-200/70">مصفوفة قياس انضباط المناديب، المحاضرات المعقودة، ونسب الحضور التراكمية لكل لجنة</p>
+                </div>
+              </div>
+              <button 
+                @click="adminQuizFilter = 'all'"
+                class="text-xs text-amber-300 hover:text-amber-100 font-bold flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+              >
+                <span>عرض جميع الاختبارات أدناه</span>
+                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-right text-xs">
+                <thead>
+                  <tr class="text-amber-200/70 border-b border-amber-600/30">
+                    <th class="py-2.5 px-3 font-bold">اللجنة / القطاع</th>
+                    <th class="py-2.5 px-3 font-bold text-center">قوة المناديب</th>
+                    <th class="py-2.5 px-3 font-bold text-center">المحاضرات المعقودة</th>
+                    <th class="py-2.5 px-3 font-bold text-center">إجمالي الحضور</th>
+                    <th class="py-2.5 px-3 font-bold text-center">إجمالي الغياب</th>
+                    <th class="py-2.5 px-3 font-bold text-center">معدل الالتزام</th>
+                    <th class="py-2.5 px-3 font-bold text-center">الإجراء الرقابي</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-amber-600/20 text-amber-100">
+                  <tr 
+                    v-for="comm in committeesAttendanceSummary" 
+                    :key="'matrix_' + comm.committeeId"
+                    class="hover:bg-amber-950/20 transition cursor-pointer"
+                    :class="adminQuizFilter === comm.committeeId ? 'bg-amber-950/40 font-bold' : ''"
+                  >
+                    <td class="py-3 px-3">
+                      <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: comm.color || '#c5a059' }"></span>
+                        <span class="font-bold text-white">{{ comm.committeeName }}</span>
+                      </div>
+                    </td>
+                    <td class="py-3 px-3 text-center font-mono font-bold">{{ comm.delegatesCount }}</td>
+                    <td class="py-3 px-3 text-center font-mono">
+                      <span class="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20 font-bold">
+                        {{ comm.quizzesCount }} محاضرة
+                      </span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-mono text-emerald-400 font-bold">{{ comm.attendedCount }}</td>
+                    <td class="py-3 px-3 text-center font-mono">
+                      <span 
+                        v-if="comm.absentCount > 0"
+                        class="px-2 py-0.5 rounded-full bg-rose-950/60 text-rose-300 border border-rose-500/30 font-bold"
+                      >
+                        {{ comm.absentCount }} غياب
+                      </span>
+                      <span v-else class="text-amber-200/50 font-bold">0</span>
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                      <div class="flex items-center justify-center gap-2 font-mono">
+                        <div class="w-16 bg-[#100703] h-1.5 rounded-full overflow-hidden border border-amber-600/20 hidden sm:block">
+                          <div class="bg-gradient-to-r from-amber-500 to-emerald-400 h-full rounded-full" :style="{ width: (comm.attendanceRate || 0) + '%' }"></div>
+                        </div>
+                        <span class="font-bold" :class="comm.attendanceRate >= 80 ? 'text-emerald-400' : 'text-amber-400'">
+                          {{ comm.attendanceRate }}%
+                        </span>
+                      </div>
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                      <button 
+                        @click="adminQuizFilter = (adminQuizFilter === comm.committeeId ? 'all' : comm.committeeId)"
+                        class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 mx-auto cursor-pointer"
+                        :class="adminQuizFilter === comm.committeeId ? 'btn-gold shadow-sm' : 'bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40'"
+                      >
+                        <i data-lucide="filter" class="w-3 h-3"></i>
+                        <span>{{ adminQuizFilter === comm.committeeId ? 'إلغاء التصفية' : 'تصفية الاختبارات' }}</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </template>
+
+        <!-- ============================================== -->
+        <!-- FILTER BAR: COMMITTEES & GENERAL LECTURES       -->
+        <!-- ============================================== -->
+        <div v-if="currentUser && currentUser.role === 'admin'" class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-amber-200/80 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>تصنيف الاختبارات والمحاضرات المعروضة:</span>
+            </span>
+            <span class="text-[11px] text-amber-300 font-mono">معروض: {{ displayQuizzes.length }} من {{ quizzes.length }}</span>
+          </div>
+
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-thin">
+            
+            <button 
+              @click="adminQuizFilter = 'all'"
+              :class="adminQuizFilter === 'all' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+              class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer flex items-center gap-1.5"
+            >
+              <span>جميع الاختبارات (الكل)</span>
+              <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-black/30 text-amber-200">{{ quizzes.length }}</span>
+            </button>
+
+            <button 
+              @click="adminQuizFilter = 'general'"
+              :class="adminQuizFilter === 'general' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+              class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer flex items-center gap-1.5"
+            >
+              <i data-lucide="globe" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>المحاضرات العامة (الأكاديمية)</span>
+              <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-black/30 text-amber-200">{{ generalQuizzesCount }}</span>
+            </button>
+
+            <button 
+              v-for="comm in committees" 
+              :key="'tab_comm_' + comm.id"
+              @click="adminQuizFilter = comm.id"
+              :class="adminQuizFilter === comm.id ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+              class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer flex items-center gap-1.5"
+            >
+              <span>{{ comm.shortName || comm.name }}</span>
+              <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-black/30 text-amber-200">{{ getCommitteeQuizzesCount(comm.id) }}</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- QUIZZES CARDS LIST                             -->
+        <!-- ============================================== -->
+        <div v-if="displayQuizzes.length === 0" class="bg-[#180d05]/95 rounded-3xl p-12 text-center border border-amber-600/30 text-amber-100">
           <div class="w-16 h-16 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-3xl flex items-center justify-center mx-auto mb-4">
             <i data-lucide="file-question" class="w-8 h-8"></i>
           </div>
-          <h3 class="font-black text-base text-amber-100 mb-1">لم يتم إنشاء أي اختبارات لهذه اللجنة بعد</h3>
-          <p class="text-xs text-amber-200/60 mb-6">اضغط على زر "إنشاء اختبار محاضرة جديد" للبدء في إضافة أسئلة وتوليد QR Code المحاضرة لقطاعك.</p>
+          <h3 class="font-black text-base text-amber-100 mb-1">
+            <template v-if="currentUser && currentUser.role === 'admin'">
+              لا توجد اختبارات مسجلة ضمن هذا التصنيف المختار
+            </template>
+            <template v-else>
+              لم يتم إنشاء أي اختبارات لهذه اللجنة بعد
+            </template>
+          </h3>
+          <p class="text-xs text-amber-200/60 mb-6 max-w-md mx-auto">
+            <template v-if="currentUser && currentUser.role === 'admin'">
+              يمكنك تغيير التصفية أعلاه لعرض اختبارات اللجان الأخرى أو المحاضرات العامة.
+            </template>
+            <template v-else>
+              اضغط على زر "إنشاء اختبار محاضرة جديد" للبدء في إضافة أسئلة وتوليد QR Code المحاضرة لقطاعك.
+            </template>
+          </p>
           <button 
-            @click="openCreateQuizModal"
-            class="px-5 py-2.5 rounded-xl btn-gold transition"
+            v-if="currentUser && currentUser.role !== 'admin'"
+            @click="openCreateQuizModal" 
+            class="px-5 py-2.5 rounded-xl btn-gold transition cursor-pointer"
           >
             + إنشاء أول اختبار
+          </button>
+          <button 
+            v-else
+            @click="adminQuizFilter = 'all'" 
+            class="px-5 py-2.5 rounded-xl btn-gold transition cursor-pointer"
+          >
+            عرض كافة الاختبارات (الكل)
           </button>
         </div>
 
         <div v-else class="space-y-4">
           <div 
-            v-for="quiz in committeeQuizzes" 
+            v-for="quiz in displayQuizzes" 
             :key="quiz.id"
             class="bg-[#180d05]/95 rounded-3xl p-5 sm:p-6 border border-amber-600/30 text-amber-100 shadow-md hover:shadow-lg transition-all"
           >
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
               
               <!-- Quiz Info -->
               <div class="flex items-start gap-4">
@@ -4342,108 +4624,152 @@
                   <span class="text-base font-black leading-none">{{ quiz.lectureNumber }}</span>
                 </div>
 
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
+                <div class="space-y-1.5">
+                  <!-- Badges: Origin & Status -->
+                  <div class="flex flex-wrap items-center gap-2">
+                    <!-- Origin Badge -->
                     <span 
-                      :class="quiz.isOpen ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-[#1b0f07] text-slate-600 border-amber-600/30'"
+                      v-if="quiz.committeeId === 'all' || quiz.committeeId === 'academic' || quiz.isGeneralLecture"
+                      class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-black flex items-center gap-1"
+                    >
+                      <i data-lucide="globe" class="w-3 h-3 text-amber-400"></i>
+                      <span>محاضرة عامة • اللجنة الأكاديمية المركزية</span>
+                    </span>
+                    <span 
+                      v-else
+                      class="px-2.5 py-0.5 rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 text-[10px] font-black flex items-center gap-1"
+                    >
+                      <i data-lucide="shield" class="w-3 h-3 text-emerald-400"></i>
+                      <span>قطاع تخصصي: {{ getCommitteeNameById(quiz.committeeId) }}</span>
+                    </span>
+
+                    <!-- Open/Closed Status Badge -->
+                    <span 
+                      :class="quiz.isOpen ? 'bg-emerald-950/60 text-emerald-300 border-emerald-600/40' : 'bg-[#140a04] text-amber-200/50 border-amber-600/30'"
                       class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold flex items-center gap-1"
                     >
                       <span class="w-1.5 h-1.5 rounded-full" :class="quiz.isOpen ? 'bg-emerald-500 animate-pulse' : 'bg-amber-700'"></span>
                       <span>{{ quiz.isOpen ? 'نشط ويستقبل إجابات' : 'مغلق' }}</span>
                     </span>
 
-                    <span class="px-2 py-0.5 rounded-full bg-[#1b0f07] text-slate-600 text-[10px] font-bold">
-                      {{ quiz.questions ? quiz.questions.length : 0 }} أسئلة ({{ quiz.totalPoints }} درجات)
-                    </span>
-
-                    <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 text-[10px] font-bold">
-                      {{ quiz.durationMinutes > 0 ? quiz.durationMinutes + ' دقائق' : 'بدون مؤقت' }}
+                    <!-- Questions count badge -->
+                    <span class="px-2 py-0.5 rounded-full bg-[#140a04] text-amber-200/70 border border-amber-600/30 text-[10px] font-bold font-mono">
+                      {{ quiz.questions ? quiz.questions.length : 0 }} أسئلة ({{ quiz.totalPoints || 10 }} درجات)
                     </span>
                   </div>
 
-                  <h3 class="font-black text-base sm:text-lg text-slate-900 leading-tight">
-                    {{ quiz.title }}
-                  </h3>
-
-                  <p v-if="quiz.description" class="text-xs text-slate-500 mt-1">
+                  <h3 class="font-black text-base sm:text-lg text-white">{{ quiz.title }}</h3>
+                  <p v-if="quiz.description" class="text-xs text-amber-200/60 line-clamp-2 max-w-2xl leading-relaxed">
                     {{ quiz.description }}
                   </p>
 
-                  <div class="flex items-center gap-4 text-xs text-slate-500 mt-2 font-medium">
-                    <span class="flex items-center gap-1 text-emerald-700 font-bold">
+                  <!-- Real-time Attendance & Performance Stats -->
+                  <div class="flex flex-wrap items-center gap-3 sm:gap-5 text-xs text-amber-200/80 pt-1 font-medium font-mono">
+                    <span class="flex items-center gap-1 text-emerald-400 font-bold">
                       <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
-                      <span>{{ quiz.submissionsCount || 0 }} مندوب سلّم وحضر هذه المحاضرة</span>
+                      <span>حضور: {{ quiz.submissionsCount || 0 }} مندوب</span>
                     </span>
-                    <span v-if="quiz.submissionsCount > 0" class="text-slate-400">•</span>
-                    <span v-if="quiz.submissionsCount > 0" class="text-amber-700 font-bold">
-                      متوسط الدرجات: {{ quiz.averageScore }} / 10
+
+                    <span class="text-amber-600/50">•</span>
+
+                    <span class="flex items-center gap-1 text-rose-400 font-bold">
+                      <i data-lucide="user-x" class="w-3.5 h-3.5"></i>
+                      <span>غياب: {{ quiz.absenteesCount || 0 }} مندوب</span>
+                    </span>
+
+                    <span class="text-amber-600/50">•</span>
+
+                    <span class="flex items-center gap-1 text-amber-300 font-bold">
+                      <i data-lucide="percent" class="w-3.5 h-3.5"></i>
+                      <span>نسبة الحضور: {{ quiz.attendanceRate || 0 }}%</span>
+                    </span>
+
+                    <span class="text-amber-600/50">•</span>
+
+                    <span class="flex items-center gap-1 text-amber-400 font-bold">
+                      <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                      <span>متوسط الدرجات: {{ quiz.averageScore || 0 }} / 10</span>
                     </span>
                   </div>
                 </div>
               </div>
 
-              <!-- Actions -->
-              <div class="flex items-center flex-wrap gap-2 pt-3 lg:pt-0 border-t lg:border-t-0 border-amber-600/30">
+              <!-- Actions Area -->
+              <div class="flex items-center flex-wrap gap-2 pt-3 lg:pt-0 border-t lg:border-t-0 border-amber-600/30 flex-shrink-0">
                 
-                <!-- Edit Quiz Button -->
+                <!-- Primary Action: Full Submissions & Absence Modal -->
                 <button 
-                  @click="openEditQuizModal(quiz)"
-                  class="px-3 py-2 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-800 text-xs font-bold transition flex items-center gap-1.5"
-                  title="تعديل محتوى وأسئلة هذا الاختبار"
+                  @click="openSubmissionsModal(quiz)"
+                  class="btn-gold px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-1.5 shadow-md cursor-pointer"
+                  title="عرض كشف حضور ونتائج هذه المحاضرة والمناديب الغائبين مع رسائل الواتساب والأسينمنت"
                 >
-                  <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-600"></i>
-                  <span>تعديل الاختبار</span>
+                  <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                  <span>كشف الحضور والغياب ({{ quiz.submissionsCount || 0 }})</span>
+                </button>
+
+                <!-- Preview Exam Questions (Read-only modal) -->
+                <button 
+                  @click="openPreviewQuizModal(quiz)"
+                  class="px-3 py-2 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-500/40 hover:border-amber-400 text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+                  title="معاينة أسئلة الاختبار والإجابات الصحيحة المعتمدة"
+                >
+                  <i data-lucide="eye" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>معاينة الأسئلة</span>
                 </button>
 
                 <!-- QR Code Button -->
                 <button 
                   @click="openQRModal(quiz)"
-                  class="px-3.5 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                  class="px-3 py-2 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-500/40 hover:border-amber-400 text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
                   title="عرض كود الـ QR لعرضه على شاشة القاعة"
                 >
-                  <i data-lucide="qr-code" class="w-4 h-4 text-purple-700"></i>
-                  <span>عرض QR كود</span>
+                  <i data-lucide="qr-code" class="w-4 h-4 text-amber-400"></i>
+                  <span>QR كود</span>
                 </button>
 
                 <!-- Copy Link Button -->
                 <button 
                   @click="copyQuizLink(quiz)"
-                  class="px-3 py-2 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-800 text-xs font-bold transition flex items-center gap-1.5"
+                  class="p-2 rounded-xl bg-[#140a04] hover:bg-amber-900/60 text-amber-200/80 hover:text-amber-100 border border-amber-600/40 transition flex items-center justify-center cursor-pointer"
                   title="نسخ رابط الاختبار لإرساله للمناديب"
                 >
-                  <i data-lucide="link" class="w-3.5 h-3.5"></i>
-                  <span>نسخ الرابط</span>
+                  <i data-lucide="link" class="w-4 h-4"></i>
                 </button>
 
-                <!-- Lecture Specific Submissions Button -->
-                <button 
-                  @click="openSubmissionsModal(quiz)"
-                  class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-bold transition flex items-center gap-1.5"
-                  title="عرض كشف حضور ونتائج هذه المحاضرة فقط (الحاضرون والغائبون)"
-                >
-                  <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-emerald-700"></i>
-                  <span>كشف حضور ونتائج المحاضرة ({{ quiz.submissionsCount || 0 }})</span>
-                </button>
+                <!-- Actions ONLY for Committee Heads (Hidden for Admin) -->
+                <template v-if="currentUser && currentUser.role !== 'admin'">
+                  
+                  <!-- Edit Quiz Button -->
+                  <button 
+                    @click="openEditQuizModal(quiz)"
+                    class="px-3 py-2 rounded-xl bg-[#140a04] hover:bg-amber-900/60 text-amber-200/90 border border-amber-600/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                    title="تعديل محتوى وأسئلة هذا الاختبار"
+                  >
+                    <i data-lucide="edit-3" class="w-3.5 h-3.5 text-amber-400"></i>
+                    <span>تعديل</span>
+                  </button>
 
-                <!-- Toggle Open/Close -->
-                <button 
-                  @click="toggleQuizStatus(quiz)"
-                  :class="quiz.isOpen ? 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'"
-                  class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1"
-                  :title="quiz.isOpen ? 'إغلاق الاختبار مؤقتاً' : 'فتح واستقبال الإجابات'"
-                >
-                  <i :data-lucide="quiz.isOpen ? 'pause-circle' : 'play-circle'" class="w-3.5 h-3.5"></i>
-                  <span>{{ quiz.isOpen ? 'إغلاق' : 'فتح' }}</span>
-                </button>
+                  <!-- Toggle Open/Close -->
+                  <button 
+                    @click="toggleQuizStatus(quiz)"
+                    :class="quiz.isOpen ? 'bg-amber-950/60 text-amber-300 border border-amber-600/40' : 'bg-emerald-950/60 text-emerald-300 border border-emerald-600/40'"
+                    class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                    :title="quiz.isOpen ? 'إغلاق الاختبار مؤقتاً' : 'فتح واستقبال الإجابات'"
+                  >
+                    <i :data-lucide="quiz.isOpen ? 'pause-circle' : 'play-circle'" class="w-3.5 h-3.5"></i>
+                    <span>{{ quiz.isOpen ? 'إغلاق' : 'فتح' }}</span>
+                  </button>
 
-                <!-- Delete Quiz -->
-                <button 
-                  @click="deleteQuiz(quiz)"
-                  class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
-                  title="حذف الاختبار"
-                >
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
+                  <!-- Delete Quiz -->
+                  <button 
+                    @click="deleteQuiz(quiz)"
+                    class="p-2 rounded-xl text-rose-300/60 hover:text-rose-300 hover:bg-rose-950/60 border border-transparent hover:border-rose-600/30 transition cursor-pointer"
+                    title="حذف الاختبار"
+                  >
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+
+                </template>
 
               </div>
 
@@ -5665,6 +5991,82 @@
     <!-- ============================================== -->
     <!-- LECTURE-SPECIFIC SUBMISSIONS & ATTENDANCE MODAL -->
     <!-- ============================================== -->
+    
+    <!-- ============================================== -->
+    <!-- MODAL: READ-ONLY QUIZ QUESTIONS PREVIEW (ADMIN & HEADS) -->
+    <!-- ============================================== -->
+    <div v-if="previewQuizData" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-7 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-5">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
+              <i data-lucide="eye" class="w-3 h-3 text-amber-400"></i>
+              <span>معاينة بنك أسئلة الاختبار</span>
+            </div>
+            <h4 class="font-black text-amber-100 text-base sm:text-lg">{{ previewQuizData.title }}</h4>
+            <p class="text-xs text-amber-200/60 font-mono">
+              المحاضرة رقم {{ previewQuizData.lectureNumber }} • 
+              {{ previewQuizData.questions ? previewQuizData.questions.length : 0 }} أسئلة • 
+              درجة النجاح: {{ previewQuizData.passingScore || 6 }} / 10
+            </p>
+          </div>
+          <button @click="previewQuizData = null" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div 
+            v-for="(q, qIdx) in (previewQuizData.questions || [])" 
+            :key="'preview_q_' + qIdx"
+            class="p-4 rounded-2xl bg-[#140a04] border border-amber-600/30 space-y-2.5"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-2.5">
+                <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center text-xs font-mono font-black shrink-0">
+                  {{ qIdx + 1 }}
+                </span>
+                <span class="text-xs sm:text-sm font-bold text-white leading-relaxed">{{ q.questionText }}</span>
+              </div>
+              <span class="text-[10px] font-mono text-amber-400 font-bold shrink-0">({{ q.points || 1 }} درجة)</span>
+            </div>
+
+            <!-- Choices -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 mr-8">
+              <div 
+                v-for="(choice, cIdx) in (q.options || [])" 
+                :key="'choice_' + qIdx + '_' + cIdx"
+                class="p-2.5 rounded-xl text-xs flex items-center justify-between border"
+                :class="cIdx === q.correctAnswer ? 'bg-amber-950/60 border-amber-500 text-amber-200 font-black shadow-sm ring-1 ring-amber-500/30' : 'bg-[#100703] border-amber-600/20 text-amber-200/60'"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-mono font-bold" :class="cIdx === q.correctAnswer ? 'text-amber-400' : 'text-amber-600'">
+                    {{ ['أ', 'ب', 'ج', 'د'][cIdx] || (cIdx + 1) }}.
+                  </span>
+                  <span>{{ choice }}</span>
+                </div>
+                <span v-if="cIdx === q.correctAnswer" class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[9px] font-bold border border-amber-500/30">
+                  الإجابة المعتمدة
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-5 mt-5 border-t border-amber-600/30 flex justify-end">
+          <button 
+            @click="previewQuizData = null" 
+            class="btn-gold px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer"
+          >
+            إغلاق المعاينة
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
     <div v-if="showQuizSubmissionsModal" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-4xl w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[92vh] overflow-y-auto">
         
@@ -8351,6 +8753,9 @@
         });
         const showQRModal = ref(null);
         const showQuizSubmissionsModal = ref(null);
+        const adminQuizFilter = ref('all');
+        const previewQuizData = ref(null);
+        const isRefreshingQuizzes = ref(false);
         const currentQuizSubmissions = ref([]);
         const evaluatingAssignmentCandidate = ref(null);
         const isSavingAssignmentEval = ref(false);
@@ -9142,15 +9547,133 @@
 
                 const lectureAbsentDelegates = computed(() => {
           if (!showQuizSubmissionsModal.value) return [];
-          const commId = showQuizSubmissionsModal.value.committeeId;
-          const delegatesInComm = candidates.value.filter(c => 
-            c.assignedCommitteeId === commId && 
-            c.evaluation && c.evaluation.decision === 'accepted' && 
-            (c.roleType || 'delegate') === 'delegate'
-          );
+          const q = showQuizSubmissionsModal.value;
+          const isGeneral = q.committeeId === 'all' || q.committeeId === 'academic' || q.isGeneralLecture;
+          const delegatesInComm = candidates.value.filter(c => {
+            const matchesComm = isGeneral || (c.assignedCommitteeId || c.originalCommitteeId) === q.committeeId;
+            return matchesComm && 
+              c.evaluation && c.evaluation.decision === 'accepted' && 
+              (c.roleType || 'delegate') === 'delegate';
+          });
           const attendedIds = new Set(currentQuizSubmissions.value.map(s => s.candidateId));
           return delegatesInComm.filter(c => !attendedIds.has(c.id));
         });
+
+        // ==========================================
+        // ADMIN QUIZZES & ATTENDANCE OVERSIGHT COMPUTED
+        // ==========================================
+        const generalQuizzesCount = computed(() => {
+          return quizzes.value.filter(q => q.committeeId === 'all' || q.committeeId === 'academic' || q.isGeneralLecture).length;
+        });
+
+        const overallQuizzesAttendanceRate = computed(() => {
+          if (!quizzes.value || quizzes.value.length === 0) return 100;
+          let totalPotential = 0;
+          let totalAttended = 0;
+          quizzes.value.forEach(q => {
+            const target = q.totalTargetDelegates || 0;
+            const subs = q.submissionsCount || 0;
+            if (target > 0) {
+              totalPotential += target;
+              totalAttended += Math.min(target, subs);
+            }
+          });
+          return totalPotential > 0 ? Math.min(100, Math.round((totalAttended / totalPotential) * 100)) : 100;
+        });
+
+        const totalAttendedSubmissions = computed(() => {
+          return quizzes.value.reduce((acc, q) => acc + (q.submissionsCount || 0), 0);
+        });
+
+        const totalAbsencesCount = computed(() => {
+          return quizzes.value.reduce((acc, q) => acc + (q.absenteesCount || 0), 0);
+        });
+
+        const displayQuizzes = computed(() => {
+          if (currentUser.value && currentUser.value.role === 'admin') {
+            if (adminQuizFilter.value === 'all') {
+              return quizzes.value;
+            }
+            if (adminQuizFilter.value === 'general') {
+              return quizzes.value.filter(q => q.committeeId === 'all' || q.committeeId === 'academic' || q.isGeneralLecture);
+            }
+            return quizzes.value.filter(q => q.committeeId === adminQuizFilter.value);
+          }
+          return committeeQuizzes.value;
+        });
+
+        const committeesAttendanceSummary = computed(() => {
+          if (allCommitteesPerformance.value && allCommitteesPerformance.value.length > 0) {
+            return allCommitteesPerformance.value;
+          }
+          return (committees.value || []).map(comm => {
+            const delegates = (allCandidatesGlobal.value || candidates.value || []).filter(c => 
+              (c.assignedCommitteeId || c.originalCommitteeId) === comm.id &&
+              c.evaluation && c.evaluation.decision === 'accepted' &&
+              (c.roleType || 'delegate') === 'delegate'
+            );
+            const commQuizzes = quizzes.value.filter(q => q.committeeId === comm.id);
+            const generalQuizzes = quizzes.value.filter(q => q.committeeId === 'all' || q.committeeId === 'academic' || q.isGeneralLecture);
+            const totalLectures = commQuizzes.length + generalQuizzes.length;
+            return {
+              committeeId: comm.id,
+              committeeName: comm.name,
+              color: comm.color,
+              delegatesCount: delegates.length,
+              quizzesCount: totalLectures,
+              attendedCount: 0,
+              absentCount: 0,
+              attendanceRate: 100
+            };
+          });
+        });
+
+        function getCommitteeQuizzesCount(commId) {
+          return quizzes.value.filter(q => q.committeeId === commId).length;
+        }
+
+        function getCommitteeNameById(commId) {
+          if (commId === 'all' || commId === 'academic') return 'اللجنة الأكاديمية المركزية (عام)';
+          const c = (committees.value || []).find(cm => cm.id === commId);
+          return c ? (c.shortName || c.name) : commId;
+        }
+
+        function openPreviewQuizModal(quiz) {
+          previewQuizData.value = quiz;
+          nextTick(() => { if (window.lucide) lucide.createIcons(); });
+        }
+
+        async function refreshQuizzesData() {
+          isRefreshingQuizzes.value = true;
+          try {
+            await fetchQuizzes();
+            await loadAdminPerformance();
+          } finally {
+            isRefreshingQuizzes.value = false;
+          }
+        }
+
+        function exportAdminQuizzesReport() {
+          let csv = '\uFEFFرقم المحاضرة,عنوان الاختبار,نوع المحاضرة / القطاع,حالة الاختبار,عدد الأسئلة,درجة النجاح,المناديب المستهدفون,عدد الحاضرين,عدد الغائبين,نسبة الحضور,متوسط الدرجات\n';
+          quizzes.value.forEach(q => {
+            const isGen = q.committeeId === 'all' || q.committeeId === 'academic' || q.isGeneralLecture;
+            const sectorName = isGen ? 'محاضرة عامة (اللجنة الأكاديمية)' : getCommitteeNameById(q.committeeId);
+            const status = q.isOpen ? 'نشط' : 'مغلق';
+            const questionsCount = q.questions ? q.questions.length : 0;
+            const target = q.totalTargetDelegates || 0;
+            const attended = q.submissionsCount || 0;
+            const absent = q.absenteesCount || 0;
+            const rate = (q.attendanceRate || 0) + '%';
+            const avg = q.averageScore || 0;
+            csv += `${q.lectureNumber},"${(q.title || '').replace(/"/g, '""')}","${sectorName}","${status}",${questionsCount},${q.passingScore || 6},${target},${attended},${absent},"${rate}",${avg}\n`;
+          });
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `تقرير_اختبارات_وغياب_النموذج_${new Date().toISOString().split('T')[0]}.csv`;
+          a.click();
+        }
 
         const delegateProfileStats = computed(() => {
           if (!selectedDelegateProfile.value) {
@@ -11101,6 +11624,7 @@
             loadGradebook();
           } else if (newTab === 'quizzes') {
             fetchQuizzes();
+            loadAdminPerformance();
           } else if (newTab === 'analytics') {
             loadGradebook();
             renderOperationalCharts();
@@ -11311,6 +11835,20 @@
           gradebookData,
           gradebookLoading,
           allCommitteesPerformance,
+          adminQuizFilter,
+          previewQuizData,
+          isRefreshingQuizzes,
+          displayQuizzes,
+          generalQuizzesCount,
+          overallQuizzesAttendanceRate,
+          totalAttendedSubmissions,
+          totalAbsencesCount,
+          committeesAttendanceSummary,
+          getCommitteeQuizzesCount,
+          getCommitteeNameById,
+          openPreviewQuizModal,
+          refreshQuizzesData,
+          exportAdminQuizzesReport,
           committeeGroupLinkInput,
           targetCommitteeForLink,
           targetCommitteeGroupLink,
