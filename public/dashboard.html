@@ -3099,13 +3099,13 @@
                     <span 
                       class="px-2.5 py-1 rounded-full font-bold text-[10px]"
                       :class="{
-                        'bg-blue-50 text-blue-700': mem.subDepartment === 'hr',
-                        'bg-pink-50 text-pink-700': mem.subDepartment === 'media',
-                        'bg-amber-50 text-amber-700': mem.subDepartment === 'academic',
-                        'bg-purple-50 text-purple-700': mem.subDepartment === 'logistics'
+                        'bg-amber-950/40 text-amber-300 border border-amber-600/30': mem.subDepartment === 'organization',
+                        'bg-pink-950/40 text-pink-300 border border-pink-600/30': mem.subDepartment === 'hr',
+                        'bg-purple-950/40 text-purple-300 border border-purple-600/30': mem.subDepartment === 'media',
+                        'bg-emerald-950/40 text-emerald-300 border border-emerald-600/30': mem.subDepartment === 'academic'
                       }"
                     >
-                      {{ mem.subDepartment === 'hr' ? 'موارد بشرية HR' : (mem.subDepartment === 'media' ? 'ميديا وتصميم' : (mem.subDepartment === 'academic' ? 'أكاديمي وإعداد' : 'لوجستيك وتنظيم')) }}
+                      {{ mem.subDepartment === 'organization' ? 'قطاع التنظيم' : (mem.subDepartment === 'hr' ? 'موارد بشرية (HR)' : (mem.subDepartment === 'media' ? 'ميديا وتصميم' : (mem.subDepartment === 'academic' ? 'أكاديمي وإعداد' : 'عضو هيكل'))) }}
                     </span>
                   </td>
                   <td class="py-3 text-center">
@@ -4548,26 +4548,34 @@
             <!-- If Member, choose Sub-Department -->
             <div v-if="evalForm.roleType === 'member'" class="pt-2 border-t border-amber-200">
               <label class="block text-[11px] font-bold text-slate-800 mb-1.5">اختر القسم الداخلي للعضو في القطاع:</label>
-              <div class="grid grid-cols-3 gap-2">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <label 
-                  :class="evalForm.subDepartment === 'hr' ? 'bg-pink-600 text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200'"
-                  class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition"
+                  :class="evalForm.subDepartment === 'organization' ? 'bg-amber-600 text-slate-950 font-black shadow-sm' : 'bg-white text-slate-700 border border-slate-200'"
+                  class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
+                >
+                  <input type="radio" v-model="evalForm.subDepartment" value="organization" class="hidden">
+                  <span>قطاع التنظيم</span>
+                </label>
+
+                <label 
+                  :class="evalForm.subDepartment === 'hr' ? 'bg-pink-600 text-white shadow-sm font-black' : 'bg-white text-slate-700 border border-slate-200'"
+                  class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="hr" class="hidden">
-                  <span>موارد بشرية (HR)</span>
+                  <span>الموارد البشرية (HR)</span>
                 </label>
 
                 <label 
-                  :class="evalForm.subDepartment === 'media' ? 'bg-purple-600 text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200'"
-                  class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition"
+                  :class="evalForm.subDepartment === 'media' ? 'bg-purple-600 text-white shadow-sm font-black' : 'bg-white text-slate-700 border border-slate-200'"
+                  class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="media" class="hidden">
-                  <span>ميديا وإعلام (Media)</span>
+                  <span>ميديا وإعلام</span>
                 </label>
 
                 <label 
-                  :class="evalForm.subDepartment === 'academic' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200'"
-                  class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition"
+                  :class="evalForm.subDepartment === 'academic' ? 'bg-emerald-600 text-white shadow-sm font-black' : 'bg-white text-slate-700 border border-slate-200'"
+                  class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="academic" class="hidden">
                   <span>أكاديمي وتدريب</span>
@@ -5598,13 +5606,13 @@
                     <span 
                       class="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
                       :class="{
-                        'bg-blue-50 text-blue-700': mem.subDepartment === 'hr',
-                        'bg-pink-50 text-pink-700': mem.subDepartment === 'media',
-                        'bg-amber-50 text-amber-700': mem.subDepartment === 'academic',
-                        'bg-purple-50 text-purple-700': mem.subDepartment === 'logistics'
+                        'bg-amber-950/40 text-amber-300 border border-amber-600/30': mem.subDepartment === 'organization',
+                        'bg-pink-950/40 text-pink-300 border border-pink-600/30': mem.subDepartment === 'hr',
+                        'bg-purple-950/40 text-purple-300 border border-purple-600/30': mem.subDepartment === 'media',
+                        'bg-emerald-950/40 text-emerald-300 border border-emerald-600/30': mem.subDepartment === 'academic'
                       }"
                     >
-                      {{ mem.subDepartment === 'hr' ? 'HR' : (mem.subDepartment === 'media' ? 'ميديا' : (mem.subDepartment === 'academic' ? 'أكاديمي' : 'لوجستيك')) }}
+                      {{ mem.subDepartment === 'organization' ? 'تنظيم' : (mem.subDepartment === 'hr' ? 'HR' : (mem.subDepartment === 'media' ? 'ميديا' : (mem.subDepartment === 'academic' ? 'أكاديمي' : 'عضو هيكل'))) }}
                     </span>
                   </td>
                   
@@ -6164,26 +6172,34 @@
           <!-- If member, pick department -->
           <div v-if="editingRoleForm.roleType === 'member'" class="space-y-2 pt-2 border-t border-slate-100">
             <label class="block text-xs font-bold text-slate-700">القسم الداخلي للعضو في القطاع:</label>
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <label 
-                :class="editingRoleForm.subDepartment === 'hr' ? 'bg-pink-600 text-white shadow-sm' : 'bg-slate-50 text-slate-700 border border-slate-200'"
-                class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition"
+                :class="editingRoleForm.subDepartment === 'organization' ? 'bg-amber-600 text-slate-950 font-black shadow-sm' : 'bg-slate-50 text-slate-700 border border-slate-200'"
+                class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition text-center"
+              >
+                <input type="radio" v-model="editingRoleForm.subDepartment" value="organization" class="hidden">
+                <span>تنظيم</span>
+              </label>
+
+              <label 
+                :class="editingRoleForm.subDepartment === 'hr' ? 'bg-pink-600 text-white font-black shadow-sm' : 'bg-slate-50 text-slate-700 border border-slate-200'"
+                class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition text-center"
               >
                 <input type="radio" v-model="editingRoleForm.subDepartment" value="hr" class="hidden">
                 <span>HR</span>
               </label>
 
               <label 
-                :class="editingRoleForm.subDepartment === 'media' ? 'bg-purple-600 text-white shadow-sm' : 'bg-slate-50 text-slate-700 border border-slate-200'"
-                class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition"
+                :class="editingRoleForm.subDepartment === 'media' ? 'bg-purple-600 text-white font-black shadow-sm' : 'bg-slate-50 text-slate-700 border border-slate-200'"
+                class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition text-center"
               >
                 <input type="radio" v-model="editingRoleForm.subDepartment" value="media" class="hidden">
                 <span>ميديا</span>
               </label>
 
               <label 
-                :class="editingRoleForm.subDepartment === 'academic' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-50 text-slate-700 border border-slate-200'"
-                class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition"
+                :class="editingRoleForm.subDepartment === 'academic' ? 'bg-emerald-600 text-white font-black shadow-sm' : 'bg-slate-50 text-slate-700 border border-slate-200'"
+                class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition text-center"
               >
                 <input type="radio" v-model="editingRoleForm.subDepartment" value="academic" class="hidden">
                 <span>أكاديمي</span>

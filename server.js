@@ -171,7 +171,8 @@ function generateDiplomaticId(cand, index) {
   if (cand.roleType === 'member') {
     roleCode = 'M';
     const sub = String(cand.subDepartment || '').toLowerCase().trim();
-    if (sub === 'hr' || sub === 'organization') commCode = 'ORG';
+    if (sub === 'organization') commCode = 'ORG';
+    else if (sub === 'hr') commCode = 'HR';
     else if (sub === 'media') commCode = 'MED';
     else if (sub === 'academic') commCode = 'ACD';
   } else if (cand.roleType === 'delegate') {
@@ -234,8 +235,11 @@ function calculateCPI(candidate, db) {
       if (ev && ev.bonusScore) totalBonus += Number(ev.bonusScore) || 0;
     });
   }
+  if (candidate.bonusPoints) {
+    totalBonus += Number(candidate.bonusPoints) || 0;
+  }
 
-  const rawCPI = (attendanceRate * 0.35) + (quizAvg * 0.35) + (fieldScore * 0.30) + Math.min(5, totalBonus);
+  const rawCPI = (attendanceRate * 0.35) + (quizAvg * 0.35) + (fieldScore * 0.30) + Math.min(10, totalBonus);
   const score = Math.min(100, Math.round(rawCPI));
 
   let standing = 'جيد';
@@ -516,6 +520,9 @@ app.get('/api/delegate/my-profile', (req, res) => {
       if (ev && ev.bonusScore) totalBonus += Number(ev.bonusScore) || 0;
     });
   }
+  if (cand.bonusPoints) {
+    totalBonus += Number(cand.bonusPoints) || 0;
+  }
 
   res.json({
     success: true,
@@ -556,6 +563,257 @@ app.get('/api/auth/logout', (req, res) => {
   res.clearCookie('mfa_user', { path: '/' });
   res.clearCookie('mfa_delegate_id', { path: '/' });
   res.json({ success: true, redirect: '/login' });
+});
+
+// ==========================================
+// HR COMMITTEE ROSTER & EVALUATION APIS
+// ==========================================
+
+// 1. Get Committee Roster (Members & Delegates) for HR Member
+app.get('/api/hr/committee-roster', (req, res) => {
+  const db = getDB();
+  let candId = req.cookies.mfa_delegate_id || req.query.hrId;
+  if (!candId && req.cookies.mfa_user) {
+    try {
+      const u = JSON.parse(req.cookies.mfa_user);
+      if (u.id) candId = u.id;
+    } catch (e) {}
+  }
+  
+  const hrCand = (db.candidates || []).find(c => c.id === candId || (c.diplomaticId && c.diplomaticId.toUpperCase() === String(candId).toUpperCase().trim()));
+  
+  let targetCommitteeId = req.query.committeeId;
+  if (!targetCommitteeId && hrCand) {
+    targetCommitteeId = hrCand.assignedCommitteeId || hrCand.originalCommitteeId;
+  }
+
+  if (!targetCommitteeId) {
+    return res.status(400).json({ success: false, message: 'لم يتم تحديد اللجنة' });
+  }
+
+  const comm = (db.committees || []).find(c => c.id === targetCommitteeId);
+  const commCandidates = (db.candidates || []).filter(c => 
+    (c.assignedCommitteeId === targetCommitteeId || c.originalCommitteeId === targetCommitteeId) &&
+    (c.evaluation && c.evaluation.decision === 'accepted')
+  );
+
+  const members = commCandidates.filter(c => c.roleType === 'member').map(m => {
+    const cpi = calculateCPI(m, db);
+    return {
+      id: m.id,
+      name: m.arabicName || m.fullName,
+      arabicName: m.arabicName || m.fullName,
+      fullName: m.fullName,
+      diplomaticId: m.diplomaticId || generateDiplomaticId(m),
+      phone: m.phone,
+      email: m.email,
+      faculty: m.faculty,
+      university: m.university,
+      grade: m.grade,
+      roleType: 'member',
+      subDepartment: m.subDepartment || 'organization',
+      memberEvaluation: m.memberEvaluation || null,
+      bonusPoints: Number(m.bonusPoints) || 0,
+      bonusHistory: m.bonusHistory || [],
+      cpi
+    };
+  });
+
+  const delegates = commCandidates.filter(c => c.roleType !== 'member').map(d => {
+    const cpi = calculateCPI(d, db);
+    return {
+      id: d.id,
+      name: d.arabicName || d.fullName,
+      arabicName: d.arabicName || d.fullName,
+      fullName: d.fullName,
+      diplomaticId: d.diplomaticId || generateDiplomaticId(d),
+      phone: d.phone,
+      email: d.email,
+      faculty: d.faculty,
+      university: d.university,
+      grade: d.grade,
+      roleType: 'delegate',
+      evaluation: d.evaluation || null,
+      hrEvaluation: d.hrEvaluation || null,
+      bonusPoints: Number(d.bonusPoints) || 0,
+      bonusHistory: d.bonusHistory || [],
+      cpi
+    };
+  });
+
+  const upcomingEvents = (db.events || []).filter(e => e.isOpen && (e.targetCommitteeId === targetCommitteeId || e.targetCommitteeId === 'all'));
+
+  res.json({
+    success: true,
+    committee: {
+      id: targetCommitteeId,
+      name: comm ? comm.name : 'اللجنة'
+    },
+    hrUser: hrCand ? {
+      id: hrCand.id,
+      name: hrCand.arabicName || hrCand.fullName,
+      diplomaticId: hrCand.diplomaticId,
+      subDepartment: hrCand.subDepartment
+    } : null,
+    members,
+    delegates,
+    events: upcomingEvents
+  });
+});
+
+// 2. HR Evaluation of Member or Delegate
+app.post('/api/hr/evaluate', async (req, res) => {
+  const db = getDB();
+  const { hrCandidateId, targetCandidateId, score, commitment, tasks, notes } = req.body;
+
+  if (!targetCandidateId) {
+    return res.status(400).json({ success: false, message: 'لم يتم تحديد العضو أو المندوب المراد تقييمه' });
+  }
+
+  const target = (db.candidates || []).find(c => c.id === targetCandidateId || c.diplomaticId === targetCandidateId);
+  if (!target) {
+    return res.status(404).json({ success: false, message: 'العضو أو المندوب غير موجود' });
+  }
+
+  const hr = (db.candidates || []).find(c => c.id === hrCandidateId || c.diplomaticId === hrCandidateId);
+  const evaluatorName = hr ? (hr.arabicName || hr.fullName) : 'مسؤول الموارد البشرية';
+  const evaluatorId = hr ? hr.diplomaticId : '';
+
+  const parsedScore = score !== undefined && score !== null && score !== '' ? parseFloat(score) : 8;
+
+  if (target.roleType === 'member') {
+    target.memberEvaluation = {
+      score: parsedScore,
+      commitment: commitment || 'ممتاز ومستمر',
+      tasks: tasks || 'منضبط ومتميز',
+      notes: notes || '',
+      evaluatedBy: evaluatorName,
+      evaluatedByDiplomaticId: evaluatorId,
+      evaluatedAt: new Date().toISOString()
+    };
+  } else {
+    target.hrEvaluation = {
+      score: parsedScore,
+      commitment: commitment || 'ممتاز ومستمر',
+      notes: notes || '',
+      evaluatedBy: evaluatorName,
+      evaluatedByDiplomaticId: evaluatorId,
+      evaluatedAt: new Date().toISOString()
+    };
+  }
+
+  logActivity(req, 'تقييم HR لكادر باللجنة', `قام ${evaluatorName} بتقييم ${target.arabicName || target.fullName} بدرجة ${parsedScore}/10`, target.id);
+  await saveDB(db);
+
+  const updatedCpi = calculateCPI(target, db);
+  res.json({
+    success: true,
+    message: `تم حفظ تقييم ${target.arabicName || target.fullName} بنجاح`,
+    candidate: {
+      id: target.id,
+      memberEvaluation: target.memberEvaluation,
+      hrEvaluation: target.hrEvaluation,
+      cpi: updatedCpi
+    }
+  });
+});
+
+// 3. HR Grant Bonus Points
+app.post('/api/hr/grant-bonus', async (req, res) => {
+  const db = getDB();
+  const { hrCandidateId, targetCandidateId, points, reason } = req.body;
+
+  if (!targetCandidateId) {
+    return res.status(400).json({ success: false, message: 'لم يتم تحديد العضو أو المندوب' });
+  }
+
+  const numPoints = parseInt(points, 10);
+  if (isNaN(numPoints) || numPoints <= 0) {
+    return res.status(400).json({ success: false, message: 'يرجى تحديد عدد نقاط بونص صحيح أكبر من صفر' });
+  }
+
+  const target = (db.candidates || []).find(c => c.id === targetCandidateId || c.diplomaticId === targetCandidateId);
+  if (!target) {
+    return res.status(404).json({ success: false, message: 'العضو أو المندوب غير موجود' });
+  }
+
+  const hr = (db.candidates || []).find(c => c.id === hrCandidateId || c.diplomaticId === hrCandidateId);
+  const granterName = hr ? (hr.arabicName || hr.fullName) : 'مسؤول الموارد البشرية';
+  const granterId = hr ? hr.diplomaticId : '';
+
+  target.bonusPoints = (Number(target.bonusPoints) || 0) + numPoints;
+
+  if (!Array.isArray(target.bonusHistory)) {
+    target.bonusHistory = [];
+  }
+
+  target.bonusHistory.push({
+    id: 'bonus_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+    points: numPoints,
+    reason: reason || 'مكافأة تميز وانضباط من مسؤول الموارد البشرية',
+    grantedBy: granterName,
+    grantedByDiplomaticId: granterId,
+    date: new Date().toISOString()
+  });
+
+  logActivity(req, 'منح بونص دبلوماسي', `قام ${granterName} بمنح ${target.arabicName || target.fullName} عدد ${numPoints} نقاط بونص. السبب: ${reason || 'تميز دبلوماسي'}`, target.id);
+  await saveDB(db);
+
+  const updatedCpi = calculateCPI(target, db);
+  res.json({
+    success: true,
+    message: `تم منح ${numPoints} نقاط بونص للعضو ${target.arabicName || target.fullName} بنجاح`,
+    newTotalBonus: target.bonusPoints,
+    cpi: updatedCpi
+  });
+});
+
+// 4. Quick Attendance Toggle (HR & Org)
+app.post('/api/hr/quick-attendance', async (req, res) => {
+  const db = getDB();
+  const { hrCandidateId, targetCandidateId, eventId, status } = req.body;
+
+  const target = (db.candidates || []).find(c => c.id === targetCandidateId || c.diplomaticId === targetCandidateId);
+  if (!target) {
+    return res.status(404).json({ success: false, message: 'العضو أو المندوب غير موجود' });
+  }
+
+  const hr = (db.candidates || []).find(c => c.id === hrCandidateId || c.diplomaticId === hrCandidateId);
+  const recorderName = hr ? (hr.arabicName || hr.fullName) : 'مسؤول التنظيم وHR';
+
+  let booking = (db.eventBookings || []).find(b => b.eventId === eventId && (b.candidateId === target.id || b.userId === target.id) && b.status !== 'cancelled');
+  if (!booking) {
+    booking = {
+      id: 'bk_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+      ticketCode: `TKT-${target.id.slice(-4).toUpperCase()}`,
+      eventId: eventId || 'general',
+      candidateId: target.id,
+      userId: target.id,
+      name: target.arabicName || target.fullName,
+      phone: target.phone || '',
+      userType: target.roleType === 'member' ? 'member' : 'delegate',
+      committeeId: target.assignedCommitteeId || 'general',
+      status: 'confirmed',
+      attendanceStatus: status || 'attended',
+      checkedInAt: new Date().toISOString(),
+      checkinMethod: 'hr_manual',
+      recordedBy: recorderName
+    };
+    db.eventBookings.push(booking);
+  } else {
+    booking.attendanceStatus = status || 'attended';
+    booking.checkedInAt = new Date().toISOString();
+    booking.recordedBy = recorderName;
+  }
+
+  logActivity(req, 'تسجيل حضور عبر HR/تنظيم', `تم تسجيل حالة الحضور (${status}) لـ ${target.arabicName || target.fullName}`, target.id);
+  await saveDB(db);
+
+  res.json({
+    success: true,
+    message: `تم تحديث الحضور للعضو ${target.arabicName || target.fullName} بنجاح`,
+    attendanceStatus: booking.attendanceStatus
+  });
 });
 
 // 2. COMMITTEES APIS

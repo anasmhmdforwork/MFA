@@ -12,6 +12,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
     body {
@@ -136,7 +137,30 @@
         <h3 class="text-lg font-black text-rose-200 mb-2">تعذر عرض الملف الشخصي</h3>
         <p class="text-xs text-rose-300 mb-5">{{ error }}</p>
         <button 
-          @click="redirectToLogin" 
+          @click="redirectToLogin,
+          stopHrQrScanner,
+          startHrQrScanner,
+          toggleHrQuickAttendance,
+          submitHrBonus,
+          openHrBonusModal,
+          submitHrEvaluation,
+          openHrEvalModal,
+          filteredHrDelegates,
+          filteredHrMembers,
+          loadHrCommitteeRoster,
+          hrScannerResult,
+          isSubmittingHrAction,
+          hrBonusForm,
+          hrBonusTarget,
+          showHrBonusModal,
+          hrEvalForm,
+          hrEvalTarget,
+          showHrEvalModal,
+          hrActiveSubTab,
+          hrSearchQuery,
+          hrDelegatesList,
+          hrMembersList,
+          hrCommitteeData" 
           class="btn-gold px-6 py-2.5 rounded-xl text-xs font-black inline-flex items-center gap-2 cursor-pointer"
         >
           <span>الانتقال لصفحة تسجيل الدخول</span>
@@ -223,6 +247,20 @@
           >
             <i data-lucide="award" class="w-4 h-4"></i>
             <span>تقييم الأداء الميداني</span>
+          </button>
+
+          <!-- TAB 5: HR & ORG COMMITTEE MANAGEMENT (FOR HR MEMBERS ONLY) -->
+          <button 
+            v-if="candidate.roleType === 'member' && candidate.subDepartment === 'hr'"
+            @click="activeProfileTab = 'hr_management'; loadHrCommitteeRoster();" 
+            class="px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer flex-shrink-0"
+            :class="activeProfileTab === 'hr_management' ? 'bg-gradient-to-r from-[#f3d685] via-[#dfb147] to-[#c08d24] text-[#1a0f00] font-black shadow-md' : 'text-amber-200/70 hover:text-white hover:bg-amber-950/40'"
+          >
+            <i data-lucide="users" class="w-4 h-4"></i>
+            <span>إدارة وتقييم كوادر اللجنة (HR & تنظيم)</span>
+            <span v-if="hrMembersList && (hrMembersList.length > 0 || hrDelegatesList.length > 0)" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-black" :class="activeProfileTab === 'hr_management' ? 'bg-[#1a0f00] text-amber-300' : 'bg-pink-500/20 text-pink-300'">
+              {{ (hrMembersList ? hrMembersList.length : 0) + (hrDelegatesList ? hrDelegatesList.length : 0) }}
+            </span>
           </button>
 
         </div>
