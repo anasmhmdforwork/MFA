@@ -160,6 +160,7 @@
       padding: 125px 16px 100px;
       position: relative;
       z-index: 20;
+      transition: padding 1.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* Top and bottom antique wooden and brass rollers */
@@ -180,6 +181,9 @@
       padding: 0 12px;
       z-index: 30;
       border: 1px solid rgba(197, 160, 89, 0.5);
+      transition: border-radius 0.6s ease, box-shadow 0.6s ease, transform 1.35s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      user-select: none;
     }
 
     .scroll-finial::before,
@@ -240,14 +244,37 @@
       padding: 60px 48px;
       color: var(--ink-primary);
       overflow: hidden;
+      transition: max-height 1.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                  opacity 0.6s ease, 
+                  padding 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: max-height, opacity;
     }
 
     @media (max-width: 768px) {
+      .parchment-scroll-wrapper.scroll-state-closed {
+        padding-top: calc(34vh - 42px);
+        padding-bottom: 20vh;
+      }
+      .scroll-wax-lock {
+        top: calc(34vh - 1px);
+      }
+      .parchment-scroll-wrapper.scroll-state-opening,
+      .parchment-scroll-wrapper.scroll-state-open {
+        padding-top: 105px;
+        padding-bottom: 80px;
+      }
+      .scroll-finial {
+        height: 42px;
+        width: 100%;
+        margin-left: 0;
+      }
+      .finial-center-seal {
+        font-size: 11px;
+        padding: 2px 8px;
+        gap: 6px;
+      }
       .parchment-continuous-scroll {
         padding: 36px 18px;
-      }
-      .parchment-scroll-wrapper {
-        padding: 105px 8px 80px;
       }
     }
 
@@ -491,86 +518,44 @@
     }
 
     /* =========================================================================
-       DIPLOMATIC LETTER COVER (Closed from both ends, opens after 0.7s)
+       DIPLOMATIC SCROLL MECHANICAL ROLLERS (Top & Bottom Finials Move to Open)
        ========================================================================= */
-    .diplomatic-letter-cover {
-      position: absolute;
-      inset: 0;
-      z-index: 40;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
+    .parchment-scroll-wrapper.scroll-state-closed {
+      padding-top: calc(38vh - 48px);
+      padding-bottom: 25vh;
       cursor: pointer;
-      pointer-events: auto;
-      overflow: hidden;
-      border-radius: 8px;
     }
 
-    /* The Top Flap / End */
-    .letter-flap {
-      width: 100%;
-      height: 50%;
-      position: relative;
-      background: linear-gradient(180deg, #fbf4e2 0%, #f4e8cc 60%, #eeddb8 100%);
-      box-shadow: 
-        inset 0 0 40px rgba(180, 130, 50, 0.2),
-        0 10px 25px rgba(0, 0, 0, 0.4);
-      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease;
-      will-change: transform, opacity;
-      overflow: hidden;
+    .parchment-scroll-wrapper.scroll-state-closed #parchmentContinuousScroll {
+      max-height: 0 !important;
+      height: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      opacity: 0 !important;
+      overflow: hidden !important;
+      border-top-width: 0 !important;
+      border-bottom-width: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
     }
 
-    .flap-top {
-      border-bottom: 2px solid rgba(197, 160, 89, 0.8);
-      transform-origin: top center;
+    .parchment-scroll-wrapper.scroll-state-closed #topScrollFinial {
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.25);
     }
 
-    .flap-bottom {
-      border-top: 2px solid rgba(197, 160, 89, 0.8);
-      transform-origin: bottom center;
+    .parchment-scroll-wrapper.scroll-state-closed #bottomScrollFinial {
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      margin-top: -1px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.75), inset 0 -2px 6px rgba(0, 0, 0, 0.8);
     }
 
-    /* Flap Patterns & Deckled Gilded Hems */
-    .flap-parchment-pattern {
+    /* Central Royal Carmine Wax Seal Lock Holding Closed Scroll */
+    .scroll-wax-lock {
       position: absolute;
-      inset: 0;
-      background-image: radial-gradient(rgba(197, 160, 89, 0.15) 1px, transparent 1px);
-      background-size: 16px 16px;
-      opacity: 0.5;
-    }
-
-    .flap-gilded-hem {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 24px;
-      background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.5) 20%, rgba(197, 160, 89, 0.5) 80%, transparent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #92400e;
-      font-size: 11px;
-      letter-spacing: 4px;
-    }
-
-    .hem-top { bottom: 8px; }
-    .hem-bottom { top: 8px; }
-
-    .hem-brass-corner {
-      width: 10px;
-      height: 10px;
-      background: #c5a059;
-      border-radius: 2px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-    }
-    .hem-brass-corner.left { position: absolute; left: 20px; }
-    .hem-brass-corner.right { position: absolute; right: 20px; }
-
-    /* Central Seam & Wax Seal */
-    .letter-center-seam {
-      position: absolute;
-      top: 50%;
+      top: calc(38vh - 1px);
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 50;
@@ -578,19 +563,23 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+      pointer-events: auto;
+      cursor: pointer;
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
       will-change: transform, opacity;
     }
 
-    .seam-gold-thread {
+    .wax-lock-thread {
       position: absolute;
-      width: 100vw;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #c5a059 30%, #fae5a0 50%, #c5a059 70%, transparent);
-      box-shadow: 0 0 6px rgba(197, 160, 89, 0.7);
+      width: 90vw;
+      max-width: 1040px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #c5a059 25%, #fae5a0 50%, #c5a059 75%, transparent);
+      box-shadow: 0 0 10px rgba(197, 160, 89, 0.8);
+      pointer-events: none;
     }
 
-    .wax-seal-medallion {
+    .wax-lock-medallion {
       position: relative;
       width: 86px;
       height: 86px;
@@ -598,48 +587,51 @@
       background: radial-gradient(circle at 35% 35%, #b91c1c 0%, #881337 55%, #4c0519 100%);
       border: 2.5px solid #fde68a;
       box-shadow: 
-        0 12px 30px rgba(0, 0, 0, 0.6),
+        0 14px 35px rgba(0, 0, 0, 0.75),
         inset 0 3px 5px rgba(255, 255, 255, 0.4),
-        inset 0 -4px 8px rgba(0, 0, 0, 0.7);
+        inset 0 -4px 8px rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.2s ease;
+      transition: transform 0.25s ease;
     }
 
-    .wax-seal-caption {
-      position: absolute;
-      bottom: -22px;
+    .scroll-wax-lock:hover .wax-lock-medallion {
+      transform: scale(1.08) rotate(3deg);
+    }
+
+    .wax-lock-badge {
       white-space: nowrap;
       font-size: 11px;
       font-weight: 800;
-      font-family: 'Amiri', serif;
       color: #78350f;
       background: #fef3c7;
-      border: 1px solid #c5a059;
-      padding: 1px 14px;
+      border: 1.5px solid #c5a059;
+      padding: 2px 16px;
       border-radius: 9999px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      margin-top: -12px;
+      position: relative;
+      z-index: 2;
     }
 
-    .letter-open-prompt {
-      position: absolute;
-      bottom: -50px;
+    .wax-lock-hint {
       white-space: nowrap;
       font-size: 11px;
       font-weight: 700;
       color: #92400e;
-      background: rgba(254, 243, 199, 0.95);
-      padding: 2px 12px;
+      background: rgba(254, 243, 199, 0.96);
+      padding: 3px 14px;
       border-radius: 12px;
-      border: 1px solid rgba(197, 160, 89, 0.4);
+      border: 1px solid rgba(197, 160, 89, 0.5);
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      margin-top: 10px;
     }
 
-    .prompt-dot {
+    .prompt-pulse {
       width: 6px;
       height: 6px;
       background: #b91c1c;
@@ -651,24 +643,32 @@
       50% { opacity: 0.3; transform: scale(0.6); }
     }
 
-    /* Unrolling / Opening Animation Transitions */
-    .diplomatic-letter-cover.is-opening .flap-top {
-      transform: translateY(-105%);
-      opacity: 0;
+    /* OPENING PHASE (.scroll-state-opening) */
+    .parchment-scroll-wrapper.scroll-state-opening {
+      padding-top: 125px;
+      padding-bottom: 100px;
     }
 
-    .diplomatic-letter-cover.is-opening .flap-bottom {
-      transform: translateY(105%);
+    .parchment-scroll-wrapper.scroll-state-opening .scroll-wax-lock {
+      transform: translate(-50%, -50%) scale(1.35) rotate(-18deg);
       opacity: 0;
+      pointer-events: none;
     }
 
-    .diplomatic-letter-cover.is-opening .letter-center-seam {
-      transform: translate(-50%, -50%) scale(1.25) rotate(12deg);
-      opacity: 0;
+    /* OPEN PHASE (.scroll-state-open) */
+    .parchment-scroll-wrapper.scroll-state-open {
+      padding-top: 125px;
+      padding-bottom: 100px;
     }
 
-    .diplomatic-letter-cover.is-opened {
+    .parchment-scroll-wrapper.scroll-state-open .scroll-wax-lock {
       display: none !important;
+    }
+
+    .parchment-scroll-wrapper.scroll-state-open #parchmentContinuousScroll {
+      max-height: none !important;
+      opacity: 1 !important;
+      overflow: visible !important;
     }
 
     /* Floating Cinematic HUD in Royal Parchment Tone */
@@ -814,10 +814,23 @@
   <!-- =========================================================================
        THE CONTINUOUS PARCHMENT SCROLL CONTAINER (Macro Top-Down View)
        ========================================================================= -->
-  <main class="parchment-scroll-wrapper">
+  <main class="parchment-scroll-wrapper scroll-state-closed" id="parchmentScrollWrapper">
 
-    <!-- TOP WOODEN & BRASS SCROLL ROLLER FINIAL -->
-    <div class="scroll-finial">
+    <!-- ROYAL WAX SEAL LOCK (Centrally locks top and bottom finials while closed) -->
+    <div id="scrollCenterWaxLock" class="scroll-wax-lock" onclick="unrollDiplomaticScroll()" title="انقر لفتح الوثيقة">
+      <div class="wax-lock-thread"></div>
+      <div class="wax-lock-medallion">
+        <img src="/logo.jpg" alt="MFA Crest" class="w-14 h-14 rounded-full border-2 border-amber-300 object-cover shadow-inner">
+      </div>
+      <div class="wax-lock-badge font-amiri" data-i18n="hero_seal_badge">المرسوم التأسيسي • معتمد رسمي</div>
+      <div class="wax-lock-hint font-cairo">
+        <span class="prompt-pulse"></span>
+        <span data-i18n="hero_unroll_hint">انقر لفتح الوثيقة أو سيتم الفتح تلقائياً...</span>
+      </div>
+    </div>
+
+    <!-- TOP WOODEN & BRASS SCROLL ROLLER FINIAL (Glides upward on open) -->
+    <div class="scroll-finial top-finial" id="topScrollFinial" onclick="unrollDiplomaticScroll()" title="وثيقة دبلوماسية معتمدة">
       <div class="finial-brass-ring"></div>
       <div class="finial-center-seal">
         <i data-lucide="shield-check" class="w-4 h-4 text-amber-700"></i>
@@ -827,7 +840,7 @@
     </div>
 
     <!-- THE CONTINUOUS SINGLE AGED PARCHMENT SHEET -->
-    <article class="parchment-continuous-scroll">
+    <article class="parchment-continuous-scroll" id="parchmentContinuousScroll">
       
       <!-- Watermark Backgrounds -->
       <div class="parchment-watermark" data-i18n="watermark_ar">وزارة الخارجية المصرية</div>
@@ -836,49 +849,7 @@
       <!-- =====================================================================
            DOCUMENT PREAMBLE / MASTHEAD (Historical Diplomatic Decree Format)
            ===================================================================== -->
-      <header id="diplomaticHeroHeader" class="text-center pb-12 pt-4 relative z-10 border-b-2 border-amber-700/30 overflow-hidden">
-        
-        <!-- CLOSED DIPLOMATIC LETTER COVER (Closed from both ends, opens after 0.7s) -->
-        <div id="diplomaticLetterCover" class="diplomatic-letter-cover" onclick="openDiplomaticLetter()">
-          
-          <!-- Top End / Flap of the sealed missive -->
-          <div class="letter-flap flap-top">
-            <div class="flap-parchment-pattern"></div>
-            <div class="flap-gilded-hem hem-top">
-              <span class="hem-brass-corner left"></span>
-              <span class="hem-ornament">❖ ❖ ❖</span>
-              <span class="hem-brass-corner right"></span>
-            </div>
-          </div>
-
-          <!-- Central Seam & Royal Carmine Wax Seal Locking Both Ends -->
-          <div class="letter-center-seam">
-            <div class="seam-gold-thread"></div>
-            
-            <div class="wax-seal-medallion shadow-2xl">
-              <div class="wax-seal-crest">
-                <img src="/logo.jpg" alt="MFA Crest" class="w-14 h-14 rounded-full border-2 border-amber-300 object-cover shadow-inner">
-              </div>
-              <div class="wax-seal-caption">المرسوم التأسيسي • معتمد رسمي</div>
-            </div>
-
-            <div class="letter-open-prompt">
-              <span class="prompt-dot"></span>
-              <span>انقر لفتح الوثيقة أو سيتم الفتح تلقائياً...</span>
-            </div>
-          </div>
-
-          <!-- Bottom End / Flap of the sealed missive -->
-          <div class="letter-flap flap-bottom">
-            <div class="flap-gilded-hem hem-bottom">
-              <span class="hem-brass-corner left"></span>
-              <span class="hem-ornament">❖ ❖ ❖</span>
-              <span class="hem-brass-corner right"></span>
-            </div>
-            <div class="flap-parchment-pattern"></div>
-          </div>
-
-        </div>
+      <header id="diplomaticHeroHeader" class="text-center pb-12 pt-4 relative z-10 border-b-2 border-amber-700/30">
 
         <!-- Sacred Invocation in Classical Calligraphy -->
         <div class="font-amiri text-3xl sm:text-4xl text-amber-950 font-black mb-3 tracking-wider" style="color: #241305;" data-i18n="doc_invocation">
@@ -2092,8 +2063,8 @@
 
     </article>
 
-    <!-- BOTTOM WOODEN & BRASS SCROLL ROLLER FINIAL -->
-    <div class="scroll-finial">
+    <!-- BOTTOM WOODEN & BRASS SCROLL ROLLER FINIAL (Glides downward on open) -->
+    <div class="scroll-finial bottom-finial" id="bottomScrollFinial" onclick="unrollDiplomaticScroll()" title="ختام الوثيقة التأسيسية">
       <div class="finial-brass-ring"></div>
       <div class="finial-center-seal">
         <i data-lucide="feather" class="w-4 h-4 text-amber-700"></i>
@@ -2969,6 +2940,23 @@
           osc.start();
           osc.stop(this.ctx.currentTime + 0.15);
         } catch(e) {}
+      },
+      unroll() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(320, this.ctx.currentTime + 0.25);
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.3);
+        } catch(e) {}
       }
     };
 
@@ -3032,36 +3020,52 @@
     }
 
     // =========================================================================
-    // DIPLOMATIC MISSIVE AUTO-UNFOLD ENGINE (Closed from both ends, opens after 0.7s)
+    // DIPLOMATIC SCROLL MECHANICAL UNROLL ENGINE
+    // (Top & Bottom Finials Move Apart to Unroll Parchment after 0.7s)
     // =========================================================================
-    let isLetterOpened = false;
+    let isScrollUnrolled = false;
 
-    function openDiplomaticLetter() {
-      if (isLetterOpened) return;
-      isLetterOpened = true;
+    function unrollDiplomaticScroll() {
+      if (isScrollUnrolled) return;
+      isScrollUnrolled = true;
 
-      const cover = document.getElementById('diplomaticLetterCover');
-      if (!cover) return;
+      const wrapper = document.getElementById('parchmentScrollWrapper');
+      const sheet = document.getElementById('parchmentContinuousScroll');
+      if (!wrapper || !sheet) return;
 
-      // Play authentic wax seal snap sound & haptic vibration
+      // 1. Play authentic wax seal snap sound, paper unroll & haptic vibration
       if (typeof tactileAudio !== 'undefined') {
         tactileAudio.stamp();
-        setTimeout(() => tactileAudio.click(), 160);
+        setTimeout(() => {
+          if (typeof tactileAudio.unroll === 'function') tactileAudio.unroll();
+          else tactileAudio.click();
+        }, 160);
       }
-      if (navigator.vibrate) navigator.vibrate([40, 25, 40]);
+      if (navigator.vibrate) navigator.vibrate([45, 30, 45]);
 
-      // Phase 1: Two ends slide apart smoothly
-      cover.classList.add('is-opening');
+      // 2. Measure actual target scroll height of the continuous sheet
+      const targetHeight = sheet.scrollHeight || 6500;
+      sheet.style.maxHeight = targetHeight + 'px';
+      sheet.style.opacity = '1';
 
-      // Phase 2: Fully remove cover from DOM flow after animation finishes
+      // 3. Trigger opening class: Top finial glides up, bottom finial glides down!
+      wrapper.classList.remove('scroll-state-closed');
+      wrapper.classList.add('scroll-state-opening');
+
+      // 4. Once unrolling completes, switch to fully unlocked open state
       setTimeout(() => {
-        cover.classList.add('is-opened');
-        lucide.createIcons();
-      }, 900);
+        wrapper.classList.remove('scroll-state-opening');
+        wrapper.classList.add('scroll-state-open');
+        sheet.style.maxHeight = 'none';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }, 1450);
     }
 
+    // Ensure page starts at top so the closed scroll is visible
+    if (window.scrollY > 0) window.scrollTo(0, 0);
+
     // Automatically open after exactly 0.7s (700ms) on page load
-    setTimeout(openDiplomaticLetter, 700);
+    setTimeout(unrollDiplomaticScroll, 700);
 
     // On Load: Apply Saved or Default Language & Setup Tactile Interactions
     applyLanguage(currentLang);
