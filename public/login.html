@@ -76,11 +76,15 @@
       border-color: #694406 !important;
     }
     .quote-lead {
-      font-size: clamp(16px, 4.2vw, 22px);
+      font-size: clamp(9.5px, 2.65vw, 13.5px);
+      white-space: nowrap !important;
+      letter-spacing: -0.015em;
       line-height: 1.6;
-      display: block;
-      width: 100%;
+      display: inline-block;
+      max-width: 100%;
       text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     @media (max-width: 640px) {
       input {
@@ -127,20 +131,20 @@
         </div>
 
         <!-- Hierarchical Institutional Header (Smallest to Largest) -->
-        <div class="space-y-1 mb-3 text-center">
+        <div class="space-y-1 mb-2.5 text-center">
           <!-- 1. Smallest: Model Entity Title -->
-          <p class="text-xs sm:text-sm font-bold font-kufi text-amber-400 tracking-wider">
+          <p class="text-[10px] sm:text-xs font-bold font-kufi text-amber-400/90 tracking-widest">
             نموذج محاكاة وزارة الخارجية
           </p>
 
           <!-- 2. Medium (Larger): Faculty & University Subtitle -->
-          <h2 class="text-sm sm:text-base md:text-lg font-black font-kufi text-amber-200 tracking-wide">
+          <h2 class="text-xs sm:text-sm font-black font-kufi text-amber-200 tracking-wider">
             كلية السياسة والاقتصاد • جامعة السويس
           </h2>
         </div>
 
-        <!-- 3. Largest: Central Diplomatic Mission Quote (Aref Ruqaa) -->
-        <div class="w-full mt-3 px-2 pt-3 border-t border-amber-600/30 text-center">
+        <!-- 3. Diplomatic Mission Quote (Guaranteed Single Line & Contained) -->
+        <div class="w-full mt-2.5 px-0.5 sm:px-2 pt-2.5 border-t border-amber-600/30 text-center overflow-hidden">
           <p class="quote-lead font-ruqaa font-bold gold-gradient-text">
             حيث يلتقي الفكر الدبلوماسي بالتطبيق المؤسسي، لصناعة أجيال واعية تقود المشهد الدولي.
           </p>
