@@ -157,7 +157,7 @@
     .parchment-scroll-wrapper {
       max-width: 1080px;
       margin: 0 auto;
-      padding: 60px 16px 100px;
+      padding: 125px 16px 100px;
       position: relative;
       z-index: 20;
     }
@@ -247,7 +247,7 @@
         padding: 36px 18px;
       }
       .parchment-scroll-wrapper {
-        padding: 40px 8px 80px;
+        padding: 105px 8px 80px;
       }
     }
 
@@ -683,40 +683,18 @@
         <span id="hudProgressPercent" class="text-xs font-bold text-amber-800 font-mono">0%</span>
       </div>
 
-      <!-- Left/Trailing: Controls, Language Switcher & Portal Actions -->
-      <div class="flex items-center gap-2 sm:gap-2.5">
-        
+      <!-- Left/Trailing: ONLY Language Switcher & Login Buttons -->
+      <div class="flex items-center gap-2 sm:gap-3">
         <!-- BILINGUAL LANGUAGE SWITCHER BUTTON (AR / EN) -->
-        <button id="langToggleBtn" onclick="toggleLanguage()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-200/90 hover:bg-amber-300 text-amber-950 border border-amber-600 font-bold text-xs shadow-sm transition-all hover:scale-105" title="Switch Language / تغيير اللغة">
-          <i data-lucide="languages" class="w-3.5 h-3.5 text-amber-800"></i>
+        <button id="langToggleBtn" onclick="toggleLanguage()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-amber-200/90 hover:bg-amber-300 text-amber-950 border border-amber-600 font-bold text-xs sm:text-sm shadow-sm transition-all hover:scale-105" title="Switch Language / تغيير اللغة">
+          <i data-lucide="languages" class="w-4 h-4 text-amber-800"></i>
           <span id="langBtnLabel">English</span>
         </button>
 
-        <!-- Silent Cinematic Auto-Glide Toggle -->
-        <button id="autoGlideBtn" onclick="toggleAutoGlide()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-500/60 text-xs font-bold transition-all shadow-sm" title="تمرير سينمائي تلقائي صامت">
-          <i data-lucide="play" id="glideIcon" class="w-3.5 h-3.5 text-amber-800"></i>
-          <span id="glideLabel" data-i18n="hud_glide_btn">العرض السينمائي</span>
-        </button>
-
-        <!-- Speed switch (hidden until auto-glide active) -->
-        <button id="glideSpeedBtn" onclick="toggleGlideSpeed()" class="hidden sm:inline-flex items-center px-2 py-1.5 rounded-lg bg-amber-50 text-amber-900 text-xs font-bold border border-amber-400" title="سرعة التمرير">
-          1x
-        </button>
-
-        <!-- Audio ambience toggle (Silent by default) -->
-        <button id="audioToggleBtn" onclick="toggleAmbientSound()" class="p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-400 text-xs transition-all" title="مؤثر صوتي للمخطوطة (صامت افتراضياً)">
-          <i data-lucide="volume-x" id="audioIcon" class="w-4 h-4"></i>
-        </button>
-
-        <!-- Direct Portal Pathways -->
-        <a href="/book" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-600 text-amber-950 font-black text-xs sm:text-sm shadow-md shadow-amber-600/25 transition-all">
-          <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
-          <span data-i18n="hud_book_btn">حجز مقابلة</span>
-        </a>
-
-        <a href="/login" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-100/90 hover:bg-amber-200 text-amber-950 border border-amber-500/70 text-xs font-bold transition-all">
-          <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-700"></i>
-          <span class="hidden sm:inline" data-i18n="hud_login_btn">دخول اللجان</span>
+        <!-- LOGIN BUTTON ONLY -->
+        <a href="/login" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-600 text-amber-950 font-black text-xs sm:text-sm shadow-md shadow-amber-600/25 transition-all hover:scale-105">
+          <i data-lucide="lock" class="w-4 h-4 text-amber-950"></i>
+          <span data-i18n="hud_login_btn">تسجيل الدخول</span>
         </a>
       </div>
 
@@ -804,41 +782,41 @@
       <header class="text-center pb-12 pt-4 relative z-10 border-b-2 border-amber-700/30">
         
         <!-- Sacred Invocation in Classical Calligraphy -->
-        <div class="font-amiri text-2xl sm:text-3xl text-amber-900/90 font-bold mb-4 tracking-wider" data-i18n="doc_invocation">
+        <div class="font-amiri text-3xl sm:text-4xl text-amber-950 font-black mb-3 tracking-wider" style="color: #241305;" data-i18n="doc_invocation">
           بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
         </div>
 
         <!-- Official Republic & University Heading -->
         <div class="flex flex-col items-center justify-center gap-1.5 mb-6 text-amber-950">
-          <span class="font-kufi text-xs sm:text-sm font-semibold tracking-widest text-amber-900 uppercase" data-i18n="doc_republic">
+          <span class="font-kufi text-xs sm:text-sm font-bold tracking-widest text-amber-900 uppercase" data-i18n="doc_republic">
             جمهورية مصر العربية • وزارة التعليم العالي والبحث العلمي
           </span>
-          <span class="font-amiri text-base sm:text-xl font-bold text-amber-950" data-i18n="doc_faculty">
+          <span class="font-amiri text-2xl sm:text-3xl font-black text-amber-950 mt-1" style="color: #201004;" data-i18n="doc_faculty">
             جامعة السويس • كلية السياسة والاقتصاد
           </span>
-          <span class="font-ruqaa text-sm text-amber-900 font-semibold" data-i18n="doc_entity">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-200/80 border border-amber-600/50 text-amber-950 font-bold font-amiri text-base sm:text-lg shadow-sm mt-2" data-i18n="doc_entity">
             نموذج محاكاة وزارة الخارجية المصرية (MFA SM)
-          </span>
+          </div>
         </div>
 
         <!-- Official Central Medallion -->
-        <div class="inline-flex flex-col items-center justify-center p-4 rounded-2xl bg-amber-900/5 border border-amber-600/35 shadow-inner mb-6">
-          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 border-2 border-amber-600/60 p-1 shadow-md mb-2">
+        <div class="inline-flex flex-col items-center justify-center p-5 rounded-2xl bg-amber-100/60 border-2 border-amber-600/40 shadow-sm mb-6 max-w-md mx-auto">
+          <div class="w-24 h-24 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 border-2 border-amber-600 p-1 shadow-md mb-3">
             <img src="/logo.jpg" alt="ختم النسر والنموذج" class="w-full h-full object-cover rounded-full">
           </div>
-          <div class="font-amiri text-xs font-bold text-amber-950" data-i18n="doc_medallion_title">
+          <div class="font-amiri text-base sm:text-lg font-bold text-amber-950 text-center leading-snug" data-i18n="doc_medallion_title">
             وثيقة التأسيس والبيان الاستراتيجي الشامل للدبلوماسية المصرية الشبابية
           </div>
-          <div class="text-[11px] text-amber-800 font-mono mt-0.5">
+          <div class="text-xs text-amber-900 font-mono font-bold mt-1.5 bg-amber-200/70 px-3 py-0.5 rounded-full border border-amber-400">
             Ref: MFA-SU/DECREE-2026/01 • Macro Official Protocol
           </div>
         </div>
 
-        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black font-amiri gold-gradient-title leading-tight mb-4" data-i18n="doc_main_title">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black font-amiri text-amber-950 leading-tight mb-4" style="color: #241305; text-shadow: 0 1px 1px rgba(197, 160, 89, 0.4);" data-i18n="doc_main_title">
           المرسوم التأسيسي والإطار المفاهيمي العام
         </h2>
         
-        <p class="max-w-2xl mx-auto font-ruqaa text-base sm:text-lg text-amber-950/85 leading-relaxed" data-i18n="doc_lead_desc">
+        <p class="max-w-2xl mx-auto font-cairo text-base sm:text-lg font-bold text-amber-950 leading-relaxed" style="color: #2c1707;" data-i18n="doc_lead_desc">
           وثيقة رسمية جامعة تشرح الهيكل، الرؤية، الأهداف الوطنية، والمنظومة التدريبية لنموذج محاكاة وزارة الخارجية بجامعة السويس.
         </p>
 
@@ -1973,7 +1951,7 @@
         hud_brand_sub: "MFA SUEZ 2026",
         hud_official_badge: "الوثيقة الرسمية",
         hud_book_btn: "حجز مقابلة",
-        hud_login_btn: "دخول اللجان",
+        hud_login_btn: "تسجيل الدخول",
         hud_glide_btn: "العرض السينمائي",
         hud_glide_pause: "إيقاف مؤقت",
         astrolabe_label: "البنود",
@@ -2210,7 +2188,7 @@
         hud_brand_sub: "MFA SUEZ 2026",
         hud_official_badge: "Official Charter",
         hud_book_btn: "Book Interview",
-        hud_login_btn: "Committee Login",
+        hud_login_btn: "Login",
         hud_glide_btn: "Cinematic Scroll",
         hud_glide_pause: "Pause Scroll",
         astrolabe_label: "ARTICLES",
