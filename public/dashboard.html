@@ -490,66 +490,95 @@
     
     <!-- Top Header -->
     <header class="bg-[#160c06]/95 backdrop-blur-md text-white border-b border-amber-900/60 shadow-xl sticky top-0 z-40 no-print">
-      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-auto min-h-[64px] py-2.5 sm:h-20 sm:py-0 flex items-center justify-between gap-2">
+      <!-- Main Row -->
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2">
         
-        <!-- Logo & Committee Identity -->
-        <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+        <!-- Logo & Official Identity -->
+        <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1 sm:flex-initial">
           <div class="relative flex-shrink-0">
-            <a href="/" title="الرئيسية"><img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-400/80 object-cover shadow-lg hover:opacity-90 transition"></a>
+            <a href="/" title="الرئيسية"><img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-400/80 object-cover shadow-lg hover:scale-105 transition"></a>
           </div>
-          <div class="min-w-0">
-            <div class="flex items-center gap-1.5 sm:gap-2">
-              <h1 class="font-amiri font-bold text-sm sm:text-xl text-amber-100 leading-tight truncate max-w-[170px] sm:max-w-none">
-                {{ currentUser && currentUser.role === 'directorate' ? currentUser.name : (currentCommittee ? currentCommittee.name : 'الإدارة العامة - جميع اللجان') }}
-              </h1>
-              <span v-if="currentUser && currentUser.role === 'admin'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] sm:text-[11px] font-kufi font-bold border border-amber-500/30 whitespace-nowrap">
-                رئيس النموذج
-              </span>
-              <span v-else-if="currentUser && currentUser.role === 'directorate'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-[11px] font-kufi font-bold border border-amber-400/40 whitespace-nowrap">
-                {{ currentUser.directorateType === 'hr' ? 'رئيس قطاع الموارد البشرية (Head of HR)' : (currentUser.directorateType === 'organization' ? 'رئيس قطاع التنظيم واللوجستيات' : (currentUser.directorateType === 'operations' ? 'مدير إدارة التشغيل العام' : (currentUser.directorateType === 'media' ? 'مسؤول الميديا والإعلام' : 'مسؤول الشؤون الأكاديمية'))) }}
-              </span>
-              <span v-else-if="currentUser && currentUser.role === 'head'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-[11px] font-kufi font-bold border border-amber-400/40 whitespace-nowrap">
-                رئيس اللجنة
-              </span>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <!-- Admin Role Identity -->
+              <template v-if="currentUser && currentUser.role === 'admin'">
+                <h1 class="font-kufi font-black text-sm sm:text-lg text-amber-100 leading-tight truncate">
+                  {{ currentCommittee ? ('رئاسة النموذج • ' + (currentCommittee.shortName || currentCommittee.name)) : 'رئاسة النموذج' }}
+                </h1>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] sm:text-xs font-kufi font-bold border border-amber-500/40 whitespace-nowrap shadow-sm">
+                  <i data-lucide="crown" class="w-3 h-3 text-amber-400"></i>
+                  <span>رئيس النموذج</span>
+                </span>
+              </template>
+
+              <!-- Directorate Role Identity -->
+              <template v-else-if="currentUser && currentUser.role === 'directorate'">
+                <h1 class="font-kufi font-black text-sm sm:text-lg text-amber-100 leading-tight truncate">
+                  {{ currentUser.name }}
+                </h1>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-xs font-kufi font-bold border border-amber-400/40 whitespace-nowrap">
+                  {{ currentUser.directorateType === 'hr' ? 'رئيس قطاع HR' : (currentUser.directorateType === 'organization' ? 'رئيس قطاع التنظيم' : (currentUser.directorateType === 'operations' ? 'مدير التشغيل العام' : (currentUser.directorateType === 'media' ? 'مسؤول الميديا' : 'الشؤون الأكاديمية'))) }}
+                </span>
+              </template>
+
+              <!-- Committee Head Identity -->
+              <template v-else>
+                <h1 class="font-kufi font-black text-sm sm:text-lg text-amber-100 leading-tight truncate">
+                  {{ currentCommittee ? currentCommittee.name : (currentUser ? currentUser.name : 'اللجنة التخصصية') }}
+                </h1>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-xs font-kufi font-bold border border-amber-400/40 whitespace-nowrap">
+                  رئيس اللجنة
+                </span>
+              </template>
             </div>
-            <p class="hidden sm:block text-xs font-kufi text-amber-300/80 font-medium mt-0.5 truncate">
-              {{ currentUser && currentUser.role === 'directorate' ? (currentUser.directorateType === 'hr' ? 'الإدارة المركزية للموارد البشرية • متابعة الكوادر، التقييم، وجداول التشغيل والمهام' : (currentUser.directorateType === 'operations' ? 'إدارة منظومة التشغيل والتقويم الشهري الميداني للموسم الدبلوماسي' : (currentUser.directorateType === 'organization' ? 'إدارة التنظيم واللوجستيات والمتابعة الميدانية' : 'إدارة ومتابعة وتقييم الكوادر التابعة لك في مختلف اللجان'))) : ((currentUser ? currentUser.name : 'مدير اللجنة') + ' • لوحة إدارة وتقييم المقابلات والأنشطة') }}
+
+            <!-- Subtitle Description -->
+            <p class="text-[11px] sm:text-xs font-ruqaa text-amber-300/80 leading-snug mt-0.5 truncate">
+              <template v-if="currentUser && currentUser.role === 'admin'">
+                {{ currentCommittee ? ('متابعة وإشراف مباشر على قطاع ' + currentCommittee.name) : 'الإدارة المركزية • إشراف كامل على كافة القطاعات واللجان والكوادر' }}
+              </template>
+              <template v-else-if="currentUser && currentUser.role === 'directorate'">
+                {{ currentUser.directorateType === 'hr' ? 'الإدارة المركزية للموارد البشرية • متابعة الكوادر والتقييم' : (currentUser.directorateType === 'operations' ? 'منظومة التشغيل والتقويم الشهري الميداني للموسم الدبلوماسي' : (currentUser.directorateType === 'organization' ? 'إدارة التنظيم واللوجستيات والمتابعة الميدانية' : 'متابعة وتقييم الكوادر باللجان')) }}
+              </template>
+              <template v-else>
+                {{ (currentUser ? currentUser.name : 'مدير اللجنة') + ' • لوحة إدارة وتقييم المقابلات والأنشطة' }}
+              </template>
             </p>
           </div>
         </div>
 
-        <!-- Header Actions -->
+        <!-- Header Actions (Desktop Full, Mobile Compact) -->
         <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
           
-          <!-- Live QR Camera Check-in Desk Button -->
+          <!-- Live QR Camera Check-in Desk Button (Desktop) -->
           <button 
             @click="openQrScannerModal"
-            class="btn-gold px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition shadow-lg cursor-pointer"
+            class="hidden sm:inline-flex btn-gold px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-kufi font-black items-center gap-1.5 transition shadow-lg cursor-pointer"
             title="فتح كاميرا مسح كود الـ QR لتحضير الطلاب والندوات"
           >
             <i data-lucide="scan-line" class="w-4 h-4"></i>
-            <span class="hidden sm:inline">تحضير الـ QR</span>
+            <span>تحضير الـ QR</span>
           </button>
 
-          <!-- Copy Student Booking Link Button -->
+          <!-- Copy Student Booking Link Button (Desktop) -->
           <button 
             v-if="currentUser && currentUser.role !== 'directorate'"
             @click="copyBookingLink"
-            class="hidden lg:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-950/50 hover:bg-amber-900/70 text-amber-300 border border-amber-600/40 hover:border-amber-400 text-xs font-bold transition shadow-sm cursor-pointer"
+            class="hidden lg:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-950/50 hover:bg-amber-900/70 text-amber-300 border border-amber-600/40 hover:border-amber-400 text-xs font-kufi font-bold transition shadow-sm cursor-pointer"
             title="نسخ رابط صفحة الحجز لإرساله للطلاب"
           >
             <i data-lucide="link" class="w-3.5 h-3.5"></i>
             <span>{{ copySuccess ? 'تم نسخ الرابط! ' : 'نسخ رابط الحجز للمرشحين' }}</span>
           </button>
 
-          <!-- Committee Switcher (for Admin or Demo) -->
-          <div v-if="currentUser && (currentUser.role === 'admin' || currentUser.role === 'directorate')" class="flex items-center">
+          <!-- Committee Switcher (Desktop) -->
+          <div v-if="currentUser && (currentUser.role === 'admin' || currentUser.role === 'directorate')" class="hidden sm:flex items-center">
             <select 
               v-model="selectedCommitteeId" 
               @change="onCommitteeChange"
-              class="text-[11px] sm:text-xs font-bold bg-[#140904] text-amber-200 border border-amber-600/40 rounded-xl px-2.5 py-1.5 sm:px-3 sm:py-2 outline-none focus:border-amber-400 shadow-sm"
+              class="text-xs font-kufi font-bold bg-[#140904] text-amber-200 border border-amber-600/40 rounded-xl px-3 py-2 outline-none focus:border-amber-400 shadow-sm cursor-pointer"
             >
-              <option value="all">جميع اللجان</option>
+              <option value="all">جميع اللجان (إشراف عام)</option>
               <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.shortName || c.name }}</option>
             </select>
           </div>
@@ -558,7 +587,7 @@
           <a 
             v-if="currentUser && currentUser.role === 'admin'"
             href="/profile?id=c_439_mvkwa9xn"
-            class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-amber-900/40 hover:bg-amber-800/60 text-amber-200 border border-amber-600/40 text-xs font-bold flex items-center gap-1.5 transition"
+            class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-amber-900/40 hover:bg-amber-800/60 text-amber-200 border border-amber-600/40 text-xs font-kufi font-bold flex items-center gap-1.5 transition"
             title="فتح بروفايل المندوب أنس محمد"
           >
             <i data-lucide="user-check" class="w-4 h-4 text-amber-400"></i>
@@ -568,7 +597,7 @@
           <!-- Logout Button -->
           <button 
             @click="logout"
-            class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-950/40 hover:bg-rose-950/80 hover:text-rose-200 text-amber-200 border border-amber-600/30 hover:border-rose-600/50 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+            class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-950/40 hover:bg-rose-950/80 hover:text-rose-200 text-amber-200 border border-amber-600/30 hover:border-rose-600/50 text-xs font-kufi font-bold flex items-center gap-1.5 transition cursor-pointer"
             title="تسجيل الخروج"
           >
             <i data-lucide="log-out" class="w-4 h-4 text-rose-400"></i>
@@ -576,6 +605,41 @@
           </button>
         </div>
 
+      </div>
+
+      <!-- Mobile Quick Controls Bar (Visible on Mobile only: < 640px) -->
+      <div v-if="currentUser" class="sm:hidden border-t border-amber-900/40 bg-[#120803]/90 px-3 py-2 flex items-center gap-2">
+        <!-- Committee Switcher on Mobile (Takes flexible width) -->
+        <div v-if="currentUser.role === 'admin' || currentUser.role === 'directorate'" class="flex-1 min-w-0">
+          <select 
+            v-model="selectedCommitteeId" 
+            @change="onCommitteeChange"
+            class="w-full text-[11px] font-kufi font-bold bg-[#1a0c06] text-amber-200 border border-amber-600/40 rounded-xl px-2.5 py-1.5 outline-none focus:border-amber-400 shadow-sm"
+          >
+            <option value="all">جميع اللجان (إشراف عام)</option>
+            <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.shortName || c.name }}</option>
+          </select>
+        </div>
+
+        <!-- Live QR Camera Button on Mobile -->
+        <button 
+          @click="openQrScannerModal"
+          class="btn-gold px-3 py-1.5 rounded-xl text-[11px] font-kufi font-black flex items-center gap-1.5 transition shadow-md shrink-0 cursor-pointer"
+          title="تحضير الحضور بمسح كود QR"
+        >
+          <i data-lucide="scan-line" class="w-3.5 h-3.5"></i>
+          <span>تحضير QR</span>
+        </button>
+
+        <!-- Copy Booking Link Icon Button on Mobile -->
+        <button 
+          v-if="currentUser.role !== 'directorate'"
+          @click="copyBookingLink"
+          class="p-1.5 rounded-xl bg-amber-950/60 text-amber-300 border border-amber-600/40 text-xs font-bold transition shrink-0 cursor-pointer"
+          :title="copySuccess ? 'تم النسخ!' : 'نسخ رابط الحجز'"
+        >
+          <i :data-lucide="copySuccess ? 'check' : 'link'" class="w-4 h-4"></i>
+        </button>
       </div>
     </header>
 
@@ -8998,8 +9062,10 @@
         });
 
         const publicBookingUrl = computed(() => {
-          const slug = currentCommittee.value ? currentCommittee.value.slug : 'crises';
-          return `${window.location.origin}/book/${slug}`;
+          if (currentCommittee.value && currentCommittee.value.slug) {
+            return `${window.location.origin}/book/${currentCommittee.value.slug}`;
+          }
+          return `${window.location.origin}/book`;
         });
 
         function copyBookingLink() {
