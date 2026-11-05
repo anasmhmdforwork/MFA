@@ -145,31 +145,52 @@
       transition: font-family 0.3s ease;
     }
 
+    /* =========================================================================
+       UNIFIED DIPLOMATIC TYPOGRAPHY ARCHITECTURE
+       Headings & Action Buttons: Reem Kufi
+       Descriptive Content & Preambles: Aref Ruqaa
+       Functional Data & Fields: Cairo
+       ========================================================================= */
+    h1, h2, h3, h4, h5, h6,
+    .font-amiri,
+    .gold-gradient-title,
+    .section-title,
+    .font-kufi,
+    .btn-gold,
+    .wax-lock-badge,
+    .diplomatic-badge {
+      font-family: 'Reem Kufi', sans-serif !important;
+    }
+
+    .font-ruqaa,
+    .ink-lead,
+    [data-i18n="doc_lead_desc"],
+    .parchment-lead {
+      font-family: 'Aref Ruqaa', serif !important;
+    }
+
     /* English LTR Mode Styling Overrides */
     html[lang="en"] body {
       font-family: 'Cairo', 'Cormorant Garamond', sans-serif;
     }
     html[lang="en"] .gold-gradient-title,
+    html[lang="en"] h1,
     html[lang="en"] h2,
-    html[lang="en"] h3 {
+    html[lang="en"] h3,
+    html[lang="en"] h4,
+    html[lang="en"] h5,
+    html[lang="en"] .font-amiri,
+    html[lang="en"] .font-kufi {
       font-family: 'Cinzel', serif !important;
       letter-spacing: 0.03em;
     }
-    html[lang="en"] .ink-lead {
+    html[lang="en"] .ink-lead,
+    html[lang="en"] .font-ruqaa,
+    html[lang="en"] [data-i18n="doc_lead_desc"] {
       font-family: 'Cormorant Garamond', serif !important;
       font-size: 1.25rem !important;
       line-height: 1.85 !important;
       font-weight: 600 !important;
-    }
-    html[lang="en"] .font-amiri {
-      font-family: 'Cinzel', serif !important;
-    }
-    html[lang="en"] .font-ruqaa {
-      font-family: 'Cormorant Garamond', italic, serif !important;
-    }
-    html[lang="en"] .font-kufi {
-      font-family: 'Cinzel', sans-serif !important;
-      letter-spacing: 0.08em;
     }
     html[lang="en"] .diplomatic-astrolabe-nav {
       left: 20px;
@@ -1236,7 +1257,7 @@
           المرسوم التأسيسي والإطار المفاهيمي العام
         </h2>
         
-        <p class="max-w-2xl mx-auto font-cairo text-base sm:text-lg font-bold text-amber-950 leading-relaxed" style="color: #2c1707;" data-i18n="doc_lead_desc">
+        <p class="max-w-2xl mx-auto font-ruqaa ink-lead text-base sm:text-lg font-bold text-amber-950 leading-relaxed" style="color: #2c1707;" data-i18n="doc_lead_desc">
           وثيقة رسمية جامعة تشرح الهيكل، الرؤية، الأهداف الوطنية، والمنظومة التدريبية لنموذج محاكاة وزارة الخارجية بجامعة السويس.
         </p>
 

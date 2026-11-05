@@ -35,14 +35,23 @@
       background: radial-gradient(circle at 50% 25%, #2c170b 0%, #180d05 60%, #0b0602 100%), #120a04;
       background-attachment: fixed;
     }
-    .font-amiri { font-family: 'Amiri', serif; }
-    .font-kufi { font-family: 'Reem Kufi', sans-serif; }
-    .font-ruqaa { font-family: 'Aref Ruqaa', serif; }
+    /* =========================================================================
+       UNIFIED DIPLOMATIC TYPOGRAPHY ARCHITECTURE
+       Headings & Action Buttons: Reem Kufi
+       Descriptive Content & Preambles: Aref Ruqaa
+       Functional Data & Fields: Cairo
+       ========================================================================= */
+    h1, h2, h3, h4, h5, h6,
+    .font-kufi,
+    .font-amiri,
+    .btn-gold,
     .gold-gradient-text {
-      background: linear-gradient(180deg, #ffffff 0%, #fef08a 30%, #f59e0b 70%, #d97706 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
+      font-family: 'Reem Kufi', sans-serif !important;
+    }
+
+    .font-ruqaa,
+    .single-line-quote {
+      font-family: 'Aref Ruqaa', serif !important;
     }
     .diplomatic-card {
       background: rgba(24, 15, 10, 0.94);
@@ -123,15 +132,15 @@
           جمهورية مصر العربية • جامعة السويس
         </p>
 
-        <!-- Main Title Swapped as Requested with Original Calligraphy Fonts -->
+        <!-- Main Titles (Reem Kufi) -->
         <div class="space-y-1 mb-2">
-          <!-- 1. First Line (Swapped): Faculty & Portal (Aref Ruqaa) -->
-          <h2 class="text-sm sm:text-base font-bold text-amber-200/90 font-ruqaa leading-normal">
+          <!-- 1. Faculty & Portal Subheading (Reem Kufi) -->
+          <h2 class="text-sm sm:text-base font-bold text-amber-200/90 font-kufi leading-normal">
             كلية السياسة والاقتصاد • بوابة الدخول الرسمية
           </h2>
 
-          <!-- 2. Second Line (Swapped): Model Main Title (Amiri) -->
-          <h1 class="text-2xl sm:text-3xl font-black font-amiri leading-tight mt-0.5">
+          <!-- 2. Model Main Title (Reem Kufi) -->
+          <h1 class="text-2xl sm:text-3xl font-black font-kufi leading-tight mt-0.5">
             <span class="gold-gradient-text">
               نموذج محاكاة وزارة الخارجية
             </span>

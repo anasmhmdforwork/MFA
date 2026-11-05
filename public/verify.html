@@ -22,13 +22,24 @@
       background: radial-gradient(circle at 50% 15%, #2c170b 0%, #180d05 60%, #0b0602 100%), #120a04;
       background-attachment: fixed;
     }
-    .font-amiri { font-family: 'Amiri', serif; }
-    .font-kufi { font-family: 'Reem Kufi', sans-serif; }
-    .font-ruqaa { font-family: 'Aref Ruqaa', serif; }
+    /* =========================================================================
+       UNIFIED DIPLOMATIC TYPOGRAPHY ARCHITECTURE
+       Headings & Action Buttons: Reem Kufi
+       Descriptive Content & Preambles: Aref Ruqaa
+       Functional Data & Fields: Cairo
+       ========================================================================= */
+    h1, h2, h3, h4, h5, h6,
+    .font-kufi,
+    .font-amiri,
+    .btn-gold,
     .gold-gradient-text {
-      background: linear-gradient(135deg, #fef08a 0%, #dfb147 50%, #c08d24 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-family: 'Reem Kufi', sans-serif !important;
+    }
+
+    .font-ruqaa,
+    .verify-lead,
+    .diplomatic-note {
+      font-family: 'Aref Ruqaa', serif !important;
     }
     .diplomatic-card {
       background: rgba(24, 15, 10, 0.94);
