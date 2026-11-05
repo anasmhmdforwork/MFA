@@ -861,36 +861,36 @@
        FLOATING TOP CINEMATIC HEADS-UP DISPLAY (HUD) IN ROYAL PARCHMENT
        ========================================================================= -->
   <header class="cinematic-hud" dir="ltr">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-2">
       
       <!-- Left/Leading: Crest and Title -->
-      <div class="flex items-center gap-3">
-        <a href="/" class="flex items-center gap-3 group">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform">
+      <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+        <a href="/" class="flex items-center gap-2 sm:gap-3 group">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform flex-shrink-0">
             <img src="/logo.jpg" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-xl">
           </div>
           <div class="text-start">
             <div class="flex items-center gap-2">
-              <span class="text-amber-800 font-bold font-kufi text-xs tracking-wider" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
+              <span class="text-amber-800 font-bold font-kufi text-[10px] sm:text-xs tracking-wider" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
             </div>
-            <h1 class="text-amber-950 font-black text-sm sm:text-base font-amiri tracking-wide leading-tight" data-i18n="hud_brand_title">
-              نموذج محاكاة وزارة الخارجية المصرية
+            <h1 class="text-amber-950 font-black text-xs sm:text-base font-amiri tracking-wide leading-tight sm:leading-tight" data-i18n="hud_brand_title">
+              <span class="block sm:inline">نموذج محاكاة</span> <span class="block sm:inline">وزارة الخارجية المصرية</span>
             </h1>
           </div>
         </a>
       </div>
 
-      <!-- Left/Trailing: ONLY Language Switcher & Login Buttons -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Right/Trailing: ONLY Language Switcher & Login Buttons -->
+      <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
         <!-- BILINGUAL LANGUAGE SWITCHER BUTTON (AR / EN) -->
-        <button id="langToggleBtn" onclick="toggleLanguage()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-amber-200/90 hover:bg-amber-300 text-amber-950 border border-amber-600 font-bold text-xs sm:text-sm shadow-sm transition-all hover:scale-105" title="Switch Language / تغيير اللغة">
-          <i data-lucide="languages" class="w-4 h-4 text-amber-800"></i>
+        <button id="langToggleBtn" onclick="toggleLanguage()" class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-amber-200/90 hover:bg-amber-300 text-amber-950 border border-amber-600 font-bold text-xs sm:text-sm shadow-sm transition-all hover:scale-105" title="Switch Language / تغيير اللغة">
+          <i data-lucide="languages" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-800"></i>
           <span id="langBtnLabel">English</span>
         </button>
 
         <!-- LOGIN BUTTON ONLY -->
-        <a href="/login" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-600 text-amber-950 font-black text-xs sm:text-sm shadow-md shadow-amber-600/25 transition-all hover:scale-105">
-          <i data-lucide="lock" class="w-4 h-4 text-amber-950"></i>
+        <a href="/login" class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-600 text-amber-950 font-black text-xs sm:text-sm shadow-md shadow-amber-600/25 transition-all hover:scale-105">
+          <i data-lucide="lock" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-950"></i>
           <span data-i18n="hud_login_btn">تسجيل الدخول</span>
         </a>
       </div>
@@ -2184,7 +2184,7 @@
     const translations = {
       ar: {
         page_title: "الوثيقة الرسمية والبيان التأسيسي | نموذج محاكاة وزارة الخارجية - جامعة السويس",
-        hud_brand_title: "نموذج محاكاة وزارة الخارجية المصرية",
+        hud_brand_title: "<span class='block sm:inline'>نموذج محاكاة</span> <span class='block sm:inline'>وزارة الخارجية المصرية</span>",
         hud_brand_sub: "MFA SUEZ 2026",
         hud_official_badge: "الوثيقة الرسمية",
         hud_book_btn: "حجز مقابلة",
@@ -2431,7 +2431,7 @@
       },
       en: {
         page_title: "Official Founding Manifesto | Simulation Model of the Egyptian Ministry of Foreign Affairs - Suez University",
-        hud_brand_title: "Simulation Model of Egyptian Ministry of Foreign Affairs",
+        hud_brand_title: "<span class='block sm:inline'>Simulation Model of</span> <span class='block sm:inline'>Egyptian Foreign Affairs</span>",
         hud_brand_sub: "MFA SUEZ 2026",
         hud_official_badge: "Official Charter",
         hud_book_btn: "Book Interview",
