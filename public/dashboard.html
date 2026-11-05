@@ -2153,6 +2153,12 @@
                           مندوب
                         </span>
                         <span 
+                          v-else-if="cand.evaluation.decision === 'accepted' && cand.subDepartment === 'organization'"
+                          class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-950/50 text-amber-300 border border-amber-500/40"
+                        >
+                          عضو تنظيم
+                        </span>
+                        <span 
                           v-else-if="cand.evaluation.decision === 'accepted' && cand.subDepartment === 'hr'"
                           class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-950/50 text-amber-200 border border-amber-600/30"
                         >
@@ -2318,7 +2324,7 @@
                         مندوب
                       </span>
                       <span v-else-if="cand.evaluation.decision === 'accepted' && cand.subDepartment" class="px-1 py-0.2 rounded text-[9px] font-bold bg-pink-50 text-pink-700 border border-pink-200">
-                        عضو {{ cand.subDepartment }}
+                        عضو {{ cand.subDepartment === 'organization' ? 'تنظيم' : (cand.subDepartment === 'hr' ? 'HR' : (cand.subDepartment === 'media' ? 'ميديا' : 'أكاديمي')) }}
                       </span>
                     </div>
                   </div>
@@ -2616,7 +2622,7 @@
 
             <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center col-span-2 sm:col-span-1 shadow-md hover:border-amber-500/50 transition">
               <span class="block text-xs font-bold text-amber-200/70 mb-1">أعضاء الهيكل (لجان)</span>
-              <span class="text-2xl sm:text-3xl font-black text-amber-100 font-mono">{{ hrCount + mediaCount + academicCount }}</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-100 font-mono">{{ organizationCount + hrCount + mediaCount + academicCount }}</span>
             </div>
           </div>
 
@@ -2762,6 +2768,14 @@
             >
               <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
               <span>المناديب ({{ delegatesCount }})</span>
+            </button>
+
+            <button 
+              @click="noticeRoleFilter = 'organization'"
+              :class="noticeRoleFilter === 'organization' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1 cursor-pointer"
+            >
+              <span>تنظيم ({{ organizationCount }})</span>
             </button>
 
             <button 
@@ -3588,8 +3602,8 @@
             </button>
           </div>
 
-          <!-- Summary Metric Counters -->
-          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <!-- Summary Metric Counters (6 Pillars: Total, Delegates, Organization, HR, Media, Academic) -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
               <span class="block text-xs font-bold text-amber-200/70 mb-1">إجمالي المقبولين</span>
               <span class="text-2xl sm:text-3xl font-black text-amber-300 font-mono">{{ acceptedMembersList.length }}</span>
@@ -3601,16 +3615,21 @@
             </div>
 
             <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">قطاع التنظيم</span>
+              <span class="text-2xl sm:text-3xl font-black text-amber-300 font-mono">{{ organizationCount }}</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
               <span class="block text-xs font-bold text-amber-200/70 mb-1">موارد بشرية (HR)</span>
               <span class="text-2xl sm:text-3xl font-black text-amber-400 font-mono">{{ hrCount }}</span>
             </div>
 
             <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
-              <span class="block text-xs font-bold text-amber-200/70 mb-1">ميديا وإعلام (Media)</span>
+              <span class="block text-xs font-bold text-amber-200/70 mb-1">ميديا وإعلام</span>
               <span class="text-2xl sm:text-3xl font-black text-amber-100 font-mono">{{ mediaCount }}</span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center col-span-2 sm:col-span-1 shadow-md hover:border-amber-500/50 transition">
+            <div class="p-4 rounded-2xl bg-[#1c0f08]/90 border border-amber-600/30 text-center shadow-md hover:border-amber-500/50 transition">
               <span class="block text-xs font-bold text-amber-200/70 mb-1">أكاديمي وتدريب</span>
               <span class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">{{ academicCount }}</span>
             </div>
@@ -3721,10 +3740,11 @@
                 </div>
 
                 <!-- Role Badge -->
-                <span v-if="(cand.roleType || 'delegate') === 'delegate'" class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold">مندوب (Delegate)</span>
-                <span v-else-if="cand.subDepartment === 'hr'" class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold">عضو HR</span>
-                <span v-else-if="cand.subDepartment === 'media'" class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold">عضو ميديا</span>
-                <span v-else class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold">عضو أكاديمي</span>
+                <span v-if="(cand.roleType || 'delegate') === 'delegate'" class="px-2.5 py-1 rounded-full bg-amber-950/50 text-amber-200 border border-amber-600/30 text-[10px] font-bold font-mono">مندوب (Delegate)</span>
+                <span v-else-if="cand.subDepartment === 'organization'" class="px-2.5 py-1 rounded-full bg-amber-950/60 text-amber-300 border border-amber-500/40 text-[10px] font-bold font-mono">عضو تنظيم</span>
+                <span v-else-if="cand.subDepartment === 'hr'" class="px-2.5 py-1 rounded-full bg-amber-950/60 text-amber-300 border border-amber-500/40 text-[10px] font-bold font-mono">عضو موارد بشرية (HR)</span>
+                <span v-else-if="cand.subDepartment === 'media'" class="px-2.5 py-1 rounded-full bg-amber-950/60 text-amber-300 border border-amber-500/40 text-[10px] font-bold font-mono">عضو ميديا</span>
+                <span v-else class="px-2.5 py-1 rounded-full bg-amber-950/60 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold font-mono">عضو أكاديمي</span>
               </div>
 
               <!-- Contact & Details -->
@@ -8097,6 +8117,7 @@
           if (c.subDepartment === 'academic') {
             return female ? 'عضوة أكاديمية وتدريب (Academic)' : 'عضو أكاديمي وتدريب (Academic)';
           }
+          if (c.subDepartment === 'organization') return female ? 'عضوة تنظيم ولوجستيات' : 'عضو تنظيم ولوجستيات';
           return female ? 'عضوة في الهيكل التنظيمي' : 'عضو في الهيكل التنظيمي';
         }
 
@@ -8275,7 +8296,7 @@
           let list = acceptedMembersList.value;
           if (noticeRoleFilter.value === 'delegate') {
             list = list.filter(c => (c.roleType || 'delegate') === 'delegate');
-          } else if (['hr', 'media', 'academic'].includes(noticeRoleFilter.value)) {
+          } else if (['organization', 'hr', 'media', 'academic'].includes(noticeRoleFilter.value)) {
             list = list.filter(c => c.roleType === 'member' && c.subDepartment === noticeRoleFilter.value);
           }
 
