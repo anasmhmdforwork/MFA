@@ -192,22 +192,24 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 32px;
-      height: 60px;
+      width: 30px;
+      height: 44px;
       background: radial-gradient(circle, #fae5a0 0%, #c5a059 40%, #7d591b 80%, #3e2808 100%);
       border-radius: 8px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.6);
       border: 1px solid #ffe8a3;
+      transition: all 0.5s ease;
     }
-    .scroll-finial::before { left: -16px; border-radius: 12px 4px 4px 12px; }
-    .scroll-finial::after { right: -16px; border-radius: 4px 12px 12px 4px; }
+    .scroll-finial::before { left: -15px; border-radius: 10px 4px 4px 10px; }
+    .scroll-finial::after { right: -15px; border-radius: 4px 10px 10px 4px; }
 
     .finial-brass-ring {
-      width: 18px;
-      height: 52px;
+      width: 14px;
+      height: 34px;
       background: linear-gradient(90deg, #7d591b, #fae5a0, #c5a059, #593d0f);
       border-radius: 3px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      transition: all 0.4s ease;
     }
 
     .finial-center-seal {
@@ -223,6 +225,7 @@
       font-weight: 700;
       letter-spacing: 0.05em;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+      transition: opacity 0.45s ease, transform 0.45s ease;
     }
 
     /* THE CONTINUOUS PARCHMENT BODY */
@@ -252,11 +255,24 @@
 
     @media (max-width: 768px) {
       .parchment-scroll-wrapper.scroll-state-closed {
+        max-width: 100%;
         padding-top: calc(34vh - 42px);
         padding-bottom: 20vh;
       }
       .scroll-wax-lock {
-        top: calc(34vh - 1px);
+        top: 34vh;
+      }
+      .wax-lock-sash {
+        left: 8px;
+        right: 8px;
+        padding: 0 16px;
+      }
+      .sash-gold-braid {
+        display: none;
+      }
+      .wax-lock-medallion {
+        width: 72px;
+        height: 72px;
       }
       .parchment-scroll-wrapper.scroll-state-opening,
       .parchment-scroll-wrapper.scroll-state-open {
@@ -518,9 +534,14 @@
     }
 
     /* =========================================================================
-       DIPLOMATIC SCROLL MECHANICAL ROLLERS (Top & Bottom Finials Move to Open)
+       DIPLOMATIC SCROLL MECHANICAL ROLLERS (Harmonious Closed & Open States)
        ========================================================================= */
+
+    /* -------------------------------------------------------------
+       CLOSED STATE: Harmonious, Clean, Balanced Diplomacy Scroll
+       ------------------------------------------------------------- */
     .parchment-scroll-wrapper.scroll-state-closed {
+      max-width: 920px;
       padding-top: calc(38vh - 48px);
       padding-bottom: 25vh;
       cursor: pointer;
@@ -539,23 +560,55 @@
       margin-bottom: 0 !important;
     }
 
+    /* HIDE THE INDIVIDUAL TEXT BADGES WHILE CLOSED SO THEY NEVER CLASH WITH THE SEAL */
+    .parchment-scroll-wrapper.scroll-state-closed .finial-center-seal {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transform: scale(0.85) !important;
+      pointer-events: none !important;
+    }
+
+    /* Seamless cylindrical 3D shading on the two closed finials */
     .parchment-scroll-wrapper.scroll-state-closed #topScrollFinial {
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 4px;
-      box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.25);
+      border-radius: 24px 24px 0 0 !important;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.35) !important;
+      background: linear-gradient(180deg, #522c15 0%, #3a1e0e 40%, #201007 80%, #160a04 100%) !important;
+      box-shadow: 
+        0 -8px 25px rgba(0, 0, 0, 0.6),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 5px rgba(0, 0, 0, 0.6) !important;
     }
 
     .parchment-scroll-wrapper.scroll-state-closed #bottomScrollFinial {
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-      margin-top: -1px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.75), inset 0 -2px 6px rgba(0, 0, 0, 0.8);
+      border-radius: 0 0 24px 24px !important;
+      border-top: 1px solid rgba(197, 160, 89, 0.35) !important;
+      margin-top: 0px !important;
+      background: linear-gradient(180deg, #160a04 0%, #201007 20%, #3a1e0e 60%, #522c15 100%) !important;
+      box-shadow: 
+        0 18px 45px rgba(0, 0, 0, 0.85),
+        inset 0 2px 5px rgba(0, 0, 0, 0.6),
+        inset 0 -2px 4px rgba(255, 255, 255, 0.2) !important;
     }
 
-    /* Central Royal Carmine Wax Seal Lock Holding Closed Scroll */
+    /* UNIFIED BRASS HANDLES ON LEFT & RIGHT:
+       Top knob seamlessly spans the entire 96px closed cylinder; bottom knob is hidden */
+    .parchment-scroll-wrapper.scroll-state-closed #topScrollFinial::before,
+    .parchment-scroll-wrapper.scroll-state-closed #topScrollFinial::after {
+      height: 80px !important;
+      top: 48px !important; /* perfectly centered on the seam */
+      transform: translateY(-50%) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75), inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
+    }
+    .parchment-scroll-wrapper.scroll-state-closed #bottomScrollFinial::before,
+    .parchment-scroll-wrapper.scroll-state-closed #bottomScrollFinial::after {
+      display: none !important;
+    }
+
+    /* Central Royal Carmine Wax Seal & Diplomatic Sash Lock */
     .scroll-wax-lock {
       position: absolute;
-      top: calc(38vh - 1px);
+      top: 38vh;
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 50;
@@ -565,18 +618,38 @@
       justify-content: center;
       pointer-events: auto;
       cursor: pointer;
+      width: 100%;
+      max-width: 920px;
       transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
       will-change: transform, opacity;
     }
 
-    .wax-lock-thread {
+    /* Luxurious Royal Diplomatic Sash Ribbon Band */
+    .wax-lock-sash {
       position: absolute;
-      width: 90vw;
-      max-width: 1040px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #c5a059 25%, #fae5a0 50%, #c5a059 75%, transparent);
-      box-shadow: 0 0 10px rgba(197, 160, 89, 0.8);
+      left: 20px;
+      right: 20px;
+      height: 32px;
+      background: linear-gradient(180deg, #701010 0%, #991b1b 50%, #701010 100%);
+      border-top: 1.5px solid #fde68a;
+      border-bottom: 1.5px solid #fde68a;
+      box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.6),
+        inset 0 1px 3px rgba(255, 255, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
       pointer-events: none;
+    }
+
+    .sash-gold-braid {
+      color: #fde68a;
+      font-size: 11px;
+      letter-spacing: 6px;
+      opacity: 0.85;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      user-select: none;
     }
 
     .wax-lock-medallion {
@@ -585,15 +658,16 @@
       height: 86px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, #b91c1c 0%, #881337 55%, #4c0519 100%);
-      border: 2.5px solid #fde68a;
+      border: 3px solid #fde68a;
       box-shadow: 
-        0 14px 35px rgba(0, 0, 0, 0.75),
-        inset 0 3px 5px rgba(255, 255, 255, 0.4),
-        inset 0 -4px 8px rgba(0, 0, 0, 0.8);
+        0 14px 35px rgba(0, 0, 0, 0.85),
+        inset 0 3px 5px rgba(255, 255, 255, 0.45),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.85);
       display: flex;
       align-items: center;
       justify-content: center;
       transition: transform 0.25s ease;
+      z-index: 2;
     }
 
     .scroll-wax-lock:hover .wax-lock-medallion {
@@ -602,40 +676,43 @@
 
     .wax-lock-badge {
       white-space: nowrap;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
       color: #78350f;
-      background: #fef3c7;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
       border: 1.5px solid #c5a059;
-      padding: 2px 16px;
+      padding: 3px 18px;
       border-radius: 9999px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      margin-top: -12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      margin-top: 8px;
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
 
     .wax-lock-hint {
       white-space: nowrap;
       font-size: 11px;
       font-weight: 700;
-      color: #92400e;
-      background: rgba(254, 243, 199, 0.96);
-      padding: 3px 14px;
-      border-radius: 12px;
+      color: #fef3c7;
+      background: rgba(30, 15, 6, 0.85);
+      padding: 4px 16px;
+      border-radius: 9999px;
       border: 1px solid rgba(197, 160, 89, 0.5);
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
       margin-top: 10px;
+      backdrop-filter: blur(8px);
+      z-index: 3;
     }
 
     .prompt-pulse {
       width: 6px;
       height: 6px;
-      background: #b91c1c;
+      background: #ef4444;
       border-radius: 50%;
+      box-shadow: 0 0 8px #ef4444;
       animation: promptPulse 1s infinite;
     }
     @keyframes promptPulse {
@@ -643,8 +720,11 @@
       50% { opacity: 0.3; transform: scale(0.6); }
     }
 
-    /* OPENING PHASE (.scroll-state-opening) */
+    /* -------------------------------------------------------------
+       OPENING PHASE (.scroll-state-opening)
+       ------------------------------------------------------------- */
     .parchment-scroll-wrapper.scroll-state-opening {
+      max-width: 1080px;
       padding-top: 125px;
       padding-bottom: 100px;
     }
@@ -655,8 +735,18 @@
       pointer-events: none;
     }
 
-    /* OPEN PHASE (.scroll-state-open) */
+    .parchment-scroll-wrapper.scroll-state-opening .finial-center-seal,
+    .parchment-scroll-wrapper.scroll-state-open .finial-center-seal {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: scale(1) !important;
+    }
+
+    /* -------------------------------------------------------------
+       OPEN PHASE (.scroll-state-open)
+       ------------------------------------------------------------- */
     .parchment-scroll-wrapper.scroll-state-open {
+      max-width: 1080px;
       padding-top: 125px;
       padding-bottom: 100px;
     }
@@ -818,11 +908,18 @@
 
     <!-- ROYAL WAX SEAL LOCK (Centrally locks top and bottom finials while closed) -->
     <div id="scrollCenterWaxLock" class="scroll-wax-lock" onclick="unrollDiplomaticScroll()" title="انقر لفتح الوثيقة">
-      <div class="wax-lock-thread"></div>
+      <!-- Ornate Diplomatic Sash Ribbon Band across the closed scroll -->
+      <div class="wax-lock-sash">
+        <div class="sash-gold-braid left"><span>❖ ❖ ❖</span></div>
+        <div class="sash-gold-braid right"><span>❖ ❖ ❖</span></div>
+      </div>
+      <!-- Royal Carmine Wax Seal Medallion -->
       <div class="wax-lock-medallion">
         <img src="/logo.jpg" alt="MFA Crest" class="w-14 h-14 rounded-full border-2 border-amber-300 object-cover shadow-inner">
       </div>
+      <!-- Official Badge -->
       <div class="wax-lock-badge font-amiri" data-i18n="hero_seal_badge">المرسوم التأسيسي • معتمد رسمي</div>
+      <!-- Unroll Prompt -->
       <div class="wax-lock-hint font-cairo">
         <span class="prompt-pulse"></span>
         <span data-i18n="hero_unroll_hint">انقر لفتح الوثيقة أو سيتم الفتح تلقائياً...</span>
