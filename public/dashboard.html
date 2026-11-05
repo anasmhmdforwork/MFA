@@ -661,7 +661,7 @@
                 :class="activeTab === 'gradebook' ? 'tab-active' : 'tab-inactive'"
                 class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
               >
-                <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="file-spreadsheet" class="w-4 h-4 text-amber-400"></i>
                 <span>سجل الدرجات والغياب (Excel)</span>
               </button>
 
@@ -670,7 +670,7 @@
                 :class="activeTab === 'quizzes' ? 'tab-active' : 'tab-inactive'"
                 class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
               >
-                <i data-lucide="qr-code" class="w-4 h-4 text-purple-600"></i>
+                <i data-lucide="qr-code" class="w-4 h-4 text-amber-400"></i>
                 <span>الاختبارات والـ QR</span>
               </button>
             </template>
@@ -740,7 +740,7 @@
               :class="activeTab === 'notices' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
-              <i data-lucide="send" class="w-4 h-4 text-emerald-600"></i>
+              <i data-lucide="send" class="w-4 h-4 text-amber-400"></i>
               <span>إبلاغ المقبولين ({{ acceptedMembersList.length }})</span>
             </button>
 
@@ -750,7 +750,7 @@
               :class="activeTab === 'structure' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
-              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
               <span>الهيكل والأعضاء ({{ acceptedMembersList.length }})</span>
             </button>
 
@@ -770,7 +770,7 @@
               :class="activeTab === 'quizzes' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
-              <i data-lucide="qr-code" class="w-4 h-4 text-purple-600"></i>
+              <i data-lucide="qr-code" class="w-4 h-4 text-amber-400"></i>
               <span>الاختبارات والـ QR ({{ committeeQuizzes.length }})</span>
             </button>
 
@@ -780,7 +780,7 @@
               :class="activeTab === 'gradebook' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
-              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i>
+              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-amber-400"></i>
               <span>سجل الدرجات والغياب (Excel)</span>
             </button>
 
@@ -822,7 +822,7 @@
               :class="activeTab === 'secondary' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
-              <i data-lucide="bookmark" class="w-4 h-4 text-purple-600"></i>
+              <i data-lucide="bookmark" class="w-4 h-4 text-amber-400"></i>
               <span>مرشحو الرغبة الثانية ({{ secondaryCandidates.length }})</span>
             </button>
           </template>
@@ -887,7 +887,7 @@
                 @click="activeTab = 'directorate_members'" 
                 class="btn-gold px-4 py-2.5 rounded-xl text-xs font-black transition cursor-pointer flex items-center gap-2 shadow-md"
               >
-                <i data-lucide="user-check" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="user-check" class="w-4 h-4 text-amber-400"></i>
                 <span>فتح كشف التقييمات</span>
               </button>
             </div>
@@ -1216,18 +1216,16 @@
               <!-- Top row: Avatar & Committee Badge -->
               <div class="flex items-start justify-between gap-3 mb-3">
                 <div class="flex items-center gap-3">
-                  <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-black text-white text-base shadow-sm"
-                       :class="currentUser && currentUser.directorateType === 'hr' ? 'bg-pink-600' : (currentUser && currentUser.directorateType === 'media' ? 'bg-purple-600' : 'bg-emerald-600')">
+                  <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-black text-amber-300 text-base shadow-md bg-amber-500/20 border border-amber-500/40">
                     {{ cand.arabicName ? cand.arabicName.charAt(0) : 'ع' }}
                   </div>
                   <div>
-                    <h5 class="font-black text-sm text-slate-900 leading-snug">{{ cand.arabicName }}</h5>
+                    <h5 class="font-black text-sm text-amber-100 leading-snug">{{ cand.arabicName }}</h5>
                     <span class="text-[11px] text-slate-400 block">{{ cand.university }} - {{ cand.faculty }}</span>
                   </div>
                 </div>
 
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold"
-                      :style="{ backgroundColor: getCommitteeColor(cand.assignedCommitteeId || cand.originalCommitteeId) + '20', color: getCommitteeColor(cand.assignedCommitteeId || cand.originalCommitteeId) }">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-950/60 text-amber-300 border border-amber-600/30 font-mono shadow-sm">
                   {{ getCommitteeName(cand.assignedCommitteeId || cand.originalCommitteeId) }}
                 </span>
               </div>
@@ -1244,10 +1242,10 @@
                     <a 
                       :href="getDirectorateMemberWALink(cand)" 
                       target="_blank" 
-                      class="px-2.5 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[11px] font-bold flex items-center gap-1 transition"
+                      class="px-2.5 py-1 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-600/40 text-[11px] font-bold flex items-center gap-1 transition"
                       title="محادثة واتساب مباشرة"
                     >
-                      <i data-lucide="message-circle" class="w-3 h-3 text-emerald-600"></i>
+                      <i data-lucide="message-circle" class="w-3 h-3 text-emerald-400"></i>
                       <span>واتساب</span>
                     </a>
 
@@ -1264,20 +1262,20 @@
 
               <!-- Evaluation Box -->
               <div class="p-3 rounded-2xl mb-3"
-                   :class="cand.memberEvaluation && cand.memberEvaluation.score ? 'bg-amber-50/70 border border-amber-200' : 'bg-[#140b05] border border-dashed border-amber-600/30'">
+                   :class="cand.memberEvaluation && cand.memberEvaluation.score ? 'bg-[#221309] border border-amber-500/40 text-amber-100 shadow-inner' : 'bg-[#100703] border border-dashed border-amber-600/30 text-amber-200/60'">
                 <div class="flex items-center justify-between mb-1">
-                  <span class="text-[11px] font-bold text-slate-700">تقييم الأداء الميداني:</span>
-                  <span v-if="cand.memberEvaluation && cand.memberEvaluation.score" class="font-black text-amber-700 text-xs inline-flex items-center gap-1">
-                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-500 text-amber-500"></i>
+                  <span class="text-[11px] font-bold text-amber-200/80">تقييم الأداء الميداني:</span>
+                  <span v-if="cand.memberEvaluation && cand.memberEvaluation.score" class="font-black text-amber-300 text-xs inline-flex items-center gap-1 font-mono">
+                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
                     <span>{{ cand.memberEvaluation.score }} / 10</span>
                   </span>
-                  <span v-else class="text-[10px] text-slate-400 font-bold">لم يُقيّم بعد</span>
+                  <span v-else class="text-[10px] text-amber-200/50 font-bold">لم يُقيّم بعد</span>
                 </div>
 
-                <p v-if="cand.memberEvaluation && cand.memberEvaluation.notes" class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                <p v-if="cand.memberEvaluation && cand.memberEvaluation.notes" class="text-[11px] text-amber-100/90 mt-1 leading-relaxed">
                   "{{ cand.memberEvaluation.notes }}"
                 </p>
-                <p v-else class="text-[10px] text-slate-400 italic">
+                <p v-else class="text-[10px] text-amber-200/50 italic">
                   اضغط زر التقييم بالأسفل لتسجيل درجة وملاحظات أداء العضو...
                 </p>
               </div>
@@ -1882,21 +1880,21 @@
 
           <!-- Completed Interviews -->
           <div class="bg-[#1c0f08]/90 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-amber-600/30 shadow-md text-amber-100">
-            <div class="flex items-center justify-between text-emerald-600 text-[11px] sm:text-xs font-bold mb-1">
+            <div class="flex items-center justify-between text-amber-400 text-[11px] sm:text-xs font-bold mb-1">
               <span>تمت المقابلة</span>
               <i data-lucide="check-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500"></i>
             </div>
-            <div class="text-xl sm:text-3xl font-black text-emerald-600">{{ currentStats.completed || 0 }}</div>
+            <div class="text-xl sm:text-3xl font-black text-amber-400">{{ currentStats.completed || 0 }}</div>
             <p class="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 sm:mt-1">تم رصد درجاتهم</p>
           </div>
 
           <!-- Average Rating -->
           <div class="bg-[#180d05]/95 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-amber-600/30 text-amber-100 shadow-sm col-span-2 sm:col-span-1">
-            <div class="flex items-center justify-between text-purple-600 text-[11px] sm:text-xs font-bold mb-1">
+            <div class="flex items-center justify-between text-amber-400 text-[11px] sm:text-xs font-bold mb-1">
               <span>متوسط التقييم</span>
               <i data-lucide="star" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500"></i>
             </div>
-            <div class="text-xl sm:text-3xl font-black text-purple-600">
+            <div class="text-xl sm:text-3xl font-black text-amber-400">
               {{ currentStats.avgScore ? currentStats.avgScore + ' / 10' : '--' }}
             </div>
             <p class="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 sm:mt-1">
@@ -1925,7 +1923,7 @@
               class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs border border-amber-600/30 transition"
               title="تصدير كشف المرشحين والتقييمات إلى Excel"
             >
-              <i data-lucide="download" class="w-4 h-4 text-emerald-600"></i>
+              <i data-lucide="download" class="w-4 h-4 text-amber-400"></i>
               <span>تصدير Excel</span>
             </a>
 
@@ -2043,7 +2041,7 @@
             <div class="flex items-center gap-2.5 flex-wrap">
               <span class="text-amber-600">لم يحجزوا: {{ countByStatus('pending') }}</span>
               <span class="text-amber-200">محجوز: {{ countByStatus('booked') }}</span>
-              <span class="text-emerald-600">مكتمل: {{ countByStatus('completed') }}</span>
+              <span class="text-amber-400">مكتمل: {{ countByStatus('completed') }}</span>
               <span class="text-slate-300">|</span>
               <span class="text-emerald-700 font-bold">مقبول: {{ countByDecision('accepted') }}</span>
               <span class="text-amber-700 font-bold">احتياطي: {{ countByDecision('reserve') }}</span>
@@ -2107,7 +2105,7 @@
                         class="p-1.5 rounded-lg btn-action-whatsapp transition flex items-center gap-1 text-[11px] font-bold cursor-pointer"
                         title="محادثة واتساب مباشرة"
                       >
-                        <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+                        <i data-lucide="message-circle" class="w-3.5 h-3.5 text-amber-400"></i>
                         <span>{{ cand.phone }}</span>
                       </a>
                     </div>
@@ -2283,7 +2281,7 @@
                   class="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition flex items-center justify-center flex-shrink-0 shadow-sm"
                   title="محادثة واتساب"
                 >
-                  <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
+                  <i data-lucide="message-circle" class="w-4 h-4 text-amber-400"></i>
                 </a>
               </div>
 
@@ -2544,7 +2542,7 @@
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-6 pb-6 border-b border-amber-600/30">
             <div>
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold mb-2 border border-emerald-200">
-                <i data-lucide="send" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <i data-lucide="send" class="w-3.5 h-3.5 text-amber-400"></i>
                 <span>حملة إبلاغ المقبولين بالهيكل التنظيمي</span>
               </div>
               <h2 class="text-xl sm:text-2xl font-black text-slate-900">
@@ -2830,7 +2828,7 @@
               class="hidden sm:inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40 text-xs font-bold transition cursor-pointer"
               title="تحديد كل المعروضين في الصفحة كـ تم الإبلاغ"
             >
-              <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <i data-lucide="check-check" class="w-3.5 h-3.5 text-amber-400"></i>
               <span>تحديد المعروض كتم</span>
             </button>
           </div>
@@ -3059,11 +3057,11 @@
           <div class="bg-[#180d05]/95 rounded-2xl p-4 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[11px] font-bold text-slate-500">نسبة حضور المحاضرات</span>
-              <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg">
+              <span class="p-1.5 bg-emerald-50 text-amber-400 rounded-lg">
                 <i data-lucide="check-circle-2" class="w-4 h-4"></i>
               </span>
             </div>
-            <div class="text-2xl font-black text-emerald-600">{{ operationalStats.overallAttendanceRate }}%</div>
+            <div class="text-2xl font-black text-amber-400">{{ operationalStats.overallAttendanceRate }}%</div>
             <div class="mt-2 text-[10px] text-slate-500 flex items-center justify-between">
               <span>تسليمات QR المحاضرات</span>
               <span class="font-bold font-mono text-emerald-700">{{ operationalStats.totalQuizzes }} محاضرات</span>
@@ -3140,7 +3138,7 @@
             <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-4">
               <div>
                 <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
-                  <i data-lucide="user-check" class="w-5 h-5 text-emerald-600"></i>
+                  <i data-lucide="user-check" class="w-5 h-5 text-amber-400"></i>
                   <span>منحنى حضور وغياب المحاضرات (Lecture Attendance Trend)</span>
                 </h4>
                 <p class="text-xs text-slate-500 mt-0.5">رصد تسليمات اختبارات الـ QR ومقارنة الحاضرين بالمتغيبين لكل محاضرة</p>
@@ -3194,7 +3192,7 @@
           <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col">
             <div class="pb-3 border-b border-amber-600/30 mb-3">
               <h4 class="font-black text-slate-900 text-sm flex items-center gap-2">
-                <i data-lucide="pie-chart" class="w-4 h-4 text-purple-600"></i>
+                <i data-lucide="pie-chart" class="w-4 h-4 text-amber-400"></i>
                 <span>الهيكل التشغيلي الداخلي للقطاع</span>
               </h4>
               <p class="text-[11px] text-slate-500 mt-0.5">توزيع المناديب وأعضاء اللجان التنفيذية</p>
@@ -3208,7 +3206,7 @@
           <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 text-amber-100 shadow-sm flex flex-col">
             <div class="pb-3 border-b border-amber-600/30 mb-3">
               <h4 class="font-black text-slate-900 text-sm flex items-center gap-2">
-                <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="bar-chart-2" class="w-4 h-4 text-amber-400"></i>
                 <span>التوزيع التكراري لتقديرات المناديب</span>
               </h4>
               <p class="text-[11px] text-slate-500 mt-0.5">تصنيف المناديب حسب مستويات الدرجات الأكاديمية</p>
@@ -3476,7 +3474,7 @@
         
         <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 shadow-md text-amber-100">
           <h4 class="font-black text-slate-900 text-base mb-2 flex items-center gap-2">
-            <i data-lucide="arrow-left-right" class="w-5 h-5 text-purple-600"></i>
+            <i data-lucide="arrow-left-right" class="w-5 h-5 text-amber-400"></i>
             <span>سجل التحويلات بين اللجان والقطاعات</span>
           </h4>
           <p class="text-xs text-slate-500 mb-6">يوثق هذا السجل جميع حالات تحويل المرشحين مع الأسباب والتواريخ</p>
@@ -3545,7 +3543,7 @@
                   <td class="py-2.5 px-3 text-slate-600">{{ sc.university }} - {{ sc.faculty }}</td>
                   <td class="py-2.5 px-3 text-amber-700 font-semibold">{{ sc.firstPreference }}</td>
                   <td class="py-2.5 px-3">
-                    <a :href="'https://wa.me/20' + sc.phone.replace(/\\D/g, '').replace(/^0/, '')" target="_blank" class="text-emerald-600 font-bold hover:underline">
+                    <a :href="'https://wa.me/20' + sc.phone.replace(/\\D/g, '').replace(/^0/, '')" target="_blank" class="text-amber-400 font-bold hover:underline">
                       {{ sc.phone }}
                     </a>
                   </td>
@@ -3733,7 +3731,7 @@
               <div class="space-y-1.5 text-xs bg-[#100703]/80 p-3 rounded-xl mb-3 border border-amber-600/25">
                 <div class="flex items-center justify-between">
                   <span class="text-slate-400">الهاتف:</span>
-                  <a :href="'https://wa.me/2' + cand.phone" target="_blank" class="font-mono text-emerald-600 font-bold hover:underline flex items-center gap-1">
+                  <a :href="'https://wa.me/2' + cand.phone" target="_blank" class="font-mono text-amber-400 font-bold hover:underline flex items-center gap-1">
                     <span>{{ cand.phone }}</span>
                     <i data-lucide="phone" class="w-3 h-3"></i>
                   </a>
@@ -4273,8 +4271,8 @@
         <!-- Header -->
         <div class="bg-gradient-to-r from-[#2c170b] via-[#1a0d05] to-[#0c0602] text-amber-100 rounded-3xl p-6 sm:p-8 border border-amber-500/40 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-bold mb-2 border border-purple-500/30">
-              <i data-lucide="qr-code" class="w-4 h-4"></i>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold mb-2 border border-amber-500/30">
+              <i data-lucide="qr-code" class="w-4 h-4 text-amber-400"></i>
               <span>نظام الاختبارات وتسجيل الحضور الذكي</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black text-white">
@@ -4299,8 +4297,8 @@
           <div class="w-16 h-16 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-3xl flex items-center justify-center mx-auto mb-4">
             <i data-lucide="file-question" class="w-8 h-8"></i>
           </div>
-          <h3 class="font-black text-base text-slate-900 mb-1">لم يتم إنشاء أي اختبارات لهذه اللجنة بعد</h3>
-          <p class="text-xs text-slate-500 mb-6">اضغط على زر "إنشاء اختبار محاضرة جديد" للبدء في إضافة أسئلة وتوليد QR Code المحاضرة لقطاعك.</p>
+          <h3 class="font-black text-base text-amber-100 mb-1">لم يتم إنشاء أي اختبارات لهذه اللجنة بعد</h3>
+          <p class="text-xs text-amber-200/60 mb-6">اضغط على زر "إنشاء اختبار محاضرة جديد" للبدء في إضافة أسئلة وتوليد QR Code المحاضرة لقطاعك.</p>
           <button 
             @click="openCreateQuizModal"
             class="px-5 py-2.5 rounded-xl btn-gold transition"
@@ -4498,7 +4496,7 @@
                     class="p-3.5 whitespace-nowrap text-center bg-purple-50/50 border-x border-purple-100"
                   >
                     <span>محاضرة {{ q.lectureNumber }}</span>
-                    <span class="block text-[10px] text-purple-600 font-normal">({{ q.totalPoints }} درجات)</span>
+                    <span class="block text-[10px] text-amber-400 font-normal">({{ q.totalPoints }} درجات)</span>
                   </th>
 
                   <th class="p-3.5 whitespace-nowrap text-center">نسبة الحضور</th>
@@ -4639,7 +4637,7 @@
                 class="flex items-center justify-center gap-2 p-3 rounded-xl border font-bold text-xs cursor-pointer transition"
               >
                 <input type="radio" v-model="batchForm.type" value="offline" class="hidden">
-                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="map-pin" class="w-4 h-4 text-amber-400"></i>
                 <span>حضوري (Offline بالكلية)</span>
               </label>
             </div>
@@ -4772,7 +4770,7 @@
                 class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold cursor-pointer transition"
               >
                 <input type="radio" v-model="evalForm.attendanceStatus" value="attended" class="hidden">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="check" class="w-4 h-4 text-amber-400"></i>
                 <span>حضر المقابلة</span>
               </label>
 
@@ -5192,7 +5190,7 @@
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
-              <i data-lucide="user-plus" class="w-5 h-5 text-emerald-600"></i>
+              <i data-lucide="user-plus" class="w-5 h-5 text-amber-400"></i>
             </div>
             <div>
               <h4 class="font-black text-slate-900 text-lg">إضافة مرشح جديد يدوياً</h4>
@@ -5398,7 +5396,7 @@
         
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
           <div>
-            <span class="text-[11px] font-bold text-purple-600">منشئ الاختبارات والمحاضرات</span>
+            <span class="text-[11px] font-bold text-amber-400">منشئ الاختبارات والمحاضرات</span>
             <h4 class="font-black text-slate-900 text-lg">{{ editingQuizId ? 'تعديل اختبار المحاضرة' : 'إنشاء اختبار محاضرة جديد وتوليد الـ QR' }}</h4>
           </div>
           <button @click="showCreateQuizModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
@@ -5711,7 +5709,7 @@
           
           <div class="mb-4 bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl flex items-center justify-between text-xs text-emerald-900">
             <div class="flex items-center gap-2">
-              <i data-lucide="info" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <i data-lucide="info" class="w-4 h-4 text-amber-400 shrink-0"></i>
               <span>يُسجل الحضور ودرجة الفهم من اختبار نهاية المحاضرة، بينما يُقيّم الأسينمنت بعد تسليمه مع إمكانية منح بونص تفاعل.</span>
             </div>
             <span class="font-bold text-emerald-300 font-mono bg-emerald-950/70 px-2.5 py-1 rounded-lg border border-emerald-600/40 shrink-0">
@@ -6371,7 +6369,7 @@
         <div class="bg-[#140b05] p-4 rounded-2xl border border-amber-600/30 mb-6 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div class="flex items-center gap-2">
             <span class="text-slate-400">الهاتف:</span>
-            <a :href="'https://wa.me/2' + selectedDelegateProfile.phone" target="_blank" class="font-mono text-emerald-600 font-bold hover:underline flex items-center gap-1">
+            <a :href="'https://wa.me/2' + selectedDelegateProfile.phone" target="_blank" class="font-mono text-amber-400 font-bold hover:underline flex items-center gap-1">
               <span>{{ selectedDelegateProfile.phone }}</span>
               <i data-lucide="phone" class="w-3.5 h-3.5"></i>
             </a>
@@ -6389,7 +6387,7 @@
         <!-- Lectures & Quizzes History (سجل درجات كل محاضرة) -->
         <div class="space-y-3 mb-6">
           <h4 class="font-black text-sm text-slate-900 flex items-center gap-2">
-            <i data-lucide="calendar" class="w-4 h-4 text-purple-600"></i>
+            <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
             <span>سجل حضور واختبارات المحاضرات المنعقدة:</span>
           </h4>
 
@@ -7072,7 +7070,7 @@
                   <td class="py-2.5 px-3 text-slate-600">{{ bk.committeeName }}</td>
                   <td class="py-2.5 px-3">
                     <a :href="'https://wa.me/2' + bk.phone.replace(/\D/g, '').replace(/^0/, '')" target="_blank" class="text-emerald-700 font-mono font-bold hover:underline flex items-center gap-1">
-                      <i data-lucide="message-circle" class="w-3 h-3 text-emerald-600"></i>
+                      <i data-lucide="message-circle" class="w-3 h-3 text-amber-400"></i>
                       <span>{{ bk.phone }}</span>
                     </a>
                   </td>
