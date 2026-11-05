@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title id="pageTitle">Official Document & Founding Declaration | MFA Simulation Model - Suez University</title>
-  <link rel="icon" type="image/jpeg" href="/logo.jpg">
+  <link rel="icon" type="image/png" href="/logo.png">
   <!-- Preload Critical Visual Assets for Instant Cache -->
-  <link rel="preload" as="image" href="/logo.jpg" type="image/jpeg">
+  <link rel="preload" as="image" href="/logo.png" type="image/png">
 
   <script>
     (function() {
@@ -1146,7 +1146,7 @@
       <div class="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
         <a href="/" class="flex items-center gap-1.5 sm:gap-2.5 min-w-0 group">
           <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform shrink-0">
-            <img src="/logo.jpg" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-lg sm:rounded-xl">
+            <img src="/logo.png" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-lg sm:rounded-xl">
           </div>
           <div class="min-w-0 text-start">
             <span class="block text-amber-800 font-bold font-kufi text-[9px] sm:text-xs tracking-wider truncate" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
@@ -1193,7 +1193,7 @@
       </div>
       <!-- Royal Carmine Wax Seal Medallion -->
       <div class="wax-lock-medallion">
-        <img src="/logo.jpg" alt="MFA Crest" class="w-14 h-14 rounded-full border-2 border-amber-300 object-cover shadow-inner">
+        <img src="/logo.png" alt="MFA Crest" class="w-14 h-14 rounded-full border-2 border-amber-300 object-cover shadow-inner">
       </div>
       <!-- Official Badge -->
       <div class="wax-lock-badge font-amiri" data-i18n="hero_seal_badge">المرسوم التأسيسي • معتمد رسمي</div>
@@ -1233,7 +1233,7 @@
             <div class="absolute -inset-1.5 bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 rounded-full blur-sm opacity-60"></div>
             <!-- Large Crest Container -->
             <div class="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-amber-100 via-amber-200 to-amber-300 border-4 border-amber-600/80 p-1.5 shadow-xl shadow-amber-950/20">
-              <img src="/logo.jpg" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-full shadow-inner">
+              <img src="/logo.png" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-full shadow-inner">
             </div>
           </div>
         </div>
@@ -1858,7 +1858,7 @@
 
               <!-- Pass Main Identity -->
               <div class="flex items-center gap-3 mb-3">
-                <img src="/logo.jpg" alt="Seal" class="w-12 h-12 rounded-full border-2 border-amber-600 shadow-md object-cover flex-shrink-0">
+                <img src="/logo.png" alt="Seal" class="w-12 h-12 rounded-full border-2 border-amber-600 shadow-md object-cover flex-shrink-0">
                 <div class="flex-1 min-w-0">
                   <div class="text-[10px] text-amber-800 font-bold font-kufi">جمهورية مصر العربية • نموذج المحاكاة</div>
                   <h4 class="font-extrabold text-sm sm:text-base font-amiri text-amber-950 truncate" data-i18n="s6_pass_title">بطاقة تمثيل السلك الدبلوماسي</h4>
@@ -2382,7 +2382,7 @@
     // Background Asset Preloader (Immediate memory cache)
     (function preloadPlatformAssets() {
       const img = new Image();
-      img.src = '/logo.jpg';
+      img.src = '/logo.png';
     })();
 
     // =========================================================================
@@ -3321,13 +3321,18 @@
 
     // =========================================================================
     // DIPLOMATIC SCROLL MECHANICAL UNROLL ENGINE
-    // (Top & Bottom Finials Move Apart to Unroll Parchment after 0.7s)
+    // (Top & Bottom Finials Move Apart to Unroll Parchment after 3.0s or On Click)
     // =========================================================================
     let isScrollUnrolled = false;
+    let autoUnrollTimer = null;
 
     function unrollDiplomaticScroll() {
       if (isScrollUnrolled) return;
       isScrollUnrolled = true;
+      if (autoUnrollTimer) {
+        clearTimeout(autoUnrollTimer);
+        autoUnrollTimer = null;
+      }
 
       const wrapper = document.getElementById('parchmentScrollWrapper');
       const sheet = document.getElementById('parchmentContinuousScroll');
@@ -3364,8 +3369,8 @@
     // Ensure page starts at top so the closed scroll is visible
     if (window.scrollY > 0) window.scrollTo(0, 0);
 
-    // Automatically open after exactly 0.7s (700ms) on page load
-    setTimeout(unrollDiplomaticScroll, 700);
+    // Automatically open after exactly 3.0s (3000ms) on page load unless clicked earlier
+    autoUnrollTimer = setTimeout(unrollDiplomaticScroll, 3000);
 
     // =========================================================================
     // FLOATING DIPLOMATIC CONTACT WIDGET INTERACTION ENGINE
