@@ -1445,6 +1445,60 @@ app.delete('/api/candidates/:id/booking', async (req, res) => {
   res.json({ success: true, message: 'تم إلغاء حجز الموعد بنجاح وأصبح الموعد متاحاً مجدداً' });
 });
 
+// Delete a candidate/member entirely
+app.delete('/api/candidates/:id', async (req, res) => {
+  const db = getDB();
+  const candIndex = (db.candidates || []).findIndex(c => c.id === req.params.id || c.diplomaticId === req.params.id);
+  if (candIndex === -1) {
+    return res.status(404).json({ success: false, message: 'العضو / المرشح غير موجود' });
+  }
+
+  const cand = db.candidates[candIndex];
+
+  // If candidate had a booked slot, free it up
+  if (cand.slotId) {
+    const slot = (db.slots || []).find(s => s.id === cand.slotId);
+    if (slot) {
+      slot.status = 'available';
+      slot.candidateId = null;
+      slot.candidateName = null;
+      slot.candidatePhone = null;
+    }
+  }
+
+  // Clean up any tasks or assignments linked to this candidate
+  if (db.operationsTasks) {
+    db.operationsTasks.forEach(task => {
+      if (task.assignedToCandidateId === cand.id || task.assignedToCandidateId === cand.diplomaticId) {
+        task.assignedToCandidateId = null;
+      }
+    });
+  }
+
+  // Clean up any event bookings
+  if (db.eventBookings) {
+    db.eventBookings = db.eventBookings.filter(b => b.candidateId !== cand.id && b.userId !== cand.id && b.diplomaticId !== cand.diplomaticId);
+  }
+
+  // Remove candidate from db
+  const [deletedCandidate] = db.candidates.splice(candIndex, 1);
+
+  await saveDB(db);
+
+  const candidateDisplayName = deletedCandidate.arabicName || deletedCandidate.fullName || deletedCandidate.id;
+  logActivity(
+    req,
+    'حذف عضو/مرشح',
+    `تم حذف المرشح/العضو: ${candidateDisplayName} (${deletedCandidate.diplomaticId || deletedCandidate.id})`,
+    deletedCandidate.id
+  );
+
+  res.json({
+    success: true,
+    message: `تم حذف ${candidateDisplayName} بنجاح من قاعدة البيانات والمنظومة.`
+  });
+});
+
 // ==========================================
 // 4. INTERVIEW SLOTS & SCHEDULING APIS
 // ==========================================

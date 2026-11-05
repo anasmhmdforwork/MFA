@@ -151,45 +151,150 @@
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85) !important;
       }
 
-      /* Pill badges */
-      .bg-amber-100 {
-        background-color: rgba(245, 158, 11, 0.15) !important;
-        border: 1px solid rgba(245, 158, 11, 0.3) !important;
+      /* Pill badges & light containers overridden to luxury royal tones */
+      .bg-amber-50, .bg-amber-100 {
+        background-color: rgba(120, 53, 15, 0.38) !important;
+        border: 1px solid rgba(245, 158, 11, 0.45) !important;
+        color: #fde68a !important;
       }
-      .text-amber-800, .text-amber-900 {
+      .text-amber-800, .text-amber-900, .text-amber-700 {
         color: #fde68a !important;
       }
 
-      .bg-emerald-100 {
-        background-color: rgba(16, 185, 129, 0.15) !important;
-        border: 1px solid rgba(16, 185, 129, 0.3) !important;
+      .bg-emerald-50, .bg-emerald-100 {
+        background-color: rgba(6, 78, 59, 0.38) !important;
+        border: 1px solid rgba(16, 185, 129, 0.45) !important;
+        color: #6ee7b7 !important;
       }
-      .text-emerald-800, .text-emerald-900 {
-        color: #a7f3d0 !important;
+      .text-emerald-800, .text-emerald-900, .text-emerald-700 {
+        color: #6ee7b7 !important;
       }
 
-      .bg-rose-100 {
-        background-color: rgba(244, 63, 94, 0.15) !important;
-        border: 1px solid rgba(244, 63, 94, 0.3) !important;
+      .bg-rose-50, .bg-rose-100 {
+        background-color: rgba(136, 19, 55, 0.38) !important;
+        border: 1px solid rgba(244, 63, 94, 0.45) !important;
+        color: #fecdd3 !important;
       }
-      .text-rose-800, .text-rose-900 {
+      .text-rose-800, .text-rose-900, .text-rose-700 {
         color: #fecdd3 !important;
       }
 
-      .bg-sky-100, .bg-blue-100 {
-        background-color: rgba(14, 165, 233, 0.15) !important;
-        border: 1px solid rgba(14, 165, 233, 0.3) !important;
+      .bg-sky-50, .bg-sky-100, .bg-blue-50, .bg-blue-100 {
+        background-color: rgba(30, 58, 138, 0.38) !important;
+        border: 1px solid rgba(59, 130, 246, 0.45) !important;
+        color: #93c5fd !important;
       }
-      .text-sky-800, .text-blue-800 {
-        color: #bae6fd !important;
+      .text-sky-800, .text-blue-800, .text-blue-700 {
+        color: #93c5fd !important;
       }
 
-      .bg-purple-100 {
-        background-color: rgba(168, 85, 247, 0.15) !important;
-        border: 1px solid rgba(168, 85, 247, 0.3) !important;
+      .bg-purple-50, .bg-purple-100 {
+        background-color: rgba(88, 28, 135, 0.38) !important;
+        border: 1px solid rgba(168, 85, 247, 0.45) !important;
+        color: #d8b4fe !important;
       }
-      .text-purple-800 {
-        color: #e9d5ff !important;
+      .text-purple-800, .text-purple-700 {
+        color: #d8b4fe !important;
+      }
+
+      .bg-pink-50, .bg-pink-100 {
+        background-color: rgba(131, 24, 67, 0.38) !important;
+        border: 1px solid rgba(236, 72, 153, 0.45) !important;
+        color: #fbcfe8 !important;
+      }
+      .text-pink-800, .text-pink-700 {
+        color: #fbcfe8 !important;
+      }
+
+      .bg-indigo-50, .bg-indigo-100 {
+        background-color: rgba(49, 46, 129, 0.38) !important;
+        border: 1px solid rgba(99, 102, 241, 0.45) !important;
+        color: #c7d2fe !important;
+      }
+      .text-indigo-700, .text-indigo-800 {
+        color: #c7d2fe !important;
+      }
+
+      /* Dedicated Diplomatic Button Classes */
+      .btn-action-view {
+        background: rgba(45, 27, 14, 0.8) !important;
+        border: 1px solid rgba(197, 160, 89, 0.38) !important;
+        color: #eedcc6 !important;
+        transition: all 0.2s ease;
+      }
+      .btn-action-view:hover {
+        background: rgba(70, 42, 22, 0.95) !important;
+        border-color: #dfb147 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 10px rgba(223, 177, 71, 0.3);
+      }
+
+      .btn-action-slot {
+        background: rgba(30, 58, 138, 0.45) !important;
+        border: 1px solid rgba(59, 130, 246, 0.45) !important;
+        color: #93c5fd !important;
+        transition: all 0.2s ease;
+      }
+      .btn-action-slot:hover {
+        background: rgba(30, 58, 138, 0.8) !important;
+        border-color: #60a5fa !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+      }
+
+      .btn-action-eval {
+        background: linear-gradient(135deg, rgba(223, 177, 71, 0.25) 0%, rgba(192, 141, 36, 0.38) 100%) !important;
+        border: 1px solid rgba(223, 177, 71, 0.55) !important;
+        color: #fde68a !important;
+        transition: all 0.2s ease;
+      }
+      .btn-action-eval:hover {
+        background: linear-gradient(135deg, #dfb147 0%, #c08d24 100%) !important;
+        border-color: #f3d685 !important;
+        color: #1a0f00 !important;
+        box-shadow: 0 0 14px rgba(223, 177, 71, 0.5);
+      }
+      .btn-action-eval:hover i, .btn-action-eval:hover span {
+        color: #1a0f00 !important;
+      }
+
+      .btn-action-transfer {
+        background: rgba(88, 28, 135, 0.45) !important;
+        border: 1px solid rgba(168, 85, 247, 0.45) !important;
+        color: #d8b4fe !important;
+        transition: all 0.2s ease;
+      }
+      .btn-action-transfer:hover {
+        background: rgba(88, 28, 135, 0.8) !important;
+        border-color: #c084fc !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+      }
+
+      .btn-action-delete {
+        background: rgba(136, 19, 55, 0.45) !important;
+        border: 1px solid rgba(244, 63, 94, 0.45) !important;
+        color: #fecdd3 !important;
+        transition: all 0.2s ease;
+      }
+      .btn-action-delete:hover {
+        background: rgba(159, 18, 57, 0.9) !important;
+        border-color: #fb7185 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 14px rgba(244, 63, 94, 0.5);
+      }
+
+      .btn-action-whatsapp {
+        background: rgba(6, 78, 59, 0.45) !important;
+        border: 1px solid rgba(16, 185, 129, 0.45) !important;
+        color: #6ee7b7 !important;
+        transition: all 0.2s ease;
+      }
+      .btn-action-whatsapp:hover {
+        background: rgba(6, 78, 59, 0.85) !important;
+        border-color: #34d399 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
       }
 
       /* Active Navigation Tabs */
@@ -1775,7 +1880,7 @@
                       <a 
                         :href="getWhatsAppLink(cand)" 
                         target="_blank"
-                        class="p-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition flex items-center gap-1 text-[11px] font-bold"
+                        class="p-1.5 rounded-lg btn-action-whatsapp transition flex items-center gap-1 text-[11px] font-bold cursor-pointer"
                         title="محادثة واتساب مباشرة"
                       >
                         <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
@@ -1865,7 +1970,7 @@
                       <!-- View Dossier -->
                       <button 
                         @click="openCandidateModal(cand)"
-                        class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                        class="p-2 rounded-xl btn-action-view transition cursor-pointer"
                         title="عرض كامل بيانات واستمارة المرشح"
                       >
                         <i data-lucide="eye" class="w-3.5 h-3.5"></i>
@@ -1874,7 +1979,7 @@
                       <!-- Schedule / Change Slot -->
                       <button 
                         @click="openAssignSlotModal(cand)"
-                        class="p-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 transition"
+                        class="p-2 rounded-xl btn-action-slot transition cursor-pointer"
                         title="تحديد أو تغيير موعد المقابلة يدويًا"
                       >
                         <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
@@ -1883,20 +1988,29 @@
                       <!-- Evaluation Button -->
                       <button 
                         @click="openEvaluationModal(cand)"
-                        class="px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-bold transition flex items-center gap-1 text-[11px]"
+                        class="px-2.5 py-1.5 rounded-xl btn-action-eval font-bold transition flex items-center gap-1 text-[11px] cursor-pointer"
                         title="تقييم المقابلة ورصد الدرجة والملاحظات"
                       >
-                        <i data-lucide="star" class="w-3.5 h-3.5 text-amber-600"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5 text-amber-400"></i>
                         <span>تقييم</span>
                       </button>
 
                       <!-- Transfer to another sector -->
                       <button 
                         @click="openTransferModal(cand)"
-                        class="p-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 transition"
+                        class="p-2 rounded-xl btn-action-transfer transition cursor-pointer"
                         title="تحويل المرشح إلى قطاع/لجنة أخرى"
                       >
                         <i data-lucide="arrow-left-right" class="w-3.5 h-3.5"></i>
+                      </button>
+
+                      <!-- Delete Member / Candidate -->
+                      <button 
+                        @click="deleteCandidate(cand)"
+                        class="p-2 rounded-xl btn-action-delete transition cursor-pointer"
+                        title="حذف هذا العضو/المرشح نهائياً"
+                      >
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                       </button>
 
                     </div>
@@ -2001,15 +2115,15 @@
               <div class="flex items-center gap-1.5 pt-1 border-t border-slate-100 flex-wrap">
                 <button 
                   @click="openEvaluationModal(cand)"
-                  class="flex-1 py-2 px-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-sm transition flex items-center justify-center gap-1"
+                  class="flex-1 py-2 px-2.5 rounded-xl btn-action-eval font-bold text-xs shadow-sm transition flex items-center justify-center gap-1 cursor-pointer"
                 >
-                  <i data-lucide="star" class="w-3.5 h-3.5"></i>
+                  <i data-lucide="star" class="w-3.5 h-3.5 text-amber-400"></i>
                   <span>تقييم</span>
                 </button>
 
                 <button 
                   @click="openAssignSlotModal(cand)"
-                  class="py-2 px-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs transition flex items-center justify-center gap-1"
+                  class="py-2 px-2.5 rounded-xl btn-action-slot font-bold text-xs transition flex items-center justify-center gap-1 cursor-pointer"
                   title="تحديد موعد"
                 >
                   <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
@@ -2018,7 +2132,7 @@
 
                 <button 
                   @click="openEditCandidateModal(cand)"
-                  class="py-2 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center justify-center gap-1"
+                  class="py-2 px-2.5 rounded-xl btn-action-view font-bold text-xs transition flex items-center justify-center gap-1 cursor-pointer"
                   title="تعديل بيانات الاتصال"
                 >
                   <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
@@ -2027,7 +2141,7 @@
 
                 <button 
                   @click="openCandidateModal(cand)"
-                  class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                  class="p-2 rounded-xl btn-action-view transition cursor-pointer"
                   title="الاستمارة الكاملة"
                 >
                   <i data-lucide="eye" class="w-3.5 h-3.5"></i>
@@ -2035,10 +2149,18 @@
 
                 <button 
                   @click="openTransferModal(cand)"
-                  class="p-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 transition"
+                  class="p-2 rounded-xl btn-action-transfer transition cursor-pointer"
                   title="تحويل لقطاع آخر"
                 >
                   <i data-lucide="arrow-left-right" class="w-3.5 h-3.5"></i>
+                </button>
+
+                <button 
+                  @click="deleteCandidate(cand)"
+                  class="p-2 rounded-xl btn-action-delete transition cursor-pointer"
+                  title="حذف هذا العضو/المرشح نهائياً"
+                >
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
             </div>
@@ -3430,12 +3552,11 @@
             </div>
 
             <!-- Card Actions -->
-                        <!-- Card Actions -->
-            <div class="flex items-center gap-2 pt-3 border-t border-slate-100">
+            <div class="flex items-center gap-2 pt-3 border-t border-slate-100 flex-wrap">
               <!-- Edit Role Button -->
               <button 
                 @click="openEditRoleModal(cand)"
-                class="flex-1 py-2 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition flex items-center justify-center gap-1"
+                class="flex-1 py-2 px-2.5 rounded-xl btn-action-view text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
                 title="تعديل صفة العضو أو المندوب"
               >
                 <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
@@ -3445,10 +3566,10 @@
               <!-- Edit Email Button (Prominent & Visible) -->
               <button 
                 @click="openEditCandidateModal(cand)"
-                class="py-2 px-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm"
+                class="py-2 px-3 rounded-xl btn-action-view text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm cursor-pointer"
                 title="تعديل البريد الإلكتروني أو الهاتف في حال نسيانهما"
               >
-                <i data-lucide="mail" class="w-3.5 h-3.5 text-indigo-600"></i>
+                <i data-lucide="mail" class="w-3.5 h-3.5 text-amber-400"></i>
                 <span>تعديل الإيميل</span>
               </button>
 
@@ -3456,10 +3577,10 @@
               <button 
                 v-if="(cand.roleType || 'delegate') === 'delegate'"
                 @click="openDelegateProfile(cand)"
-                class="py-2 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 text-xs font-bold transition flex items-center justify-center gap-1"
+                class="py-2 px-3 rounded-xl btn-action-slot text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
                 title="عرض بروفايل وسجل درجات المندوب"
               >
-                <i data-lucide="user-check" class="w-3.5 h-3.5 text-blue-600"></i>
+                <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
                 <span>بروفايل المندوب</span>
               </button>
 
@@ -3467,11 +3588,20 @@
               <button 
                 v-else
                 @click="openMemberEvalModal(cand)"
-                class="py-2 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold transition flex items-center justify-center gap-1"
+                class="py-2 px-3 rounded-xl btn-action-eval text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
                 title="تقييم أداء العضو في المهام"
               >
-                <i data-lucide="star" class="w-3.5 h-3.5 text-amber-600"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 text-amber-400"></i>
                 <span>تقييم</span>
+              </button>
+
+              <!-- Delete Member Button -->
+              <button 
+                @click="deleteCandidate(cand)"
+                class="p-2 rounded-xl btn-action-delete transition cursor-pointer"
+                title="حذف هذا العضو نهائياً من المنظومة"
+              >
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
             </div>
 
@@ -9049,6 +9179,41 @@
           }
         }
 
+        async function deleteCandidate(cand) {
+          if (!cand) return;
+          const candidateName = cand.arabicName || cand.fullName || 'هذا العضو';
+          const isConfirmed = confirm(
+            `هل أنت متأكد من رغبتك في حذف ${candidateName} نهائياً؟\n\n` +
+            `تنبيه: سيتم مسح بيانات العضو وموعد المقابلة وسجل التقييمات الخاص به نهائياً من قاعدة البيانات والمنظومة ولا يمكن التراجع عن هذا الإجراء.`
+          );
+          if (!isConfirmed) return;
+
+          try {
+            const res = await fetch(`/api/candidates/${cand.id}`, {
+              method: 'DELETE'
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert(data.message || `تم حذف ${candidateName} بنجاح.`);
+              // Instantly remove from local candidates array
+              const idx = candidates.value.findIndex(c => c.id === cand.id);
+              if (idx !== -1) {
+                candidates.value.splice(idx, 1);
+              }
+              // Refresh all full tables and stats
+              await loadAllData();
+              nextTick(() => {
+                if (window.lucide) lucide.createIcons();
+              });
+            } else {
+              alert(data.message || 'فشل حذف العضو من قاعدة البيانات');
+            }
+          } catch (err) {
+            console.error('Delete candidate error:', err);
+            alert('حدث خطأ أثناء محاولة حذف العضو: ' + err.message);
+          }
+        }
+
         async function cancelSlotBooking(slot) {
           if (!confirm(`هل أنت متأكد من إلغاء حجز المرشح ${slot.candidateName} لهذا الموعد؟`)) return;
           if (!slot.candidateId) return;
@@ -10851,6 +11016,7 @@
           selectedSlotIdForAssign,
           confirmSlotAssignment,
           cancelSlotBooking,
+          deleteCandidate,
           deleteSlot,
           showBatchModal,
           batchForm,
