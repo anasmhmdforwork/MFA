@@ -7,7 +7,7 @@
   <link rel="icon" type="image/jpeg" href="/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -20,37 +20,40 @@
       font-family: 'Cairo', sans-serif;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
-      background-color: #070e1e;
-      color: #f1f5f9;
+      background-color: #0d0703;
+      color: #f5eedf;
     }
     .royal-bg {
-      background: radial-gradient(circle at 50% 15%, #112240 0%, #070e1e 75%, #030712 100%);
+      background: radial-gradient(circle at 50% 15%, #2c170b 0%, #180d05 60%, #0b0602 100%), #120a04;
       background-attachment: fixed;
     }
+    .font-amiri { font-family: 'Amiri', serif; }
+    .font-kufi { font-family: 'Reem Kufi', sans-serif; }
+    .font-ruqaa { font-family: 'Aref Ruqaa', serif; }
     .gold-gradient-text {
-      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
+      background: linear-gradient(135deg, #fef3c7 0%, #dfb147 50%, #c08d24 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .gold-card-border {
-      border: 1px solid rgba(197, 160, 89, 0.28) !important;
+      border: 1px solid rgba(197, 160, 89, 0.38) !important;
     }
     .gold-card-border:hover {
-      border-color: rgba(197, 160, 89, 0.5) !important;
+      border-color: rgba(223, 177, 71, 0.6) !important;
     }
     .btn-gold {
-      background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #a87e2b 100%) !important;
-      color: #070e1e !important;
+      background: linear-gradient(135deg, #f3d685 0%, #dfb147 50%, #c08d24 100%) !important;
+      color: #1a0f00 !important;
       font-weight: 800 !important;
       transition: all 0.25s ease;
     }
     .btn-gold:hover {
-      background: linear-gradient(135deg, #e5be4a 0%, #d4af37 50%, #b88a32 100%) !important;
-      box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.35) !important;
+      background: linear-gradient(135deg, #fde68a 0%, #e6be57 50%, #c9962e 100%) !important;
+      box-shadow: 0 10px 25px -5px rgba(223, 177, 71, 0.45) !important;
       transform: translateY(-1px);
     }
     .hero-navy {
-      background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+      background: linear-gradient(180deg, rgba(30, 16, 7, 0.98) 0%, rgba(18, 9, 4, 0.98) 100%);
     }
     [v-cloak] { display: none; }
 
@@ -58,29 +61,29 @@
     @media screen {
       /* Card backgrounds */
       .bg-white {
-        background-color: rgba(15, 23, 42, 0.88) !important;
+        background-color: rgba(24, 15, 10, 0.94) !important;
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(197, 160, 89, 0.22) !important;
-        color: #f8fafc !important;
-        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5) !important;
+        border: 1.5px solid rgba(197, 160, 89, 0.32) !important;
+        color: #fdf8ed !important;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6) !important;
       }
       
       .bg-slate-50 {
-        background-color: rgba(7, 14, 30, 0.65) !important;
-        border-color: rgba(51, 65, 85, 0.6) !important;
-        color: #cbd5e1 !important;
+        background-color: rgba(36, 21, 11, 0.75) !important;
+        border-color: rgba(197, 160, 89, 0.25) !important;
+        color: #eedcc6 !important;
       }
       
       .bg-slate-100 {
-        background-color: rgba(30, 41, 59, 0.8) !important;
-        border-color: rgba(71, 85, 105, 0.5) !important;
-        color: #f1f5f9 !important;
+        background-color: rgba(45, 27, 14, 0.8) !important;
+        border-color: rgba(197, 160, 89, 0.3) !important;
+        color: #fcf4e6 !important;
       }
 
       .bg-slate-200 {
-        background-color: rgba(51, 65, 85, 0.7) !important;
-        border-color: rgba(71, 85, 105, 0.6) !important;
+        background-color: rgba(60, 36, 20, 0.7) !important;
+        border-color: rgba(197, 160, 89, 0.35) !important;
       }
 
       /* Text Colors */
@@ -88,64 +91,64 @@
         color: #ffffff !important;
       }
       .text-slate-700 {
-        color: #e2e8f0 !important;
+        color: #f5eedf !important;
       }
       .text-slate-600 {
-        color: #cbd5e1 !important;
+        color: #eedcc6 !important;
       }
       .text-slate-500 {
-        color: #94a3b8 !important;
+        color: #d1bfa8 !important;
       }
       .text-slate-400 {
-        color: #94a3b8 !important;
+        color: #bfa88f !important;
       }
 
       /* Borders */
       .border-slate-200, .border-slate-100 {
-        border-color: rgba(197, 160, 89, 0.18) !important;
+        border-color: rgba(197, 160, 89, 0.22) !important;
       }
 
       /* Inputs, Selects & Textareas */
       input, select, textarea {
-        background-color: rgba(3, 7, 18, 0.85) !important;
+        background-color: rgba(14, 7, 3, 0.88) !important;
         color: #ffffff !important;
-        border: 1px solid rgba(71, 85, 105, 0.8) !important;
+        border: 1px solid rgba(197, 160, 89, 0.35) !important;
       }
       input::placeholder, textarea::placeholder {
-        color: #64748b !important;
+        color: #8c7355 !important;
       }
       input:focus, select:focus, textarea:focus {
-        border-color: #f59e0b !important;
+        border-color: #dfb147 !important;
         outline: none !important;
-        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25) !important;
+        box-shadow: 0 0 0 2px rgba(223, 177, 71, 0.3) !important;
       }
       select option {
-        background-color: #0f172a !important;
+        background-color: #1a0f07 !important;
         color: #ffffff !important;
       }
 
       /* Tables */
       table {
-        border-color: rgba(51, 65, 85, 0.6) !important;
+        border-color: rgba(197, 160, 89, 0.28) !important;
       }
       thead th {
-        background-color: rgba(2, 6, 23, 0.95) !important;
-        color: #fbbf24 !important;
-        border-bottom: 1px solid rgba(197, 160, 89, 0.3) !important;
+        background-color: rgba(18, 9, 4, 0.96) !important;
+        color: #f3d685 !important;
+        border-bottom: 1.5px solid rgba(197, 160, 89, 0.38) !important;
       }
       tbody tr {
-        border-bottom: 1px solid rgba(51, 65, 85, 0.4) !important;
+        border-bottom: 1px solid rgba(197, 160, 89, 0.18) !important;
       }
       tbody tr:hover {
-        background-color: rgba(30, 41, 59, 0.6) !important;
+        background-color: rgba(60, 36, 20, 0.45) !important;
       }
 
       /* Modals */
       .fixed.inset-0 .bg-white {
-        background-color: rgba(15, 23, 42, 0.96) !important;
+        background-color: rgba(22, 13, 7, 0.98) !important;
         backdrop-filter: blur(24px) !important;
-        border: 1px solid rgba(197, 160, 89, 0.35) !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
+        border: 1.5px solid rgba(197, 160, 89, 0.45) !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85) !important;
       }
 
       /* Pill badges */
@@ -241,36 +244,36 @@
 <body class="royal-bg min-h-screen text-slate-100 antialiased flex flex-col selection:bg-amber-400 selection:text-slate-950 relative overflow-x-hidden">
 
   <!-- Subtle Ambient Glows -->
-  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-500/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
-  <div class="fixed bottom-0 right-0 w-[500px] h-[400px] bg-sky-600/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-600/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed bottom-0 right-0 w-[500px] h-[400px] bg-amber-900/15 blur-[140px] rounded-full pointer-events-none -z-10"></div>
 
   <div id="app" v-cloak class="flex flex-col min-h-screen relative z-10">
     
     <!-- Top Header -->
-    <header class="bg-slate-950/80 backdrop-blur-md text-white border-b border-amber-500/20 shadow-xl sticky top-0 z-40 no-print">
+    <header class="bg-[#160c06]/95 backdrop-blur-md text-white border-b border-amber-900/60 shadow-xl sticky top-0 z-40 no-print">
       <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-auto min-h-[64px] py-2.5 sm:h-20 sm:py-0 flex items-center justify-between gap-2">
         
         <!-- Logo & Committee Identity -->
         <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
           <div class="relative flex-shrink-0">
-            <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-400/80 object-cover shadow-lg">
+            <a href="/" title="الرئيسية"><img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-400/80 object-cover shadow-lg hover:opacity-90 transition"></a>
           </div>
           <div class="min-w-0">
             <div class="flex items-center gap-1.5 sm:gap-2">
-              <h1 class="font-black text-xs sm:text-lg text-white leading-tight truncate max-w-[170px] sm:max-w-none">
+              <h1 class="font-amiri font-bold text-sm sm:text-xl text-amber-100 leading-tight truncate max-w-[170px] sm:max-w-none">
                 {{ currentUser && currentUser.role === 'directorate' ? currentUser.name : (currentCommittee ? currentCommittee.name : 'الإدارة العامة - جميع اللجان') }}
               </h1>
-              <span v-if="currentUser && currentUser.role === 'admin'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] sm:text-[11px] font-bold border border-amber-500/30 whitespace-nowrap">
+              <span v-if="currentUser && currentUser.role === 'admin'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] sm:text-[11px] font-kufi font-bold border border-amber-500/30 whitespace-nowrap">
                 رئيس النموذج
               </span>
-              <span v-else-if="currentUser && currentUser.role === 'directorate'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-[11px] font-bold border border-amber-400/40 whitespace-nowrap">
+              <span v-else-if="currentUser && currentUser.role === 'directorate'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-[11px] font-kufi font-bold border border-amber-400/40 whitespace-nowrap">
                 {{ currentUser.directorateType === 'hr' ? 'مسؤول التنظيم والموارد البشرية' : (currentUser.directorateType === 'media' ? 'مسؤول الميديا والإعلام' : 'مسؤول الشؤون الأكاديمية') }}
               </span>
-              <span v-else-if="currentUser && currentUser.role === 'head'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-[11px] font-bold border border-amber-400/40 whitespace-nowrap">
+              <span v-else-if="currentUser && currentUser.role === 'head'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-[11px] font-kufi font-bold border border-amber-400/40 whitespace-nowrap">
                 رئيس اللجنة
               </span>
             </div>
-            <p class="hidden sm:block text-xs text-amber-300/80 font-medium mt-0.5 truncate">
+            <p class="hidden sm:block text-xs font-kufi text-amber-300/80 font-medium mt-0.5 truncate">
               {{ currentUser && currentUser.role === 'directorate' ? 'إدارة ومتابعة وتقييم الكوادر التابعة لك في مختلف اللجان' : ((currentUser ? currentUser.name : 'مدير اللجنة') + ' • لوحة إدارة وتقييم المقابلات والأنشطة') }}
             </p>
           </div>

@@ -7,7 +7,7 @@
   <link rel="icon" type="image/jpeg" href="/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -16,55 +16,75 @@
       font-family: 'Cairo', sans-serif;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
-      background-color: #070e1e;
+      background-color: #120a04;
     }
-    .royal-bg {
-      background: radial-gradient(circle at 50% 10%, #112240 0%, #070e1e 75%, #030712 100%);
+    .royal-mahogany-bg {
+      background: radial-gradient(circle at 50% 15%, #2c170b 0%, #180d05 60%, #0b0602 100%), #120a04;
+      background-attachment: fixed;
     }
+    .font-amiri { font-family: 'Amiri', serif; }
+    .font-kufi { font-family: 'Reem Kufi', sans-serif; }
+    .font-ruqaa { font-family: 'Aref Ruqaa', serif; }
     .gold-gradient-text {
-      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
+      background: linear-gradient(135deg, #fef08a 0%, #dfb147 50%, #c08d24 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .gold-card-border {
-      border: 1px solid rgba(197, 160, 89, 0.35);
+    .diplomatic-card {
+      background: rgba(24, 15, 10, 0.94);
+      border: 1.5px solid rgba(197, 160, 89, 0.45);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 30px rgba(197, 160, 89, 0.12);
+    }
+    .diplomatic-card:hover {
+      border-color: rgba(223, 177, 71, 0.7);
     }
     .btn-gold {
-      background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #a87e2b 100%);
-      color: #070e1e;
-      transition: all 0.25s ease;
+      background: linear-gradient(135deg, #f3d685 0%, #dfb147 50%, #c08d24 100%) !important;
+      color: #1a0f00 !important;
+      font-weight: 900 !important;
+      border: 1.5px solid #8a5e12 !important;
+      box-shadow: 0 8px 25px rgba(160, 110, 25, 0.38), 0 2px 6px rgba(0, 0, 0, 0.18) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     .btn-gold:hover {
-      background: linear-gradient(135deg, #e5be4a 0%, #d4af37 50%, #b88a32 100%);
-      box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.35);
+      background: linear-gradient(135deg, #fae29f 0%, #e9bf57 50%, #ce9b32 100%) !important;
+      transform: translateY(-2px) scale(1.02) !important;
+      box-shadow: 0 12px 30px rgba(160, 110, 25, 0.55), 0 0 20px rgba(233, 191, 87, 0.5) !important;
+      border-color: #694406 !important;
     }
     [v-cloak] { display: none; }
   </style>
 </head>
-<body class="royal-bg min-h-screen text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950">
+<body class="royal-mahogany-bg min-h-screen text-amber-50 flex flex-col justify-between selection:bg-amber-400 selection:text-amber-950">
 
   <div id="app" v-cloak class="flex flex-col min-h-screen">
 
-    <!-- Top Navigation Header -->
-    <header class="py-4 px-4 sm:px-8 border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md sticky top-0 z-40">
-      <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-11 h-11 rounded-full border border-amber-400/60 object-cover shadow-lg">
+    <!-- Top Navigation Header matching Landing HUD -->
+    <header class="py-3 px-4 sm:px-8 border-b border-amber-600/40 bg-stone-950/85 backdrop-blur-md sticky top-0 z-40">
+      <div class="max-w-5xl mx-auto flex items-center justify-between gap-3">
+        <a href="/" class="flex items-center gap-3 group">
+          <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-11 h-11 rounded-full border border-amber-400/80 object-cover shadow-lg group-hover:scale-105 transition-transform">
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-sm sm:text-base font-black text-white">نموذج محاكاة وزارة الخارجية المصرية</span>
-              <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
+              <span class="text-sm sm:text-base font-black font-amiri text-white">نموذج محاكاة وزارة الخارجية المصرية</span>
+              <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold font-kufi border border-amber-500/30">
                 جامعة السويس
               </span>
             </div>
-            <p class="text-[11px] text-amber-400 font-medium">بوابة الاعتماد والتحقق الدبلوماسي الرقمي (Official Verification Portal)</p>
+            <p class="text-[11px] text-amber-400 font-ruqaa font-medium">بوابة الاعتماد والتحقق الدبلوماسي الرقمي (Official Verification Portal)</p>
           </div>
-        </div>
-
-        <a href="/login" class="text-xs text-slate-400 hover:text-amber-300 transition flex items-center gap-1.5 font-bold">
-          <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">تسجيل الدخول للمنظومة</span>
         </a>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="/" class="text-xs text-amber-300/80 hover:text-amber-200 transition flex items-center gap-1.5 font-bold">
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">الوثيقة الرسمية</span>
+          </a>
+          <a href="/login" class="text-xs btn-gold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 font-bold">
+            <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+            <span>تسجيل الدخول</span>
+          </a>
+        </div>
       </div>
     </header>
 
@@ -74,33 +94,33 @@
       <!-- Loading State -->
       <div v-if="loading" class="py-20 text-center">
         <div class="w-12 h-12 border-3 border-amber-400/30 border-t-amber-400 rounded-full animate-spin mx-auto mb-4"></div>
-        <p class="text-sm text-slate-300 font-bold">جاري مضاهاة السجلات الدبلوماسية والتحقق من الاعتماد الرسمي...</p>
+        <p class="text-sm text-amber-200 font-bold font-amiri text-lg">جاري مضاهاة السجلات الدبلوماسية والتحقق من الاعتماد الرسمي...</p>
       </div>
 
       <!-- Valid Certificate Card -->
-      <div v-else-if="result && result.valid" class="bg-gradient-to-b from-slate-900/95 via-slate-900/90 to-slate-950/95 backdrop-blur-xl rounded-3xl p-6 sm:p-10 gold-card-border shadow-2xl relative overflow-hidden">
+      <div v-else-if="result && result.valid" class="diplomatic-card backdrop-blur-xl rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
         
         <!-- Ambient Golden Glow -->
         <div class="absolute -top-20 -right-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <!-- Official Seal Banner -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-amber-600/30">
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 flex items-center justify-center flex-shrink-0 shadow-inner">
               <i data-lucide="shield-check" class="w-7 h-7"></i>
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-black text-emerald-400 uppercase tracking-wider">سجل معتمد وموثق</span>
+                <span class="text-xs font-black text-emerald-400 uppercase tracking-wider font-kufi">سجل معتمد وموثق</span>
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
               </div>
-              <h2 class="text-base sm:text-lg font-black text-white">وثيقة اعتماد دبلوماسية رسمية</h2>
+              <h2 class="text-base sm:text-xl font-black font-amiri text-white">وثيقة اعتماد دبلوماسية رسمية</h2>
             </div>
           </div>
 
           <div class="text-left font-mono">
-            <span class="text-[10px] text-slate-400 block font-sans">الرقم المرجعي الموحد</span>
-            <span class="text-xs sm:text-sm font-black text-amber-300 tracking-wider bg-slate-950 px-3 py-1 rounded-xl border border-amber-500/30 inline-block mt-0.5">
+            <span class="text-[10px] text-amber-300/80 block font-sans">الرقم المرجعي الموحد</span>
+            <span class="text-xs sm:text-sm font-black text-amber-300 tracking-wider bg-stone-950 px-3 py-1 rounded-xl border border-amber-500/40 inline-block mt-0.5">
               {{ result.verification.diplomaticId }}
             </span>
           </div>
@@ -109,52 +129,52 @@
         <!-- Student & Role Profile -->
         <div class="py-6 sm:py-8 space-y-6">
           <div class="text-center sm:text-right">
-            <span class="text-xs text-amber-400/90 font-bold block mb-1">تشهد رئاسة نموذج محاكاة وزارة الخارجية بجامعة السويس بأن:</span>
-            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-wide mb-2">
+            <span class="text-xs text-amber-300/90 font-bold block mb-1 font-kufi">تشهد رئاسة نموذج محاكاة وزارة الخارجية بجامعة السويس بأن:</span>
+            <h1 class="text-2xl sm:text-3xl font-black font-amiri text-white tracking-wide mb-2">
               {{ result.verification.fullNameArabic }}
             </h1>
-            <p class="text-xs sm:text-sm text-slate-300 font-mono">
+            <p class="text-xs sm:text-sm text-amber-200/80 font-mono">
               {{ result.verification.fullNameEnglish }}
             </p>
           </div>
 
           <!-- Credential Details Grid -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
-              <span class="text-slate-400 block text-[11px] mb-1">الصفة والصفة التنظيمية</span>
-              <span class="font-black text-amber-300 text-sm">{{ result.verification.role }}</span>
+            <div class="p-3.5 rounded-2xl bg-stone-950/70 border border-amber-600/30">
+              <span class="text-amber-400/80 block text-[11px] mb-1 font-kufi">الصفة والصفة التنظيمية</span>
+              <span class="font-black text-amber-300 text-sm font-amiri">{{ result.verification.role }}</span>
             </div>
 
-            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
-              <span class="text-slate-400 block text-[11px] mb-1">اللجنة الدبلوماسية / القطاع</span>
-              <span class="font-black text-slate-100 text-sm">{{ result.verification.committee }} <span v-if="result.verification.sector">({{ result.verification.sector }})</span></span>
+            <div class="p-3.5 rounded-2xl bg-stone-950/70 border border-amber-600/30">
+              <span class="text-amber-400/80 block text-[11px] mb-1 font-kufi">اللجنة الدبلوماسية / القطاع</span>
+              <span class="font-black text-stone-100 text-sm font-amiri">{{ result.verification.committee }} <span v-if="result.verification.sector">({{ result.verification.sector }})</span></span>
             </div>
 
-            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
-              <span class="text-slate-400 block text-[11px] mb-1">المؤسسة الأكاديمية</span>
-              <span class="font-bold text-slate-200">{{ result.verification.university }} - {{ result.verification.faculty }}</span>
+            <div class="p-3.5 rounded-2xl bg-stone-950/70 border border-amber-600/30">
+              <span class="text-amber-400/80 block text-[11px] mb-1 font-kufi">المؤسسة الأكاديمية</span>
+              <span class="font-bold text-stone-200">{{ result.verification.university }} - {{ result.verification.faculty }}</span>
             </div>
 
-            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
-              <span class="text-slate-400 block text-[11px] mb-1">مؤشر الجدارة التراكمي (CPI) والتقدير العام</span>
+            <div class="p-3.5 rounded-2xl bg-stone-950/70 border border-amber-600/30">
+              <span class="text-amber-400/80 block text-[11px] mb-1 font-kufi">مؤشر الجدارة التراكمي (CPI) والتقدير العام</span>
               <div class="flex items-center gap-2">
-                <span class="font-black text-emerald-400 text-sm">{{ result.verification.cpiScore }} / 100</span>
-                <span class="text-slate-400">•</span>
-                <span class="font-bold text-amber-300">{{ result.verification.standing }}</span>
+                <span class="font-black text-emerald-400 text-sm font-mono">{{ result.verification.cpiScore }} / 100</span>
+                <span class="text-amber-500">•</span>
+                <span class="font-bold text-amber-300 font-amiri">{{ result.verification.standing }}</span>
               </div>
             </div>
           </div>
 
           <!-- Event Boarding Pass Verification Section (If Ticket Detected) -->
-          <div v-if="result.verification.ticketDetails" class="p-4 rounded-2xl bg-amber-950/40 border border-amber-500/50 text-right space-y-2">
+          <div v-if="result.verification.ticketDetails" class="p-4 rounded-2xl bg-amber-950/60 border border-amber-500/50 text-right space-y-2">
             <div class="flex items-center justify-between gap-2">
-              <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-kufi">
                 تصريح دخول وتذكرة فعالية رسمية موثقة
               </span>
               <span class="font-mono text-xs font-black text-amber-300">{{ result.verification.ticketDetails.ticketCode }}</span>
             </div>
-            <h4 class="text-sm font-black text-white leading-snug">{{ result.verification.ticketDetails.eventTitle }}</h4>
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-slate-300 gap-1 pt-1">
+            <h4 class="text-sm font-black text-white leading-snug font-amiri">{{ result.verification.ticketDetails.eventTitle }}</h4>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-amber-200/80 gap-1 pt-1">
               <span>{{ result.verification.ticketDetails.eventDate }} ({{ result.verification.ticketDetails.eventTime }}) • {{ result.verification.ticketDetails.eventLocation }}</span>
               <span class="font-bold flex items-center gap-1" :class="result.verification.ticketDetails.attendanceStatus === 'attended' ? 'text-emerald-400' : 'text-amber-400'">
                 <i :data-lucide="result.verification.ticketDetails.attendanceStatus === 'attended' ? 'badge-check' : 'clock'" class="w-3.5 h-3.5"></i>
@@ -166,15 +186,15 @@
           <!-- Official Verification Notice -->
           <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-start gap-3">
             <i data-lucide="award" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
-            <div class="text-xs text-amber-200/90 leading-relaxed">
+            <div class="text-xs text-amber-200/90 leading-relaxed font-ruqaa">
               تم إصدار هذا الاعتماد الرقمي بناءً على استيفاء كافة متطلبات الحضور، الاختبارات الأكاديمية، والتقييمات الميدانية المعتمدة من رئاسة النموذج للموسم الدبلوماسي 2026. الوثيقة صادرة ومعتمدة ومحمية بكود رقمي موثق.
             </div>
           </div>
         </div>
 
         <!-- Footer Actions -->
-        <div class="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="text-[11px] text-slate-400 font-mono text-center sm:text-right">
+        <div class="pt-6 border-t border-amber-600/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-[11px] text-amber-400/80 font-mono text-center sm:text-right">
             تاريخ التحقق الفعلي: {{ currentDate }} • كود التوثيق: {{ result.verification.certificateCode }}
           </div>
           <button 
@@ -189,12 +209,12 @@
       </div>
 
       <!-- Invalid or Search State -->
-      <div v-else class="bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8 sm:p-12 gold-card-border shadow-2xl text-center max-w-xl mx-auto">
+      <div v-else class="diplomatic-card backdrop-blur-xl rounded-3xl p-8 sm:p-12 shadow-2xl text-center max-w-xl mx-auto">
         <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-4 border border-amber-500/30">
           <i data-lucide="search" class="w-7 h-7"></i>
         </div>
-        <h2 class="text-xl font-black text-white mb-2">التحقق من كود الاعتماد الدبلوماسي</h2>
-        <p class="text-xs text-slate-400 mb-6 leading-relaxed">
+        <h2 class="text-xl sm:text-2xl font-black font-amiri text-white mb-2">التحقق من كود الاعتماد الدبلوماسي</h2>
+        <p class="text-xs text-amber-200/80 mb-6 leading-relaxed font-ruqaa">
           أدخل كود العضوية الدبلوماسي الموحد (مثال: <code class="text-amber-300 font-mono">MFA-26-ECO-D-042</code>) للتأكد الفوري من مصداقية الوثيقة وصحة بيانات العضو في السجلات الرسمية.
         </p>
 
@@ -204,7 +224,7 @@
             type="text" 
             placeholder="MFA-26-..." 
             dir="ltr"
-            class="flex-1 bg-slate-950 text-white font-mono px-4 py-3 rounded-xl border border-slate-700 focus:border-amber-400 outline-none text-sm text-center uppercase tracking-wider"
+            class="flex-1 bg-stone-950 text-white font-mono px-4 py-3 rounded-xl border border-amber-600/40 focus:border-amber-400 outline-none text-sm text-center uppercase tracking-wider"
             required
           >
           <button type="submit" class="btn-gold px-6 py-3 rounded-xl text-xs font-black flex items-center gap-1.5 flex-shrink-0 cursor-pointer">
@@ -221,8 +241,8 @@
     </main>
 
     <!-- Footer -->
-    <footer class="py-4 px-6 border-t border-slate-800/80 bg-slate-950/60 text-center text-xs text-slate-500">
-      <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+    <footer class="py-4 px-6 border-t border-amber-600/30 bg-stone-950/80 text-center text-xs text-amber-500/70 font-ruqaa">
+      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
         <span>نموذج محاكاة وزارة الخارجية – جامعة السويس © 2026</span>
         <span class="text-amber-400 font-medium">سجل الحوكمة والاعتماد الدبلوماسي</span>
       </div>

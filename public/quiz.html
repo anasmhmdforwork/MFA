@@ -7,7 +7,7 @@
   <link rel="icon" type="image/jpeg" href="/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -16,56 +16,76 @@
       font-family: 'Cairo', sans-serif;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
-      background-color: #070e1e;
-      color: #f1f5f9;
+      background-color: #120a04;
+      color: #fdfaf3;
     }
     .royal-bg {
-      background: radial-gradient(circle at 50% 15%, #112240 0%, #070e1e 75%, #030712 100%);
+      background: radial-gradient(circle at 50% 15%, #2c170b 0%, #180d05 60%, #0b0602 100%), #120a04;
       background-attachment: fixed;
     }
+    .font-amiri { font-family: 'Amiri', serif; }
+    .font-kufi { font-family: 'Reem Kufi', sans-serif; }
+    .font-ruqaa { font-family: 'Aref Ruqaa', serif; }
     .gold-gradient-text {
-      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
+      background: linear-gradient(135deg, #fef08a 0%, #dfb147 50%, #c08d24 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .gold-card-border {
-      border: 1px solid rgba(197, 160, 89, 0.28) !important;
+      border: 1.5px solid rgba(197, 160, 89, 0.45) !important;
     }
     .btn-gold {
-      background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #a87e2b 100%) !important;
-      color: #070e1e !important;
-      font-weight: 800 !important;
-      transition: all 0.25s ease;
+      background: linear-gradient(135deg, #f3d685 0%, #dfb147 50%, #c08d24 100%) !important;
+      color: #1a0f00 !important;
+      font-weight: 900 !important;
+      border: 1.5px solid #8a5e12 !important;
+      box-shadow: 0 8px 25px rgba(160, 110, 25, 0.38), 0 2px 6px rgba(0, 0, 0, 0.18) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .btn-gold:hover {
+      background: linear-gradient(135deg, #fae29f 0%, #e9bf57 50%, #ce9b32 100%) !important;
+      transform: translateY(-2px) scale(1.02) !important;
+      box-shadow: 0 12px 30px rgba(160, 110, 25, 0.55), 0 0 20px rgba(233, 191, 87, 0.5) !important;
+      border-color: #694406 !important;
     }
     .hero-navy {
-      background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+      background: rgba(20, 12, 8, 0.92);
+      border-bottom: 1px solid rgba(197, 160, 89, 0.35);
+      backdrop-filter: blur(12px);
     }
     [v-cloak] { display: none; }
     
     @media screen {
       .bg-white {
-        background-color: rgba(15, 23, 42, 0.88) !important;
+        background-color: rgba(24, 15, 10, 0.94) !important;
         backdrop-filter: blur(16px);
-        border: 1px solid rgba(197, 160, 89, 0.22) !important;
-        color: #f8fafc !important;
+        border: 1.5px solid rgba(197, 160, 89, 0.35) !important;
+        color: #fdfaf3 !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
       }
       .bg-slate-50 {
-        background-color: rgba(7, 14, 30, 0.65) !important;
-        color: #cbd5e1 !important;
+        background-color: rgba(14, 8, 4, 0.75) !important;
+        color: #f3d685 !important;
+        border-color: rgba(197, 160, 89, 0.25) !important;
       }
       .bg-slate-100 {
-        background-color: rgba(30, 41, 59, 0.8) !important;
-        color: #f1f5f9 !important;
+        background-color: rgba(36, 22, 14, 0.85) !important;
+        color: #fdfaf3 !important;
+        border-color: rgba(197, 160, 89, 0.3) !important;
       }
       .text-slate-900, .text-slate-800 { color: #ffffff !important; }
-      .text-slate-700 { color: #e2e8f0 !important; }
-      .text-slate-600 { color: #cbd5e1 !important; }
-      .text-slate-500 { color: #94a3b8 !important; }
-      .border-slate-200, .border-slate-100 { border-color: rgba(197, 160, 89, 0.18) !important; }
+      .text-slate-700 { color: #fdfaf3 !important; }
+      .text-slate-600 { color: #eedfbd !important; }
+      .text-slate-500 { color: #c5a059 !important; }
+      .border-slate-200, .border-slate-100 { border-color: rgba(197, 160, 89, 0.25) !important; }
       input, select, textarea {
-        background-color: rgba(3, 7, 18, 0.85) !important;
+        background-color: rgba(18, 10, 5, 0.88) !important;
         color: #ffffff !important;
-        border: 1px solid rgba(71, 85, 105, 0.8) !important;
+        border: 1px solid rgba(197, 160, 89, 0.45) !important;
+      }
+      input:focus, select:focus, textarea:focus {
+        border-color: #f59e0b !important;
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.25) !important;
       }
     }
     
@@ -77,17 +97,17 @@
     
     .radio-card input:checked + label {
       border-color: #f59e0b;
-      background-color: rgba(245, 158, 11, 0.18);
+      background-color: rgba(245, 158, 11, 0.22);
       color: #fef08a;
-      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
     }
   </style>
 </head>
-<body class="royal-bg min-h-screen text-slate-100 antialiased flex flex-col selection:bg-amber-400 selection:text-slate-950 relative overflow-x-hidden">
+<body class="royal-bg min-h-screen text-amber-50 antialiased flex flex-col selection:bg-amber-400 selection:text-amber-950 relative overflow-x-hidden">
 
   <!-- Subtle Ambient Glows -->
-  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-500/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
-  <div class="fixed bottom-0 right-0 w-[500px] h-[400px] bg-sky-600/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-600/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed bottom-0 right-0 w-[500px] h-[400px] bg-amber-700/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
 
   <div id="app" v-cloak class="flex flex-col min-h-screen relative z-10">
     
@@ -97,11 +117,11 @@
         <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
           <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-amber-400/60 object-cover shadow-md flex-shrink-0">
           <div class="min-w-0">
-            <h1 class="font-black text-xs sm:text-base text-white leading-tight truncate">
+            <h1 class="font-black font-amiri text-sm sm:text-lg text-white leading-tight truncate">
               نموذج محاكاة وزارة الخارجية المصرية
             </h1>
-            <p class="text-[10px] sm:text-[11px] text-amber-400 font-medium truncate">
-              بوابة الاختبارات الأكاديمية وتسجيل حضور المناديب
+            <p class="text-[10px] sm:text-[11px] text-amber-300 font-ruqaa truncate">
+              جامعة السويس • بوابة الاختبارات الأكاديمية وتسجيل حضور المناديب
             </p>
           </div>
         </div>

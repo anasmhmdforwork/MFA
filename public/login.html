@@ -7,7 +7,7 @@
   <link rel="icon" type="image/jpeg" href="/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
@@ -15,36 +15,46 @@
       font-family: 'Cairo', sans-serif;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
-      background-color: #070e1e;
+      background-color: #120a04;
     }
-    .royal-bg {
-      background: radial-gradient(circle at 50% 30%, #112240 0%, #070e1e 70%, #030712 100%);
+    .royal-mahogany-bg {
+      background: radial-gradient(circle at 50% 25%, #2c170b 0%, #180d05 60%, #0b0602 100%), #120a04;
+      background-attachment: fixed;
     }
+    .font-amiri { font-family: 'Amiri', serif; }
+    .font-kufi { font-family: 'Reem Kufi', sans-serif; }
+    .font-ruqaa { font-family: 'Aref Ruqaa', serif; }
     .gold-gradient-text {
-      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
+      background: linear-gradient(135deg, #fef08a 0%, #dfb147 50%, #c08d24 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .gold-card-border {
-      border: 1px solid rgba(197, 160, 89, 0.28);
+    .diplomatic-card {
+      background: rgba(24, 15, 10, 0.94);
+      border: 1.5px solid rgba(197, 160, 89, 0.45);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 30px rgba(197, 160, 89, 0.12);
     }
-    .gold-card-border:hover {
-      border-color: rgba(197, 160, 89, 0.5);
+    .diplomatic-card:hover {
+      border-color: rgba(223, 177, 71, 0.7);
     }
     .btn-gold {
-      background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #a87e2b 100%);
-      color: #070e1e;
-      transition: all 0.25s ease;
+      background: linear-gradient(135deg, #f3d685 0%, #dfb147 50%, #c08d24 100%) !important;
+      color: #1a0f00 !important;
+      font-weight: 900 !important;
+      border: 1.5px solid #8a5e12 !important;
+      box-shadow: 0 8px 25px rgba(160, 110, 25, 0.38), 0 2px 6px rgba(0, 0, 0, 0.18) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     .btn-gold:hover {
-      background: linear-gradient(135deg, #e5be4a 0%, #d4af37 50%, #b88a32 100%);
-      box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.35);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, #fae29f 0%, #e9bf57 50%, #ce9b32 100%) !important;
+      transform: translateY(-2px) scale(1.02) !important;
+      box-shadow: 0 12px 30px rgba(160, 110, 25, 0.55), 0 0 20px rgba(233, 191, 87, 0.5) !important;
+      border-color: #694406 !important;
     }
     .single-line-quote {
-      font-size: clamp(8px, 2.2vw, 12px);
+      font-size: clamp(9px, 2.3vw, 13px);
       white-space: nowrap;
-      letter-spacing: -0.015em;
+      letter-spacing: -0.01em;
       display: block;
       width: 100%;
       text-align: center;
@@ -56,19 +66,25 @@
     }
   </style>
 </head>
-<body class="royal-bg min-h-screen text-slate-100 flex flex-col justify-between items-center selection:bg-amber-400 selection:text-slate-950 relative overflow-x-hidden p-2.5 sm:p-6">
+<body class="royal-mahogany-bg min-h-screen text-amber-50 flex flex-col justify-between items-center selection:bg-amber-400 selection:text-amber-950 relative overflow-x-hidden p-3 sm:p-6">
 
-  <!-- Subtle Ambient Glows -->
-  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-amber-500/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
-  <div class="fixed bottom-0 right-0 w-[400px] h-[350px] bg-sky-600/10 blur-[130px] rounded-full pointer-events-none -z-10"></div>
+  <!-- Subtle Ambient Mahogany & Gold Glows -->
+  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-amber-600/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed bottom-0 right-0 w-[450px] h-[350px] bg-amber-700/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
 
-  <!-- Spacer to vertically balance -->
-  <div class="w-full h-1 sm:h-6"></div>
+  <!-- Top Simple Navigation Link to Landing Page -->
+  <header class="w-full max-w-lg flex items-center justify-between pt-2 pb-1">
+    <a href="/" class="inline-flex items-center gap-2 text-xs font-bold text-amber-300 hover:text-amber-200 transition-colors">
+      <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      <span class="font-kufi">العودة للوثيقة الرسمية</span>
+    </a>
+    <span class="text-[11px] font-kufi text-amber-500/80 tracking-wider">MFA SUEZ 2026</span>
+  </header>
 
   <!-- Main Login Card Container -->
   <main class="w-full max-w-lg my-auto relative z-20">
 
-    <div class="bg-slate-900/90 backdrop-blur-xl rounded-3xl px-4 py-5 sm:p-8 gold-card-border shadow-2xl relative overflow-hidden">
+    <div class="diplomatic-card backdrop-blur-xl rounded-3xl px-4 py-5 sm:p-8 shadow-2xl relative overflow-hidden">
       
       <!-- Top Card Gold Accent Line -->
       <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
@@ -76,34 +92,36 @@
       <!-- Official Logo & Welcome Header -->
       <div class="text-center mb-6 sm:mb-7">
         
-        <!-- Logo Emblem (100px balanced size) -->
+        <!-- Logo Emblem in Diplomatic Gold Frame -->
         <div class="relative inline-block mb-3">
-          <div class="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-amber-500/40 to-amber-200/20 blur-sm"></div>
+          <div class="absolute -inset-2 rounded-full bg-gradient-to-tr from-amber-500/30 via-yellow-400/20 to-amber-700/30 blur-md"></div>
           <img 
             src="/logo.jpg" 
             alt="شعار نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس" 
-            class="relative rounded-full border-2 border-amber-400/80 object-cover p-1 bg-slate-950 shadow-xl mx-auto"
+            class="relative rounded-full border-2 border-amber-400/90 object-cover p-1 bg-stone-950 shadow-2xl mx-auto"
             style="width: 100px; height: 100px; min-width: 100px; max-width: 100px; min-height: 100px; max-height: 100px;"
           >
         </div>
 
-        <!-- Clean Welcome Text (Plain text without badge, border, or icon) -->
-        <p class="text-slate-300 text-xs sm:text-sm font-semibold mb-1">
-          أهلاً بك في
+        <!-- Institutional Header Details -->
+        <p class="text-amber-300/80 text-xs font-kufi font-bold mb-1 tracking-wider">
+          جمهورية مصر العربية • جامعة السويس
         </p>
 
-        <!-- Title (With جامعة السويس • MFA) -->
-        <h1 class="text-slate-200 text-sm sm:text-base font-bold mb-1">
-          جامعة السويس • MFA
-          <span class="block text-xl sm:text-2xl font-black gold-gradient-text mt-0.5 tracking-tight">
+        <!-- Main Title -->
+        <h1 class="text-stone-100 font-bold mb-1">
+          <span class="block text-2xl sm:text-3xl font-black font-amiri gold-gradient-text mt-0.5 tracking-tight leading-tight">
             نموذج محاكاة وزارة الخارجية
+          </span>
+          <span class="block text-xs sm:text-sm text-amber-200/90 font-ruqaa mt-1">
+            كلية السياسة والاقتصاد • بوابة الدخول الرسمية
           </span>
         </h1>
 
         <!-- Subtitle on ONE SINGLE LINE without breaking or clipping -->
-        <div class="w-full overflow-hidden mt-2 px-1">
-          <p class="single-line-quote text-slate-300 font-medium">
-            حيث يلتقي العلم بالإبداع، لنحوّل المعرفة إلى ممارسة، والطموح إلى قيادة تصنع المستقبل.
+        <div class="w-full overflow-hidden mt-3 px-1 pt-2 border-t border-amber-600/30">
+          <p class="single-line-quote font-ruqaa text-amber-200/75">
+            حيث يلتقي الفكر الدبلوماسي بالتطبيق المؤسسي، لصناعة أجيال واعية تقود المشهد الدولي.
           </p>
         </div>
       </div>
@@ -119,7 +137,7 @@
         
         <!-- Email / Phone Input -->
         <div>
-          <label for="login-identifier" class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
+          <label for="login-identifier" class="block text-xs font-bold text-amber-200 mb-1.5 flex items-center justify-between">
             <span class="flex items-center gap-1.5">
               <i data-lucide="mail" class="w-3.5 h-3.5 text-amber-400"></i>
               <span>البريد الإلكتروني أو رقم الهاتف</span>
@@ -133,14 +151,14 @@
               autocomplete="username"
               dir="auto"
               placeholder="البريد الإلكتروني أو رقم الهاتف"
-              class="w-full bg-slate-950/70 border border-slate-700/80 rounded-2xl px-4 py-3 sm:py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all font-medium"
+              class="w-full bg-stone-950/80 border border-amber-600/40 rounded-2xl px-4 py-3 sm:py-3.5 text-sm text-amber-50 placeholder-stone-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all font-medium"
             >
           </div>
         </div>
 
         <!-- Password Input with Toggle -->
         <div>
-          <label for="login-password" class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
+          <label for="login-password" class="block text-xs font-bold text-amber-200 mb-1.5 flex items-center justify-between">
             <span class="flex items-center gap-1.5">
               <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
               <span>كلمة المرور</span>
@@ -154,12 +172,12 @@
               autocomplete="current-password"
               dir="ltr"
               placeholder="••••••••"
-              class="w-full bg-slate-950/70 border border-slate-700/80 rounded-2xl pl-11 pr-4 py-3 sm:py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all font-mono"
+              class="w-full bg-stone-950/80 border border-amber-600/40 rounded-2xl pl-11 pr-4 py-3 sm:py-3.5 text-sm text-amber-50 placeholder-stone-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all font-mono"
             >
             <button 
               type="button" 
               onclick="togglePasswordVisibility()" 
-              class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400 transition-colors p-1"
+              class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-amber-400 transition-colors p-1"
               aria-label="إظهار / إخفاء كلمة المرور"
             >
               <i id="password-toggle-icon" data-lucide="eye" class="w-4 h-4"></i>
@@ -174,14 +192,14 @@
             id="login-submit-btn"
             class="w-full btn-gold py-3.5 px-4 rounded-2xl text-sm font-black shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span id="btn-text">تسجيل الدخول</span>
+            <span id="btn-text">تسجيل الدخول للمنظومة</span>
             <i id="btn-icon" data-lucide="arrow-left" class="w-4 h-4"></i>
           </button>
         </div>
       </form>
 
       <!-- Informational Helper Box -->
-      <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 leading-relaxed bg-slate-950/40 -mx-4 sm:-mx-8 -mb-5 sm:-mb-8 p-4 rounded-b-3xl flex items-center justify-center gap-2 text-center">
+      <div class="mt-6 pt-4 border-t border-amber-600/30 text-xs text-amber-300/80 leading-relaxed bg-stone-950/60 -mx-4 sm:-mx-8 -mb-5 sm:-mb-8 p-4 rounded-b-3xl flex items-center justify-center gap-2 text-center">
         <i data-lucide="info" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
         <span>كلمة المرور هي كلمة سر الاختبارات (الافتراضية: <strong class="text-amber-300 font-mono">1234</strong>)</span>
       </div>
@@ -189,15 +207,15 @@
     </div>
 
     <!-- Quick Back / Help Links -->
-    <div class="mt-4 sm:mt-5 text-center text-xs text-slate-400">
+    <div class="mt-4 sm:mt-5 text-center text-xs text-amber-400/70">
       <span>تواجه مشكلة في تسجيل الدخول؟ تواصل مع إدارة النموذج أو رئيس لجنتك</span>
     </div>
 
   </main>
 
-  <!-- Clean Minimal Footer -->
-  <footer class="py-3 sm:py-4 px-6 text-center text-[11px] sm:text-xs text-slate-500/80">
-    <p>جميع الحقوق محفوظة © 2026 - نموذج محاكاة وزارة الخارجية المصرية | جامعة السويس</p>
+  <!-- Clean Minimal Footer matching landing page -->
+  <footer class="py-3 sm:py-4 px-6 text-center text-[11px] sm:text-xs text-amber-500/60 font-ruqaa">
+    <p>© 2026 Suez University MFA Simulation Model • All Institutional Rights Reserved</p>
   </footer>
 
   <script>

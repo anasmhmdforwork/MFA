@@ -7,7 +7,7 @@
   <link rel="icon" type="image/jpeg" href="/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;600;700;800;900&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Vue 3 CDN for reactive UI -->
@@ -17,56 +17,75 @@
       font-family: 'Cairo', sans-serif;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
-      background-color: #070e1e;
-      color: #f1f5f9;
+      background-color: #0d0703;
+      color: #f5eedf;
     }
     .royal-bg {
-      background: radial-gradient(circle at 50% 15%, #112240 0%, #070e1e 75%, #030712 100%);
+      background: radial-gradient(circle at 50% 15%, #2c170b 0%, #180d05 60%, #0b0602 100%), #120a04;
       background-attachment: fixed;
     }
+    .font-amiri { font-family: 'Amiri', serif; }
+    .font-kufi { font-family: 'Reem Kufi', sans-serif; }
+    .font-ruqaa { font-family: 'Aref Ruqaa', serif; }
     .gold-gradient-text {
-      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #b4832c 100%);
+      background: linear-gradient(135deg, #fef3c7 0%, #dfb147 50%, #c08d24 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .gold-card-border {
-      border: 1px solid rgba(197, 160, 89, 0.28) !important;
+      border: 1px solid rgba(197, 160, 89, 0.4) !important;
     }
     .btn-gold {
-      background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #a87e2b 100%) !important;
-      color: #070e1e !important;
+      background: linear-gradient(135deg, #f3d685 0%, #dfb147 50%, #c08d24 100%) !important;
+      color: #1a0f00 !important;
       font-weight: 800 !important;
       transition: all 0.25s ease;
     }
+    .btn-gold:hover {
+      background: linear-gradient(135deg, #fde68a 0%, #e6be57 50%, #c9962e 100%) !important;
+      box-shadow: 0 10px 25px -5px rgba(223, 177, 71, 0.45) !important;
+      transform: translateY(-1px);
+    }
     .hero-navy {
-      background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+      background: linear-gradient(180deg, rgba(30, 16, 7, 0.98) 0%, rgba(18, 9, 4, 0.98) 100%);
+      border-bottom: 1px solid rgba(197, 160, 89, 0.35);
     }
     [v-cloak] { display: none; }
     
     @media screen {
       .bg-white {
-        background-color: rgba(15, 23, 42, 0.88) !important;
+        background-color: rgba(24, 15, 10, 0.94) !important;
         backdrop-filter: blur(16px);
-        border: 1px solid rgba(197, 160, 89, 0.22) !important;
-        color: #f8fafc !important;
+        -webkit-backdrop-filter: blur(16px);
+        border: 1.5px solid rgba(197, 160, 89, 0.35) !important;
+        color: #fdf8ed !important;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45) !important;
       }
       .bg-slate-50 {
-        background-color: rgba(7, 14, 30, 0.65) !important;
-        color: #cbd5e1 !important;
+        background-color: rgba(36, 21, 11, 0.75) !important;
+        color: #eedcc6 !important;
       }
       .bg-slate-100 {
-        background-color: rgba(30, 41, 59, 0.8) !important;
-        color: #f1f5f9 !important;
+        background-color: rgba(45, 27, 14, 0.8) !important;
+        color: #fcf4e6 !important;
       }
       .text-slate-900, .text-slate-800 { color: #ffffff !important; }
-      .text-slate-700 { color: #e2e8f0 !important; }
-      .text-slate-600 { color: #cbd5e1 !important; }
-      .text-slate-500 { color: #94a3b8 !important; }
-      .border-slate-200, .border-slate-100 { border-color: rgba(197, 160, 89, 0.18) !important; }
+      .text-slate-700 { color: #f5eedf !important; }
+      .text-slate-600 { color: #eedcc6 !important; }
+      .text-slate-500 { color: #d1bfa8 !important; }
+      .border-slate-200, .border-slate-100 { border-color: rgba(197, 160, 89, 0.25) !important; }
       input, select, textarea {
-        background-color: rgba(3, 7, 18, 0.85) !important;
+        background-color: rgba(14, 7, 3, 0.88) !important;
         color: #ffffff !important;
-        border: 1px solid rgba(71, 85, 105, 0.8) !important;
+        border: 1px solid rgba(197, 160, 89, 0.35) !important;
+      }
+      input::placeholder, textarea::placeholder {
+        color: #8c7355 !important;
+      }
+      input:focus, select:focus, textarea:focus {
+        border-color: #dfb147 !important;
+        outline: none !important;
+        box-shadow: 0 0 0 2px rgba(223, 177, 71, 0.3) !important;
       }
     }
 
@@ -74,12 +93,12 @@
        THE KITCHEN SKEUOMORPHIC TICKET PRINTER & TACTILE COMPONENTS
        ========================================================================= */
     .kitchen-printer-chassis {
-      background: linear-gradient(160deg, #182030 0%, #0d121c 100%);
+      background: linear-gradient(160deg, #24150b 0%, #140b05 100%);
       box-shadow: 
         0 30px 80px rgba(0, 0, 0, 0.9),
         inset 0 1px 1px rgba(255, 255, 255, 0.15),
         inset 0 -2px 4px rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(197, 160, 89, 0.35);
+      border: 1.5px solid rgba(197, 160, 89, 0.45);
     }
     .kitchen-paper-slot > div {
       background: #04070c;
@@ -186,31 +205,31 @@
 <body class="royal-bg min-h-screen text-slate-100 antialiased flex flex-col selection:bg-amber-400 selection:text-slate-950 relative overflow-x-hidden">
 
   <!-- Subtle Ambient Glows -->
-  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-500/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
-  <div class="fixed bottom-0 right-0 w-[500px] h-[400px] bg-sky-600/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-600/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed bottom-0 right-0 w-[500px] h-[400px] bg-amber-900/15 blur-[140px] rounded-full pointer-events-none -z-10"></div>
 
   <div id="app" v-cloak class="flex flex-col min-h-screen relative z-10">
     
     <!-- Top Header -->
-    <header class="hero-navy text-white border-b border-slate-800 shadow-md sticky top-0 z-40">
-      <div class="max-w-5xl mx-auto px-3 sm:px-4 py-2.5 sm:py-4 flex items-center justify-between">
-        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
-          <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-400/60 object-cover shadow-md flex-shrink-0">
+    <header class="hero-navy text-white border-b border-amber-900/60 shadow-md sticky top-0 z-40">
+      <div class="max-w-5xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3.5 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2.5 sm:gap-3 min-w-0 group hover:opacity-95 transition">
+          <img src="/logo.jpg" alt="شعار نموذج محاكاة وزارة الخارجية" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-amber-400/70 object-cover shadow-md flex-shrink-0">
           <div class="min-w-0">
-            <h1 class="font-black text-xs sm:text-base text-white truncate">
+            <h1 class="font-amiri font-bold text-sm sm:text-base text-amber-100 group-hover:text-amber-300 transition truncate">
               نموذج محاكاة وزارة الخارجية
             </h1>
-            <p class="text-[10px] sm:text-[11px] text-amber-400 font-semibold truncate">
+            <p class="font-kufi text-[10px] sm:text-[11px] text-amber-400/90 tracking-wide truncate">
               بوابة حجز المقابلات الشخصية 2026
             </p>
           </div>
-        </div>
+        </a>
 
         <div class="flex items-center gap-2 flex-shrink-0 mr-2">
-          <div class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-slate-800/90 text-amber-400 text-[10px] sm:text-xs font-bold border border-slate-700/80 flex items-center gap-1.5 shadow-inner">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span>بوابة حجز معتمدة</span>
-          </div>
+          <a href="/" class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-amber-950/70 hover:bg-amber-900/80 text-amber-300 text-[10px] sm:text-xs font-bold border border-amber-500/40 flex items-center gap-1.5 shadow-inner transition">
+            <i data-lucide="home" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>الرئيسية</span>
+          </a>
         </div>
       </div>
     </header>
