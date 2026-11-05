@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="scroll-smooth">
+<html lang="ar" dir="rtl" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -8,7 +8,7 @@
 
   <script>
     (function() {
-      var saved = localStorage.getItem('mfa_user_chosen_lang') || 'en';
+      var saved = localStorage.getItem('mfa_user_chosen_lang') || 'ar';
       document.documentElement.lang = saved;
       document.documentElement.dir = (saved === 'ar') ? 'rtl' : 'ltr';
     })();
@@ -86,11 +86,19 @@
       box-sizing: border-box;
     }
 
+    html {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
+    }
+
     body {
       font-family: 'Cairo', sans-serif;
       background-color: var(--desk-wood-base);
       color: var(--ink-primary);
-      overflow-x: hidden;
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
       margin: 0;
       padding: 0;
       position: relative;
@@ -766,7 +774,8 @@
     .parchment-scroll-wrapper.scroll-state-open #parchmentContinuousScroll {
       max-height: none !important;
       opacity: 1 !important;
-      overflow: visible !important;
+      overflow-x: hidden !important;
+      overflow-y: visible !important;
     }
 
     /* Floating Diplomatic Contact Widget (Direct Speed Dial - Fixed to the Right) */
@@ -846,13 +855,15 @@
       top: 0;
       left: 0;
       right: 0;
+      width: 100% !important;
+      max-width: 100vw !important;
       z-index: 100;
-      background: rgba(254, 250, 242, 0.95);
+      background: rgba(254, 250, 242, 0.96);
       backdrop-filter: blur(12px);
       border-bottom: 2px solid rgba(197, 160, 89, 0.55);
-      box-shadow: 0 6px 25px rgba(60, 30, 10, 0.12);
+      box-shadow: 0 4px 20px rgba(60, 30, 10, 0.12);
       transition: all 0.3s ease;
-      direction: ltr !important;
+      overflow: hidden;
     }
 
     /* Scroll progress line */
@@ -865,6 +876,130 @@
       box-shadow: 0 0 10px rgba(197, 160, 89, 0.6);
       width: 0%;
       transition: width 0.1s ease-out;
+    }
+
+    /* =========================================================================
+       COMPREHENSIVE MOBILE VIEWPORT OPTIMIZATIONS (Strict Zero Horizontal Overflow)
+       Guarantees permanent visibility of Language & Login buttons on all mobile screens
+       ========================================================================= */
+    @media (max-width: 768px) {
+      .parchment-scroll-wrapper {
+        max-width: 100vw !important;
+        width: 100% !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+      }
+
+      .parchment-scroll-wrapper.scroll-state-closed {
+        max-width: 100% !important;
+        padding-top: calc(34vh - 42px) !important;
+        padding-bottom: 20vh !important;
+      }
+
+      .parchment-scroll-wrapper.scroll-state-opening,
+      .parchment-scroll-wrapper.scroll-state-open {
+        padding-top: 85px !important;
+        padding-bottom: 60px !important;
+        max-width: 100vw !important;
+      }
+
+      .scroll-finial {
+        height: 40px !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 8px !important;
+        box-sizing: border-box !important;
+      }
+
+      .scroll-finial::before {
+        left: -4px !important;
+        width: 14px !important;
+        height: 34px !important;
+      }
+
+      .scroll-finial::after {
+        right: -4px !important;
+        width: 14px !important;
+        height: 34px !important;
+      }
+
+      .parchment-scroll-wrapper.scroll-state-closed #topScrollFinial::before,
+      .parchment-scroll-wrapper.scroll-state-closed #topScrollFinial::after {
+        height: 68px !important;
+        width: 14px !important;
+      }
+
+      .finial-center-seal {
+        font-size: 10px !important;
+        padding: 2px 6px !important;
+        gap: 4px !important;
+        max-width: 75% !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      .finial-brass-ring {
+        width: 10px !important;
+        height: 28px !important;
+      }
+
+      .parchment-continuous-scroll {
+        padding: 30px 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+      }
+
+      .parchment-continuous-scroll::before {
+        left: 3px !important;
+        width: 5px !important;
+      }
+
+      .parchment-continuous-scroll::after {
+        right: 3px !important;
+        width: 5px !important;
+      }
+
+      .parchment-watermark,
+      .parchment-watermark-secondary {
+        font-size: clamp(32px, 8vw, 70px) !important;
+        max-width: 90% !important;
+        overflow: hidden !important;
+      }
+
+      .scroll-wax-lock {
+        max-width: 95vw !important;
+      }
+
+      .wax-lock-sash {
+        left: 4px !important;
+        right: 4px !important;
+        padding: 0 10px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cinematic-hud .max-w-7xl {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        gap: 6px !important;
+      }
+
+      .cinematic-hud h1 {
+        font-size: 11px !important;
+      }
+
+      .cinematic-hud #langToggleBtn,
+      .cinematic-hud a[href="/login"] {
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+        gap: 3px !important;
+      }
     }
 
     /* Print styles */
@@ -939,37 +1074,35 @@
   <!-- =========================================================================
        FLOATING TOP CINEMATIC HEADS-UP DISPLAY (HUD) IN ROYAL PARCHMENT
        ========================================================================= -->
-  <header class="cinematic-hud" dir="ltr">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-2">
+  <header class="cinematic-hud">
+    <div class="max-w-7xl mx-auto px-2.5 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-1.5 sm:gap-4">
       
-      <!-- Left/Leading: Crest and Title -->
-      <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-        <a href="/" class="flex items-center gap-2 sm:gap-3 group">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform flex-shrink-0">
-            <img src="/logo.jpg" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-xl">
+      <!-- Leading: Crest and Title -->
+      <div class="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
+        <a href="/" class="flex items-center gap-1.5 sm:gap-2.5 min-w-0 group">
+          <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform shrink-0">
+            <img src="/logo.jpg" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-lg sm:rounded-xl">
           </div>
-          <div class="text-start">
-            <div class="flex items-center gap-2">
-              <span class="text-amber-800 font-bold font-kufi text-[10px] sm:text-xs tracking-wider" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
-            </div>
-            <h1 class="text-amber-950 font-black text-xs sm:text-base font-amiri tracking-wide leading-tight sm:leading-tight" data-i18n="hud_brand_title">
+          <div class="min-w-0 text-start">
+            <span class="block text-amber-800 font-bold font-kufi text-[9px] sm:text-xs tracking-wider truncate" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
+            <h1 class="text-amber-950 font-black text-xs sm:text-sm md:text-base font-amiri tracking-tight leading-tight truncate" data-i18n="hud_brand_title">
               <span class="block sm:inline">نموذج محاكاة</span> <span class="block sm:inline">وزارة الخارجية المصرية</span>
             </h1>
           </div>
         </a>
       </div>
 
-      <!-- Right/Trailing: ONLY Language Switcher & Login Buttons -->
-      <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+      <!-- Trailing: ONLY Language Switcher & Login Buttons (Always 100% visible, never shrink) -->
+      <div class="flex items-center gap-1 sm:gap-2.5 shrink-0">
         <!-- BILINGUAL LANGUAGE SWITCHER BUTTON (AR / EN) -->
-        <button id="langToggleBtn" onclick="toggleLanguage()" class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-amber-200/90 hover:bg-amber-300 text-amber-950 border border-amber-600 font-bold text-xs sm:text-sm shadow-sm transition-all hover:scale-105" title="Switch Language / تغيير اللغة">
-          <i data-lucide="languages" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-800"></i>
-          <span id="langBtnLabel">العربية</span>
+        <button id="langToggleBtn" onclick="toggleLanguage()" class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl bg-amber-200/90 hover:bg-amber-300 text-amber-950 border border-amber-600 font-bold text-xs sm:text-sm shadow-sm transition-all hover:scale-105 shrink-0" title="Switch Language / تغيير اللغة">
+          <i data-lucide="languages" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-800 shrink-0"></i>
+          <span id="langBtnLabel">English</span>
         </button>
 
         <!-- LOGIN BUTTON ONLY -->
-        <a href="/login" class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-600 text-amber-950 font-black text-xs sm:text-sm shadow-md shadow-amber-600/25 transition-all hover:scale-105">
-          <i data-lucide="lock" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-950"></i>
+        <a href="/login" class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-600 text-amber-950 font-black text-xs sm:text-sm shadow-md shadow-amber-600/25 transition-all hover:scale-105 shrink-0">
+          <i data-lucide="lock" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-950 shrink-0"></i>
           <span data-i18n="hud_login_btn">تسجيل الدخول</span>
         </a>
       </div>
@@ -2680,8 +2813,8 @@
       }
     };
 
-    // Current Active Language (Default is English 'en' for first-time visitors)
-    let currentLang = localStorage.getItem('mfa_user_chosen_lang') || 'en';
+    // Current Active Language (Default is Arabic 'ar' for all visitors)
+    let currentLang = localStorage.getItem('mfa_user_chosen_lang') || 'ar';
 
     // Roman / Eastern Arabic Numeral mappings for astrolabe & section badges
     const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
