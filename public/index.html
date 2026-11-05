@@ -761,6 +761,36 @@
       overflow: visible !important;
     }
 
+    /* Floating Diplomatic Contact Widget (Direct Speed Dial) */
+    .diplomatic-contact-popup {
+      opacity: 0;
+      transform: translateY(16px) scale(0.96);
+      pointer-events: none;
+      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .diplomatic-contact-popup.active {
+      opacity: 1 !important;
+      transform: translateY(0) scale(1) !important;
+      pointer-events: auto !important;
+    }
+    .contact-item-card {
+      transition: all 0.22s ease;
+      background: rgba(22, 16, 12, 0.94);
+      border: 1px solid rgba(197, 160, 89, 0.35);
+    }
+    .contact-item-card:hover {
+      background: rgba(38, 28, 20, 0.98);
+      border-color: rgba(212, 175, 55, 0.8);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(212, 175, 55, 0.2);
+      transform: translateY(-2px);
+    }
+    .contact-btn-glow {
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(197, 160, 89, 0.25);
+    }
+    .contact-btn-glow:hover {
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(212, 175, 55, 0.45);
+    }
+
     /* Floating Cinematic HUD in Royal Parchment Tone */
     .cinematic-hud {
       position: fixed;
@@ -2001,6 +2031,141 @@
 
   </main>
 
+  <!-- =========================================================================
+       FLOATING DIPLOMATIC CONTACT WIDGET (Facebook, WhatsApp, Phone, Email)
+       Direct channels as found on official MFA SM Facebook page
+       ========================================================================= -->
+  <aside id="diplomaticContactWidget" class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-[120] flex flex-col items-end pointer-events-auto">
+    
+    <!-- Pop-up Menu of Contact Cards (Direct Links) -->
+    <div id="contactMenu" 
+         class="diplomatic-contact-popup mb-3 w-72 sm:w-80 flex flex-col gap-2.5 origin-bottom-right"
+         role="menu"
+         aria-label="قنوات التواصل الرسمية">
+      
+      <!-- Status Header -->
+      <div class="px-3.5 py-2.5 rounded-xl bg-stone-950/95 backdrop-blur-md border border-amber-600/40 shadow-lg">
+        <div class="flex items-center justify-between text-xs font-bold text-amber-200">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span data-i18n="contact_status">متاح للتواصل المباشر</span>
+          </span>
+          <span class="text-[10px] text-amber-400/80 font-mono">MFA SUEZ 2026</span>
+        </div>
+      </div>
+
+      <!-- 1. WhatsApp Card -->
+      <a href="https://wa.me/201004628376" target="_blank" rel="noopener noreferrer"
+         class="contact-item-card group flex items-center justify-between p-3 rounded-2xl backdrop-blur-xl text-amber-50 shadow-xl"
+         role="menuitem"
+         title="واتساب إدارة النموذج">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all shrink-0">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.196 8.196 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.53c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.06-.39-2.02-1.25-.75-.67-1.25-1.5-1.4-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.56-1.35-.77-1.85-.2-.49-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.78 2.72 4.31 3.81.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.17-.48-.29z"/>
+            </svg>
+          </div>
+          <div class="text-start">
+            <div class="text-xs sm:text-sm font-bold font-amiri text-white group-hover:text-emerald-300 transition-colors" data-i18n="contact_wa_title">واتساب إدارة النموذج</div>
+            <div class="text-[11px] font-mono text-emerald-400 font-medium" dir="ltr">+20 10 04628376</div>
+          </div>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-amber-400/60 group-hover:text-emerald-400 transition-all shrink-0">
+          <i data-lucide="chevron-left" class="w-4 h-4 rtl:block ltr:hidden"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 ltr:block rtl:hidden"></i>
+        </div>
+      </a>
+
+      <!-- 2. Facebook Card -->
+      <a href="https://www.facebook.com/people/Ministry-of-Foreign-Affairs-Simulation-Model-Suez-University/61594102152103/" target="_blank" rel="noopener noreferrer"
+         class="contact-item-card group flex items-center justify-between p-3 rounded-2xl backdrop-blur-xl text-amber-50 shadow-xl"
+         role="menuitem"
+         title="الصفحة الرسمية على فيسبوك">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all shrink-0">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </div>
+          <div class="text-start">
+            <div class="text-xs sm:text-sm font-bold font-amiri text-white group-hover:text-blue-300 transition-colors" data-i18n="contact_fb_title">الصفحة الرسمية على فيسبوك</div>
+            <div class="text-[11px] text-blue-300/80 font-serif" data-i18n="contact_fb_sub">Ministry of Foreign Affairs SM</div>
+          </div>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-amber-400/60 group-hover:text-blue-400 transition-all shrink-0">
+          <i data-lucide="chevron-left" class="w-4 h-4 rtl:block ltr:hidden"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 ltr:block rtl:hidden"></i>
+        </div>
+      </a>
+
+      <!-- 3. Phone Call Card -->
+      <a href="tel:+201004628376"
+         class="contact-item-card group flex items-center justify-between p-3 rounded-2xl backdrop-blur-xl text-amber-50 shadow-xl"
+         role="menuitem"
+         title="اتصال هاتفي مباشر">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-stone-950 transition-all shrink-0">
+            <i data-lucide="phone-call" class="w-5 h-5"></i>
+          </div>
+          <div class="text-start">
+            <div class="text-xs sm:text-sm font-bold font-amiri text-white group-hover:text-amber-300 transition-colors" data-i18n="contact_phone_title">اتصال هاتفي مباشر</div>
+            <div class="text-[11px] font-mono text-amber-300 font-medium" dir="ltr">010 04628376</div>
+          </div>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-amber-400/60 group-hover:text-amber-300 transition-all shrink-0">
+          <i data-lucide="chevron-left" class="w-4 h-4 rtl:block ltr:hidden"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 ltr:block rtl:hidden"></i>
+        </div>
+      </a>
+
+      <!-- 4. Official Email Card -->
+      <a href="mailto:ministry.foreign.affairs.sm.su@gmail.com"
+         class="contact-item-card group flex items-center justify-between p-3 rounded-2xl backdrop-blur-xl text-amber-50 shadow-xl"
+         role="menuitem"
+         title="البريد الإلكتروني الرسمي">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white transition-all shrink-0">
+            <i data-lucide="mail" class="w-5 h-5"></i>
+          </div>
+          <div class="text-start">
+            <div class="text-xs sm:text-sm font-bold font-amiri text-white group-hover:text-rose-300 transition-colors" data-i18n="contact_email_title">البريد الإلكتروني الرسمي</div>
+            <div class="text-[10px] font-mono text-rose-300/90 truncate max-w-[150px] sm:max-w-[170px]" dir="ltr">ministry.foreign.affairs.sm.su@gmail.com</div>
+          </div>
+        </div>
+        <div class="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-amber-400/60 group-hover:text-rose-300 transition-all shrink-0">
+          <i data-lucide="chevron-left" class="w-4 h-4 rtl:block ltr:hidden"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 ltr:block rtl:hidden"></i>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Floating Toggle Button (Identical to Image 2 pattern) -->
+    <button id="contactToggleBtn" onclick="toggleContactMenu()" 
+            class="contact-btn-glow flex items-center gap-2.5 px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl bg-stone-950/95 hover:bg-stone-900 text-amber-100 border border-amber-500/50 hover:border-amber-400 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 group focus:outline-none"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-label="تواصل معنا">
+      
+      <!-- State: Closed -->
+      <div id="contactIconClosed" class="flex items-center gap-2">
+        <div class="relative flex items-center">
+          <i data-lucide="message-circle" class="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors"></i>
+          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-stone-950 animate-pulse"></span>
+        </div>
+        <span class="font-amiri font-bold text-sm sm:text-base text-amber-200 group-hover:text-white transition-colors" data-i18n="contact_btn">تواصل معنا</span>
+      </div>
+
+      <!-- State: Open -->
+      <div id="contactIconOpen" class="hidden items-center gap-2">
+        <i data-lucide="x" class="w-5 h-5 text-amber-400 group-hover:text-red-400 transition-colors"></i>
+        <span class="font-amiri font-bold text-sm sm:text-base text-amber-200 group-hover:text-white transition-colors" data-i18n="contact_btn_close">تواصل معنا</span>
+      </div>
+
+    </button>
+
+  </aside>
+
 
   <!-- =========================================================================
        BILINGUAL DICTIONARY & CINEMATIC SCRIPT ENGINE
@@ -2244,6 +2409,16 @@
         col_c3_s: "وثيقة إلكترونية موثقة",
         col_closing: "حررت هذه الوثيقة التاريخية بجمهورية مصر العربية، جامعة السويس، لنقل التقاليد الدبلوماسية المصرية الراسخة وتأهيل أجيال الغد لقيادة المشهد الدولي.",
         col_copy: "© 2026 Suez University MFA Simulation Model • All Institutional Rights Reserved",
+
+        // Floating Contact Widget
+        contact_btn: "تواصل معنا",
+        contact_btn_close: "تواصل معنا",
+        contact_status: "متاح للتواصل المباشر",
+        contact_wa_title: "واتساب إدارة النموذج",
+        contact_fb_title: "الصفحة الرسمية على فيسبوك",
+        contact_fb_sub: "Ministry of Foreign Affairs SM",
+        contact_phone_title: "اتصال هاتفي مباشر",
+        contact_email_title: "البريد الإلكتروني الرسمي",
 
         // Tooltips
         tooltip_1: "١. الهوية والمنطلق المؤسسي",
@@ -2491,6 +2666,16 @@
         col_c3_s: "Authenticated Digital Record",
         col_closing: "Enacted in the Arab Republic of Egypt, Suez University, transmitting Egypt's venerated diplomatic traditions and cultivating tomorrow's leaders for the international arena.",
         col_copy: "© 2026 Suez University MFA Simulation Model • All Institutional Rights Reserved",
+
+        // Floating Contact Widget
+        contact_btn: "Contact Us",
+        contact_btn_close: "Contact Us",
+        contact_status: "Direct Communication",
+        contact_wa_title: "WhatsApp Direct Chat",
+        contact_fb_title: "Official Facebook Page",
+        contact_fb_sub: "Ministry of Foreign Affairs SM",
+        contact_phone_title: "Direct Phone Call",
+        contact_email_title: "Official Email",
 
         // Tooltips
         tooltip_1: "I. Institutional Identity & Origin",
@@ -2981,6 +3166,71 @@
 
     // Automatically open after exactly 0.7s (700ms) on page load
     setTimeout(unrollDiplomaticScroll, 700);
+
+    // =========================================================================
+    // FLOATING DIPLOMATIC CONTACT WIDGET INTERACTION ENGINE
+    // =========================================================================
+    let isContactMenuOpen = false;
+
+    function toggleContactMenu() {
+      if (typeof tactileAudio !== 'undefined' && tactileAudio && tactileAudio.click) {
+        tactileAudio.click();
+      }
+      isContactMenuOpen = !isContactMenuOpen;
+      const menu = document.getElementById('contactMenu');
+      const iconClosed = document.getElementById('contactIconClosed');
+      const iconOpen = document.getElementById('contactIconOpen');
+      const btn = document.getElementById('contactToggleBtn');
+
+      if (!menu) return;
+
+      if (isContactMenuOpen) {
+        menu.classList.add('active');
+        if (iconClosed) {
+          iconClosed.classList.add('hidden');
+          iconClosed.classList.remove('flex');
+        }
+        if (iconOpen) {
+          iconOpen.classList.remove('hidden');
+          iconOpen.classList.add('flex');
+        }
+        if (btn) {
+          btn.setAttribute('aria-expanded', 'true');
+          btn.classList.add('border-amber-400', 'ring-2', 'ring-amber-400/30');
+        }
+      } else {
+        menu.classList.remove('active');
+        if (iconClosed) {
+          iconClosed.classList.remove('hidden');
+          iconClosed.classList.add('flex');
+        }
+        if (iconOpen) {
+          iconOpen.classList.add('hidden');
+          iconOpen.classList.remove('flex');
+        }
+        if (btn) {
+          btn.setAttribute('aria-expanded', 'false');
+          btn.classList.remove('border-amber-400', 'ring-2', 'ring-amber-400/30');
+        }
+      }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    // Auto-close if clicked outside
+    document.addEventListener('click', function(e) {
+      if (!isContactMenuOpen) return;
+      const widget = document.getElementById('diplomaticContactWidget');
+      if (widget && !widget.contains(e.target)) {
+        toggleContactMenu();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && isContactMenuOpen) {
+        toggleContactMenu();
+      }
+    });
 
     // On Load: Apply Saved or Default Language & Setup Tactile Interactions
     applyLanguage(currentLang);
