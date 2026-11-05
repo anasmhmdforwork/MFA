@@ -3431,7 +3431,7 @@
               <tbody class="divide-y divide-slate-100">
                 <tr v-for="mem in operationalStats.memberProfiles" :key="mem.id" class="hover:bg-amber-900/60 transition">
                   <td class="py-3">
-                    <div class="font-bold text-slate-900 text-sm">{{ mem.arabicName || mem.fullName }}</div>
+                    <div class="font-bold text-amber-100 text-sm">{{ mem.arabicName || mem.fullName }}</div>
                     <div class="text-[10px] text-slate-400 font-mono">{{ mem.phone }} | {{ mem.faculty }}</div>
                   </td>
                   <td class="py-3 text-center">
@@ -3531,7 +3531,7 @@
         <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 shadow-md text-amber-100">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h4 class="font-black text-slate-900 text-base">مرشحو الرغبة الثانية للجنة</h4>
+              <h4 class="font-black text-amber-100 text-base">مرشحو الرغبة الثانية للجنة</h4>
               <p class="text-xs text-slate-500">قائمة بالمرشحين الذين اختاروا هذه اللجنة كرغبة أخرى، يمكن الاستعانة بهم إذا احتاجت اللجنة أعضاء إضافيين</p>
             </div>
             <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-800 text-xs font-bold">
@@ -4605,15 +4605,15 @@
         
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-800 flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center justify-center font-bold">
               <i data-lucide="clock" class="w-5 h-5 text-amber-600"></i>
             </div>
             <div>
-              <h4 class="font-black text-slate-900 text-lg">توليد وتقسيم مواعيد المقابلات آلياً</h4>
-              <p class="text-xs text-slate-500">حدد نافذة الوقت وسيقوم النظام بحساب وتقسيم عدد المقابلات تلقائياً</p>
+              <h4 class="font-black text-amber-100 text-lg">توليد وتقسيم مواعيد المقابلات آلياً</h4>
+              <p class="text-xs text-amber-200/60">حدد نافذة الوقت وسيقوم النظام بحساب وتقسيم عدد المقابلات تلقائياً</p>
             </div>
           </div>
-          <button @click="showBatchModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="showBatchModal = false" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -4622,7 +4622,7 @@
           
           <!-- Committee picker (if admin) -->
           <div v-if="currentUser && currentUser.role === 'admin'">
-            <label class="block text-xs font-bold text-slate-700 mb-1">اللجنة المستهدفة:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">اللجنة المستهدفة:</label>
             <select v-model="batchForm.committeeId" class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
               <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.name }}</option>
             </select>
@@ -4630,21 +4630,21 @@
 
           <!-- Date -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ المقابلات:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">تاريخ المقابلات:</label>
             <input 
               type="date" 
               v-model="batchForm.date" 
               required
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs font-bold text-slate-800 outline-none focus:border-amber-500"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 outline-none focus:border-amber-400"
             >
           </div>
 
           <!-- Type: Online or Offline -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">نوع المقابلات:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">نوع المقابلات:</label>
             <div class="grid grid-cols-2 gap-3">
               <label 
-                :class="batchForm.type === 'online' ? 'bg-amber-950/50 border-amber-600/30 text-amber-200 ring-2 ring-blue-500/20' : 'bg-[#140b05] border-amber-600/30 text-slate-700'"
+                :class="batchForm.type === 'online' ? 'bg-amber-500/20 border-amber-400 text-amber-200 ring-2 ring-amber-400/30 font-black' : 'bg-[#140a04] border-amber-600/40 text-amber-200/70 hover:border-amber-500/60'"
                 class="flex items-center justify-center gap-2 p-3 rounded-xl border font-bold text-xs cursor-pointer transition"
               >
                 <input type="radio" v-model="batchForm.type" value="online" class="hidden">
@@ -4653,7 +4653,7 @@
               </label>
 
               <label 
-                :class="batchForm.type === 'offline' ? 'bg-emerald-50 border-emerald-500 text-emerald-900 ring-2 ring-emerald-500/20' : 'bg-[#140b05] border-amber-600/30 text-slate-700'"
+                :class="batchForm.type === 'offline' ? 'bg-amber-500/20 border-amber-400 text-amber-200 ring-2 ring-amber-400/30 font-black' : 'bg-[#140a04] border-amber-600/40 text-amber-200/70 hover:border-amber-500/60'"
                 class="flex items-center justify-center gap-2 p-3 rounded-xl border font-bold text-xs cursor-pointer transition"
               >
                 <input type="radio" v-model="batchForm.type" value="offline" class="hidden">
@@ -4665,7 +4665,7 @@
 
           <!-- Meeting Link or Physical Location -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">
               {{ batchForm.type === 'online' ? 'رابط الاجتماع (Google Meet / Zoom):' : 'مكان ومقر المقابلة في الكلية:' }}
             </label>
             <input 
@@ -4673,28 +4673,28 @@
               v-model="batchForm.locationOrLink" 
               :placeholder="batchForm.type === 'online' ? 'https://meet.google.com/xyz-abcd-efg' : 'مثال: قاعة السيمنار - مبنى كلية السياسة والاقتصاد'"
               required
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs font-medium text-slate-800 outline-none focus:border-amber-500"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
             >
           </div>
 
           <!-- Start & End Time -->
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">وقت البداية:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">وقت البداية:</label>
               <input 
                 type="time" 
                 v-model="batchForm.startTime" 
                 required
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs font-bold text-slate-800 outline-none"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 outline-none focus:border-amber-400"
               >
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">وقت النهاية:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">وقت النهاية:</label>
               <input 
                 type="time" 
                 v-model="batchForm.endTime" 
                 required
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs font-bold text-slate-800 outline-none"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 outline-none focus:border-amber-400"
               >
             </div>
           </div>
@@ -4702,7 +4702,7 @@
           <!-- Duration & Break -->
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">مدة كل مقابلة (بالدقائق):</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">مدة كل مقابلة (بالدقائق):</label>
               <select v-model="batchForm.durationMinutes" class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option :value="10">10 دقائق</option>
                 <option :value="15">15 دقيقة (موصى بها)</option>
@@ -4711,7 +4711,7 @@
               </select>
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">استراحة بين المقابلات:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">استراحة بين المقابلات:</label>
               <select v-model="batchForm.breakMinutes" class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option :value="0">بدون استراحة (مباشر)</option>
                 <option :value="5">5 دقائق</option>
@@ -4721,21 +4721,21 @@
           </div>
 
           <!-- Calculated Slots Preview -->
-          <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-950 flex items-center justify-between">
+          <div class="p-4 rounded-2xl bg-[#140a04] border border-amber-500/40 text-xs text-amber-200 flex items-center justify-between shadow-inner">
             <div>
-              <b>التقدير الآلي:</b> سيتم إنشاء تقريباً <b class="text-amber-800 text-sm font-black">{{ calculatedSlotsEstimate }}</b> موعد مقابلة
+              <b class="text-amber-300">التقدير الآلي:</b> سيتم إنشاء تقريباً <b class="text-amber-400 text-base font-black font-mono">{{ calculatedSlotsEstimate }}</b> موعد مقابلة
             </div>
-            <i data-lucide="calculator" class="w-5 h-5 text-amber-600"></i>
+            <i data-lucide="calculator" class="w-5 h-5 text-amber-400"></i>
           </div>
 
           <!-- Notes -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات أو تنبيهات للمرشحين (تظهر لهم في بطاقة الحجز):</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">ملاحظات أو تنبيهات للمرشحين (تظهر لهم في بطاقة الحجز):</label>
             <input 
               type="text" 
               v-model="batchForm.notes" 
               placeholder="مثال: يرجى التواجد قبل الموعد بـ 5 دقائق وإحضار كارنيه الكلية"
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-800 outline-none"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400 resize-none"
             >
           </div>
 
@@ -4743,7 +4743,7 @@
             <button 
               type="submit" 
               :disabled="isGenerating"
-              class="flex-1 py-3.5 px-4 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40 hover:border-amber-400 text-white font-bold text-xs shadow-md transition disabled:opacity-50"
+              class="btn-gold flex-1 py-3.5 px-4 rounded-xl text-slate-950 font-black text-xs shadow-lg shadow-amber-900/40 transition disabled:opacity-50 hover:scale-[1.01] active:scale-[0.99]"
             >
               <span v-if="isGenerating">جاري التقسيم والتوليد...</span>
               <span v-else>توليد المواعيد وتقسيمها الآن</span>
@@ -4751,7 +4751,7 @@
             <button 
               type="button" 
               @click="showBatchModal = false"
-              class="px-5 py-3.5 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs transition"
+              class="px-5 py-3.5 rounded-xl bg-[#140a04] hover:bg-amber-950/80 text-amber-300/80 hover:text-amber-100 border border-amber-600/40 font-bold text-xs transition"
             >
               إلغاء
             </button>
@@ -4771,10 +4771,10 @@
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
           <div>
             <span class="text-[11px] font-bold text-amber-600">تقييم المقابلة الشخصية</span>
-            <h4 class="font-black text-slate-900 text-lg">{{ evalCandidate.arabicName }}</h4>
-            <p class="text-xs text-slate-500">{{ evalCandidate.university }} • {{ evalCandidate.faculty }}</p>
+            <h4 class="font-black text-amber-100 text-lg">{{ evalCandidate.arabicName }}</h4>
+            <p class="text-xs text-amber-200/60">{{ evalCandidate.university }} • {{ evalCandidate.faculty }}</p>
           </div>
-          <button @click="evalCandidate = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="evalCandidate = null" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -4783,10 +4783,10 @@
           
           <!-- Attendance Status -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">حالة الحضور:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1.5">حالة الحضور:</label>
             <div class="grid grid-cols-3 gap-2">
               <label 
-                :class="evalForm.attendanceStatus === 'attended' ? 'bg-emerald-50 border-emerald-500 text-emerald-900 ring-2 ring-emerald-500/20' : 'bg-[#140b05] border-amber-600/30 text-slate-700'"
+                :class="evalForm.attendanceStatus === 'attended' ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 ring-2 ring-emerald-500/30 font-black' : 'bg-[#140a04] border-amber-600/40 text-amber-200/70 hover:border-amber-500/60'"
                 class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold cursor-pointer transition"
               >
                 <input type="radio" v-model="evalForm.attendanceStatus" value="attended" class="hidden">
@@ -4795,7 +4795,7 @@
               </label>
 
               <label 
-                :class="evalForm.attendanceStatus === 'absent' ? 'bg-rose-50 border-rose-500 text-rose-900 ring-2 ring-rose-500/20' : 'bg-[#140b05] border-amber-600/30 text-slate-700'"
+                :class="evalForm.attendanceStatus === 'absent' ? 'bg-rose-950/60 border-rose-500 text-rose-300 ring-2 ring-rose-500/30 font-black' : 'bg-[#140a04] border-amber-600/40 text-amber-200/70 hover:border-amber-500/60'"
                 class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold cursor-pointer transition"
               >
                 <input type="radio" v-model="evalForm.attendanceStatus" value="absent" class="hidden">
@@ -4804,7 +4804,7 @@
               </label>
 
               <label 
-                :class="evalForm.attendanceStatus === 'excused' ? 'bg-amber-50 border-amber-500 text-amber-900 ring-2 ring-amber-500/20' : 'bg-[#140b05] border-amber-600/30 text-slate-700'"
+                :class="evalForm.attendanceStatus === 'excused' ? 'bg-amber-950/60 border-amber-500 text-amber-300 ring-2 ring-amber-500/30 font-black' : 'bg-[#140a04] border-amber-600/40 text-amber-200/70 hover:border-amber-500/60'"
                 class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-bold cursor-pointer transition"
               >
                 <input type="radio" v-model="evalForm.attendanceStatus" value="excused" class="hidden">
@@ -4815,10 +4815,10 @@
           </div>
 
           <!-- Overall Score out of 10 -->
-          <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/80">
+          <div class="bg-[#140a04] p-4 rounded-2xl border border-amber-500/40 shadow-inner">
             <div class="flex items-center justify-between mb-2">
-              <label class="text-xs font-black text-slate-900">التقييم العام للمقابلة (من 10):</label>
-              <span class="text-xl font-black text-amber-700">{{ evalForm.score || 0 }} / 10</span>
+              <label class="text-xs font-black text-amber-200">التقييم العام للمقابلة (من 10):</label>
+              <span class="text-2xl font-black text-amber-400 font-mono">{{ evalForm.score || 0 }} / 10</span>
             </div>
             <input 
               type="range" 
@@ -4826,9 +4826,9 @@
               max="10" 
               step="0.5" 
               v-model="evalForm.score" 
-              class="w-full accent-amber-600 cursor-pointer"
+              class="w-full accent-amber-500 cursor-pointer"
             >
-            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+            <div class="flex justify-between text-[10px] text-amber-300/60 mt-1 font-mono">
               <span>1 (ضعيف)</span>
               <span>5 (متوسط)</span>
               <span>8 (جيد جداً)</span>
@@ -4838,42 +4838,42 @@
 
           <!-- Detailed Criteria (Optional) -->
           <div class="space-y-2 text-xs">
-            <span class="font-bold text-slate-700 block mb-1">تفاصيل المعايير (اختياري من 10):</span>
+            <span class="font-bold text-amber-200/90 block mb-1">تفاصيل المعايير (اختياري من 10):</span>
             
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <span class="text-[11px] text-slate-500">مهارات التواصل والإقناع:</span>
-                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.communicationScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-amber-600/30 text-xs text-slate-800">
+                <span class="text-[11px] text-amber-300/70">مهارات التواصل والإقناع:</span>
+                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.communicationScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400">
               </div>
               <div>
-                <span class="text-[11px] text-slate-500">المعرفة بمجال اللجنة:</span>
-                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.knowledgeScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-amber-600/30 text-xs text-slate-800">
+                <span class="text-[11px] text-amber-300/70">المعرفة بمجال اللجنة:</span>
+                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.knowledgeScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400">
               </div>
               <div>
-                <span class="text-[11px] text-slate-500">الالتزام والشغف:</span>
-                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.commitmentScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-amber-600/30 text-xs text-slate-800">
+                <span class="text-[11px] text-amber-300/70">الالتزام والشغف:</span>
+                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.commitmentScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400">
               </div>
               <div>
-                <span class="text-[11px] text-slate-500">اللغة الإنجليزية:</span>
-                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.englishScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-amber-600/30 text-xs text-slate-800">
+                <span class="text-[11px] text-amber-300/70">اللغة الإنجليزية:</span>
+                <input type="number" min="1" max="10" step="0.5" v-model="evalForm.englishScore" placeholder="10 / ..." class="w-full p-2 rounded-lg border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400">
               </div>
             </div>
           </div>
 
           <!-- Notes -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات المقابلة وانطباع المقيم:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">ملاحظات المقابلة وانطباع المقيم:</label>
             <textarea 
               v-model="evalForm.notes" 
               rows="3" 
               placeholder="اكتب نقاط القوة والضعف وأي توصيات بشأن المرشح..." 
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-800 outline-none focus:border-amber-500"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400 resize-none"
             ></textarea>
           </div>
 
           <!-- Committee Decision -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">القرار المبدئي للجنة:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">القرار المبدئي للجنة:</label>
             <select v-model="evalForm.decision" class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
               <option value="pending">قيد المراجعة والمفاضلة</option>
               <option value="accepted">مقبول في اللجنة</option>
@@ -4884,12 +4884,12 @@
           </div>
 
           <!-- Accepted Role Specification (Delegate vs Member) -->
-          <div v-if="evalForm.decision === 'accepted'" class="bg-gradient-to-br from-amber-50 to-amber-100/60 p-4 rounded-2xl border-2 border-amber-300/80 space-y-3 animate-fade-in">
+          <div v-if="evalForm.decision === 'accepted'" class="bg-gradient-to-br from-[#24130a] via-[#1a0e06] to-[#120703] p-4 rounded-2xl border border-amber-500/50 shadow-xl space-y-3 animate-fade-in">
             <div>
-              <label class="block text-xs font-black text-slate-900 mb-1.5">تحديد الصفة والدور في اللجنة:</label>
+              <label class="block text-xs font-black text-amber-200 mb-1.5">تحديد الصفة والدور في اللجنة:</label>
               <div class="grid grid-cols-2 gap-2">
                 <label 
-                  :class="evalForm.roleType === 'delegate' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30'"
+                  :class="evalForm.roleType === 'delegate' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
                   class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-bold cursor-pointer transition"
                 >
                   <input type="radio" v-model="evalForm.roleType" value="delegate" class="hidden">
@@ -4898,7 +4898,7 @@
                 </label>
 
                 <label 
-                  :class="evalForm.roleType === 'member' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30'"
+                  :class="evalForm.roleType === 'member' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
                   class="flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-bold cursor-pointer transition"
                 >
                   <input type="radio" v-model="evalForm.roleType" value="member" class="hidden">
@@ -4909,11 +4909,11 @@
             </div>
 
             <!-- If Member, choose Sub-Department -->
-            <div v-if="evalForm.roleType === 'member'" class="pt-2 border-t border-amber-200">
-              <label class="block text-[11px] font-bold text-slate-800 mb-1.5">اختر القسم الداخلي للعضو في القطاع:</label>
+            <div v-if="evalForm.roleType === 'member'" class="pt-2 border-t border-amber-600/30">
+              <label class="block text-[11px] font-bold text-amber-200/90 mb-1.5">اختر القسم الداخلي للعضو في القطاع:</label>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <label 
-                  :class="evalForm.subDepartment === 'organization' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30 font-bold'"
+                  :class="evalForm.subDepartment === 'organization' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60 font-bold'"
                   class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="organization" class="hidden">
@@ -4921,7 +4921,7 @@
                 </label>
 
                 <label 
-                  :class="evalForm.subDepartment === 'hr' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30 font-bold'"
+                  :class="evalForm.subDepartment === 'hr' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60 font-bold'"
                   class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="hr" class="hidden">
@@ -4929,7 +4929,7 @@
                 </label>
 
                 <label 
-                  :class="evalForm.subDepartment === 'media' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30 font-bold'"
+                  :class="evalForm.subDepartment === 'media' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60 font-bold'"
                   class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="media" class="hidden">
@@ -4937,7 +4937,7 @@
                 </label>
 
                 <label 
-                  :class="evalForm.subDepartment === 'academic' ? 'btn-gold shadow-md font-black' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30 font-bold'"
+                  :class="evalForm.subDepartment === 'academic' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60 font-bold'"
                   class="flex items-center justify-center p-2 rounded-xl text-[11px] font-bold cursor-pointer transition text-center"
                 >
                   <input type="radio" v-model="evalForm.subDepartment" value="academic" class="hidden">
@@ -4946,7 +4946,7 @@
               </div>
             </div>
 
-            <p class="text-[10px] text-amber-800 font-medium">
+            <p class="text-[10px] text-amber-300/80 font-medium">
               تنويه: كلمة المرور الموحدة لحساب المندوب لأداء الاختبارات وتسجيل الحضور هي: <strong>1234</strong>
             </p>
           </div>
@@ -4954,14 +4954,14 @@
           <div class="flex items-center gap-3 pt-4 border-t border-amber-600/30">
             <button 
               type="submit" 
-              class="flex-1 py-3 px-4 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40 hover:border-amber-400 text-white font-bold text-xs shadow-md transition"
+              class="btn-gold flex-1 py-3 px-4 rounded-xl text-slate-950 font-black text-xs shadow-lg shadow-amber-900/40 transition hover:scale-[1.01] active:scale-[0.99]"
             >
               حفظ التقييم
             </button>
             <button 
               type="button" 
               @click="evalCandidate = null"
-              class="px-5 py-3 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs transition"
+              class="px-5 py-3 rounded-xl bg-[#140a04] hover:bg-amber-950/80 text-amber-300/80 hover:text-amber-100 border border-amber-600/40 font-bold text-xs transition"
             >
               إلغاء
             </button>
@@ -4981,10 +4981,10 @@
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
           <div>
             <span class="text-[11px] font-bold text-amber-600">استمارة التقديم الرسمية للمرشح</span>
-            <h4 class="font-black text-slate-900 text-xl">{{ dossierCandidate.arabicName }}</h4>
-            <p class="text-xs text-slate-500">{{ dossierCandidate.fullName }} • {{ dossierCandidate.university }}</p>
+            <h4 class="font-black text-amber-100 text-xl">{{ dossierCandidate.arabicName }}</h4>
+            <p class="text-xs text-amber-200/60">{{ dossierCandidate.fullName }} • {{ dossierCandidate.university }}</p>
           </div>
-          <button @click="dossierCandidate = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="dossierCandidate = null" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -4995,15 +4995,15 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-[#140b05] rounded-2xl border border-amber-600/30">
             <div>
               <span class="text-slate-400 block text-[11px]">الجامعة:</span>
-              <b class="text-slate-800">{{ dossierCandidate.university }}</b>
+              <b class="text-amber-100">{{ dossierCandidate.university }}</b>
             </div>
             <div>
               <span class="text-slate-400 block text-[11px]">الكلية:</span>
-              <b class="text-slate-800">{{ dossierCandidate.faculty }}</b>
+              <b class="text-amber-100">{{ dossierCandidate.faculty }}</b>
             </div>
             <div>
               <span class="text-slate-400 block text-[11px]">الفرقة:</span>
-              <b class="text-slate-800">{{ dossierCandidate.grade }}</b>
+              <b class="text-amber-100">{{ dossierCandidate.grade }}</b>
             </div>
             <div>
               <span class="text-slate-400 block text-[11px]">رقم الواتساب:</span>
@@ -5013,18 +5013,18 @@
             </div>
             <div>
               <span class="text-slate-400 block text-[11px]">البريد الإلكتروني:</span>
-              <b class="text-slate-800 break-all">{{ dossierCandidate.email }}</b>
+              <b class="text-amber-100 font-mono break-all">{{ dossierCandidate.email }}</b>
             </div>
             <div>
               <span class="text-slate-400 block text-[11px]">مستوى الإنجليزية:</span>
-              <b class="text-slate-800">{{ dossierCandidate.englishLevel }}</b>
+              <b class="text-amber-100">{{ dossierCandidate.englishLevel }}</b>
             </div>
           </div>
 
           <!-- Preferences -->
-          <div class="p-4 bg-amber-50/50 rounded-2xl border border-amber-200">
-            <div class="font-bold text-slate-900 mb-1">الرغبات والمسار:</div>
-            <div class="text-slate-700">
+          <div class="p-4 bg-[#140a04] rounded-2xl border border-amber-500/40 shadow-inner">
+            <div class="font-bold text-amber-300 mb-2 border-b border-amber-600/30 pb-1.5 flex items-center gap-2"><i data-lucide="compass" class="w-4 h-4 text-amber-400"></i> الرغبات والمسار:</div>
+            <div class="text-amber-200/90 leading-relaxed">
               <b>الرغبة الأولى:</b> {{ dossierCandidate.firstPreference }}
               <br>
               <b>كل الرغبات المختارة:</b> {{ dossierCandidate.allPreferences || 'لا توجد' }}
@@ -5037,24 +5037,24 @@
 
           <!-- Motivation & Reasons -->
           <div v-if="dossierCandidate.reasonsForSectors" class="p-4 bg-[#140b05] rounded-2xl border border-amber-600/30">
-            <b class="text-slate-900 block mb-1">سبب اختيار القطاعات:</b>
-            <p class="text-slate-700 leading-relaxed">{{ dossierCandidate.reasonsForSectors }}</p>
+            <b class="text-amber-300 block mb-1">سبب اختيار القطاعات:</b>
+            <p class="text-amber-200/80 leading-relaxed">{{ dossierCandidate.reasonsForSectors }}</p>
           </div>
 
           <div v-if="dossierCandidate.motivation" class="p-4 bg-[#140b05] rounded-2xl border border-amber-600/30">
-            <b class="text-slate-900 block mb-1">دافع التقديم للنموذج:</b>
-            <p class="text-slate-700 leading-relaxed">{{ dossierCandidate.motivation }}</p>
+            <b class="text-amber-300 block mb-1">دافع التقديم للنموذج:</b>
+            <p class="text-amber-200/80 leading-relaxed">{{ dossierCandidate.motivation }}</p>
           </div>
 
           <!-- Activities -->
           <div v-if="dossierCandidate.activitiesDetails" class="p-4 bg-[#140b05] rounded-2xl border border-amber-600/30">
-            <b class="text-slate-900 block mb-1">تفاصيل الأنشطة والخبرات السابقة:</b>
-            <p class="text-slate-700 leading-relaxed whitespace-pre-line">{{ dossierCandidate.activitiesDetails }}</p>
+            <b class="text-amber-300 block mb-1">تفاصيل الأنشطة والخبرات السابقة:</b>
+            <p class="text-amber-200/80 leading-relaxed whitespace-pre-line">{{ dossierCandidate.activitiesDetails }}</p>
           </div>
 
           <div v-if="dossierCandidate.skills" class="p-4 bg-[#140b05] rounded-2xl border border-amber-600/30">
-            <b class="text-slate-900 block mb-1">المهارات والخبرات التي يمكنه تقديمها:</b>
-            <p class="text-slate-700 leading-relaxed">{{ dossierCandidate.skills }}</p>
+            <b class="text-amber-300 block mb-1">المهارات والخبرات التي يمكنه تقديمها:</b>
+            <p class="text-amber-200/80 leading-relaxed">{{ dossierCandidate.skills }}</p>
             <div class="mt-2 text-slate-600">
               <b>أبرز مهارة:</b> {{ dossierCandidate.topSkill }}
             </div>
@@ -5063,7 +5063,7 @@
         </div>
 
         <div class="mt-6 pt-4 border-t border-amber-600/30 flex justify-end">
-          <button @click="dossierCandidate = null" class="px-5 py-2.5 rounded-xl bg-[#180d05]/95 text-white font-bold text-xs">
+          <button @click="dossierCandidate = null" class="btn-gold px-6 py-2.5 rounded-xl text-slate-950 font-black text-xs shadow-md transition">
             إغلاق
           </button>
         </div>
@@ -5078,19 +5078,19 @@
       <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-7 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right">
         
         <div class="flex items-center gap-3 mb-4 pb-3 border-b border-amber-600/30">
-          <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center justify-center font-bold">
             <i data-lucide="arrow-left-right" class="w-5 h-5"></i>
           </div>
           <div>
-            <h4 class="font-black text-slate-900 text-base">تحويل المرشح لقطاع آخر</h4>
-            <p class="text-xs text-slate-500">{{ transferCandidate.arabicName }}</p>
+            <h4 class="font-black text-amber-100 text-base">تحويل المرشح لقطاع آخر</h4>
+            <p class="text-xs text-amber-200/60">{{ transferCandidate.arabicName }}</p>
           </div>
         </div>
 
         <form @submit.prevent="executeTransfer" class="space-y-4">
           
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">القطاع / اللجنة المحول إليها:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">القطاع / اللجنة المحول إليها:</label>
             <select v-model="transferForm.targetCommitteeId" required class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
               <option value="" disabled>اختر اللجنة المناسبة للمرشح...</option>
               <option 
@@ -5104,31 +5104,32 @@
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">سبب التحويل:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">سبب التحويل:</label>
             <textarea 
               v-model="transferForm.reason" 
               rows="3" 
               required
               placeholder="اكتب سبب التحويل (مثال: شغفه ومهاراته أنسب للشئون العربية بناء على المقابلة)"
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-800 outline-none"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
             ></textarea>
           </div>
 
-          <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-900">
-            تنبيه: سيتم نقل المرشح فوراً إلى قائمة اللجنة الجديدة، وإتاحة موعد مقابلته السابق لحجز مرشحين آخرين.
+          <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-200/90 flex items-start gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+            <span>تنبيه: سيتم نقل المرشح فوراً إلى قائمة اللجنة الجديدة، وإتاحة موعد مقابلته السابق لحجز مرشحين آخرين.</span>
           </div>
 
           <div class="flex items-center gap-3 pt-3 border-t border-amber-600/30">
             <button 
               type="submit" 
-              class="flex-1 py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition"
+              class="btn-gold flex-1 py-3 px-4 rounded-xl text-slate-950 font-black text-xs shadow-lg shadow-amber-900/40 transition hover:scale-[1.01] active:scale-[0.99]"
             >
               تأكيد التحويل
             </button>
             <button 
               type="button" 
               @click="transferCandidate = null"
-              class="px-4 py-3 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs transition"
+              class="px-4 py-3 rounded-xl bg-[#140a04] hover:bg-amber-950/80 text-amber-300/80 hover:text-amber-100 border border-amber-600/40 font-bold text-xs transition"
             >
               إلغاء
             </button>
@@ -5150,13 +5151,13 @@
             <i data-lucide="calendar" class="w-5 h-5"></i>
           </div>
           <div>
-            <h4 class="font-black text-slate-900 text-base">تحديد أو تغيير موعد المقابلة</h4>
-            <p class="text-xs text-slate-500">{{ assignSlotCandidate.arabicName }}</p>
+            <h4 class="font-black text-amber-100 text-base">تحديد أو تغيير موعد المقابلة</h4>
+            <p class="text-xs text-amber-200/60">{{ assignSlotCandidate.arabicName }}</p>
           </div>
         </div>
 
         <div class="space-y-4">
-          <p class="text-xs text-slate-600">
+          <p class="text-xs text-amber-200/80">
             اختر أحد المواعيد المتاحة للجنة لتسكين المرشح فيها مباشرة:
           </p>
 
@@ -5172,7 +5173,7 @@
                 <b class="text-amber-100">{{ s.dateDisplay }}</b>
                 <span class="text-amber-200/60 mr-2">({{ s.timeDisplay }})</span>
               </div>
-              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full" :class="s.type === 'online' ? 'bg-amber-950/50 text-amber-200' : 'bg-emerald-50 text-emerald-700'">
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full" :class="s.type === 'online' ? 'bg-amber-950/50 text-amber-200 border border-amber-600/30' : 'bg-emerald-950/50 text-emerald-300 border border-emerald-600/30'">
                 {{ s.type === 'online' ? 'أونلاين' : 'حضوري' }}
               </span>
             </div>
@@ -5191,7 +5192,7 @@
             </button>
             <button 
               @click="assignSlotCandidate = null"
-              class="px-4 py-3 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs transition"
+              class="px-4 py-3 rounded-xl bg-[#140a04] hover:bg-amber-950/80 text-amber-300/80 hover:text-amber-100 border border-amber-600/40 font-bold text-xs transition"
             >
               إلغاء
             </button>
@@ -5209,15 +5210,15 @@
         
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center justify-center font-bold">
               <i data-lucide="user-plus" class="w-5 h-5 text-amber-400"></i>
             </div>
             <div>
-              <h4 class="font-black text-slate-900 text-lg">إضافة مرشح جديد يدوياً</h4>
-              <p class="text-xs text-slate-500">إضافة متقدم جديد خارج كشف التسجيل وتسكينه في القطاع</p>
+              <h4 class="font-black text-amber-100 text-lg">إضافة مرشح جديد يدوياً</h4>
+              <p class="text-xs text-amber-200/60">إضافة متقدم جديد خارج كشف التسجيل وتسكينه في القطاع</p>
             </div>
           </div>
-          <button @click="showAddCandidateModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="showAddCandidateModal = false" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -5226,51 +5227,51 @@
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">الاسم بالعربي (مطلوب):</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">الاسم بالعربي (مطلوب):</label>
               <input 
                 type="text" 
                 v-model="newCandidateForm.arabicName" 
                 required 
                 placeholder="مثال: أحمد محمد علي" 
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs font-medium text-slate-800 outline-none focus:border-emerald-500"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
               >
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">الاسم بالإنجليزية (اختياري):</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">الاسم بالإنجليزية (اختياري):</label>
               <input 
                 type="text" 
                 v-model="newCandidateForm.fullName" 
                 placeholder="Ahmed Mohamed Ali" 
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs font-medium text-slate-800 outline-none"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
               >
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف / الواتساب (مطلوب):</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">رقم الهاتف / الواتساب (مطلوب):</label>
               <input 
                 type="text" 
                 v-model="newCandidateForm.phone" 
                 required 
                 placeholder="010xxxxxxxx" 
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs font-medium text-slate-800 outline-none focus:border-emerald-500"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
               >
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">البريد الإلكتروني:</label>
               <input 
                 type="email" 
                 v-model="newCandidateForm.email" 
                 placeholder="email@example.com" 
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs font-medium text-slate-800 outline-none"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
               >
             </div>
           </div>
 
           <!-- Committee Selection -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">القطاع / اللجنة المسكن عليها:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">القطاع / اللجنة المسكن عليها:</label>
             <select 
               v-model="newCandidateForm.committeeId" 
               required
@@ -5282,7 +5283,7 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">الجامعة:</label>
               <select v-model="newCandidateForm.university" class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option value="جامعة السويس">جامعة السويس</option>
                 <option value="جامعة السويس الأهلية">جامعة السويس الأهلية</option>
@@ -5290,11 +5291,11 @@
               </select>
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">الكلية:</label>
-              <input type="text" v-model="newCandidateForm.faculty" placeholder="مثال: سياسة واقتصاد" class="w-full p-2.5 rounded-xl border border-amber-600/30 text-xs outline-none">
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">الكلية:</label>
+              <input type="text" v-model="newCandidateForm.faculty" placeholder="مثال: سياسة واقتصاد" class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs bg-[#140a04] text-amber-100 outline-none focus:border-amber-400">
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">الفرقة الدراسية:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">الفرقة الدراسية:</label>
               <select v-model="newCandidateForm.grade" class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option value="الفرقة الأولى">الفرقة الأولى</option>
                 <option value="الفرقة الثانية">الفرقة الثانية</option>
@@ -5307,7 +5308,7 @@
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">المسار المفضل:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">المسار المفضل:</label>
               <select v-model="newCandidateForm.trackPreference" class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option value="الأكاديمي">المسار الأكاديمي</option>
                 <option value="التنظيمي">المسار التنظيمي واللوجستي</option>
@@ -5315,7 +5316,7 @@
               </select>
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">مستوى الإنجليزية:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">مستوى الإنجليزية:</label>
               <select v-model="newCandidateForm.englishLevel" class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400">
                 <option value="مبتدئ">مبتدئ</option>
                 <option value="متوسط">متوسط</option>
@@ -5327,12 +5328,12 @@
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات إضافية عن المرشح:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">ملاحظات إضافية عن المرشح:</label>
             <input 
               type="text" 
               v-model="newCandidateForm.notes" 
               placeholder="مثال: تم إضافته يدوياً بتوصية، أو سجل متأخراً" 
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-800 outline-none"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
             >
           </div>
 
@@ -5340,7 +5341,7 @@
             <button 
               type="submit" 
               :disabled="isSavingCandidate"
-              class="flex-1 py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition disabled:opacity-50"
+              class="btn-gold flex-1 py-3.5 px-4 rounded-xl text-slate-950 font-black text-xs shadow-lg shadow-amber-900/40 transition disabled:opacity-50 hover:scale-[1.01] active:scale-[0.99]"
             >
               <span v-if="isSavingCandidate">جاري الحفظ...</span>
               <span v-else>حفظ وإضافة المرشح الآن</span>
@@ -5348,7 +5349,7 @@
             <button 
               type="button" 
               @click="showAddCandidateModal = false"
-              class="px-5 py-3.5 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs transition"
+              class="px-5 py-3.5 rounded-xl bg-[#140a04] hover:bg-amber-950/80 text-amber-300/80 hover:text-amber-100 border border-amber-600/40 font-bold text-xs transition"
             >
               إلغاء
             </button>
@@ -5366,16 +5367,16 @@
     <div v-if="showQRModal" class="fixed inset-0 z-50 bg-[#0e0703] backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-center relative animate-fade-in">
         
-        <button @click="showQRModal = null" class="absolute left-5 top-5 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60 transition">
+        <button @click="showQRModal = null" class="absolute left-5 top-5 p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
 
-        <span class="px-3 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200 text-xs font-bold mb-2 inline-block">
+        <span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-bold mb-2 inline-block">
           المحاضرة رقم {{ showQRModal.lectureNumber }} • {{ showQRModal.committeeName }}
         </span>
 
-        <h3 class="font-black text-lg text-slate-900 mb-1 leading-tight">{{ showQRModal.title }}</h3>
-        <p class="text-xs text-slate-500 mb-6">امسح الكود بكاميرا الهاتف للدخول على الاختبار وتسجيل حضور المحاضرة فوراً.</p>
+        <h3 class="font-black text-lg text-amber-100 mb-1 leading-tight">{{ showQRModal.title }}</h3>
+        <p class="text-xs text-amber-200/60 mb-6">امسح الكود بكاميرا الهاتف للدخول على الاختبار وتسجيل حضور المحاضرة فوراً.</p>
 
         <!-- QR Code Canvas Container -->
         <div class="p-4 bg-[#140b05] rounded-2xl border-2 border-amber-600/30 inline-block mb-4 shadow-inner">
@@ -5389,7 +5390,7 @@
         <div class="grid grid-cols-2 gap-2">
           <button 
             @click="downloadQRCode"
-            class="py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-sm"
+            class="btn-gold py-3 px-4 rounded-xl text-slate-950 font-black text-xs transition flex items-center justify-center gap-1.5 shadow-lg shadow-amber-900/40 hover:scale-[1.01] active:scale-[0.99]"
           >
             <i data-lucide="download" class="w-4 h-4"></i>
             <span>تحميل الـ QR كصورة</span>
@@ -5417,9 +5418,9 @@
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
           <div>
             <span class="text-[11px] font-bold text-amber-400">منشئ الاختبارات والمحاضرات</span>
-            <h4 class="font-black text-slate-900 text-lg">{{ editingQuizId ? 'تعديل اختبار المحاضرة' : 'إنشاء اختبار محاضرة جديد وتوليد الـ QR' }}</h4>
+            <h4 class="font-black text-amber-100 text-lg">{{ editingQuizId ? 'تعديل اختبار المحاضرة' : 'إنشاء اختبار محاضرة جديد وتوليد الـ QR' }}</h4>
           </div>
-          <button @click="showCreateQuizModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="showCreateQuizModal = false" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -5428,15 +5429,15 @@
           
           <!-- Sector Identification (Locked for Committee Heads) -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">القطاع الخاص بهذا الاختبار:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">القطاع الخاص بهذا الاختبار:</label>
             
             <!-- For Committee Head: Fixed and locked to their sector -->
-            <div v-if="currentUser && currentUser.role !== 'admin'" class="p-3 bg-purple-50/80 border border-purple-200 rounded-xl flex items-center justify-between">
+            <div v-if="currentUser && currentUser.role !== 'admin'" class="p-3 bg-[#140a04] border border-amber-500/40 rounded-xl flex items-center justify-between shadow-inner">
               <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-purple-600"></span>
-                <span class="font-black text-xs text-purple-950">{{ currentCommittee ? currentCommittee.name : 'قطاعك' }}</span>
+                <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm"></span>
+                <span class="font-black text-xs text-amber-200">{{ currentCommittee ? currentCommittee.name : 'قطاعك' }}</span>
               </div>
-              <span class="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[10px] font-bold">
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-black">
                 خاص بقطاعك فقط
               </span>
             </div>
@@ -5449,48 +5450,48 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div class="sm:col-span-2">
-              <label class="block text-xs font-bold text-slate-700 mb-1">عنوان المحاضرة / الاختبار:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">عنوان المحاضرة / الاختبار:</label>
               <input 
                 type="text" 
                 v-model="newQuizForm.title" 
                 required 
                 placeholder="اكتب عنوان المحاضرة هنا (مثال: فن التفاوض والدبلوماسية المعاصرة)..." 
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-800 outline-none focus:border-purple-500 font-bold"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs bg-[#140a04] text-amber-100 outline-none focus:border-amber-400 font-bold"
               >
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">رقم المحاضرة:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">رقم المحاضرة:</label>
               <input 
                 type="number" 
                 v-model="newQuizForm.lectureNumber" 
                 min="1" 
                 required 
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-800 outline-none focus:border-purple-500 font-bold text-center"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs bg-[#140a04] text-amber-100 outline-none focus:border-amber-400 font-bold text-center"
               >
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">مدة الاختبار (بالدقائق):</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">مدة الاختبار (بالدقائق):</label>
               <input 
                 type="number" 
                 v-model="newQuizForm.durationMinutes" 
                 min="0" 
                 placeholder="10 (ضع 0 لاختبار مفتوح بدون وقت)" 
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-800 outline-none focus:border-purple-500 font-bold"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
               >
               <span class="text-[10px] text-slate-400 mt-0.5 block">0 يعني اختبار مفتوح بدون عداد تنازلي.</span>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">وصف أو تعليمات للمناديب (اختياري):</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">وصف أو تعليمات للمناديب (اختياري):</label>
               <input 
                 type="text" 
                 v-model="newQuizForm.description" 
                 placeholder="تعليمات تظهر للمندوب قبل بدء الاختبار..." 
-                class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-800 outline-none focus:border-purple-500"
+                class="w-full p-3 rounded-xl border border-amber-600/40 text-xs bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
               >
             </div>
           </div>
@@ -5499,7 +5500,7 @@
           <div class="pt-4 border-t border-amber-600/30 space-y-4">
             <div class="flex items-center justify-between">
               <div>
-                <span class="text-xs font-black text-slate-900 block">بنك أسئلة الاختبار ({{ newQuizForm.questions.length }} أسئلة):</span>
+                <span class="text-xs font-black text-amber-200 block">بنك أسئلة الاختبار ({{ newQuizForm.questions.length }} أسئلة):</span>
                 <span class="text-[11px] text-slate-400">حدد الإجابة الصحيحة بالضغط على الزر الأخضر بجوار الخيار المناسب.</span>
               </div>
               <div class="flex items-center gap-2">
@@ -5564,7 +5565,7 @@
 
               <!-- True / False Options & Clear Selection -->
               <div v-if="q.type === 'true_false'" class="space-y-2 pt-1">
-                <span class="text-[11px] text-slate-700 block font-bold">اختر الإجابة النموذجية الصحيحة:</span>
+                <span class="text-[11px] text-amber-200/90 block font-bold">اختر الإجابة النموذجية الصحيحة:</span>
                 <div class="grid grid-cols-2 gap-2.5">
                   <button 
                     type="button"
@@ -5590,11 +5591,11 @@
 
               <!-- MCQ Options & Obvious Correct Answer Buttons -->
               <div v-else class="space-y-2.5 pt-1">
-                <span class="text-[11px] text-slate-700 block font-bold">
+                <span class="text-[11px] text-amber-200/90 block font-bold">
                   اكتب الخيارات واضغط على زر "تحديد كإجابة صحيحة" أمام الإجابة النموذجية:
                 </span>
                 <div v-for="(opt, oIdx) in q.options" :key="oIdx" class="flex items-center gap-2">
-                  <span class="w-6 h-6 rounded-full bg-[#25140a] text-slate-700 font-mono text-xs flex items-center justify-center flex-shrink-0">
+                  <span class="w-6 h-6 rounded-full bg-[#25140a] text-amber-300 font-mono text-xs flex items-center justify-center flex-shrink-0">
                     {{ oIdx + 1 }}
                   </span>
                   
@@ -5642,14 +5643,14 @@
             <button 
               type="submit" 
               :disabled="newQuizForm.questions.length === 0"
-              class="flex-1 py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-xs shadow-md transition disabled:opacity-50"
+              class="btn-gold flex-1 py-3 px-4 rounded-xl text-slate-950 font-black text-xs shadow-lg shadow-amber-900/40 transition disabled:opacity-50 hover:scale-[1.01] active:scale-[0.99]"
             >
               {{ editingQuizId ? 'حفظ تعديلات الاختبار' : 'حفظ ونشر الاختبار وتوليد كود الـ QR' }}
             </button>
             <button 
               type="button" 
               @click="showCreateQuizModal = false" 
-              class="px-5 py-3 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs transition"
+              class="px-5 py-3 rounded-xl bg-[#140a04] hover:bg-amber-950/80 text-amber-300/80 hover:text-amber-100 border border-amber-600/40 font-bold text-xs transition"
             >
               إلغاء
             </button>
@@ -5674,12 +5675,12 @@
               <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>
               <span>كشف حضور ونتائج المحاضرة رقم {{ showQuizSubmissionsModal.lectureNumber }} ومتابعة الأسينمنت</span>
             </div>
-            <h4 class="font-black text-slate-900 text-lg sm:text-xl">{{ showQuizSubmissionsModal.title }}</h4>
+            <h4 class="font-black text-amber-100 text-lg sm:text-xl">{{ showQuizSubmissionsModal.title }}</h4>
             <p class="text-xs text-slate-500 mt-0.5">
               رصد تسليمات الاختبار للمناديب، تقييم الأسينمنت المنزلي مع درجات البونص، ومتابعة تكليفات الأعضاء الأسبوعية والشهرية.
             </p>
           </div>
-          <button @click="showQuizSubmissionsModal = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="showQuizSubmissionsModal = null" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -5689,7 +5690,7 @@
           <div class="flex flex-wrap items-center gap-2">
             <button 
               @click="lectureModalTab = 'attended'"
-              :class="lectureModalTab === 'attended' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-[#1b0f07] text-slate-700 hover:bg-amber-900/60'"
+              :class="lectureModalTab === 'attended' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
               class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
             >
               <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
@@ -5698,7 +5699,7 @@
 
             <button 
               @click="lectureModalTab = 'absent'"
-              :class="lectureModalTab === 'absent' ? 'bg-rose-600 text-white shadow-sm' : 'bg-[#1b0f07] text-slate-700 hover:bg-amber-900/60'"
+              :class="lectureModalTab === 'absent' ? 'bg-rose-950/60 border border-rose-500 text-rose-300 font-black shadow-md' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
               class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
             >
               <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
@@ -5707,7 +5708,7 @@
 
             <button 
               @click="lectureModalTab = 'membersMonthly'"
-              :class="lectureModalTab === 'membersMonthly' ? 'bg-amber-950/50 text-white shadow-sm' : 'bg-[#1b0f07] text-slate-700 hover:bg-amber-900/60'"
+              :class="lectureModalTab === 'membersMonthly' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
               class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
             >
               <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
@@ -5757,7 +5758,7 @@
                   </span>
                   <div>
                     <div class="flex items-center gap-2">
-                      <span class="font-bold text-sm text-slate-900">{{ sub.candidateName }}</span>
+                      <span class="font-bold text-sm text-amber-100">{{ sub.candidateName }}</span>
                       <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                         مندوب (Delegate)
                       </span>
@@ -5799,7 +5800,7 @@
               <div class="pt-3 border-t border-amber-600/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#140b05] p-3 rounded-xl border border-amber-600/30">
                 <div class="space-y-1.5">
                   <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                    <span class="text-xs font-bold text-amber-200/90 flex items-center gap-1">
                       <i data-lucide="file-check-2" class="w-3.5 h-3.5 text-amber-200"></i>
                       <span>تقييم أسينمنت المحاضرة:</span>
                     </span>
@@ -5821,7 +5822,7 @@
                     </span>
                     <span 
                       v-else-if="sub.assignmentStatus === 'late'" 
-                      class="px-2.5 py-0.5 rounded-lg bg-amber-100 text-amber-800 font-bold text-[11px] flex items-center gap-1"
+                      class="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold text-[11px] flex items-center gap-1"
                     >
                       <i data-lucide="clock" class="w-3 h-3"></i>
                       <span>تسليم متأخر ({{ sub.assignmentScore !== null ? sub.assignmentScore + ' / 10' : '--' }})</span>
@@ -5835,7 +5836,7 @@
                     </span>
                     <span 
                       v-else 
-                      class="px-2.5 py-0.5 rounded-lg bg-amber-50 text-amber-800 font-bold text-[11px] border border-amber-200"
+                      class="px-2.5 py-0.5 rounded-lg bg-[#140a04] text-amber-200/70 font-bold text-[11px] border border-amber-600/40"
                     >
                       بانتظار رصد الأسينمنت
                     </span>
@@ -5843,7 +5844,7 @@
                     <!-- Bonus Badge (If awarded) -->
                     <span 
                       v-if="sub.bonusScore > 0"
-                      class="px-2.5 py-0.5 rounded-lg bg-amber-100 text-amber-900 border border-amber-300 font-black text-[11px] flex items-center gap-1"
+                      class="px-2.5 py-0.5 rounded-lg bg-amber-500/25 text-amber-300 border border-amber-400 font-black text-[11px] flex items-center gap-1 shadow-sm"
                     >
                       <i data-lucide="star" class="w-3 h-3 text-amber-600 fill-amber-500"></i>
                       <span>+{{ sub.bonusScore }} بونص تفاعل بالمحاضرة</span>
@@ -5854,7 +5855,7 @@
                   <div v-if="sub.taskDescription" class="text-xs text-amber-200 font-bold">
                     التكليف: {{ sub.taskDescription }}
                   </div>
-                  <div v-if="sub.bonusReason" class="text-xs text-amber-800 font-medium">
+                  <div v-if="sub.bonusReason" class="text-xs text-amber-300 font-medium">
                     سبب البونص: "{{ sub.bonusReason }}"
                   </div>
                   <div v-if="sub.assignmentNotes" class="text-xs text-slate-600 italic">
@@ -5895,7 +5896,7 @@
                   {{ aIdx + 1 }}
                 </span>
                 <div>
-                  <span class="font-bold text-xs text-slate-900 block">{{ cand.arabicName || cand.fullName }}</span>
+                  <span class="font-bold text-xs text-amber-100 block">{{ cand.arabicName || cand.fullName }}</span>
                   <span class="text-[10px] text-slate-400 font-mono">{{ cand.faculty }} • {{ cand.phone }}</span>
                 </div>
               </div>
@@ -6052,10 +6053,10 @@
               <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>
               <span>{{ evaluatingAssignmentCandidate.roleType === 'member' ? 'تقييم المهمة الأسبوعية وأداء العضو' : 'تقييم أسينمنت المحاضرة وبونص التفاعل للمندوب' }}</span>
             </div>
-            <h4 class="font-black text-slate-900 text-lg">{{ evaluatingAssignmentCandidate.candidateName || evaluatingAssignmentCandidate.arabicName }}</h4>
-            <p class="text-xs text-slate-500 font-mono">{{ showQuizSubmissionsModal ? 'المحاضرة رقم ' + showQuizSubmissionsModal.lectureNumber + ' - ' + showQuizSubmissionsModal.title : '' }}</p>
+            <h4 class="font-black text-amber-100 text-lg">{{ evaluatingAssignmentCandidate.candidateName || evaluatingAssignmentCandidate.arabicName }}</h4>
+            <p class="text-xs text-amber-200/60 font-mono">{{ showQuizSubmissionsModal ? 'المحاضرة رقم ' + showQuizSubmissionsModal.lectureNumber + ' - ' + showQuizSubmissionsModal.title : '' }}</p>
           </div>
-          <button @click="evaluatingAssignmentCandidate = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="evaluatingAssignmentCandidate = null" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -6065,7 +6066,7 @@
           
           <!-- 1. Assignment Status (Pills) -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-2">حالة تسليم التكليف / الأسينمنت:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-2">حالة تسليم التكليف / الأسينمنت:</label>
             <div class="grid grid-cols-2 gap-2 text-xs font-bold">
               <button 
                 type="button"
@@ -6112,7 +6113,7 @@
           <!-- 2. Assignment Grade (Out of 10) -->
           <div>
             <div class="flex items-center justify-between mb-1.5">
-              <label class="text-xs font-bold text-slate-700">درجة التكليف الأساسية (من 10):</label>
+              <label class="text-xs font-bold text-amber-200/90">درجة التكليف الأساسية (من 10):</label>
               <span class="text-xs font-mono font-black text-amber-200">{{ assignmentEvalForm.assignmentScore }} / 10</span>
             </div>
             
@@ -6122,7 +6123,7 @@
               min="0" 
               max="10"
               v-model.number="assignmentEvalForm.assignmentScore" 
-              class="w-full px-4 py-2.5 rounded-xl border border-amber-600/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono font-bold text-center text-lg"
+              class="w-full px-4 py-2.5 rounded-xl border border-amber-500/40 bg-[#140a04] text-amber-400 font-mono font-black text-center text-xl outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/30 shadow-inner"
               placeholder="أدخل الدرجة مثلاً: 9.5"
             />
 
@@ -6141,13 +6142,13 @@
           </div>
 
           <!-- 3. BONUS POINTS & LECTURE PARTICIPATION -->
-          <div class="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200 space-y-2">
+          <div class="bg-[#140a04] p-3.5 rounded-2xl border border-amber-500/40 shadow-inner space-y-2">
             <div class="flex items-center justify-between">
-              <label class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
-                <i data-lucide="star" class="w-4 h-4 text-amber-600 fill-amber-500"></i>
+              <label class="text-xs font-bold text-amber-200 flex items-center gap-1.5">
+                <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
                 <span>درجات بونص المحاضرة والتفاعل الاستثنائي:</span>
               </label>
-              <span class="text-xs font-mono font-black text-amber-800">+{{ assignmentEvalForm.bonusScore }} بونص</span>
+              <span class="text-sm font-mono font-black text-amber-400">+{{ assignmentEvalForm.bonusScore }} بونص</span>
             </div>
 
             <!-- Bonus preset buttons -->
@@ -6174,22 +6175,22 @@
 
           <!-- 4. Task Description -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">عنوان التكليف أو المهمة المكلف بها:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1.5">عنوان التكليف أو المهمة المكلف بها:</label>
             <input 
               type="text" 
               v-model="assignmentEvalForm.taskDescription" 
-              class="w-full px-4 py-2 rounded-xl border border-amber-600/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs"
+              class="w-full px-4 py-2 rounded-xl border border-amber-600/40 bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400 text-xs"
               placeholder="مثال: بحث الأزمة الأوكرانية / إعداد شيت الحضور الأسبوعي"
             />
           </div>
 
           <!-- 5. Notes & Feedback -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">ملاحظات التقييم والتغذية الراجعة:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1.5">ملاحظات التقييم والتغذية الراجعة:</label>
             <textarea 
               rows="2" 
               v-model="assignmentEvalForm.notes" 
-              class="w-full p-3 rounded-xl border border-amber-600/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs resize-none"
+              class="w-full p-3 rounded-xl border border-amber-600/40 bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400 text-xs resize-none"
               placeholder="اكتب ملاحظاتك على جودة التكليف أو أداء العضو في المحاضرة..."
             ></textarea>
           </div>
@@ -6201,7 +6202,7 @@
           <button 
             @click="saveAssignmentEvaluation()" 
             :disabled="isSavingAssignmentEval"
-            class="flex-1 py-3 bg-amber-950/50 hover:bg-amber-950/50 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+            class="btn-gold flex-1 py-3 disabled:opacity-50 text-slate-950 font-black rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-amber-900/40 hover:scale-[1.01] active:scale-[0.99]"
           >
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>{{ isSavingAssignmentEval ? 'جاري حفظ التقييم...' : 'حفظ التقييم والبونص' }}</span>
@@ -6230,10 +6231,10 @@
               <i data-lucide="mail" class="w-3.5 h-3.5 text-amber-200"></i>
               <span>تعديل البريد الإلكتروني وبيانات الاتصال</span>
             </div>
-            <h4 class="font-black text-slate-900 text-lg">تحديث بيانات الدخول</h4>
+            <h4 class="font-black text-amber-100 text-lg">تحديث بيانات الدخول</h4>
             <p class="text-xs text-slate-500 mt-0.5">تعديل الإيميل أو الهاتف عند نسيانهما مع بقاء الاسم ثابتاً ومحفوظاً بكافة سجلاته.</p>
           </div>
-          <button @click="editingCandidateModal = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="editingCandidateModal = null" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -6244,21 +6245,21 @@
           <div class="p-4 rounded-2xl bg-[#1b0f07] border border-amber-600/30 flex items-center justify-between">
             <div>
               <span class="text-[11px] font-bold text-slate-500 block">اسم المندوب / العضو (ثابت لا يمكن تغييره):</span>
-              <span class="font-black text-slate-900 text-base">{{ editingCandidateForm.arabicName || editingCandidateForm.fullName }}</span>
+              <span class="font-black text-amber-200 text-base">{{ editingCandidateForm.arabicName || editingCandidateForm.fullName }}</span>
             </div>
-            <span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 text-[11px] font-black border border-amber-300">
+            <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 text-[11px] font-black border border-amber-500/40">
               الاسم ثابت
             </span>
           </div>
 
           <!-- EDIT EMAIL -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني (لتسجيل دخول الاختبارات):</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">البريد الإلكتروني (لتسجيل دخول الاختبارات):</label>
             <input 
               type="email" 
               v-model="editingCandidateForm.email" 
               dir="ltr"
-              class="w-full px-4 py-2.5 rounded-xl border border-amber-600/30 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs font-mono font-bold"
+              class="w-full px-4 py-2.5 rounded-xl border border-amber-600/40 bg-[#140a04] text-amber-100 text-xs font-mono font-bold outline-none focus:border-amber-400"
               placeholder="example@gmail.com"
             />
             <span class="text-[10px] text-slate-500 block mt-1">إذا نسي المندوب إيميله، يمكنك تعديله هنا ليسجل به فوراً مع الاحتفاظ بكافة درجاته السابقة.</span>
@@ -6266,7 +6267,7 @@
 
           <!-- EDIT PHONE -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف (WhatsApp):</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">رقم الهاتف (WhatsApp):</label>
             <input 
               type="tel" 
               v-model="editingCandidateForm.phone" 
@@ -6280,15 +6281,15 @@
           <!-- EDIT FACULTY & UNIVERSITY -->
           <div class="grid grid-cols-2 gap-3 pt-2 border-t border-amber-600/30">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">الكلية:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">الكلية:</label>
               <input 
                 type="text" 
                 v-model="editingCandidateForm.faculty" 
-                class="w-full px-3 py-2 rounded-xl border border-amber-600/30 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs"
+                class="w-full px-3 py-2 rounded-xl border border-amber-600/40 bg-[#140a04] text-amber-100 text-xs outline-none focus:border-amber-400"
               />
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة:</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">الجامعة:</label>
               <input 
                 type="text" 
                 v-model="editingCandidateForm.university" 
@@ -6340,7 +6341,7 @@
                 </span>
                 <span class="text-xs text-slate-400 font-mono">ID: {{ selectedDelegateProfile.id || selectedDelegateProfile.candidateId }}</span>
               </div>
-              <h3 class="text-lg sm:text-xl font-black text-slate-900 leading-tight">
+              <h3 class="text-lg sm:text-xl font-black text-amber-100 leading-tight">
                 {{ selectedDelegateProfile.arabicName || selectedDelegateProfile.fullName }}
               </h3>
               <p class="text-xs text-slate-500 mt-0.5">
@@ -6349,7 +6350,7 @@
             </div>
           </div>
 
-          <button @click="selectedDelegateProfile = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="selectedDelegateProfile = null" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -6358,28 +6359,28 @@
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           <div class="bg-[#140b05] p-3.5 rounded-2xl border border-amber-600/30 text-center">
             <span class="text-[10px] text-slate-400 block mb-1">حضور المحاضرات</span>
-            <span class="text-lg font-black text-slate-900 font-mono">
+            <span class="text-lg font-black text-amber-100 font-mono">
               {{ delegateProfileStats.attendedCount }} / {{ delegateProfileStats.totalQuizzes }}
             </span>
           </div>
 
-          <div class="bg-emerald-50 p-3.5 rounded-2xl border border-emerald-200 text-center">
-            <span class="text-[10px] text-emerald-700 block mb-1">نسبة الالتزام بالحضور</span>
-            <span class="text-lg font-black text-emerald-900 font-mono">
+          <div class="bg-[#140a04] p-3.5 rounded-2xl border border-amber-500/40 text-center shadow-inner">
+            <span class="text-[10px] text-emerald-400 block mb-1">نسبة الالتزام بالحضور</span>
+            <span class="text-lg font-black text-emerald-300 font-mono">
               {{ delegateProfileStats.attendanceRate }}%
             </span>
           </div>
 
-          <div class="bg-purple-50 p-3.5 rounded-2xl border border-purple-200 text-center">
-            <span class="text-[10px] text-purple-700 block mb-1">متوسط درجات الاختبارات</span>
-            <span class="text-lg font-black text-purple-900 font-mono">
+          <div class="bg-[#140a04] p-3.5 rounded-2xl border border-amber-500/40 text-center shadow-inner">
+            <span class="text-[10px] text-amber-300 block mb-1">متوسط درجات الاختبارات</span>
+            <span class="text-lg font-black text-amber-400 font-mono">
               {{ delegateProfileStats.avgScore }}%
             </span>
           </div>
 
-          <div class="bg-amber-50 p-3.5 rounded-2xl border border-amber-200 text-center">
-            <span class="text-[10px] text-amber-700 block mb-1">درجة المقابلة الشخصية</span>
-            <span class="text-lg font-black text-amber-900 font-mono">
+          <div class="bg-[#140a04] p-3.5 rounded-2xl border border-amber-500/40 text-center shadow-inner">
+            <span class="text-[10px] text-amber-300/70 block mb-1">درجة المقابلة الشخصية</span>
+            <span class="text-lg font-black text-amber-400 font-mono">
               {{ selectedDelegateProfile.interviewScore !== undefined && selectedDelegateProfile.interviewScore !== null ? selectedDelegateProfile.interviewScore + ' / 10' : '--' }}
             </span>
           </div>
@@ -6396,7 +6397,7 @@
           </div>
           <div class="flex items-center gap-2">
             <span class="text-slate-400">البريد الإلكتروني:</span>
-            <span class="font-mono text-slate-700">{{ selectedDelegateProfile.email }}</span>
+            <span class="font-mono text-amber-200">{{ selectedDelegateProfile.email }}</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-slate-400">كلمة المرور:</span>
@@ -6406,7 +6407,7 @@
 
         <!-- Lectures & Quizzes History (سجل درجات كل محاضرة) -->
         <div class="space-y-3 mb-6">
-          <h4 class="font-black text-sm text-slate-900 flex items-center gap-2">
+          <h4 class="font-black text-sm text-amber-100 flex items-center gap-2">
             <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
             <span>سجل حضور واختبارات المحاضرات المنعقدة:</span>
           </h4>
@@ -6428,7 +6429,7 @@
                   {{ q.lectureNumber }}
                 </span>
                 <div>
-                  <span class="font-black text-slate-900 block">{{ q.title }}</span>
+                  <span class="font-black text-amber-100 block">{{ q.title }}</span>
                   <span class="text-[10px] text-slate-400">إجمالي درجات الاختبار: {{ q.totalPoints }} درجات</span>
                 </div>
               </div>
@@ -6453,13 +6454,13 @@
         </div>
 
         <!-- Continuous Evaluation & Sector Head Notes -->
-        <div class="bg-amber-50/60 p-5 rounded-2xl border border-amber-200/80 space-y-4">
+        <div class="bg-[#140a04] p-5 rounded-2xl border border-amber-500/40 shadow-inner space-y-4">
           <div class="flex items-center justify-between">
-            <h4 class="font-black text-xs text-amber-950 flex items-center gap-1.5">
-              <i data-lucide="star" class="w-4 h-4 text-amber-600"></i>
+            <h4 class="font-black text-xs text-amber-200 flex items-center gap-1.5">
+              <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
               <span>التقييم المستمر وملاحظات رئيس اللجنة عن المندوب:</span>
             </h4>
-            <span class="text-base font-black text-amber-800">{{ delegateEvalScore || 8 }} / 10</span>
+            <span class="text-lg font-black text-amber-400 font-mono">{{ delegateEvalScore || 8 }} / 10</span>
           </div>
 
           <input 
@@ -6481,7 +6482,7 @@
           <button 
             type="button" 
             @click="saveDelegateEvaluation"
-            class="w-full py-2.5 px-4 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40 hover:border-amber-400 text-white font-bold text-xs transition shadow-sm"
+            class="btn-gold w-full py-2.5 px-4 rounded-xl text-slate-950 font-black text-xs shadow-lg shadow-amber-900/40 transition hover:scale-[1.01] active:scale-[0.99]"
           >
             حفظ تحديث تقييم المندوب
           </button>
@@ -6499,10 +6500,10 @@
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
           <div>
             <span class="text-[11px] font-bold text-amber-600">تعديل الصفة والهيكل التنظيمي</span>
-            <h4 class="font-black text-slate-900 text-lg">{{ editingRoleCandidate.arabicName }}</h4>
-            <p class="text-xs text-slate-500">{{ editingRoleCandidate.faculty }}</p>
+            <h4 class="font-black text-amber-100 text-lg">{{ editingRoleCandidate.arabicName }}</h4>
+            <p class="text-xs text-amber-200/60">{{ editingRoleCandidate.faculty }}</p>
           </div>
-          <button @click="editingRoleCandidate = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="editingRoleCandidate = null" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -6510,10 +6511,10 @@
         <form @submit.prevent="saveRoleEdit" class="space-y-4">
           
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-2">الصفة داخل اللجنة:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-2">الصفة داخل اللجنة:</label>
             <div class="grid grid-cols-2 gap-2">
               <label 
-                :class="editingRoleForm.roleType === 'delegate' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 border border-amber-600/30'"
+                :class="editingRoleForm.roleType === 'delegate' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
                 class="flex items-center justify-center gap-1.5 p-3 rounded-xl text-xs font-bold cursor-pointer transition"
               >
                 <input type="radio" v-model="editingRoleForm.roleType" value="delegate" class="hidden">
@@ -6522,7 +6523,7 @@
               </label>
 
               <label 
-                :class="editingRoleForm.roleType === 'member' ? 'bg-amber-600 text-white shadow-sm' : 'bg-[#140b05] text-slate-700 border border-amber-600/30'"
+                :class="editingRoleForm.roleType === 'member' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
                 class="flex items-center justify-center gap-1.5 p-3 rounded-xl text-xs font-bold cursor-pointer transition"
               >
                 <input type="radio" v-model="editingRoleForm.roleType" value="member" class="hidden">
@@ -6534,10 +6535,10 @@
 
           <!-- If member, pick department -->
           <div v-if="editingRoleForm.roleType === 'member'" class="space-y-2 pt-2 border-t border-amber-600/30">
-            <label class="block text-xs font-bold text-slate-700">القسم الداخلي للعضو في القطاع:</label>
+            <label class="block text-xs font-bold text-amber-200/90">القسم الداخلي للعضو في القطاع:</label>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <label 
-                :class="editingRoleForm.subDepartment === 'organization' ? 'bg-amber-600 text-slate-950 font-black shadow-sm' : 'bg-[#140b05] text-slate-700 border border-amber-600/30'"
+                :class="editingRoleForm.subDepartment === 'organization' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
                 class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition text-center"
               >
                 <input type="radio" v-model="editingRoleForm.subDepartment" value="organization" class="hidden">
@@ -6545,7 +6546,7 @@
               </label>
 
               <label 
-                :class="editingRoleForm.subDepartment === 'hr' ? 'bg-pink-600 text-white font-black shadow-sm' : 'bg-[#140b05] text-slate-700 border border-amber-600/30'"
+                :class="editingRoleForm.subDepartment === 'hr' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
                 class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition text-center"
               >
                 <input type="radio" v-model="editingRoleForm.subDepartment" value="hr" class="hidden">
@@ -6553,7 +6554,7 @@
               </label>
 
               <label 
-                :class="editingRoleForm.subDepartment === 'media' ? 'bg-purple-600 text-white font-black shadow-sm' : 'bg-[#140b05] text-slate-700 border border-amber-600/30'"
+                :class="editingRoleForm.subDepartment === 'media' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
                 class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition text-center"
               >
                 <input type="radio" v-model="editingRoleForm.subDepartment" value="media" class="hidden">
@@ -6561,7 +6562,7 @@
               </label>
 
               <label 
-                :class="editingRoleForm.subDepartment === 'academic' ? 'bg-emerald-600 text-white font-black shadow-sm' : 'bg-[#140b05] text-slate-700 border border-amber-600/30'"
+                :class="editingRoleForm.subDepartment === 'academic' ? 'btn-gold shadow-md font-black' : 'bg-[#140a04] text-amber-200/70 border border-amber-600/40 hover:border-amber-500/60'"
                 class="flex items-center justify-center p-2 rounded-xl text-xs font-bold cursor-pointer transition text-center"
               >
                 <input type="radio" v-model="editingRoleForm.subDepartment" value="academic" class="hidden">
@@ -6573,14 +6574,14 @@
           <div class="flex items-center gap-2 pt-4 border-t border-amber-600/30">
             <button 
               type="submit" 
-              class="flex-1 py-3 px-4 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40 hover:border-amber-400 text-white font-bold text-xs shadow-md transition"
+              class="btn-gold flex-1 py-3 px-4 rounded-xl text-slate-950 font-black text-xs shadow-lg shadow-amber-900/40 transition hover:scale-[1.01] active:scale-[0.99]"
             >
               تأكيد وحفظ
             </button>
             <button 
               type="button" 
               @click="editingRoleCandidate = null" 
-              class="px-5 py-3 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs transition"
+              class="px-5 py-3 rounded-xl bg-[#140a04] hover:bg-amber-950/80 text-amber-300/80 hover:text-amber-100 border border-amber-600/40 font-bold text-xs transition"
             >
               إلغاء
             </button>
@@ -6600,20 +6601,20 @@
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
           <div>
             <span class="text-[11px] font-bold text-amber-600">تقييم المهام والأداء المستمر</span>
-            <h4 class="font-black text-slate-900 text-lg">{{ memberEvalCandidate.arabicName }}</h4>
+            <h4 class="font-black text-amber-100 text-lg">{{ memberEvalCandidate.arabicName }}</h4>
             <p class="text-xs text-slate-500">{{ memberEvalCandidate.roleType === 'delegate' ? 'مندوب' : 'عضو ' + (memberEvalCandidate.subDepartment || '') }}</p>
           </div>
-          <button @click="memberEvalCandidate = null" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="memberEvalCandidate = null" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
 
         <form @submit.prevent="saveMemberEval" class="space-y-4">
           
-          <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/80">
+          <div class="bg-[#140a04] p-4 rounded-2xl border border-amber-500/40 shadow-inner">
             <div class="flex items-center justify-between mb-2">
-              <label class="text-xs font-black text-slate-900">تقييم الأداء والالتزام (من 10):</label>
-              <span class="text-xl font-black text-amber-700">{{ memberEvalScore || 0 }} / 10</span>
+              <label class="text-xs font-black text-amber-200">تقييم الأداء والالتزام (من 10):</label>
+              <span class="text-2xl font-black text-amber-400 font-mono">{{ memberEvalScore || 0 }} / 10</span>
             </div>
             <input 
               type="range" 
@@ -6621,31 +6622,31 @@
               max="10" 
               step="0.5" 
               v-model="memberEvalScore" 
-              class="w-full accent-amber-600 cursor-pointer"
+              class="w-full accent-amber-500 cursor-pointer"
             >
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات رئيس اللجنة عن أداء العضو:</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">ملاحظات رئيس اللجنة عن أداء العضو:</label>
             <textarea 
               v-model="memberEvalNotes" 
               rows="3" 
               placeholder="اكتب التزامه بالمهام وحضوره وملاحظاتك..." 
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-800 outline-none focus:border-amber-500"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400 resize-none"
             ></textarea>
           </div>
 
           <div class="flex items-center gap-2 pt-4 border-t border-amber-600/30">
             <button 
               type="submit" 
-              class="flex-1 py-3 px-4 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40 hover:border-amber-400 text-white font-bold text-xs shadow-md transition"
+              class="btn-gold flex-1 py-3 px-4 rounded-xl text-slate-950 font-black text-xs shadow-lg shadow-amber-900/40 transition hover:scale-[1.01] active:scale-[0.99]"
             >
               حفظ التقييم
             </button>
             <button 
               type="button" 
               @click="memberEvalCandidate = null" 
-              class="px-5 py-3 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs transition"
+              class="px-5 py-3 rounded-xl bg-[#140a04] hover:bg-amber-950/80 text-amber-300/80 hover:text-amber-100 border border-amber-600/40 font-bold text-xs transition"
             >
               إلغاء
             </button>
@@ -6664,11 +6665,11 @@
         
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-5">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-700 flex items-center justify-center">
+            <div class="w-10 h-10 rounded-2xl bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center justify-center">
               <i :data-lucide="isEditingEvent ? 'edit-3' : 'plus-circle'" class="w-5 h-5"></i>
             </div>
             <div>
-              <h4 class="font-black text-slate-900 text-base">
+              <h4 class="font-black text-amber-100 text-base">
                 {{ isEditingEvent ? 'تعديل الفعالية وتصنيفات الظهور' : 'إطلاق فعالية / زيارة رسمية جديدة' }}
               </h4>
               <p class="text-xs text-slate-500">
@@ -6676,7 +6677,7 @@
               </p>
             </div>
           </div>
-          <button @click="showCreateEventModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="showCreateEventModal = false" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -6684,23 +6685,23 @@
         <form @submit.prevent="saveEvent" class="space-y-4">
           <!-- Title -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">عنوان الفعالية / الزيارة *</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">عنوان الفعالية / الزيارة *</label>
             <input 
               v-model="newEventForm.title" 
               type="text" 
               required
               placeholder="مثال: زيارة رسمية إلى ديوان عام وزارة الخارجية بالعاصمة الإدارية"
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-900 outline-none focus:border-amber-500 font-bold"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
             >
           </div>
 
           <!-- Type & Capacity -->
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">نوع الفعالية</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">نوع الفعالية</label>
               <select 
                 v-model="newEventForm.type" 
-                class="w-full p-2.5 rounded-xl border border-amber-600/30 text-xs font-bold text-slate-700 outline-none focus:border-amber-500"
+                class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 outline-none focus:border-amber-400"
               >
                 <option value="visit">زيارة رسمية ميدانية</option>
                 <option value="seminar">ندوة علمية / سياسية</option>
@@ -6710,14 +6711,14 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">الطاقة الاستيعابية (المقاعد) *</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">الطاقة الاستيعابية (المقاعد) *</label>
               <input 
                 v-model.number="newEventForm.capacity" 
                 type="number" 
                 min="5" 
                 max="500" 
                 required
-                class="w-full p-2.5 rounded-xl border border-amber-600/30 text-xs font-bold text-slate-900 outline-none focus:border-amber-500 font-mono"
+                class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 outline-none focus:border-amber-400 font-mono"
               >
             </div>
           </div>
@@ -6725,63 +6726,63 @@
           <!-- Date & Time -->
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ الانعقاد *</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">تاريخ الانعقاد *</label>
               <input 
                 v-model="newEventForm.date" 
                 type="date" 
                 required
-                class="w-full p-2.5 rounded-xl border border-amber-600/30 text-xs font-bold text-slate-900 outline-none focus:border-amber-500"
+                class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 outline-none focus:border-amber-400"
               >
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">وقت التجمع / البدء</label>
+              <label class="block text-xs font-bold text-amber-200/90 mb-1">وقت التجمع / البدء</label>
               <input 
                 v-model="newEventForm.time" 
                 type="time" 
                 required
-                class="w-full p-2.5 rounded-xl border border-amber-600/30 text-xs font-bold text-slate-900 outline-none focus:border-amber-500"
+                class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 outline-none focus:border-amber-400"
               >
             </div>
           </div>
 
           <!-- Location -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">المكان / العنوان أو مقر التجمع *</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">المكان / العنوان أو مقر التجمع *</label>
             <input 
               v-model="newEventForm.location" 
               type="text" 
               required
               placeholder="مثال: مقر وزارة الخارجية المصرية - العاصمة الإدارية الجديدة"
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-900 outline-none focus:border-amber-500"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
             >
           </div>
 
           <!-- Dress Code -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">الزي المطلوب (Dress Code)</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">الزي المطلوب (Dress Code)</label>
             <input 
               v-model="newEventForm.dressCode" 
               type="text" 
               placeholder="مثال: زي رسمي دبلوماسي كامل (بدلة كاملة)"
-              class="w-full p-2.5 rounded-xl border border-amber-600/30 text-xs text-slate-900 outline-none focus:border-amber-500"
+              class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
             >
           </div>
 
           <!-- Description -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">تفاصيل الفعالية وبرنامج اليوم</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">تفاصيل الفعالية وبرنامج اليوم</label>
             <textarea 
               v-model="newEventForm.description" 
               rows="2"
               placeholder="وصف موجز لأهمية الزيارة والأنشطة المقررة..."
-              class="w-full p-3 rounded-xl border border-amber-600/30 text-xs text-slate-900 outline-none focus:border-amber-500"
+              class="w-full p-3 rounded-xl border border-amber-600/40 text-xs font-medium bg-[#140a04] text-amber-100 placeholder-amber-400/30 outline-none focus:border-amber-400"
             ></textarea>
           </div>
 
           <!-- Notes / Instructions -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">تعليمات هامة للحضور (أوراق مطلوبة، مواعيد التجمع...)</label>
+            <label class="block text-xs font-bold text-amber-200/90 mb-1">تعليمات هامة للحضور (أوراق مطلوبة، مواعيد التجمع...)</label>
             <input 
               v-model="newEventForm.notes" 
               type="text" 
@@ -6793,7 +6794,7 @@
           <!-- Target Audience / Categorization -->
           <div class="bg-[#140b05] p-3.5 sm:p-4 rounded-2xl border border-amber-600/30 space-y-3">
             <div class="flex items-center justify-between flex-wrap gap-1">
-              <label class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+              <label class="text-xs font-black text-amber-200 flex items-center gap-1.5">
                 <i data-lucide="target" class="w-4 h-4 text-amber-600"></i>
                 <span>الفئات والتصنيفات المستهدفة بالفعالية</span>
               </label>
@@ -6828,7 +6829,7 @@
               
               <!-- 1. Roles Selection -->
               <div>
-                <span class="block text-[11px] font-bold text-slate-700 mb-1.5">1. الأدوار التنظيمية المسموح لها بالظهور والحجز:</span>
+                <span class="block text-[11px] font-bold text-amber-200/90 mb-1.5">1. الأدوار التنظيمية المسموح لها بالظهور والحجز:</span>
                 <div class="grid grid-cols-3 gap-1.5">
                   <label 
                     class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
@@ -6858,7 +6859,7 @@
 
               <!-- 2. Sectors Selection -->
               <div>
-                <span class="block text-[11px] font-bold text-slate-700 mb-1.5">2. القطاعات المستهدفة:</span>
+                <span class="block text-[11px] font-bold text-amber-200/90 mb-1.5">2. القطاعات المستهدفة:</span>
                 <div class="grid grid-cols-3 gap-1.5">
                   <label 
                     class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
@@ -6889,7 +6890,7 @@
               <!-- 3. Committees Selection -->
               <div>
                 <div class="flex items-center justify-between mb-1.5">
-                  <span class="text-[11px] font-bold text-slate-700">3. اللجان الأكاديمية المستهدفة:</span>
+                  <span class="text-[11px] font-bold text-amber-200/90">3. اللجان الأكاديمية المستهدفة:</span>
                   <button 
                     type="button" 
                     @click="toggleAllCommittees" 
@@ -6904,7 +6905,7 @@
                     v-for="comm in officialCommitteesList" 
                     :key="comm.id"
                     class="flex items-center gap-2 p-1.5 rounded-lg text-[10px] font-bold cursor-pointer transition hover:bg-amber-900/60"
-                    :class="newEventForm.targetAudience.committees.includes(comm.id) ? 'bg-amber-50/70 text-amber-900 font-black' : 'text-slate-600'"
+                    :class="newEventForm.targetAudience.committees.includes(comm.id) ? 'bg-amber-500/20 text-amber-200 border border-amber-500/40 font-black' : 'text-amber-200/60 hover:text-amber-100'"
                   >
                     <input 
                       type="checkbox" 
@@ -6924,7 +6925,7 @@
             <button 
               type="submit" 
               :disabled="isCreatingEvent"
-              class="flex-1 py-3 px-4 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40 hover:border-amber-400 disabled:opacity-50 text-white font-black text-xs shadow-md transition cursor-pointer flex items-center justify-center gap-2"
+              class="btn-gold flex-1 py-3 px-4 rounded-xl disabled:opacity-50 text-slate-950 font-black text-xs shadow-lg shadow-amber-900/40 transition cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99]"
             >
               <i v-if="isCreatingEvent" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
               <span>{{ isCreatingEvent ? 'جاري الحفظ...' : (isEditingEvent ? 'حفظ تعديلات الفعالية وتصنيفات الظهور' : 'إطلاق الفعالية وفق التصنيفات المحددة') }}</span>
@@ -6932,7 +6933,7 @@
             <button 
               type="button" 
               @click="showCreateEventModal = false" 
-              class="px-5 py-3 rounded-xl bg-[#1b0f07] hover:bg-amber-900/60 text-slate-700 font-bold text-xs transition"
+              class="px-5 py-3 rounded-xl bg-[#140a04] hover:bg-amber-950/80 text-amber-300/80 hover:text-amber-100 border border-amber-600/40 font-bold text-xs transition"
             >
               إلغاء
             </button>
@@ -6951,14 +6952,14 @@
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-5">
           <div>
             <div class="flex items-center gap-2">
-              <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-800 text-[11px] font-bold">
+              <span class="px-2.5 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[11px] font-bold">
                 كشف الحضور والتحليلات المباشرة
               </span>
               <span class="text-xs text-slate-400 font-bold">{{ currentEventData ? currentEventData.date : '' }}</span>
             </div>
-            <h4 class="font-black text-slate-900 text-lg mt-1">{{ currentEventData ? currentEventData.title : '' }}</h4>
+            <h4 class="font-black text-amber-100 text-lg mt-1">{{ currentEventData ? currentEventData.title : '' }}</h4>
           </div>
-          <button @click="showAttendeesModal = false" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-amber-900/60">
+          <button @click="showAttendeesModal = false" class="p-2 rounded-xl text-amber-300/60 hover:text-amber-100 hover:bg-amber-950/60 transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -6974,16 +6975,16 @@
               </span>
             </div>
 
-            <div class="bg-purple-50/60 border border-purple-200 p-4 rounded-2xl text-center">
-              <span class="text-xs font-bold text-purple-700 block">أعضاء الهيكل (Members)</span>
-              <span class="text-2xl font-black text-purple-900 font-mono mt-0.5 block">
+            <div class="bg-[#140a04] border border-amber-500/40 p-4 rounded-2xl text-center shadow-inner">
+              <span class="text-xs font-bold text-amber-300 block">أعضاء الهيكل (Members)</span>
+              <span class="text-2xl font-black text-amber-400 font-mono mt-0.5 block">
                 {{ eventAttendeesData.analytics ? eventAttendeesData.analytics.roleBreakdown.membersCount : 0 }}
               </span>
             </div>
 
-            <div class="bg-amber-50/60 border border-amber-200 p-4 rounded-2xl text-center">
-              <span class="text-xs font-bold text-amber-700 block">الهاي بورد ورؤساء اللجان</span>
-              <span class="text-2xl font-black text-amber-900 font-mono mt-0.5 block">
+            <div class="bg-[#140a04] border border-amber-500/40 p-4 rounded-2xl text-center shadow-inner">
+              <span class="text-xs font-bold text-amber-300 block">الهاي بورد ورؤساء اللجان</span>
+              <span class="text-2xl font-black text-amber-400 font-mono mt-0.5 block">
                 {{ eventAttendeesData.analytics ? eventAttendeesData.analytics.roleBreakdown.boardCount : 0 }}
               </span>
             </div>
@@ -6992,7 +6993,7 @@
           <!-- Sector Breakdown Cards (التقسيم حسب اللجان) -->
           <div>
             <div class="flex items-center justify-between mb-2">
-              <h5 class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+              <h5 class="text-xs font-black text-amber-200 flex items-center gap-1.5">
                 <i data-lucide="layout-grid" class="w-4 h-4 text-amber-500"></i>
                 <span>تقسيم الحضور حسب القطاعات واللجان الـ 9:</span>
               </h5>
@@ -7006,10 +7007,10 @@
                 v-for="comm in (eventAttendeesData.analytics ? eventAttendeesData.analytics.committeeBreakdown : [])" 
                 :key="comm.committeeId"
                 class="p-2.5 rounded-xl border bg-[#140b05] text-center"
-                :class="comm.count > 0 ? 'border-amber-300 bg-amber-50/40 font-bold' : 'border-amber-600/30 text-slate-400'"
+                :class="comm.count > 0 ? 'border-amber-400 bg-amber-500/15 font-black text-amber-200' : 'border-amber-600/30 text-amber-200/50'"
               >
                 <span class="truncate block text-[11px]">{{ comm.committeeName }}</span>
-                <span class="text-sm font-black font-mono" :class="comm.count > 0 ? 'text-amber-800' : 'text-slate-400'">
+                <span class="text-sm font-black font-mono" :class="comm.count > 0 ? 'text-amber-400' : 'text-amber-200/50'">
                   {{ comm.count }} حجز
                 </span>
               </div>
@@ -7031,7 +7032,7 @@
 
               <select 
                 v-model="attendeesRoleFilter" 
-                class="py-2 px-3 rounded-xl border border-amber-600/30 text-xs font-bold text-slate-700 outline-none"
+                class="py-2 px-3 rounded-xl border border-amber-600/40 text-xs font-bold bg-[#140a04] text-amber-100 outline-none focus:border-amber-400"
               >
                 <option value="all">كافة الأدوار</option>
                 <option value="delegate">المناديب فقط</option>
@@ -7080,7 +7081,7 @@
                   class="hover:bg-amber-900/60/80"
                 >
                   <td class="py-2.5 px-3 text-slate-400 font-mono">{{ idx + 1 }}</td>
-                  <td class="py-2.5 px-3 font-bold text-slate-900">{{ bk.name }}</td>
+                  <td class="py-2.5 px-3 font-bold text-amber-100">{{ bk.name }}</td>
                   <td class="py-2.5 px-3">
                     <span class="px-2 py-0.5 rounded-md text-[10px] font-bold"
                           :class="bk.userType === 'delegate' ? 'bg-amber-950/60 text-amber-200 border border-amber-600/30' : (bk.userType === 'member' ? 'bg-amber-950/60 text-amber-300 border border-amber-600/30' : 'bg-amber-950/60 text-amber-100 border border-amber-600/30')">
