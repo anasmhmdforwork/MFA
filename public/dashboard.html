@@ -291,6 +291,24 @@
       .text-emerald-800, .text-emerald-900, .text-emerald-700 { color: #6ee7b7 !important; }
       .text-amber-800, .text-amber-900, .text-amber-700 { color: #dfb147 !important; }
 
+      
+      .tab-active {
+        background: linear-gradient(135deg, rgba(223, 177, 71, 0.22) 0%, rgba(192, 141, 36, 0.12) 100%) !important;
+        color: #f3d685 !important;
+        border-bottom-color: #dfb147 !important;
+        box-shadow: inset 0 -2px 0 #dfb147 !important;
+        font-family: 'Reem Kufi', sans-serif !important;
+      }
+      .tab-inactive {
+        border-color: transparent !important;
+        color: #cbb497 !important;
+        font-family: 'Reem Kufi', sans-serif !important;
+      }
+      .tab-inactive:hover {
+        color: #ffffff !important;
+        background-color: rgba(223, 177, 71, 0.08) !important;
+      }
+
       /* Dedicated Diplomatic Button Classes */
       .btn-action-view {
         background: rgba(45, 27, 14, 0.8) !important;
@@ -624,7 +642,7 @@
             <template v-if="currentUser.directorateType === 'academic'">
               <button 
                 @click="activeTab = 'gradebook'; loadGradebook();" 
-                :class="activeTab === 'gradebook' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+                :class="activeTab === 'gradebook' ? 'tab-active' : 'tab-inactive'"
                 class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
               >
                 <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i>
@@ -633,7 +651,7 @@
 
               <button 
                 @click="activeTab = 'quizzes'" 
-                :class="activeTab === 'quizzes' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+                :class="activeTab === 'quizzes' ? 'tab-active' : 'tab-inactive'"
                 class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
               >
                 <i data-lucide="qr-code" class="w-4 h-4 text-purple-600"></i>
@@ -650,7 +668,7 @@
             <button 
               v-if="currentUser && currentUser.role === 'admin'"
               @click="activeTab = 'minister'" 
-              :class="activeTab === 'minister' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'minister' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
@@ -658,20 +676,32 @@
             </button>
 
             <!-- Events & Visits Tab (Admin) -->
+            <!-- Events & Visits Tab (Admin) -->
             <button 
               v-if="currentUser && currentUser.role === 'admin'"
               @click="activeTab = 'directorate_events'; fetchDashboardEvents();" 
-              :class="activeTab === 'directorate_events' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+              :class="activeTab === 'directorate_events' ? 'border-amber-400 text-amber-300 bg-amber-950/40 shadow-inner' : 'border-transparent text-amber-200/60 hover:text-amber-100 hover:bg-amber-950/20'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
             >
               <i data-lucide="compass" class="w-4 h-4 text-amber-500"></i>
-              <span>إدارة الفعاليات والزيارات ({{ dashboardEvents.length }})</span>
+              <span>إدارة الفعاليات والزيارات المركزية</span>
+            </button>
+
+            <!-- Central Directorate Cadres & Continuous Evaluations (Admin only) -->
+            <button 
+              v-if="currentUser && currentUser.role === 'admin'"
+              @click="activeTab = 'directorate_members'" 
+              :class="activeTab === 'directorate_members' ? 'border-amber-400 text-amber-300 bg-amber-950/40 shadow-inner' : 'border-transparent text-amber-200/60 hover:text-amber-100 hover:bg-amber-950/20'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="award" class="w-4 h-4 text-amber-500"></i>
+              <span>تقييمات الكوادر المركزية (HR/تنظيم/ميديا)</span>
             </button>
 
             <!-- 1. Candidates & Interviews -->
             <button 
               @click="activeTab = 'candidates'" 
-              :class="activeTab === 'candidates' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'candidates' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="users" class="w-4 h-4"></i>
@@ -681,7 +711,7 @@
             <!-- 2. Slots Schedule -->
             <button 
               @click="activeTab = 'slots'" 
-              :class="activeTab === 'slots' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'slots' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="calendar" class="w-4 h-4"></i>
@@ -691,7 +721,7 @@
             <!-- 3. Acceptance WhatsApp Notices -->
             <button 
               @click="activeTab = 'notices'" 
-              :class="activeTab === 'notices' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'notices' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="send" class="w-4 h-4 text-emerald-600"></i>
@@ -701,7 +731,7 @@
             <!-- 4. Structure & Accepted Members -->
             <button 
               @click="activeTab = 'structure'" 
-              :class="activeTab === 'structure' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'structure' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
@@ -711,7 +741,7 @@
             <!-- 5. Operations & Monthly Schedule -->
             <button 
               @click="activeTab = 'operations'; loadOperationsCalendar();" 
-              :class="activeTab === 'operations' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'operations' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
             >
               <i data-lucide="calendar-days" class="w-4 h-4 text-amber-500"></i>
@@ -721,7 +751,7 @@
             <!-- 5. Lectures & Quizzes -->
             <button 
               @click="activeTab = 'quizzes'" 
-              :class="activeTab === 'quizzes' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'quizzes' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="qr-code" class="w-4 h-4 text-purple-600"></i>
@@ -731,7 +761,7 @@
             <!-- 6. Gradebook & Excel Sheet -->
             <button 
               @click="activeTab = 'gradebook'; loadGradebook();" 
-              :class="activeTab === 'gradebook' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'gradebook' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i>
@@ -741,7 +771,7 @@
             <!-- 7. Professional Analytics Dashboard -->
             <button 
               @click="activeTab = 'analytics'" 
-              :class="activeTab === 'analytics' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'analytics' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="pie-chart" class="w-4 h-4"></i>
@@ -751,7 +781,7 @@
             <!-- 8. Transfers Audit Log -->
             <button 
               @click="activeTab = 'transfers'" 
-              :class="activeTab === 'transfers' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'transfers' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
@@ -762,7 +792,7 @@
             <button 
               v-if="currentUser && currentUser.role === 'admin'"
               @click="activeTab = 'audit_logs'; loadAuditLogs();" 
-              :class="activeTab === 'audit_logs' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'audit_logs' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
             >
               <i data-lucide="history" class="w-4 h-4 text-sky-400"></i>
@@ -773,7 +803,7 @@
             <button 
               v-if="currentCommittee && secondaryCandidates.length > 0"
               @click="activeTab = 'secondary'" 
-              :class="activeTab === 'secondary' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'secondary' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
             >
               <i data-lucide="bookmark" class="w-4 h-4 text-purple-600"></i>
@@ -892,7 +922,7 @@
 
           <!-- Card 4: Evaluated Count -->
           <div class="bg-[#180d05]/95 p-5 rounded-3xl border border-amber-600/30 text-amber-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
               <i data-lucide="clipboard-check" class="w-6 h-6"></i>
             </div>
             <div>
@@ -1029,7 +1059,7 @@
             <div 
               v-for="comm in allCommitteesPerformance" 
               :key="comm.committeeId"
-              class="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:shadow-md transition flex flex-col justify-between"
+              class="p-5 rounded-2xl border border-amber-600/30 bg-[#180d05]/95 hover:bg-[#201007] hover:border-amber-500/50 text-amber-100 hover:shadow-md transition flex flex-col justify-between"
             >
               <div>
                 <div class="flex items-center justify-between gap-2 mb-3">
@@ -1039,11 +1069,11 @@
                       {{ comm.committeeName.charAt(0) }}
                     </div>
                     <div>
-                      <h5 class="font-black text-sm text-slate-900">{{ comm.committeeName }}</h5>
+                      <h5 class="font-black text-sm text-amber-100">{{ comm.committeeName }}</h5>
                       <span class="text-[10px] text-slate-400 font-mono">{{ comm.slug }}</span>
                     </div>
                   </div>
-                  <span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-800 text-[10px] font-bold">
+                  <span class="px-2 py-0.5 rounded-full bg-amber-950/60 text-amber-300 border border-amber-600/30 text-[10px] font-bold">
                     {{ comm.acceptedCount }} مقبول
                   </span>
                 </div>
@@ -1107,7 +1137,22 @@
           </div>
 
           <!-- Filters Row -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-4">
+            <!-- Sector Filter (Admin only) -->
+            <div v-if="currentUser && currentUser.role === 'admin'">
+              <select 
+                v-model="directorateSectorFilter" 
+                class="w-full py-2.5 px-3 rounded-xl border border-amber-600/40 bg-[#0e0703] text-xs font-bold text-amber-200 outline-none focus:border-amber-400 cursor-pointer"
+              >
+                <option value="all">كافة التخصصات (الكل)</option>
+                <option value="hr">الموارد البشرية والتنظيم (HR/Org)</option>
+                <option value="organization">التنظيم واللوجستيات فقط</option>
+                <option value="media">الميديا والإعلام فقط</option>
+                <option value="academic">الشؤون الأكاديمية والمناديب</option>
+                <option value="delegate">المناديب (Delegates) فقط</option>
+                <option value="members_only">أعضاء الهيكل (Members) فقط</option>
+              </select>
+            </div>
             <!-- Search Input -->
             <div class="relative">
               <input 
@@ -1410,35 +1455,122 @@
 
       <section v-show="activeTab === 'minister'" class="space-y-8">
         
-        <!-- Minister Welcome Banner -->
+        <!-- Panoramic Command & Cadre Monitoring Center for Admin -->
         <div class="bg-gradient-to-r from-[#2c170b] via-[#1a0d05] to-[#0c0602] text-amber-100 rounded-3xl p-6 sm:p-8 border border-amber-500/40 shadow-2xl relative overflow-hidden">
           <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
           
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10 mb-6 pb-6 border-b border-amber-600/30">
             <div class="flex items-center gap-4">
-              <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-black text-2xl shadow-lg">
-                <i data-lucide="shield" class="w-9 h-9"></i>
+              <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-black text-2xl shadow-lg">
+                <i data-lucide="crown" class="w-9 h-9"></i>
               </div>
               <div>
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold mb-1 border border-amber-500/30">
-                  لوحة المتابعة التنفيذية للقيادة العامة
+                  لوحة القيادة والمتابعة التنفيذية الشاملة لرئيس النموذج
                 </div>
-                <h3 class="text-xl sm:text-2xl font-black text-white">مرحباً فريق الإدارة العامة</h3>
-                <p class="text-xs sm:text-sm text-slate-300 mt-1">
-                  تقرير حي يوضح أداء كل قطاع ونسبة إنجاز المقابلات وعدد المواعيد ومستوى تقييم المرشحين عبر الـ 9 لجان.
+                <h3 class="text-xl sm:text-2xl font-black text-white">الرقابة المركزية الشاملة لكافة القطاعات والتشغيل والكوادر</h3>
+                <p class="text-xs sm:text-sm text-amber-200/80 mt-1 max-w-3xl leading-relaxed">
+                  متابعة بانورامية حية لكل تفاصيل النموذج: أداء اللجان الـ 9، خطط التشغيل والتقويم الشهري، التكليفات الميدانية، كشوفات كافة المناديب (Delegates) وكوادر الهيكل (HR، تنظيم، ميديا، أكاديمي)، وسجلات التدقيق الإداري.
                 </p>
               </div>
             </div>
 
+            <!-- Quick Add Candidate Button -->
             <div class="flex items-center gap-3">
               <button 
                 @click="openAddCandidateModal"
-                class="px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold text-xs shadow-lg transition flex items-center gap-2"
+                class="btn-gold px-4 py-3 rounded-xl font-bold text-xs shadow-lg transition flex items-center gap-2 cursor-pointer"
               >
                 <i data-lucide="user-plus" class="w-4 h-4"></i>
                 <span>إضافة مرشح جديد يدوياً</span>
               </button>
             </div>
+          </div>
+
+          <!-- Comprehensive Platform Metric Cards Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
+            <div class="bg-[#120803]/80 p-3.5 rounded-2xl border border-amber-600/30 text-center">
+              <span class="text-[10px] text-amber-200/70 font-bold block mb-1">إجمالي المتقدمين</span>
+              <span class="text-xl sm:text-2xl font-black text-amber-300 font-mono">{{ candidates.length }}</span>
+            </div>
+            <div class="bg-[#120803]/80 p-3.5 rounded-2xl border border-amber-600/30 text-center">
+              <span class="text-[10px] text-amber-200/70 font-bold block mb-1">المقبولين بالهيكل</span>
+              <span class="text-xl sm:text-2xl font-black text-amber-200 font-mono">{{ acceptedMembersList.length }}</span>
+            </div>
+            <div class="bg-[#120803]/80 p-3.5 rounded-2xl border border-amber-600/30 text-center">
+              <span class="text-[10px] text-amber-200/70 font-bold block mb-1">المناديب (Delegates)</span>
+              <span class="text-xl sm:text-2xl font-black text-amber-100 font-mono">{{ delegatesCount }}</span>
+            </div>
+            <div class="bg-[#120803]/80 p-3.5 rounded-2xl border border-amber-600/30 text-center">
+              <span class="text-[10px] text-amber-200/70 font-bold block mb-1">كوادر الـ HR</span>
+              <span class="text-xl sm:text-2xl font-black text-amber-300 font-mono">{{ hrCount }}</span>
+            </div>
+            <div class="bg-[#120803]/80 p-3.5 rounded-2xl border border-amber-600/30 text-center">
+              <span class="text-[10px] text-amber-200/70 font-bold block mb-1">كوادر التنظيم</span>
+              <span class="text-xl sm:text-2xl font-black text-amber-200 font-mono">{{ organizationCount }}</span>
+            </div>
+            <div class="bg-[#120803]/80 p-3.5 rounded-2xl border border-amber-600/30 text-center">
+              <span class="text-[10px] text-amber-200/70 font-bold block mb-1">كوادر الميديا</span>
+              <span class="text-xl sm:text-2xl font-black text-amber-100 font-mono">{{ mediaCount }}</span>
+            </div>
+            <div class="bg-[#120803]/80 p-3.5 rounded-2xl border border-amber-600/30 text-center">
+              <span class="text-[10px] text-amber-200/70 font-bold block mb-1">الأكاديمي والتدريب</span>
+              <span class="text-xl sm:text-2xl font-black text-emerald-400 font-mono">{{ academicCount }}</span>
+            </div>
+            <div class="bg-[#120803]/80 p-3.5 rounded-2xl border border-amber-600/30 text-center">
+              <span class="text-[10px] text-amber-200/70 font-bold block mb-1">أيام التشغيل والجلسات</span>
+              <span class="text-xl sm:text-2xl font-black text-amber-300 font-mono">{{ operationsSessions.length }}</span>
+            </div>
+          </div>
+
+          <!-- Rapid Command Navigation Strip -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 pt-1 border-t border-amber-600/25">
+            <span class="text-xs font-bold text-amber-300 ml-2 whitespace-nowrap flex items-center gap-1.5">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>لوحات المتابعة السريعة:</span>
+            </span>
+            <button 
+              @click="activeTab = 'operations'; loadOperationsCalendar();"
+              class="px-3.5 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 text-xs font-bold transition flex items-center gap-1.5 border border-amber-600/30 cursor-pointer whitespace-nowrap"
+            >
+              <i data-lucide="calendar-days" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>جدول التشغيل الشهري والمهام</span>
+            </button>
+            <button 
+              @click="activeTab = 'structure'"
+              class="px-3.5 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 text-xs font-bold transition flex items-center gap-1.5 border border-amber-600/30 cursor-pointer whitespace-nowrap"
+            >
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>متابعة المناديب والهيكل ({{ acceptedMembersList.length }})</span>
+            </button>
+            <button 
+              @click="activeTab = 'directorate_members'"
+              class="px-3.5 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 text-xs font-bold transition flex items-center gap-1.5 border border-amber-600/30 cursor-pointer whitespace-nowrap"
+            >
+              <i data-lucide="award" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>تقييمات الكوادر المركزية</span>
+            </button>
+            <button 
+              @click="activeTab = 'directorate_events'; fetchDashboardEvents();"
+              class="px-3.5 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 text-xs font-bold transition flex items-center gap-1.5 border border-amber-600/30 cursor-pointer whitespace-nowrap"
+            >
+              <i data-lucide="compass" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>الفعاليات والزيارات المركزية</span>
+            </button>
+            <button 
+              @click="activeTab = 'gradebook'; loadGradebook();"
+              class="px-3.5 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 text-xs font-bold transition flex items-center gap-1.5 border border-amber-600/30 cursor-pointer whitespace-nowrap"
+            >
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>سجل الدرجات والغياب (Excel)</span>
+            </button>
+            <button 
+              @click="activeTab = 'audit_logs'; loadAuditLogs();"
+              class="px-3.5 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 text-xs font-bold transition flex items-center gap-1.5 border border-amber-600/30 cursor-pointer whitespace-nowrap"
+            >
+              <i data-lucide="history" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>سجل التدقيق الإداري (Audit Trail)</span>
+            </button>
           </div>
         </div>
 
@@ -1575,7 +1707,7 @@
             <div 
               v-for="comm in allCommitteesPerformance" 
               :key="comm.committeeId"
-              class="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:shadow-md transition flex flex-col justify-between"
+              class="p-5 rounded-2xl border border-amber-600/30 bg-[#180d05]/95 hover:bg-[#201007] hover:border-amber-500/50 text-amber-100 hover:shadow-md transition flex flex-col justify-between"
             >
               <div>
                 <div class="flex items-center justify-between gap-2 mb-3">
@@ -1585,11 +1717,11 @@
                       {{ comm.committeeName.charAt(0) }}
                     </div>
                     <div>
-                      <h5 class="font-black text-sm text-slate-900">{{ comm.committeeName }}</h5>
+                      <h5 class="font-black text-sm text-amber-100">{{ comm.committeeName }}</h5>
                       <span class="text-[10px] text-slate-400 font-mono">{{ comm.slug }}</span>
                     </div>
                   </div>
-                  <span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-800 text-[10px] font-bold">
+                  <span class="px-2 py-0.5 rounded-full bg-amber-950/60 text-amber-300 border border-amber-600/30 text-[10px] font-bold">
                     {{ comm.acceptedCount }} مقبول
                   </span>
                 </div>
@@ -1647,7 +1779,7 @@
 
           <div class="overflow-x-auto">
             <table class="w-full text-right text-xs">
-              <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
+              <thead class="bg-[#120803] border-b border-amber-600/30 text-amber-300 font-bold">
                 <tr>
                   <th class="py-3 px-4 w-12">م</th>
                   <th class="py-3 px-4">اسم المرشح</th>
@@ -1658,7 +1790,7 @@
                   <th class="py-3 px-4 text-center">الإجراءات</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100 font-medium">
+              <tbody class="divide-y divide-amber-600/20 font-medium">
                 <tr v-for="(cand, idx) in topRatedCandidates" :key="cand.id" class="hover:bg-amber-50/40">
                   <td class="py-3 px-4 text-slate-400">{{ idx + 1 }}</td>
                   <td class="py-3 px-4 font-bold text-slate-900">{{ cand.arabicName }}</td>
@@ -1836,7 +1968,7 @@
             <div>
               <select 
                 v-model="filters.status" 
-                class="w-full py-2.5 px-3 rounded-xl border border-slate-200 focus:border-amber-500 text-xs font-semibold text-slate-700 outline-none bg-white"
+                class="w-full py-2.5 px-3 rounded-xl border border-amber-600/40 focus:border-amber-400 text-xs font-semibold text-amber-100 outline-none bg-[#0e0703]"
               >
                 <option value="all">كل حالات المقابلات</option>
                 <option value="pending">لم يحجز موعد بعد</option>
@@ -1850,7 +1982,7 @@
             <div>
               <select 
                 v-model="filters.decision" 
-                class="w-full py-2.5 px-3 rounded-xl border border-slate-200 focus:border-amber-500 text-xs font-semibold text-slate-700 outline-none bg-white"
+                class="w-full py-2.5 px-3 rounded-xl border border-amber-600/40 focus:border-amber-400 text-xs font-semibold text-amber-100 outline-none bg-[#0e0703]"
               >
                 <option value="all">القرار المبدئي للجنة (الكل)</option>
                 <option value="accepted">مقبول في اللجنة</option>
@@ -1865,7 +1997,7 @@
             <div>
               <select 
                 v-model="filters.university" 
-                class="w-full py-2.5 px-3 rounded-xl border border-slate-200 focus:border-amber-500 text-xs font-semibold text-slate-700 outline-none bg-white"
+                class="w-full py-2.5 px-3 rounded-xl border border-amber-600/40 focus:border-amber-400 text-xs font-semibold text-amber-100 outline-none bg-[#0e0703]"
               >
                 <option value="all">جميع الجامعات</option>
                 <option value="جامعة السويس">جامعة السويس (الأولوية 1)</option>
@@ -1878,7 +2010,7 @@
             <div>
               <select 
                 v-model="filters.track" 
-                class="w-full py-2.5 px-3 rounded-xl border border-slate-200 focus:border-amber-500 text-xs font-semibold text-slate-700 outline-none bg-white"
+                class="w-full py-2.5 px-3 rounded-xl border border-amber-600/40 focus:border-amber-400 text-xs font-semibold text-amber-100 outline-none bg-[#0e0703]"
               >
                 <option value="all">جميع المسارات (أكاديمي/تنظيمي/إعلامي)</option>
                 <option value="الأكاديمي">المسار الأكاديمي</option>
@@ -1890,7 +2022,7 @@
           </div>
 
           <!-- Quick status counter badges -->
-          <div class="flex items-center justify-between text-xs font-semibold pt-3 mt-3 border-t border-slate-100 text-slate-500 flex-wrap gap-2">
+          <div class="flex items-center justify-between text-xs font-semibold pt-3 mt-3 border-t border-amber-600/25 text-amber-200/70 flex-wrap gap-2">
             <span>عرض {{ filteredCandidates.length }} من أصل {{ candidates.length }} مرشح</span>
             <div class="flex items-center gap-2.5 flex-wrap">
               <span class="text-amber-600">لم يحجزوا: {{ countByStatus('pending') }}</span>
@@ -1925,15 +2057,15 @@
                 <tr 
                   v-for="(cand, idx) in filteredCandidates" 
                   :key="cand.id" 
-                  class="hover:bg-slate-50/80 transition-colors"
+                  class="hover:bg-amber-950/20 transition-colors"
                 >
                   <td class="py-3.5 px-4 text-slate-400 font-mono text-[11px]">{{ idx + 1 }}</td>
                   
                   <!-- Candidate Name & Details -->
                   <td class="py-3.5 px-4">
-                    <div class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                    <div class="font-bold text-amber-100 text-sm flex items-center gap-1.5">
                       <span>{{ cand.arabicName }}</span>
-                      <span v-if="cand.transferHistory && cand.transferHistory.length > 0" class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold" title="تم تحويله من قطاع آخر">
+                      <span v-if="cand.transferHistory && cand.transferHistory.length > 0" class="px-1.5 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-600/30 text-[10px] font-bold" title="تم تحويله من قطاع آخر">
                         محوّل
                       </span>
                     </div>
@@ -1946,8 +2078,8 @@
 
                   <!-- University & Faculty -->
                   <td class="py-3.5 px-4">
-                    <div class="text-slate-800 font-semibold">{{ cand.faculty }}</div>
-                    <div class="text-[11px] text-slate-500">{{ cand.university }} ({{ cand.grade }})</div>
+                    <div class="text-amber-100 font-semibold">{{ cand.faculty }}</div>
+                    <div class="text-[11px] text-amber-200/60">{{ cand.university }} ({{ cand.grade }})</div>
                   </td>
 
                   <!-- Contact & Direct WhatsApp -->
@@ -1968,21 +2100,21 @@
                   <!-- Interview Slot Details -->
                   <td class="py-3.5 px-4">
                     <div v-if="cand.slotInfo">
-                      <div class="font-bold text-slate-900 flex items-center gap-1">
+                      <div class="font-bold text-amber-100 flex items-center gap-1">
                         <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-600"></i>
                         <span>{{ cand.slotInfo.dateDisplay }}</span>
                       </div>
                       <div class="text-[11px] text-slate-600 flex items-center gap-1 mt-0.5">
                         <i data-lucide="clock" class="w-3 h-3 text-slate-400"></i>
-                        <b class="text-emerald-700">{{ cand.slotInfo.timeDisplay }}</b>
+                        <b class="text-amber-300 font-mono">{{ cand.slotInfo.timeDisplay }}</b>
                         <span class="mx-1">•</span>
-                        <span :class="cand.slotInfo.type === 'online' ? 'text-blue-700' : 'text-emerald-700'">
+                        <span :class="cand.slotInfo.type === 'online' ? 'text-amber-300' : 'text-emerald-400'">
                           {{ cand.slotInfo.type === 'online' ? ' أونلاين' : ' حضوري' }}
                         </span>
                       </div>
                     </div>
                     <div v-else>
-                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 text-[11px] font-bold border border-amber-200">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-950/60 text-amber-300 text-[11px] font-bold border border-amber-600/40">
                         <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                         لم يحجز بعد
                       </span>
@@ -2025,7 +2157,7 @@
                           عضو أكاديمي
                         </span>
                       </div>
-                      <div v-if="cand.evaluation.notes" class="text-[11px] text-slate-500 truncate max-w-xs mt-0.5">
+                      <div v-if="cand.evaluation.notes" class="text-[11px] text-amber-200/60 truncate max-w-xs mt-0.5">
                         {{ cand.evaluation.notes }}
                       </div>
                     </div>
@@ -2035,7 +2167,7 @@
                       </span>
                     </div>
                     <div v-else>
-                      <span class="text-slate-400 text-[11px]">بانتظار المقابلة</span>
+                      <span class="text-amber-200/50 text-[11px]">بانتظار المقابلة</span>
                     </div>
                   </td>
 
@@ -2323,7 +2455,7 @@
               <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-black text-slate-900">{{ slot.dateDisplay }}</span>
                 <span 
-                  :class="slot.type === 'online' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'"
+                  :class="slot.type === 'online' ? 'bg-amber-950/60 text-amber-200 border border-amber-600/30' : 'bg-emerald-950/60 text-emerald-300 border border-emerald-600/30'"
                   class="text-[11px] font-bold px-2 py-0.5 rounded-full"
                 >
                   {{ slot.type === 'online' ? ' أونلاين' : ' حضوري' }}
@@ -2671,7 +2803,7 @@
                 type="text" 
                 v-model="noticeSearch" 
                 placeholder="ابحث بالاسم أو الهاتف..."
-                class="w-full pl-4 pr-9 py-2 rounded-xl border border-slate-200 text-xs text-slate-800 outline-none focus:border-amber-500 bg-white"
+                class="w-full pl-4 pr-9 py-2 rounded-xl border border-amber-600/40 text-xs text-amber-100 outline-none focus:border-amber-400 bg-[#0e0703]"
               >
               <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3 top-2.5 pointer-events-none"></i>
             </div>
@@ -2679,7 +2811,7 @@
             <!-- Batch Mark Toggle -->
             <button 
               @click="markAllDisplayedAsNotified(true)" 
-              class="hidden sm:inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+              class="hidden sm:inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40 text-xs font-bold transition cursor-pointer"
               title="تحديد كل المعروضين في الصفحة كـ تم الإبلاغ"
             >
               <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i>
@@ -2721,6 +2853,9 @@
                       </span>
                     </div>
                     <p class="text-[11px] text-amber-200/70 mt-0.5">{{ cand.faculty }} • {{ cand.university }}</p>
+                    <span class="inline-block mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-950/60 text-amber-300 border border-amber-600/30 font-mono">
+                      {{ getCandidateCommitteeTitle(cand) }}
+                    </span>
                   </div>
                 </div>
 
@@ -3506,12 +3641,31 @@
             </button>
 
             <button 
+              @click="structureFilter = 'organization'"
+              :class="structureFilter === 'organization' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1 cursor-pointer"
+            >
+              <span>تنظيم ({{ organizationCount }})</span>
+            </button>
+
+            <button 
               @click="structureFilter = 'academic'"
               :class="structureFilter === 'academic' ? 'btn-gold shadow-md' : 'bg-amber-950/30 text-amber-200/70 hover:bg-amber-950/60 hover:text-amber-100 border border-amber-600/30'"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap flex items-center gap-1 cursor-pointer"
             >
               <span>أكاديمي ({{ academicCount }})</span>
             </button>
+          </div>
+
+          <!-- Committee Filter Dropdown for Admin -->
+          <div v-if="currentUser && currentUser.role === 'admin'" class="w-full sm:w-auto">
+            <select 
+              v-model="structureCommitteeFilter" 
+              class="w-full sm:w-60 px-3 py-2 rounded-xl border border-amber-600/40 bg-[#0e0703] text-xs text-amber-200 font-bold outline-none focus:border-amber-400 cursor-pointer"
+            >
+              <option value="all">كافة اللجان والقطاعات (الـ 9)</option>
+              <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.name }}</option>
+            </select>
           </div>
 
           <!-- Search Input -->
@@ -3520,7 +3674,7 @@
               type="text" 
               v-model="structureSearch" 
               placeholder="ابحث بالاسم أو الهاتف أو الكلية..."
-              class="w-full pl-4 pr-9 py-2 rounded-xl border border-slate-200 text-xs text-slate-800 outline-none focus:border-amber-500 bg-white"
+              class="w-full pl-4 pr-9 py-2 rounded-xl border border-amber-600/40 text-xs text-amber-100 outline-none focus:border-amber-400 bg-[#0e0703]"
             >
             <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3 top-2.5 pointer-events-none"></i>
           </div>
@@ -3730,8 +3884,7 @@
               <span>قائمة الجلسات والتكليفات (Sessions & Tasks)</span>
             </button>
             <button 
-              v-if="currentUser && currentUser.role === 'directorate'"
-              @click="operationsViewMode = 'sector_matrix'" 
+              v-if="currentUser && (currentUser.role === 'directorate' || currentUser.role === 'admin')" @click="operationsViewMode = 'sector_matrix'" 
               :class="operationsViewMode === 'sector_matrix' ? 'btn-gold shadow-md' : 'text-amber-200/70 hover:text-amber-100 hover:bg-amber-950/40'"
               class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
             >
@@ -3740,9 +3893,21 @@
             </button>
           </div>
 
-          <span class="text-xs font-bold text-amber-300 font-mono px-3">
-            نوفمبر 2026 (الموسم الأكاديمي)
-          </span>
+          <div class="flex items-center gap-2">
+            <select 
+              v-if="currentUser && currentUser.role === 'admin'"
+              v-model="selectedCommitteeId"
+              @change="loadOperationsCalendar"
+              class="px-3 py-1.5 rounded-xl border border-amber-600/40 bg-[#0e0703] text-xs text-amber-200 font-bold outline-none focus:border-amber-400 cursor-pointer"
+            >
+              <option value="all">كافة اللجان والقطاعات الـ 9</option>
+              <option v-for="c in committees" :key="c.id" :value="c.id">{{ c.name }}</option>
+            </select>
+
+            <span class="text-xs font-bold text-amber-300 font-mono px-2">
+              نوفمبر 2026 (الموسم الأكاديمي)
+            </span>
+          </div>
         </div>
 
         <!-- VIEW 1: MONTHLY CALENDAR GRID -->
@@ -4961,17 +5126,17 @@
             اختر أحد المواعيد المتاحة للجنة لتسكين المرشح فيها مباشرة:
           </p>
 
-          <div class="max-h-60 overflow-y-auto space-y-2 border border-slate-200 rounded-2xl p-2 bg-slate-50">
+          <div class="max-h-60 overflow-y-auto space-y-2 border border-amber-600/30 rounded-2xl p-2 bg-[#120803]">
             <div 
               v-for="s in availableSlotsForCandidate" 
               :key="s.id"
               @click="selectedSlotIdForAssign = s.id"
-              :class="selectedSlotIdForAssign === s.id ? 'bg-blue-100/70 border-blue-500 ring-2 ring-blue-500/20' : 'bg-white border-slate-200 hover:bg-slate-100'"
+              :class="selectedSlotIdForAssign === s.id ? 'bg-amber-500/20 border-amber-400 ring-2 ring-amber-400/30 text-amber-100' : 'bg-[#180d05] border-amber-600/30 hover:bg-[#241307] text-amber-200'"
               class="p-3 rounded-xl border cursor-pointer transition text-xs flex items-center justify-between"
             >
               <div>
-                <b class="text-slate-900">{{ s.dateDisplay }}</b>
-                <span class="text-slate-500 mr-2">({{ s.timeDisplay }})</span>
+                <b class="text-amber-100">{{ s.dateDisplay }}</b>
+                <span class="text-amber-200/60 mr-2">({{ s.timeDisplay }})</span>
               </div>
               <span class="text-[11px] font-bold px-2 py-0.5 rounded-full" :class="s.type === 'online' ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700'">
                 {{ s.type === 'online' ? 'أونلاين' : 'حضوري' }}
@@ -5370,7 +5535,7 @@
                   <button 
                     type="button"
                     @click="q.correctAnswer = 0"
-                    :class="q.correctAnswer === 0 ? 'bg-emerald-600 text-white shadow-md ring-2 ring-emerald-600/30 font-black' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-bold'"
+                    :class="q.correctAnswer === 0 ? 'bg-emerald-600 text-white shadow-md ring-2 ring-emerald-600/30 font-black' : 'bg-[#180d05] text-amber-200 border border-amber-600/30 hover:bg-[#241307] font-bold'"
                     class="p-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition"
                   >
                     <i data-lucide="check" class="w-4 h-4"></i>
@@ -5380,7 +5545,7 @@
                   <button 
                     type="button"
                     @click="q.correctAnswer = 1"
-                    :class="q.correctAnswer === 1 ? 'bg-rose-600 text-white shadow-md ring-2 ring-rose-600/30 font-black' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-bold'"
+                    :class="q.correctAnswer === 1 ? 'bg-rose-600 text-white shadow-md ring-2 ring-rose-600/30 font-black' : 'bg-[#180d05] text-amber-200 border border-amber-600/30 hover:bg-[#241307] font-bold'"
                     class="p-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition"
                   >
                     <i data-lucide="x" class="w-4 h-4"></i>
@@ -5429,7 +5594,7 @@
                     min="1" 
                     max="10" 
                     v-model="q.points" 
-                    class="w-16 p-1.5 rounded-lg border border-slate-200 text-xs text-center font-bold bg-white"
+                    class="w-16 p-1.5 rounded-lg border border-amber-600/40 text-xs text-center font-bold bg-[#0e0703] text-amber-100"
                   >
                   <span class="text-slate-600 font-bold">درجات</span>
                 </div>
@@ -5533,7 +5698,7 @@
               <i data-lucide="info" class="w-4 h-4 text-emerald-600 shrink-0"></i>
               <span>يُسجل الحضور ودرجة الفهم من اختبار نهاية المحاضرة، بينما يُقيّم الأسينمنت بعد تسليمه مع إمكانية منح بونص تفاعل.</span>
             </div>
-            <span class="font-bold text-emerald-800 font-mono bg-white px-2.5 py-1 rounded-lg border border-emerald-200 shrink-0">
+            <span class="font-bold text-emerald-300 font-mono bg-emerald-950/70 px-2.5 py-1 rounded-lg border border-emerald-600/40 shrink-0">
               {{ attendedDelegatesList.length }} مناديب حاضرون
             </span>
           </div>
@@ -5548,12 +5713,12 @@
             <div 
               v-for="(sub, sIdx) in attendedDelegatesList" 
               :key="sub.id"
-              class="p-4 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 transition space-y-3"
+              class="p-4 rounded-2xl border border-amber-600/30 bg-[#180d05]/95 hover:border-amber-500/50 transition space-y-3 text-amber-100"
             >
               <!-- Row 1: Attendee Info, Quiz Score, Edit Button -->
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                  <span class="w-7 h-7 rounded-xl bg-purple-100 text-purple-800 font-bold text-xs flex items-center justify-center font-mono">
+                  <span class="w-7 h-7 rounded-xl bg-amber-950/60 text-amber-300 border border-amber-600/30 font-bold text-xs flex items-center justify-center font-mono">
                     {{ sIdx + 1 }}
                   </span>
                   <div>
@@ -5667,7 +5832,7 @@
                 <button 
                   @click="openAssignmentEvalModal(sub)"
                   class="px-3.5 py-2 rounded-xl font-bold text-xs transition flex items-center gap-1.5 shadow-sm self-start sm:self-auto shrink-0"
-                  :class="sub.assignmentStatus && sub.assignmentStatus !== 'pending' ? 'bg-white hover:bg-slate-100 text-indigo-700 border border-indigo-200' : 'bg-indigo-600 hover:bg-indigo-700 text-white'"
+                  :class="sub.assignmentStatus && sub.assignmentStatus !== 'pending' ? 'bg-amber-950/50 hover:bg-amber-900/80 text-amber-200 border border-amber-600/40' : 'btn-gold shadow-md'"
                 >
                   <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                   <span>{{ sub.assignmentStatus && sub.assignmentStatus !== 'pending' ? 'تعديل الأسينمنت والبونص' : 'تقييم الأسينمنت والبونص' }}</span>
@@ -5737,7 +5902,7 @@
               <i data-lucide="info" class="w-4 h-4 text-indigo-600 shrink-0"></i>
               <span>الأعضاء لا يخضعون للاختبارات الأكاديمية (مخصصة للمناديب). تُقيّم مهامهم وتكليفاتهم الأسبوعية هنا وتُجمع تلقائياً كل 4 أسابيع كتقييم شهري.</span>
             </div>
-            <span class="font-bold text-indigo-800 font-mono bg-white px-2.5 py-1 rounded-lg border border-indigo-200 shrink-0">
+            <span class="font-bold text-amber-300 font-mono bg-amber-950/70 px-2.5 py-1 rounded-lg border border-amber-600/40 shrink-0">
               {{ lectureCommitteeMembers.length }} أعضاء لجان
             </span>
           </div>
@@ -5958,7 +6123,7 @@
                 :key="bPreset" 
                 type="button"
                 @click="assignmentEvalForm.bonusScore = bPreset"
-                :class="assignmentEvalForm.bonusScore === bPreset ? 'bg-amber-500 text-white shadow-sm' : 'bg-white text-amber-900 border border-amber-200 hover:bg-amber-100'"
+                :class="assignmentEvalForm.bonusScore === bPreset ? 'btn-gold shadow-sm' : 'bg-[#180d05] text-amber-200 border border-amber-600/30 hover:bg-[#241307]'"
                 class="flex-1 py-1.5 rounded-xl text-xs font-bold font-mono transition"
               >
                 {{ bPreset === 0 ? 'بدون' : '+' + bPreset }}
@@ -5968,7 +6133,7 @@
             <input 
               type="text" 
               v-model="assignmentEvalForm.bonusReason" 
-              class="w-full px-3 py-1.5 rounded-xl border border-amber-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs placeholder:text-amber-700/50"
+              class="w-full px-3 py-1.5 rounded-xl border border-amber-600/40 bg-[#0e0703] text-amber-100 outline-none focus:border-amber-400 text-xs placeholder:text-amber-700/50"
               placeholder="سبب منح البونص (مثال: تفاعل استثنائي ومداخلة قوية في المحاضرة)"
             />
           </div>
@@ -6276,7 +6441,7 @@
             v-model="delegateEvalNotes" 
             rows="2" 
             placeholder="اكتب ملاحظاتك عن مشاركته وتفاعله داخل ورش العمل والمحاضرات..." 
-            class="w-full p-2.5 rounded-xl border border-amber-200 text-xs text-slate-800 bg-white outline-none focus:border-amber-500"
+            class="w-full p-2.5 rounded-xl border border-amber-600/40 text-xs text-amber-100 bg-[#0e0703] outline-none focus:border-amber-400"
           ></textarea>
 
           <button 
@@ -6607,7 +6772,7 @@
                 type="button" 
                 @click="newEventForm.targetAudience.scope = 'all'"
                 class="py-2.5 px-3 rounded-xl text-xs font-black border transition flex items-center justify-center gap-1.5 cursor-pointer"
-                :class="newEventForm.targetAudience.scope === 'all' ? 'bg-amber-500 text-slate-950 border-amber-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'"
+                :class="newEventForm.targetAudience.scope === 'all' ? 'btn-gold shadow-sm' : 'bg-[#180d05] text-amber-200 border border-amber-600/30 hover:bg-[#241307]'"
               >
                 <i data-lucide="globe" class="w-3.5 h-3.5"></i>
                 <span>متاحة للجميع (عامة)</span>
@@ -6617,7 +6782,7 @@
                 type="button" 
                 @click="newEventForm.targetAudience.scope = 'custom'"
                 class="py-2.5 px-3 rounded-xl text-xs font-black border transition flex items-center justify-center gap-1.5 cursor-pointer"
-                :class="newEventForm.targetAudience.scope === 'custom' ? 'bg-amber-500 text-slate-950 border-amber-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'"
+                :class="newEventForm.targetAudience.scope === 'custom' ? 'btn-gold shadow-sm' : 'bg-[#180d05] text-amber-200 border border-amber-600/30 hover:bg-[#241307]'"
               >
                 <i data-lucide="filter" class="w-3.5 h-3.5"></i>
                 <span>تخصيص فئات محددة</span>
@@ -6633,7 +6798,7 @@
                 <div class="grid grid-cols-3 gap-1.5">
                   <label 
                     class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
-                    :class="newEventForm.targetAudience.roles.includes('delegate') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                    :class="newEventForm.targetAudience.roles.includes('delegate') ? 'bg-amber-500/20 border-amber-400 text-amber-200 font-black' : 'bg-[#180d05] border-amber-600/30 text-amber-200/60'"
                   >
                     <input type="checkbox" value="delegate" v-model="newEventForm.targetAudience.roles" class="rounded text-amber-600 focus:ring-0">
                     <span>المناديب</span>
@@ -6641,7 +6806,7 @@
 
                   <label 
                     class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
-                    :class="newEventForm.targetAudience.roles.includes('member') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                    :class="newEventForm.targetAudience.roles.includes('member') ? 'bg-amber-500/20 border-amber-400 text-amber-200 font-black' : 'bg-[#180d05] border-amber-600/30 text-amber-200/60'"
                   >
                     <input type="checkbox" value="member" v-model="newEventForm.targetAudience.roles" class="rounded text-amber-600 focus:ring-0">
                     <span>أعضاء اللجان</span>
@@ -6649,7 +6814,7 @@
 
                   <label 
                     class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
-                    :class="newEventForm.targetAudience.roles.includes('board') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                    :class="newEventForm.targetAudience.roles.includes('board') ? 'bg-amber-500/20 border-amber-400 text-amber-200 font-black' : 'bg-[#180d05] border-amber-600/30 text-amber-200/60'"
                   >
                     <input type="checkbox" value="board" v-model="newEventForm.targetAudience.roles" class="rounded text-amber-600 focus:ring-0">
                     <span>الهاي بورد</span>
@@ -6663,7 +6828,7 @@
                 <div class="grid grid-cols-3 gap-1.5">
                   <label 
                     class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
-                    :class="newEventForm.targetAudience.sectors.includes('hr') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                    :class="newEventForm.targetAudience.sectors.includes('hr') ? 'bg-amber-500/20 border-amber-400 text-amber-200 font-black' : 'bg-[#180d05] border-amber-600/30 text-amber-200/60'"
                   >
                     <input type="checkbox" value="hr" v-model="newEventForm.targetAudience.sectors" class="rounded text-amber-600 focus:ring-0">
                     <span>قطاع التنظيم</span>
@@ -6671,7 +6836,7 @@
 
                   <label 
                     class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
-                    :class="newEventForm.targetAudience.sectors.includes('media') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                    :class="newEventForm.targetAudience.sectors.includes('media') ? 'bg-amber-500/20 border-amber-400 text-amber-200 font-black' : 'bg-[#180d05] border-amber-600/30 text-amber-200/60'"
                   >
                     <input type="checkbox" value="media" v-model="newEventForm.targetAudience.sectors" class="rounded text-amber-600 focus:ring-0">
                     <span>قطاع الميديا</span>
@@ -6679,7 +6844,7 @@
 
                   <label 
                     class="flex items-center gap-1.5 p-2 rounded-xl border text-[11px] font-bold cursor-pointer transition"
-                    :class="newEventForm.targetAudience.sectors.includes('academic') ? 'bg-amber-50 border-amber-400 text-amber-950 font-black' : 'bg-white border-slate-200 text-slate-600'"
+                    :class="newEventForm.targetAudience.sectors.includes('academic') ? 'bg-amber-500/20 border-amber-400 text-amber-200 font-black' : 'bg-[#180d05] border-amber-600/30 text-amber-200/60'"
                   >
                     <input type="checkbox" value="academic" v-model="newEventForm.targetAudience.sectors" class="rounded text-amber-600 focus:ring-0">
                     <span>قطاع الأكاديمي</span>
@@ -8127,6 +8292,9 @@
         // Structure & Roles State
         const structureFilter = ref('all');
         const structureSearch = ref('');
+        const structureCommitteeFilter = ref('all');
+        const operationsCommitteeFilter = ref('all');
+        const directorateSectorFilter = ref('all');
         const editingRoleCandidate = ref(null);
         const editingRoleForm = ref({ roleType: 'delegate', subDepartment: 'academic' });
         const memberEvalCandidate = ref(null);
@@ -8762,20 +8930,25 @@
         const directorateEvalFilter = ref('all');
 
         const directorateMembersList = computed(() => {
-          if (!currentUser.value || currentUser.value.role !== 'directorate') return [];
-          const type = currentUser.value.directorateType;
+          if (!currentUser.value || (currentUser.value.role !== 'directorate' && currentUser.value.role !== 'admin')) return [];
+          const isAdm = currentUser.value.role === 'admin';
+          const type = isAdm ? (directorateSectorFilter.value || 'all') : currentUser.value.directorateType;
           let list = acceptedMembersList.value || [];
           
           if (type === 'hr') {
             list = list.filter(c => c.roleType === 'member' && (c.subDepartment === 'hr' || c.subDepartment === 'organization'));
           } else if (type === 'organization') {
-            list = list.filter(c => c.roleType === 'member' && (c.subDepartment === 'organization' || c.subDepartment === 'hr'));
+            list = list.filter(c => c.roleType === 'member' && c.subDepartment === 'organization');
           } else if (type === 'operations') {
             list = list.filter(c => c.roleType === 'member');
           } else if (type === 'media') {
             list = list.filter(c => c.roleType === 'member' && c.subDepartment === 'media');
           } else if (type === 'academic') {
             list = list.filter(c => (c.roleType || 'delegate') === 'delegate' || (c.roleType === 'member' && c.subDepartment === 'academic'));
+          } else if (type === 'delegate') {
+            list = list.filter(c => (c.roleType || 'delegate') === 'delegate');
+          } else if (type === 'members_only') {
+            list = list.filter(c => c.roleType === 'member');
           }
           
           if (directorateCommitteeFilter.value !== 'all') {
@@ -8898,6 +9071,10 @@
           return acceptedMembersList.value.filter(c => c.roleType === 'member' && c.subDepartment === 'media').length;
         });
 
+        const organizationCount = computed(() => {
+          return acceptedMembersList.value.filter(c => c.roleType === 'member' && c.subDepartment === 'organization').length;
+        });
+
         const academicCount = computed(() => {
           return acceptedMembersList.value.filter(c => c.roleType === 'member' && c.subDepartment === 'academic').length;
         });
@@ -8906,8 +9083,13 @@
           let list = acceptedMembersList.value;
           if (structureFilter.value === 'delegate') {
             list = list.filter(c => (c.roleType || 'delegate') === 'delegate');
-          } else if (['hr', 'media', 'academic'].includes(structureFilter.value)) {
+          } else if (structureFilter.value === 'organization') {
+            list = list.filter(c => c.roleType === 'member' && c.subDepartment === 'organization');
+          } else if (['hr', 'organization', 'media', 'academic'].includes(structureFilter.value)) {
             list = list.filter(c => c.roleType === 'member' && c.subDepartment === structureFilter.value);
+          }
+          if (structureCommitteeFilter.value && structureCommitteeFilter.value !== 'all') {
+            list = list.filter(c => (c.assignedCommitteeId || c.originalCommitteeId) === structureCommitteeFilter.value);
           }
           if (structureSearch.value.trim()) {
             const q = structureSearch.value.trim().toLowerCase();
@@ -8915,7 +9097,8 @@
               (c.arabicName && c.arabicName.toLowerCase().includes(q)) ||
               (c.fullName && c.fullName.toLowerCase().includes(q)) ||
               (c.phone && c.phone.includes(q)) ||
-              (c.faculty && c.faculty.toLowerCase().includes(q))
+              (c.faculty && c.faculty.toLowerCase().includes(q)) ||
+              (c.diplomaticId && c.diplomaticId.toLowerCase().includes(q))
             );
           }
           return list;
@@ -11072,6 +11255,10 @@
           logout,
           structureFilter,
           structureSearch,
+          structureCommitteeFilter,
+          operationsCommitteeFilter,
+          directorateSectorFilter,
+          organizationCount,
           editingRoleCandidate,
           editingRoleForm,
           memberEvalCandidate,
