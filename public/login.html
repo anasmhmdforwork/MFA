@@ -50,7 +50,7 @@
     }
 
     .font-ruqaa,
-    .single-line-quote {
+    .quote-lead {
       font-family: 'Aref Ruqaa', serif !important;
     }
     .diplomatic-card {
@@ -75,10 +75,9 @@
       box-shadow: 0 12px 30px rgba(160, 110, 25, 0.55), 0 0 20px rgba(233, 191, 87, 0.5) !important;
       border-color: #694406 !important;
     }
-    .single-line-quote {
-      font-size: clamp(9px, 2.3vw, 13px);
-      white-space: nowrap;
-      letter-spacing: -0.01em;
+    .quote-lead {
+      font-size: clamp(16px, 4.2vw, 22px);
+      line-height: 1.6;
       display: block;
       width: 100%;
       text-align: center;
@@ -127,24 +126,22 @@
           >
         </div>
 
-        <!-- Main Institutional Titles (Reem Kufi) -->
-        <div class="space-y-1.5 mb-2">
-          <!-- 1. Model Main Title -->
-          <h1 class="text-2xl sm:text-3xl font-black font-kufi leading-tight">
-            <span class="gold-gradient-text">
-              نموذج محاكاة وزارة الخارجية
-            </span>
-          </h1>
+        <!-- Hierarchical Institutional Header (Smallest to Largest) -->
+        <div class="space-y-1 mb-3 text-center">
+          <!-- 1. Smallest: Model Entity Title -->
+          <p class="text-xs sm:text-sm font-bold font-kufi text-amber-400 tracking-wider">
+            نموذج محاكاة وزارة الخارجية
+          </p>
 
-          <!-- 2. Faculty & University Subtitle -->
-          <h2 class="text-xs sm:text-sm font-bold text-amber-200/90 font-kufi tracking-wider">
+          <!-- 2. Medium (Larger): Faculty & University Subtitle -->
+          <h2 class="text-sm sm:text-base md:text-lg font-black font-kufi text-amber-200 tracking-wide">
             كلية السياسة والاقتصاد • جامعة السويس
           </h2>
         </div>
 
-        <!-- Subtitle on ONE SINGLE LINE without breaking or clipping -->
-        <div class="w-full overflow-hidden mt-3 px-1 pt-2 border-t border-amber-600/30">
-          <p class="single-line-quote font-ruqaa text-amber-200/80">
+        <!-- 3. Largest: Central Diplomatic Mission Quote (Aref Ruqaa) -->
+        <div class="w-full mt-3 px-2 pt-3 border-t border-amber-600/30 text-center">
+          <p class="quote-lead font-ruqaa font-bold gold-gradient-text">
             حيث يلتقي الفكر الدبلوماسي بالتطبيق المؤسسي، لصناعة أجيال واعية تقود المشهد الدولي.
           </p>
         </div>
