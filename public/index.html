@@ -136,64 +136,87 @@
        Descriptive Content & Preambles: Aref Ruqaa
        Functional Data & Fields: Cairo
        ========================================================================= */
-    h1, h2, h3, h4, h5, h6,
-    .font-amiri,
-    .gold-gradient-title,
-    .section-title,
-    .font-kufi,
-    .btn-gold,
-    .wax-lock-badge,
-    .diplomatic-badge {
+    /* =========================================================================
+       ARABIC TYPOGRAPHY (When NOT in English mode)
+       ========================================================================= */
+    html:not([lang="en"]) h1,
+    html:not([lang="en"]) h2,
+    html:not([lang="en"]) h3,
+    html:not([lang="en"]) h4,
+    html:not([lang="en"]) h5,
+    html:not([lang="en"]) h6,
+    html:not([lang="en"]) .font-amiri,
+    html:not([lang="en"]) .gold-gradient-title,
+    html:not([lang="en"]) .section-title,
+    html:not([lang="en"]) .font-kufi,
+    html:not([lang="en"]) .btn-gold,
+    html:not([lang="en"]) .wax-lock-badge,
+    html:not([lang="en"]) .diplomatic-badge {
       font-family: 'Reem Kufi', sans-serif !important;
     }
 
-    .font-ruqaa,
-    .ink-lead,
-    [data-i18n="doc_lead_desc"],
-    .parchment-lead {
+    html:not([lang="en"]) .font-ruqaa,
+    html:not([lang="en"]) .ink-lead,
+    html:not([lang="en"]) [data-i18n="doc_lead_desc"],
+    html:not([lang="en"]) .parchment-lead {
       font-family: 'Aref Ruqaa', serif !important;
     }
 
     /* =========================================================================
        ENGLISH LTR MODE: AUTHENTIC 17TH-CENTURY DIPLOMATIC PRESS (1670s)
        Titles & Monumental Headings: IM Fell English SC (Oxford Press 1670)
-       Preamble Leads & Ceremonial Quotes: IM Fell English
-       Body, Articles & Card Explanations: Cardo
+       Preamble Leads, Articles, Cards & Text: IM Fell English (Visible & Deeply Vintage)
        ========================================================================= */
-    html[lang="en"] body {
-      font-family: 'Cardo', serif;
+    html[lang="en"],
+    html[lang="en"] body,
+    html[lang="en"] .parchment-continuous-scroll,
+    html[lang="en"] .parchment-sheet,
+    html[lang="en"] .parchment-card,
+    html[lang="en"] p,
+    html[lang="en"] span:not([class*="lucide"]):not(.lucide),
+    html[lang="en"] div,
+    html[lang="en"] li,
+    html[lang="en"] blockquote,
+    html[lang="en"] strong,
+    html[lang="en"] em,
+    html[lang="en"] b,
+    html[lang="en"] .font-ruqaa,
+    html[lang="en"] .font-cairo,
+    html[lang="en"] .ink-lead,
+    html[lang="en"] [data-i18n="doc_lead_desc"],
+    html[lang="en"] .parchment-lead {
+      font-family: 'IM Fell English', 'Cardo', serif !important;
+      letter-spacing: 0.015em;
     }
-    html[lang="en"] .gold-gradient-title,
+
+    /* Monumental Titles, Headings & Action Seals: IM Fell English SC */
     html[lang="en"] h1,
     html[lang="en"] h2,
     html[lang="en"] h3,
     html[lang="en"] h4,
     html[lang="en"] h5,
     html[lang="en"] h6,
+    html[lang="en"] .gold-gradient-title,
     html[lang="en"] .font-amiri,
     html[lang="en"] .font-kufi,
     html[lang="en"] .section-title,
     html[lang="en"] .btn-gold,
     html[lang="en"] .wax-lock-badge,
     html[lang="en"] .diplomatic-badge,
+    html[lang="en"] .finial-center-seal,
+    html[lang="en"] #topScrollFinial,
+    html[lang="en"] #bottomScrollFinial,
     html[lang="en"] #hudBrandTitle,
     html[lang="en"] [data-i18n="hud_brand_title"] {
       font-family: 'IM Fell English SC', serif !important;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.04em !important;
     }
+
     html[lang="en"] .ink-lead,
-    html[lang="en"] .font-ruqaa,
     html[lang="en"] [data-i18n="doc_lead_desc"],
     html[lang="en"] .parchment-lead {
-      font-family: 'IM Fell English', serif !important;
       font-size: 1.25rem !important;
       line-height: 1.85 !important;
-    }
-    html[lang="en"] p,
-    html[lang="en"] li,
-    html[lang="en"] .parchment-sheet p {
-      font-family: 'Cardo', serif;
-      line-height: 1.75;
     }
     html[lang="en"] .diplomatic-astrolabe-nav {
       left: 20px;
@@ -365,9 +388,11 @@
         margin-left: 0;
       }
       .finial-center-seal {
-        font-size: 11px;
-        padding: 2px 8px;
+        font-size: clamp(9px, 2.5vw, 12px);
+        padding: 2px 10px;
         gap: 6px;
+        max-width: 95%;
+        white-space: nowrap;
       }
       .parchment-continuous-scroll {
         padding: 36px 18px;
@@ -998,13 +1023,13 @@
       }
 
       .finial-center-seal {
-        font-size: 10px !important;
-        padding: 2px 6px !important;
+        font-size: clamp(8px, 2.3vw, 11px) !important;
+        padding: 2px 8px !important;
         gap: 4px !important;
-        max-width: 75% !important;
+        max-width: 95% !important;
         white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        overflow: visible !important;
+        letter-spacing: 0.02em !important;
       }
 
       .finial-brass-ring {
@@ -1149,7 +1174,7 @@
             <img src="/logo.png" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-lg sm:rounded-xl">
           </div>
           <div class="min-w-0 text-start">
-            <span class="block text-amber-800 font-bold font-kufi text-[9px] sm:text-xs tracking-wider truncate" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
+            <span class="block text-amber-800 font-bold font-kufi text-[9px] sm:text-xs tracking-wider shrink-0 whitespace-nowrap" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
             <h1 class="text-amber-950 font-black text-xs sm:text-sm md:text-base font-amiri tracking-tight leading-tight truncate" data-i18n="hud_brand_title">
               <span class="block sm:inline">نموذج محاكاة</span> <span class="block sm:inline">وزارة الخارجية المصرية</span>
             </h1>
