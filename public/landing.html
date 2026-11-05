@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>الوثيقة الرسمية والبيان التأسيسي | نموذج محاكاة وزارة الخارجية - جامعة السويس</title>
+  <title id="pageTitle">الوثيقة الرسمية والبيان التأسيسي | نموذج محاكاة وزارة الخارجية - جامعة السويس</title>
   <link rel="icon" type="image/jpeg" href="/logo.jpg">
 
-  <!-- Google Fonts: Amiri, Aref Ruqaa, Reem Kufi, Cairo -->
+  <!-- Google Fonts: Arabic (Amiri, Aref Ruqaa, Reem Kufi, Cairo) + English Royal Serif (Cinzel, Cormorant Garamond) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Cinzel:wght@600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -26,6 +26,8 @@
             ruqaa: ['"Aref Ruqaa"', 'serif'],
             kufi: ['"Reem Kufi"', 'sans-serif'],
             cairo: ['Cairo', 'sans-serif'],
+            cinzel: ['Cinzel', 'serif'],
+            garamond: ['"Cormorant Garamond"', 'serif'],
           },
           colors: {
             parchment: {
@@ -84,6 +86,46 @@
       margin: 0;
       padding: 0;
       position: relative;
+      transition: font-family 0.3s ease;
+    }
+
+    /* English LTR Mode Styling Overrides */
+    html[lang="en"] body {
+      font-family: 'Cairo', 'Cormorant Garamond', sans-serif;
+    }
+    html[lang="en"] .gold-gradient-title,
+    html[lang="en"] h2,
+    html[lang="en"] h3 {
+      font-family: 'Cinzel', serif !important;
+      letter-spacing: 0.03em;
+    }
+    html[lang="en"] .ink-lead {
+      font-family: 'Cormorant Garamond', serif !important;
+      font-size: 1.25rem !important;
+      line-height: 1.85 !important;
+      font-weight: 600 !important;
+    }
+    html[lang="en"] .font-amiri {
+      font-family: 'Cinzel', serif !important;
+    }
+    html[lang="en"] .font-ruqaa {
+      font-family: 'Cormorant Garamond', italic, serif !important;
+    }
+    html[lang="en"] .font-kufi {
+      font-family: 'Cinzel', sans-serif !important;
+      letter-spacing: 0.08em;
+    }
+    html[lang="en"] .diplomatic-astrolabe-nav {
+      left: 20px;
+      right: auto;
+    }
+    html[lang="en"] .astrolabe-tooltip {
+      left: 42px;
+      right: auto;
+      transform: translateX(-10px);
+    }
+    html[lang="en"] .astrolabe-dot:hover .astrolabe-tooltip {
+      transform: translateX(0);
     }
 
     /* Desk background with macro top-down lighting (Warm Antique Mahogany) */
@@ -431,7 +473,7 @@
       transform: translateY(-2px);
     }
 
-    /* Floating Side Navigation Spine (Golden Timeline Astrolabe in Warm Parchment) */
+    /* Floating Side Navigation Spine */
     .diplomatic-astrolabe-nav {
       position: fixed;
       right: 20px;
@@ -544,7 +586,7 @@
         background: #ffffff !important;
         color: #000000 !important;
       }
-      .cinematic-hud, .diplomatic-astrolabe-nav, .desk-prop, #autoGlideBtn, #audioToggleBtn {
+      .cinematic-hud, .diplomatic-astrolabe-nav, .desk-prop, #autoGlideBtn, #audioToggleBtn, #langToggleBtn {
         display: none !important;
       }
       .parchment-scroll-wrapper {
@@ -565,7 +607,7 @@
 <body class="diplomatic-desk-environment antialiased selection:bg-amber-300 selection:text-amber-950">
 
   <!-- =========================================================================
-       MACRO TOP-DOWN DESK PROPS (Atmospheric visual stationery in Antique Brass & Wood)
+       MACRO TOP-DOWN DESK PROPS (Atmospheric visual stationery)
        ========================================================================= -->
   
   <!-- Top Left: Antique Brass Astrolabe / Navigational Compass -->
@@ -585,13 +627,11 @@
   <!-- Bottom Right: Diplomatic Inkpot & Golden Quill Nib -->
   <div class="desk-prop bottom-12 right-12" style="transform: rotate(25deg);">
     <div class="relative w-28 h-28 flex items-center justify-center">
-      <!-- Inkpot base -->
       <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-950 via-stone-900 to-amber-900 border-2 border-amber-600/70 shadow-2xl flex items-center justify-center">
         <div class="w-8 h-8 rounded-full bg-amber-950 border border-amber-400/50 shadow-inner flex items-center justify-center">
           <div class="w-4 h-4 rounded-full bg-stone-900 shadow-inner"></div>
         </div>
       </div>
-      <!-- Feather Quill resting across -->
       <div class="absolute -top-12 -right-4 w-3 h-36 origin-bottom transform rotate-45">
         <div class="w-full h-full bg-gradient-to-t from-amber-400 via-amber-100 to-amber-800 rounded-full shadow-lg"></div>
       </div>
@@ -615,18 +655,18 @@
   <header class="cinematic-hud">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
       
-      <!-- Right: Crest and Title -->
+      <!-- Right/Leading: Crest and Title -->
       <div class="flex items-center gap-3">
         <a href="/" class="flex items-center gap-3 group">
           <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform">
             <img src="/logo.jpg" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-xl">
           </div>
-          <div class="text-right">
+          <div class="text-start">
             <div class="flex items-center gap-2">
-              <span class="text-amber-800 font-bold font-kufi text-xs tracking-wider">MFA SUEZ 2026</span>
-              <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-200/70 text-amber-900 border border-amber-400">الوثيقة الرسمية</span>
+              <span class="text-amber-800 font-bold font-kufi text-xs tracking-wider" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-200/70 text-amber-900 border border-amber-400" data-i18n="hud_official_badge">الوثيقة الرسمية</span>
             </div>
-            <h1 class="text-amber-950 font-black text-sm sm:text-base font-amiri tracking-wide leading-tight">
+            <h1 class="text-amber-950 font-black text-sm sm:text-base font-amiri tracking-wide leading-tight" data-i18n="hud_brand_title">
               نموذج محاكاة وزارة الخارجية المصرية
             </h1>
           </div>
@@ -643,12 +683,19 @@
         <span id="hudProgressPercent" class="text-xs font-bold text-amber-800 font-mono">0%</span>
       </div>
 
-      <!-- Left: Interactive Controls & Portal Actions -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Left/Trailing: Controls, Language Switcher & Portal Actions -->
+      <div class="flex items-center gap-2 sm:gap-2.5">
+        
+        <!-- BILINGUAL LANGUAGE SWITCHER BUTTON (AR / EN) -->
+        <button id="langToggleBtn" onclick="toggleLanguage()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-200/90 hover:bg-amber-300 text-amber-950 border border-amber-600 font-bold text-xs shadow-sm transition-all hover:scale-105" title="Switch Language / تغيير اللغة">
+          <i data-lucide="languages" class="w-3.5 h-3.5 text-amber-800"></i>
+          <span id="langBtnLabel">English</span>
+        </button>
+
         <!-- Silent Cinematic Auto-Glide Toggle -->
         <button id="autoGlideBtn" onclick="toggleAutoGlide()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-500/60 text-xs font-bold transition-all shadow-sm" title="تمرير سينمائي تلقائي صامت">
           <i data-lucide="play" id="glideIcon" class="w-3.5 h-3.5 text-amber-800"></i>
-          <span id="glideLabel">العرض السينمائي</span>
+          <span id="glideLabel" data-i18n="hud_glide_btn">العرض السينمائي</span>
         </button>
 
         <!-- Speed switch (hidden until auto-glide active) -->
@@ -664,12 +711,12 @@
         <!-- Direct Portal Pathways -->
         <a href="/book" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-600 text-amber-950 font-black text-xs sm:text-sm shadow-md shadow-amber-600/25 transition-all">
           <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
-          <span>حجز مقابلة</span>
+          <span data-i18n="hud_book_btn">حجز مقابلة</span>
         </a>
 
         <a href="/login" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-100/90 hover:bg-amber-200 text-amber-950 border border-amber-500/70 text-xs font-bold transition-all">
           <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-700"></i>
-          <span class="hidden sm:inline">دخول اللجان</span>
+          <span class="hidden sm:inline" data-i18n="hud_login_btn">دخول اللجان</span>
         </a>
       </div>
 
@@ -684,47 +731,47 @@
        FLOATING LATERAL GOLDEN ASTROLABE (Quick Jump Navigation 1-10)
        ========================================================================= -->
   <nav class="diplomatic-astrolabe-nav" aria-label="فهرس بنود الوثيقة">
-    <div class="text-[10px] font-bold text-amber-900 uppercase tracking-widest mb-1 font-kufi">البنود</div>
+    <div class="text-[10px] font-bold text-amber-900 uppercase tracking-widest mb-1 font-kufi" data-i18n="astrolabe_label">البنود</div>
     
     <button class="astrolabe-dot active" data-target="section-1" onclick="scrollToSection('section-1')">
-      ١
-      <span class="astrolabe-tooltip">١. الهوية والمنطلق المؤسسي</span>
+      <span class="dot-num">١</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_1">١. الهوية والمنطلق المؤسسي</span>
     </button>
     <button class="astrolabe-dot" data-target="section-2" onclick="scrollToSection('section-2')">
-      ٢
-      <span class="astrolabe-tooltip">٢. الرؤية والفلسفة الحاكمة</span>
+      <span class="dot-num">٢</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_2">٢. الرؤية والفلسفة الحاكمة</span>
     </button>
     <button class="astrolabe-dot" data-target="section-3" onclick="scrollToSection('section-3')">
-      ٣
-      <span class="astrolabe-tooltip">٣. الأهداف الوطنية والمهنية</span>
+      <span class="dot-num">٣</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_3">٣. الأهداف الوطنية والمهنية</span>
     </button>
     <button class="astrolabe-dot" data-target="section-4" onclick="scrollToSection('section-4')">
-      ٤
-      <span class="astrolabe-tooltip">٤. هيكل تنظيمي يحاكي الدولة</span>
+      <span class="dot-num">٤</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_4">٤. هيكل تنظيمي يحاكي الدولة</span>
     </button>
     <button class="astrolabe-dot" data-target="section-5" onclick="scrollToSection('section-5')">
-      ٥
-      <span class="astrolabe-tooltip">٥. القطاعات التخصصية ودوائر العمل</span>
+      <span class="dot-num">٥</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_5">٥. القطاعات التخصصية ودوائر العمل</span>
     </button>
     <button class="astrolabe-dot" data-target="section-6" onclick="scrollToSection('section-6')">
-      ٦
-      <span class="astrolabe-tooltip">٦. نظام التدرج الوظيفي الدبلوماسي</span>
+      <span class="dot-num">٦</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_6">٦. نظام التدرج الوظيفي الدبلوماسي</span>
     </button>
     <button class="astrolabe-dot" data-target="section-7" onclick="scrollToSection('section-7')">
-      ٧
-      <span class="astrolabe-tooltip">٧. منظومة تدريبية خماسية المسارات</span>
+      <span class="dot-num">٧</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_7">٧. منظومة تدريبية خماسية المسارات</span>
     </button>
     <button class="astrolabe-dot" data-target="section-8" onclick="scrollToSection('section-8')">
-      ٨
-      <span class="astrolabe-tooltip">٨. منهجية الأسبوع التدريبي والتطبيق</span>
+      <span class="dot-num">٨</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_8">٨. منهجية الأسبوع التدريبي والتطبيق</span>
     </button>
     <button class="astrolabe-dot" data-target="section-9" onclick="scrollToSection('section-9')">
-      ٩
-      <span class="astrolabe-tooltip">٩. دراسات الحالة وإدارة الأزمات</span>
+      <span class="dot-num">٩</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_9">٩. دراسات الحالة وإدارة الأزمات</span>
     </button>
     <button class="astrolabe-dot" data-target="section-10" onclick="scrollToSection('section-10')">
-      ١٠
-      <span class="astrolabe-tooltip">١٠. الحوكمة والانفتاح والشراكة</span>
+      <span class="dot-num">١٠</span>
+      <span class="astrolabe-tooltip" data-i18n="tooltip_10">١٠. الحوكمة والانفتاح والشراكة</span>
     </button>
   </nav>
 
@@ -739,7 +786,7 @@
       <div class="finial-brass-ring"></div>
       <div class="finial-center-seal">
         <i data-lucide="shield-check" class="w-4 h-4 text-amber-700"></i>
-        <span>وثيقة دبلوماسية معتمدة • جامعة السويس • 2026</span>
+        <span data-i18n="finial_top">وثيقة دبلوماسية معتمدة • جامعة السويس • 2026</span>
       </div>
       <div class="finial-brass-ring"></div>
     </div>
@@ -748,7 +795,7 @@
     <article class="parchment-continuous-scroll">
       
       <!-- Watermark Backgrounds -->
-      <div class="parchment-watermark">وزارة الخارجية المصرية</div>
+      <div class="parchment-watermark" data-i18n="watermark_ar">وزارة الخارجية المصرية</div>
       <div class="parchment-watermark-secondary">MFA SIMULATION MODEL</div>
 
       <!-- =====================================================================
@@ -757,19 +804,19 @@
       <header class="text-center pb-12 pt-4 relative z-10 border-b-2 border-amber-700/30">
         
         <!-- Sacred Invocation in Classical Calligraphy -->
-        <div class="font-amiri text-2xl sm:text-3xl text-amber-900/90 font-bold mb-4 tracking-wider">
+        <div class="font-amiri text-2xl sm:text-3xl text-amber-900/90 font-bold mb-4 tracking-wider" data-i18n="doc_invocation">
           بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
         </div>
 
         <!-- Official Republic & University Heading -->
         <div class="flex flex-col items-center justify-center gap-1.5 mb-6 text-amber-950">
-          <span class="font-kufi text-xs sm:text-sm font-semibold tracking-widest text-amber-900 uppercase">
+          <span class="font-kufi text-xs sm:text-sm font-semibold tracking-widest text-amber-900 uppercase" data-i18n="doc_republic">
             جمهورية مصر العربية • وزارة التعليم العالي والبحث العلمي
           </span>
-          <span class="font-amiri text-base sm:text-xl font-bold text-amber-950">
+          <span class="font-amiri text-base sm:text-xl font-bold text-amber-950" data-i18n="doc_faculty">
             جامعة السويس • كلية السياسة والاقتصاد
           </span>
-          <span class="font-ruqaa text-sm text-amber-900 font-semibold">
+          <span class="font-ruqaa text-sm text-amber-900 font-semibold" data-i18n="doc_entity">
             نموذج محاكاة وزارة الخارجية المصرية (MFA SM)
           </span>
         </div>
@@ -779,7 +826,7 @@
           <div class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 border-2 border-amber-600/60 p-1 shadow-md mb-2">
             <img src="/logo.jpg" alt="ختم النسر والنموذج" class="w-full h-full object-cover rounded-full">
           </div>
-          <div class="font-amiri text-xs font-bold text-amber-950">
+          <div class="font-amiri text-xs font-bold text-amber-950" data-i18n="doc_medallion_title">
             وثيقة التأسيس والبيان الاستراتيجي الشامل للدبلوماسية المصرية الشبابية
           </div>
           <div class="text-[11px] text-amber-800 font-mono mt-0.5">
@@ -787,11 +834,11 @@
           </div>
         </div>
 
-        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black font-amiri gold-gradient-title leading-tight mb-4">
+        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black font-amiri gold-gradient-title leading-tight mb-4" data-i18n="doc_main_title">
           المرسوم التأسيسي والإطار المفاهيمي العام
         </h2>
         
-        <p class="max-w-2xl mx-auto font-ruqaa text-base sm:text-lg text-amber-950/85 leading-relaxed">
+        <p class="max-w-2xl mx-auto font-ruqaa text-base sm:text-lg text-amber-950/85 leading-relaxed" data-i18n="doc_lead_desc">
           وثيقة رسمية جامعة تشرح الهيكل، الرؤية، الأهداف الوطنية، والمنظومة التدريبية لنموذج محاكاة وزارة الخارجية بجامعة السويس.
         </p>
 
@@ -809,13 +856,13 @@
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">١</div>
+            <div class="gold-numeral-seal"><span class="badge-num">١</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="landmark" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">وثيقة التأسيس والمنطلق المؤسسي</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s1_badge">وثيقة التأسيس والمنطلق المؤسسي</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s1_title">
                 ١. الهوية والمنطلق المؤسسي
               </h3>
             </div>
@@ -823,13 +870,13 @@
           
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="stamp" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE I: IDENTITY & ORIGIN</span>
+            <span data-i18n="s1_article">ARTICLE I: IDENTITY & ORIGIN</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s1_body">
             نحن <strong>"نموذج محاكاة وزارة الخارجية بجامعة السويس" (MFA SM)</strong>، مبادرة أكاديمية طلابية رائدة تنطلق من رحم <em>كلية السياسة والاقتصاد بجامعة السويس</em>. يمثل نموذجنا منصة تعليمية تطبيقية معتمدة تهدف إلى كسر الحاجز التقليدي بين قاعات المحاضرات النظرية والواقع العملي للسياسة الدولية، لنقدم تجربة تحاكي بدقة بيئة العمل الدبلوماسي والمؤسسي المصري بكل ما تحمله من ضغوط وتحديات.
           </p>
         </div>
@@ -840,8 +887,8 @@
             <div class="w-10 h-10 mx-auto rounded-full bg-amber-500/15 flex items-center justify-center text-amber-800 mb-2">
               <i data-lucide="building-2" class="w-5 h-5"></i>
             </div>
-            <h4 class="font-amiri font-bold text-base text-amber-950 mb-1">المنبت الأكاديمي</h4>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <h4 class="font-amiri font-bold text-base text-amber-950 mb-1" data-i18n="s1_c1_t">المنبت الأكاديمي</h4>
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s1_c1_d">
               كلية السياسة والاقتصاد بجامعة السويس — معقل الفكر السياسي والتحليل الجيواقتصادي في إقليم قناة السويس.
             </p>
           </div>
@@ -850,8 +897,8 @@
             <div class="w-10 h-10 mx-auto rounded-full bg-amber-600/15 flex items-center justify-center text-amber-800 mb-2">
               <i data-lucide="scale" class="w-5 h-5"></i>
             </div>
-            <h4 class="font-amiri font-bold text-base text-amber-950 mb-1">منصة تطبيقية معتمدة</h4>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <h4 class="font-amiri font-bold text-base text-amber-950 mb-1" data-i18n="s1_c2_t">منصة تطبيقية معتمدة</h4>
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s1_c2_d">
               كسر رتابة التلقين النظري والانتقال إلى الصياغات الميدانية وصناعة القرار السياسي في البيئات الواقعية.
             </p>
           </div>
@@ -860,8 +907,8 @@
             <div class="w-10 h-10 mx-auto rounded-full bg-amber-800/15 flex items-center justify-center text-amber-900 mb-2">
               <i data-lucide="flag" class="w-5 h-5"></i>
             </div>
-            <h4 class="font-amiri font-bold text-base text-amber-950 mb-1">بيئة الدبلوماسية المصرية</h4>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <h4 class="font-amiri font-bold text-base text-amber-950 mb-1" data-i18n="s1_c3_t">بيئة الدبلوماسية المصرية</h4>
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s1_c3_d">
               محاكاة كاملة لكافة ضغوطات الدبلوماسية المصرية العريقة ومقتضيات حفظ توازنات الدولة والمصالح الحيوية.
             </p>
           </div>
@@ -880,13 +927,13 @@
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">٢</div>
+            <div class="gold-numeral-seal"><span class="badge-num">٢</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="compass" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">المثلث الاستراتيجي للدبلوماسية</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s2_badge">المثلث الاستراتيجي للدبلوماسية</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s2_title">
                 ٢. الرؤية والفلسفة الحاكمة
               </h3>
             </div>
@@ -894,22 +941,22 @@
 
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE II: GOVERNING PHILOSOPHY</span>
+            <span data-i18n="s2_article">ARTICLE II: GOVERNING PHILOSOPHY</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s2_body">
             تتأسس فلسفتنا على ثلاثة محاور متكاملة هي: <strong>المعرفة، والمحاكاة، والخبرة</strong>؛ حيث نتحرك مع الطالب في مسار منهجي يبدأ بالتعلم، ثم المحاكاة، فالتطبيق، وصولاً إلى التقييم والتطوير. نحن لا نكتفي بدراسة نظريات العلاقات الدولية، بل نضع العضو في قلب مواقف وسيناريوهات افتراضية تتطلب منه تحليل القضايا، وتقدير المصالح، وصياغة أوراق السياسات، وإدارة المفاوضات تحت ضغط المتغيرات المتسارعة.
           </p>
         </div>
 
-        <!-- Interactive Diplomatic Triad Diagram (Pure Warm Parchment) -->
+        <!-- Interactive Diplomatic Triad Diagram -->
         <div class="parchment-card p-6 bg-gradient-to-br from-amber-50/80 to-amber-100/40 border-2 border-amber-600/40">
           <div class="text-center mb-4">
-            <h4 class="font-amiri font-bold text-lg text-amber-950">المحاور الثلاثة المتكاملة للتأهيل الدبلوماسي</h4>
-            <p class="text-xs text-amber-900/70 font-ruqaa">اضغط على المحور لاستعراض مساره العملي داخل النموذج</p>
+            <h4 class="font-amiri font-bold text-lg text-amber-950" data-i18n="s2_triad_h">المحاور الثلاثة المتكاملة للتأهيل الدبلوماسي</h4>
+            <p class="text-xs text-amber-900/70 font-ruqaa" data-i18n="s2_triad_sub">اضغط على المحور لاستعراض مساره العملي داخل النموذج</p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -917,36 +964,36 @@
               <div class="w-12 h-12 mx-auto rounded-full bg-amber-100 border border-amber-400 flex items-center justify-center text-amber-900 font-bold text-lg font-amiri mb-2">
                 ١
               </div>
-              <h5 class="font-amiri font-bold text-base text-amber-950">المعرفة</h5>
-              <p class="text-xs text-amber-900/80 mt-1">القاعدة النظرية وفقه السياسة الدولية ومحددات الأمن القومي.</p>
+              <h5 class="font-amiri font-bold text-base text-amber-950" data-i18n="s2_p1_t">المعرفة</h5>
+              <p class="text-xs text-amber-900/80 mt-1" data-i18n="s2_p1_d">القاعدة النظرية وفقه السياسة الدولية ومحددات الأمن القومي.</p>
             </div>
 
             <div onclick="selectTriad(2)" id="triad-btn-2" class="cursor-pointer p-4 rounded-xl border border-amber-300/80 bg-amber-50/60 hover:bg-white text-center transition-all">
               <div class="w-12 h-12 mx-auto rounded-full bg-amber-100/60 border border-amber-300 flex items-center justify-center text-amber-900 font-bold text-lg font-amiri mb-2">
                 ٢
               </div>
-              <h5 class="font-amiri font-bold text-base text-amber-950">المحاكاة</h5>
-              <p class="text-xs text-amber-900/80 mt-1">السيناريوهات الافتراضية وتمثيل الدول وجلسات التفاوض الحي.</p>
+              <h5 class="font-amiri font-bold text-base text-amber-950" data-i18n="s2_p2_t">المحاكاة</h5>
+              <p class="text-xs text-amber-900/80 mt-1" data-i18n="s2_p2_d">السيناريوهات الافتراضية وتمثيل الدول وجلسات التفاوض الحي.</p>
             </div>
 
             <div onclick="selectTriad(3)" id="triad-btn-3" class="cursor-pointer p-4 rounded-xl border border-amber-300/80 bg-amber-50/60 hover:bg-white text-center transition-all">
               <div class="w-12 h-12 mx-auto rounded-full bg-amber-100/60 border border-amber-300 flex items-center justify-center text-amber-900 font-bold text-lg font-amiri mb-2">
                 ٣
               </div>
-              <h5 class="font-amiri font-bold text-base text-amber-950">الخبرة</h5>
-              <p class="text-xs text-amber-900/80 mt-1">صياغة أوراق السياسات وإدارة الأزمات تحت ضغط المتغيرات.</p>
+              <h5 class="font-amiri font-bold text-base text-amber-950" data-i18n="s2_p3_t">الخبرة</h5>
+              <p class="text-xs text-amber-900/80 mt-1" data-i18n="s2_p3_d">صياغة أوراق السياسات وإدارة الأزمات تحت ضغط المتغيرات.</p>
             </div>
           </div>
 
           <!-- Flow Progression Step Banner -->
           <div class="mt-6 pt-4 border-t border-amber-600/30 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs font-bold text-amber-950 font-kufi">
-            <span class="px-3 py-1 bg-amber-200/60 rounded-full border border-amber-400">١. التعلم</span>
+            <span class="px-3 py-1 bg-amber-200/60 rounded-full border border-amber-400" data-i18n="s2_f1">١. التعلم</span>
             <span class="text-amber-700">➔</span>
-            <span class="px-3 py-1 bg-amber-200/60 rounded-full border border-amber-400">٢. المحاكاة</span>
+            <span class="px-3 py-1 bg-amber-200/60 rounded-full border border-amber-400" data-i18n="s2_f2">٢. المحاكاة</span>
             <span class="text-amber-700">➔</span>
-            <span class="px-3 py-1 bg-amber-200/60 rounded-full border border-amber-400">٣. التطبيق</span>
+            <span class="px-3 py-1 bg-amber-200/60 rounded-full border border-amber-400" data-i18n="s2_f3">٣. التطبيق</span>
             <span class="text-amber-700">➔</span>
-            <span class="px-3 py-1 bg-amber-600 text-amber-950 rounded-full shadow-sm font-black border border-amber-700">٤. التقييم والتطوير</span>
+            <span class="px-3 py-1 bg-amber-600 text-amber-950 rounded-full shadow-sm font-black border border-amber-700" data-i18n="s2_f4">٤. التقييم والتطوير</span>
           </div>
         </div>
 
@@ -963,13 +1010,13 @@
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">٣</div>
+            <div class="gold-numeral-seal"><span class="badge-num">٣</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="target" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">الرباعية الاستراتيجية المتناغمة</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s3_badge">الرباعية الاستراتيجية المتناغمة</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s3_title">
                 ٣. الأهداف الوطنية والمهنية
               </h3>
             </div>
@@ -977,59 +1024,55 @@
 
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="award" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE III: STRATEGIC QUAD</span>
+            <span data-i18n="s3_article">ARTICLE III: STRATEGIC QUAD</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s3_body">
             نسعى من خلال هذا الكيان إلى تحقيق رباعية متناغمة من الأهداف <strong>الأكاديمية والمهنية والقيادية والوطنية</strong>. فإلى جانب إتقان فنون الكتابة الدبلوماسية وقواعد البروتوكول والمراسم، نركز بعمق على تعزيز وعي الشباب المصري بمحددات الأمن القومي ومكانة مصر المحورية في محيطها الإقليمي والدولي، وإعداد كوادر شابة تدرك كيف تُصاغ المواقف الخارجية انطلاقاً من المصلحة الوطنية العليا.
           </p>
         </div>
 
-        <!-- Four Sovereign Pillars Matrix (Parchment Styled) -->
+        <!-- Four Sovereign Pillars Matrix -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-          <!-- Pillar 1: National -->
           <div class="parchment-card border-r-4 border-r-red-700">
             <div class="flex items-center gap-2 mb-2 text-red-900">
               <i data-lucide="shield" class="w-5 h-5"></i>
-              <h4 class="font-amiri font-bold text-lg">الركن الوطني</h4>
+              <h4 class="font-amiri font-bold text-lg" data-i18n="s3_p1_t">الركن الوطني</h4>
             </div>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s3_p1_d">
               تعزيز وعي الشباب المصري بمحددات الأمن القومي، وإدراك مكانة مصر المركزية ودورها التاريخي في حماية التوازنات الإقليمية.
             </p>
           </div>
 
-          <!-- Pillar 2: Professional -->
           <div class="parchment-card border-r-4 border-r-amber-600">
             <div class="flex items-center gap-2 mb-2 text-amber-900">
               <i data-lucide="feather" class="w-5 h-5"></i>
-              <h4 class="font-amiri font-bold text-lg">الركن المهني</h4>
+              <h4 class="font-amiri font-bold text-lg" data-i18n="s3_p2_t">الركن المهني</h4>
             </div>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s3_p2_d">
               إتقان فنون التحرير الدبلوماسي وصياغة المذكرات الرسمية، واستيعاب قواعد المراسم (Protocol & Etiquette) الدولية.
             </p>
           </div>
 
-          <!-- Pillar 3: Leadership -->
           <div class="parchment-card border-r-4 border-r-amber-800">
             <div class="flex items-center gap-2 mb-2 text-amber-950">
               <i data-lucide="crown" class="w-5 h-5 text-amber-700"></i>
-              <h4 class="font-amiri font-bold text-lg">الركن القيادي</h4>
+              <h4 class="font-amiri font-bold text-lg" data-i18n="s3_p3_t">الركن القيادي</h4>
             </div>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s3_p3_d">
               بناء شخصية مفاوضة متزنة، قادرة على العمل تحت الضغط، وفهم آليات اتخاذ القرار وصياغة المواقف المحكمة.
             </p>
           </div>
 
-          <!-- Pillar 4: Academic -->
           <div class="parchment-card border-r-4 border-r-emerald-700">
             <div class="flex items-center gap-2 mb-2 text-emerald-900">
               <i data-lucide="book-marked" class="w-5 h-5"></i>
-              <h4 class="font-amiri font-bold text-lg">الركن الأكاديمي</h4>
+              <h4 class="font-amiri font-bold text-lg" data-i18n="s3_p4_t">الركن الأكاديمي</h4>
             </div>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s3_p4_d">
               تأصيل أدوات البحث العلمي الجيوسياسي، ومقاربة القضايا الدولية من منظور منهجي محايد ورصين.
             </p>
           </div>
@@ -1048,13 +1091,13 @@
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">٤</div>
+            <div class="gold-numeral-seal"><span class="badge-num">٤</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="network" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">التراتبية الإدارية والانضباط المؤسسي</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s4_badge">التراتبية الإدارية والانضباط المؤسسي</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s4_title">
                 ٤. هيكل تنظيمي يحاكي الدولة
               </h3>
             </div>
@@ -1062,34 +1105,34 @@
 
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="git-branch" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE IV: STATE HIERARCHY</span>
+            <span data-i18n="s4_article">ARTICLE IV: STATE HIERARCHY</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s4_body">
             نُدار من خلال لائحة تنظيمية صارمة تحاكي التراتبية الإدارية لوزارة الخارجية المصرية؛ إذ يقود النموذج <strong>"رئيس النموذج" (بمثابة وزير الخارجية)</strong>، ويعاونه <strong>ثلاثة نواب متخصصون</strong> يشرفون على اللجان الأكاديمية والتنظيمية والشؤون العامة، إلى جانب <strong>متحدث إعلامي رسمي</strong> يدير فريقاً للإعلام واللغات، و<strong>مساعدين للوزير</strong> يترأسون القطاعات التخصصية، مما يرسخ الانضباط المؤسسي ويمنع تضارب الاختصاصات.
           </p>
         </div>
 
-        <!-- Visual Hierarchy Organogram Tree (Warm Parchment & Engraved Gold) -->
+        <!-- Visual Hierarchy Organogram Tree -->
         <div class="parchment-card p-6 bg-amber-50/50 border-2 border-amber-600/40">
           <div class="text-center mb-6">
-            <span class="px-4 py-1.5 rounded-full bg-amber-100 text-amber-950 font-bold text-xs font-kufi border-2 border-amber-500/60 shadow-sm">
+            <span class="px-4 py-1.5 rounded-full bg-amber-100 text-amber-950 font-bold text-xs font-kufi border-2 border-amber-500/60 shadow-sm" data-i18n="s4_chart_badge">
               المخطط الهيكلي الرسمي لإدارة النموذج
             </span>
           </div>
 
-          <!-- Top Level: President / Minister (Parchment Gold Crown Card) -->
+          <!-- Top Level: President / Minister -->
           <div class="flex justify-center mb-6">
             <div class="p-5 rounded-xl bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 border-2 border-amber-600 shadow-md text-center max-w-sm w-full">
               <div class="inline-flex p-2 rounded-full bg-amber-600/20 text-amber-900 mb-1">
                 <i data-lucide="crown" class="w-6 h-6 text-amber-700"></i>
               </div>
-              <h4 class="font-amiri font-bold text-xl text-amber-950">رئيس النموذج</h4>
-              <p class="text-xs text-amber-800 font-bold">(بمثابة وزير الخارجية المصري)</p>
-              <div class="mt-2 text-xs text-amber-900/80 border-t border-amber-600/30 pt-1.5 font-ruqaa">
+              <h4 class="font-amiri font-bold text-xl text-amber-950" data-i18n="s4_pres_t">رئيس النموذج</h4>
+              <p class="text-xs text-amber-800 font-bold" data-i18n="s4_pres_role">(بمثابة وزير الخارجية المصري)</p>
+              <div class="mt-2 text-xs text-amber-900/80 border-t border-amber-600/30 pt-1.5 font-ruqaa" data-i18n="s4_pres_d">
                 القيادة الاستراتيجية العليا وإقرار المخرجات والسياسات
               </div>
             </div>
@@ -1100,28 +1143,24 @@
 
           <!-- Second Level: 3 Specialized Deputies + Official Spokesperson -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-            <!-- Deputy Academic -->
             <div class="p-3.5 rounded-lg bg-white border border-amber-500/50 shadow-sm text-center">
-              <div class="text-amber-900 font-bold text-sm font-amiri">نائب الشؤون الأكاديمية</div>
-              <div class="text-[11px] text-amber-900/70 mt-1">الإشراف على المناهج والبحوث والتدريب التخصصي</div>
+              <div class="text-amber-900 font-bold text-sm font-amiri" data-i18n="s4_dep1_t">نائب الشؤون الأكاديمية</div>
+              <div class="text-[11px] text-amber-900/70 mt-1" data-i18n="s4_dep1_d">الإشراف على المناهج والبحوث والتدريب التخصصي</div>
             </div>
 
-            <!-- Deputy Organizing -->
             <div class="p-3.5 rounded-lg bg-white border border-amber-500/50 shadow-sm text-center">
-              <div class="text-amber-900 font-bold text-sm font-amiri">نائب الشؤون التنظيمية</div>
-              <div class="text-[11px] text-amber-900/70 mt-1">إدارة اللوجستيات والمراسم وقاعات المحاكاة</div>
+              <div class="text-amber-900 font-bold text-sm font-amiri" data-i18n="s4_dep2_t">نائب الشؤون التنظيمية</div>
+              <div class="text-[11px] text-amber-900/70 mt-1" data-i18n="s4_dep2_d">إدارة اللوجستيات والمراسم وقاعات المحاكاة</div>
             </div>
 
-            <!-- Deputy General Affairs -->
             <div class="p-3.5 rounded-lg bg-white border border-amber-500/50 shadow-sm text-center">
-              <div class="text-amber-900 font-bold text-sm font-amiri">نائب الشؤون العامة</div>
-              <div class="text-[11px] text-amber-900/70 mt-1">المتابعة والتنسيق الداخلي والرقابة الإدارية</div>
+              <div class="text-amber-900 font-bold text-sm font-amiri" data-i18n="s4_dep3_t">نائب الشؤون العامة</div>
+              <div class="text-[11px] text-amber-900/70 mt-1" data-i18n="s4_dep3_d">المتابعة والتنسيق الداخلي والرقابة الإدارية</div>
             </div>
 
-            <!-- Official Spokesperson -->
             <div class="p-3.5 rounded-lg bg-gradient-to-br from-amber-100 to-amber-50 border border-amber-500 shadow-sm text-center">
-              <div class="text-amber-950 font-bold text-sm font-amiri">المتحدث الإعلامي الرسمي</div>
-              <div class="text-[11px] text-amber-900/80 mt-1">إدارة فريق الإعلام واللغات الأجنبية الحية والبيانات الصحفية</div>
+              <div class="text-amber-950 font-bold text-sm font-amiri" data-i18n="s4_spok_t">المتحدث الإعلامي الرسمي</div>
+              <div class="text-[11px] text-amber-900/80 mt-1" data-i18n="s4_spok_d">إدارة فريق الإعلام واللغات الأجنبية الحية والبيانات الصحفية</div>
             </div>
           </div>
 
@@ -1129,9 +1168,9 @@
           <div class="p-4 rounded-xl bg-gradient-to-r from-amber-100/90 via-amber-50 to-amber-100/90 text-amber-950 border border-amber-600/40 text-center shadow-inner">
             <div class="flex items-center justify-center gap-2 font-amiri font-bold text-base text-amber-900">
               <i data-lucide="layers" class="w-5 h-5 text-amber-700"></i>
-              <span>مساعدو الوزير — رؤساء القطاعات التخصصية</span>
+              <span data-i18n="s4_asst_t">مساعدو الوزير — رؤساء القطاعات التخصصية</span>
             </div>
-            <p class="text-xs text-amber-900/80 mt-1 max-w-xl mx-auto">
+            <p class="text-xs text-amber-900/80 mt-1 max-w-xl mx-auto" data-i18n="s4_asst_d">
               قيادة القطاعات الجغرافية والوظيفية، وإدارة فرق العمل الأكاديمية والتنظيمية والإعلامية داخل كل قطاع.
             </p>
           </div>
@@ -1144,19 +1183,19 @@
 
 
       <!-- =====================================================================
-           SECTION 5: القطاعات التخصصية ودوائر العمل (ALL SECTORS & COMMITTEES)
+           SECTION 5: القطاعات التخصصية ودوائر العمل (ALL 12 SECTORS & COMMITTEES)
            ===================================================================== -->
       <section id="section-5" class="parchment-section scroll-mt-28" data-index="5">
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">٥</div>
+            <div class="gold-numeral-seal"><span class="badge-num">٥</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="globe" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">دوائر وقطاعات الدبلوماسية الرسمية</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s5_badge">دوائر وقطاعات الدبلوماسية الرسمية</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s5_title">
                 ٥. القطاعات التخصصية ودوائر العمل
               </h3>
             </div>
@@ -1164,28 +1203,28 @@
 
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE V: ALL DIPLOMATIC SECTORS</span>
+            <span data-i18n="s5_article">ARTICLE V: ALL DIPLOMATIC SECTORS</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s5_body">
             يتوزع عملنا الأكاديمي والتطبيقي عبر قطاعات تخصصية تعكس دوائر اهتمام السياسة الخارجية، وتشمل: <strong>قطاع الشؤون العربية، وقطاع الشؤون الأمريكية، وقطاع الشؤون متعددة الأطراف والأمن الدولي، وقطاع الشؤون الاقتصادية، وقطاع البحوث والتخطيط وإدارة الأزمات</strong> (مع امتداد الدائرة الأكاديمية لتشمل <em>الشؤون الأفريقية والأوروبية والآسيوية والقانونية</em>). ويضم كل قطاع مزيجاً متناغماً من الكوادر الأكاديمية والتنظيمية والإعلامية لضمان تكامل الأداء.
           </p>
         </div>
 
         <!-- Section Introduction Notice -->
         <div class="mb-4 flex items-center justify-between flex-wrap gap-2 px-2">
-          <span class="font-amiri font-bold text-amber-950 text-base">
+          <span class="font-amiri font-bold text-amber-950 text-base" data-i18n="s5_grid_t">
             القطاعات واللجان الرسمية المعتمدة بالنموذج (١٢ قطاعاً ودائرة عمل):
           </span>
-          <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-200/80 text-amber-950 font-bold font-kufi border border-amber-400">
+          <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-200/80 text-amber-950 font-bold font-kufi border border-amber-400" data-i18n="s5_grid_b">
             تكامل دبلوماسي شامل
           </span>
         </div>
 
-        <!-- Comprehensive 12 Sectors & Committees Grid in Pure Warm Parchment Styling -->
+        <!-- Comprehensive 12 Sectors & Committees Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           
           <!-- 1. Arab Affairs -->
@@ -1193,13 +1232,13 @@
             <div>
               <div class="flex items-center gap-2 text-emerald-900 mb-2">
                 <i data-lucide="map-pin" class="w-5 h-5 text-emerald-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">قطاع الشؤون العربية</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_arab_t">قطاع الشؤون العربية</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_arab_d">
                 الدائرة الحيوية المركزية: متابعة قضايا الشرق الأوسط، العمل العربي المشترك، جامعة الدول العربية، وملفات الأمن القومي بالمنطقة.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_arab_tag">
               ID: arab • الدائرة المركزية
             </div>
           </div>
@@ -1209,13 +1248,13 @@
             <div>
               <div class="flex items-center gap-2 text-red-900 mb-2">
                 <i data-lucide="flag" class="w-5 h-5 text-red-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">قطاع فلسطين والقضايا العادلة</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_pal_t">قطاع فلسطين والقضايا العادلة</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_pal_d">
                 القضية الفلسطينية، القانون الدولي الإنساني، توثيق الانتهاكات، والمساعي الدبلوماسية لدعم الحقوق الوطنية المشروعة وإقامة الدولة المستقلة.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_pal_tag">
               ID: palestine • قضية الأمة
             </div>
           </div>
@@ -1225,13 +1264,13 @@
             <div>
               <div class="flex items-center gap-2 text-amber-900 mb-2">
                 <i data-lucide="droplet" class="w-5 h-5 text-amber-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">قطاع شؤون أفريقيا وحوض النيل</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_afr_t">قطاع شؤون أفريقيا وحوض النيل</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_afr_d">
                 العمق الاستراتيجي المصري: ملف الأمن المائي وحوض النيل، الاتحاد الأفريقي، الشراكات التنموية ودول الساحل والصحراء والقرن الأفريقي.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_afr_tag">
               ID: africa • العمق الاستراتيجي
             </div>
           </div>
@@ -1241,13 +1280,13 @@
             <div>
               <div class="flex items-center gap-2 text-amber-900 mb-2">
                 <i data-lucide="shield-alert" class="w-5 h-5 text-amber-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">شؤون متعددة الأطراف والأمن الدولي</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_sec_t">شؤون متعددة الأطراف والأمن الدولي</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_sec_d">
                 المنظمات الدولية، الأمم المتحدة، مجلس الأمن الدولي، معاهدات نزع السلاح ومكافحة الإرهاب وقضايا حفظ وبناء السلام الدولي.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_sec_tag">
               ID: security • الشرعية الدولية
             </div>
           </div>
@@ -1257,13 +1296,13 @@
             <div>
               <div class="flex items-center gap-2 text-amber-950 mb-2">
                 <i data-lucide="anchor" class="w-5 h-5 text-amber-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">قطاع الشؤون الأمريكية</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_usa_t">قطاع الشؤون الأمريكية</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_usa_d">
                 العلاقات الاستراتيجية الثنائية مع الولايات المتحدة الأمريكية، توازنات القوى الكبرى، والسياسة الخارجية لدول الأمريكيتين.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_usa_tag">
               ID: american • القوى الكبرى
             </div>
           </div>
@@ -1273,13 +1312,13 @@
             <div>
               <div class="flex items-center gap-2 text-amber-900 mb-2">
                 <i data-lucide="trending-up" class="w-5 h-5 text-amber-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">التعاون الاقتصادي والتنمية</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_eco_t">التعاون الاقتصادي والتنمية</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_eco_d">
                 الدبلوماسية الاقتصادية، جذب الاستثمارات، تجمعات البريكس (BRICS)، التجارة الدولية وممرات الطاقة العالمية والتنمية المستدامة.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_eco_tag">
               ID: economic • الدبلوماسية التنموية
             </div>
           </div>
@@ -1289,13 +1328,13 @@
             <div>
               <div class="flex items-center gap-2 text-red-950 mb-2">
                 <i data-lucide="activity" class="w-5 h-5 text-red-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">البحث والتخطيط وإدارة الأزمات</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_crs_t">البحث والتخطيط وإدارة الأزمات</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_crs_d">
                 خلية التفكير الاستراتيجي والإنذار المبكر، محاكاة غرف الطوارئ، استشراف السيناريوهات ورسم استجابات دبلوماسية عاجلة.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_crs_tag">
               ID: crises • التفكير الاستراتيجي
             </div>
           </div>
@@ -1305,13 +1344,13 @@
             <div>
               <div class="flex items-center gap-2 text-emerald-900 mb-2">
                 <i data-lucide="leaf" class="w-5 h-5 text-emerald-600"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">المناخ والبيئة والتنمية المستدامة</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_clm_t">المناخ والبيئة والتنمية المستدامة</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_clm_d">
                 دبلوماسية المناخ العالمية، مفاوضات قمم المناخ (COP)، اتفاقيات التحول الأخضر، العدالة المناخية، والتمويل البيئي الدولي.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_clm_tag">
               ID: climate • الدبلوماسية الخضراء
             </div>
           </div>
@@ -1321,13 +1360,13 @@
             <div>
               <div class="flex items-center gap-2 text-amber-900 mb-2">
                 <i data-lucide="cpu" class="w-5 h-5 text-amber-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">الاتصالات والتحول الرقمي</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_dig_t">الاتصالات والتحول الرقمي</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_dig_d">
                 الدبلوماسية الرقمية، حوكمة الذكاء الاصطناعي، الأمن السيبراني الدولي، وحملات الاتصال الاستراتيجي وبناء الصورة الذهنية للدولة.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_dig_tag">
               ID: digital • فضاء المستقبل
             </div>
           </div>
@@ -1337,13 +1376,13 @@
             <div>
               <div class="flex items-center gap-2 text-amber-900 mb-2">
                 <i data-lucide="landmark" class="w-5 h-5 text-amber-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">قطاع الشؤون الأوروبية</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_eur_t">قطاع الشؤون الأوروبية</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_eur_d">
                 العلاقات مع الاتحاد الأوروبي، الشراكة الأورومتوسطية، قضايا الهجرة وتأمين البحر المتوسط ومسارات الحوار الجيوسياسي المشترك.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_eur_tag">
               دائرة ممتدة • الجوار المتوسطي
             </div>
           </div>
@@ -1353,13 +1392,13 @@
             <div>
               <div class="flex items-center gap-2 text-amber-900 mb-2">
                 <i data-lucide="compass" class="w-5 h-5 text-amber-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">قطاع الشؤون الآسيوية</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_asi_t">قطاع الشؤون الآسيوية</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_asi_d">
                 التوجه شرقاً: العلاقات مع قوى آسيا الفاعلة (الصين، الهند، اليابان، دول الآسيان)، ومبادرات الحزام والطريق والشراكات الشرقية.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_asi_tag">
               دائرة ممتدة • الشرق الصاعد
             </div>
           </div>
@@ -1369,13 +1408,13 @@
             <div>
               <div class="flex items-center gap-2 text-amber-950 mb-2">
                 <i data-lucide="scale" class="w-5 h-5 text-amber-700"></i>
-                <h4 class="font-amiri font-bold text-base text-amber-950">الشؤون القانونية والمعاهدات</h4>
+                <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="sec_leg_t">الشؤون القانونية والمعاهدات</h4>
               </div>
-              <p class="text-xs text-amber-950/80 leading-relaxed">
+              <p class="text-xs text-amber-950/80 leading-relaxed" data-i18n="sec_leg_d">
                 فقه القانون الدولي العام، صياغة الاتفاقيات والمعاهدات الثنائية والمتعددة، تسوية المنازعات سلمياً وآليات التحكيم الدولي.
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold">
+            <div class="mt-3 pt-2 border-t border-amber-600/20 text-[10px] text-amber-800 font-mono font-bold" data-i18n="sec_leg_tag">
               دائرة ممتدة • الحصن القانوني
             </div>
           </div>
@@ -1395,13 +1434,13 @@
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">٦</div>
+            <div class="gold-numeral-seal"><span class="badge-num">٦</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="award" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">مراتب السلك الدبلوماسي الرفيع</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s6_badge">مراتب السلك الدبلوماسي الرفيع</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s6_title">
                 ٦. نظام التدرج الوظيفي الدبلوماسي
               </h3>
             </div>
@@ -1409,93 +1448,93 @@
 
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE VI: CAREER SYSTEM</span>
+            <span data-i18n="s6_article">ARTICLE VI: CAREER SYSTEM</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s6_body">
             ابتكرنا نظاماً تقييمياً فريداً يحاكي السلك الدبلوماسي الحقيقي، حيث يبدأ العضو مسيرته برتبة <strong>"ملحق دبلوماسي"</strong>، ويتدرج بناءً على كفاءته والتزامه وجودة مخرجاته البحثية عبر رتب <strong>(سكرتير ثالث، وسكرتير ثانٍ، وسكرتير أول)</strong> في فئة الأعضاء العاديين، وصولاً إلى فئة الأعضاء المتميزين برتب <strong>"مستشار، ووزير مفوض، وسفير"</strong>، وهي الرتب الرفيعة التي يؤهل بلوغها للمشاركة في المحاكاة الختامية الكبرى وتمثيل النموذج في الوفود الخارجية.
           </p>
         </div>
 
-        <!-- Career Ladder Visualization in Pure Parchment Styling -->
+        <!-- Career Ladder Visualization -->
         <div class="parchment-card p-6 bg-gradient-to-b from-white to-amber-50/70 border-2 border-amber-600/40">
           
           <div class="flex items-center justify-between border-b border-amber-600/30 pb-3 mb-4">
-            <span class="font-amiri font-bold text-amber-950 text-base">سلم الرتب الدبلوماسية الرسمية (Diplomatic Cadre Ranks)</span>
-            <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-950 font-bold font-kufi border border-amber-400">٧ رتب محاكاة</span>
+            <span class="font-amiri font-bold text-amber-950 text-base" data-i18n="s6_scale_t">سلم الرتب الدبلوماسية الرسمية (Diplomatic Cadre Ranks)</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-950 font-bold font-kufi border border-amber-400" data-i18n="s6_scale_b">٧ رتب محاكاة</span>
           </div>
 
           <!-- Ranks Grid -->
           <div class="space-y-3">
             
-            <!-- Tier 2: Distinguished Category (Top) - Royal Parchment Gold Card -->
+            <!-- Tier 2: Distinguished Category (Top) -->
             <div class="p-4 rounded-xl bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 text-amber-950 border-2 border-amber-600 shadow-md">
               <div class="text-xs font-bold text-amber-900 font-kufi mb-2.5 flex items-center gap-1.5">
                 <i data-lucide="sparkles" class="w-4 h-4 text-amber-700"></i>
-                <span>★ فئة الأعضاء المتميزين (حق التمثيل الخارجي والمحاكاة الختامية الكبرى)</span>
+                <span data-i18n="s6_t2_h">★ فئة الأعضاء المتميزين (حق التمثيل الخارجي والمحاكاة الختامية الكبرى)</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 <div class="p-3 rounded-lg bg-white/90 border border-amber-500/60 shadow-sm flex items-center gap-2.5">
                   <div class="w-9 h-9 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs shadow-inner">٧</div>
                   <div>
-                    <div class="text-xs font-bold text-amber-950">سفير فوق العادة</div>
-                    <div class="text-[10px] text-amber-800">رتبة قيادية رفيعة</div>
+                    <div class="text-xs font-bold text-amber-950" data-i18n="s6_r7_t">سفير فوق العادة</div>
+                    <div class="text-[10px] text-amber-800" data-i18n="s6_r7_d">رتبة قيادية رفيعة</div>
                   </div>
                 </div>
                 <div class="p-3 rounded-lg bg-white/90 border border-amber-500/60 shadow-sm flex items-center gap-2.5">
                   <div class="w-9 h-9 rounded-full bg-amber-500 text-amber-950 flex items-center justify-center font-bold text-xs shadow-inner">٦</div>
                   <div>
-                    <div class="text-xs font-bold text-amber-950">وزير مفوض</div>
-                    <div class="text-[10px] text-amber-800">إدارة الملفات الكبرى</div>
+                    <div class="text-xs font-bold text-amber-950" data-i18n="s6_r6_t">وزير مفوض</div>
+                    <div class="text-[10px] text-amber-800" data-i18n="s6_r6_d">إدارة الملفات الكبرى</div>
                   </div>
                 </div>
                 <div class="p-3 rounded-lg bg-white/90 border border-amber-500/60 shadow-sm flex items-center gap-2.5">
                   <div class="w-9 h-9 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center font-bold text-xs shadow-inner">٥</div>
                   <div>
-                    <div class="text-xs font-bold text-amber-950">مستشار دبلوماسي</div>
-                    <div class="text-[10px] text-amber-800">الاستشارات والتقديرات</div>
+                    <div class="text-xs font-bold text-amber-950" data-i18n="s6_r5_t">مستشار دبلوماسي</div>
+                    <div class="text-[10px] text-amber-800" data-i18n="s6_r5_d">الاستشارات والتقديرات</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Tier 1: Core Diplomatic Officers (Base to Senior) -->
+            <!-- Tier 1: Core Diplomatic Officers -->
             <div class="p-3.5 rounded-xl bg-white border border-amber-400/60 shadow-sm">
-              <div class="text-[11px] font-bold text-amber-900 font-kufi mb-2.5">● فئة الأعضاء العاملين (التدرج المبني على الكفاءة والالتزام والبحوث)</div>
+              <div class="text-[11px] font-bold text-amber-900 font-kufi mb-2.5" data-i18n="s6_t1_h">● فئة الأعضاء العاملين (التدرج المبني على الكفاءة والالتزام والبحوث)</div>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 
                 <div class="p-2.5 rounded-lg bg-amber-50/80 border border-amber-300 flex items-center gap-2">
                   <div class="w-7 h-7 rounded-full bg-amber-700 text-white flex items-center justify-center font-bold text-xs">٤</div>
                   <div>
-                    <div class="text-xs font-bold text-amber-950">سكرتير أول</div>
-                    <div class="text-[10px] text-amber-900/70">جودة بحثية متقدمة</div>
+                    <div class="text-xs font-bold text-amber-950" data-i18n="s6_r4_t">سكرتير أول</div>
+                    <div class="text-[10px] text-amber-900/70" data-i18n="s6_r4_d">جودة بحثية متقدمة</div>
                   </div>
                 </div>
 
                 <div class="p-2.5 rounded-lg bg-amber-50/80 border border-amber-300 flex items-center gap-2">
                   <div class="w-7 h-7 rounded-full bg-amber-700 text-white flex items-center justify-center font-bold text-xs">٣</div>
                   <div>
-                    <div class="text-xs font-bold text-amber-950">سكرتير ثانٍ</div>
-                    <div class="text-[10px] text-amber-900/70">صياغة المذكرات</div>
+                    <div class="text-xs font-bold text-amber-950" data-i18n="s6_r3_t">سكرتير ثانٍ</div>
+                    <div class="text-[10px] text-amber-900/70" data-i18n="s6_r3_d">صياغة المذكرات</div>
                   </div>
                 </div>
 
                 <div class="p-2.5 rounded-lg bg-amber-50/80 border border-amber-300 flex items-center gap-2">
                   <div class="w-7 h-7 rounded-full bg-amber-700 text-white flex items-center justify-center font-bold text-xs">٢</div>
                   <div>
-                    <div class="text-xs font-bold text-amber-950">سكرتير ثالث</div>
-                    <div class="text-[10px] text-amber-900/70">المشاركة التحليلية</div>
+                    <div class="text-xs font-bold text-amber-950" data-i18n="s6_r2_t">سكرتير ثالث</div>
+                    <div class="text-[10px] text-amber-900/70" data-i18n="s6_r2_d">المشاركة التحليلية</div>
                   </div>
                 </div>
 
                 <div class="p-2.5 rounded-lg bg-amber-100/90 border border-amber-400 flex items-center gap-2">
                   <div class="w-7 h-7 rounded-full bg-amber-800 text-amber-100 flex items-center justify-center font-bold text-xs">١</div>
                   <div>
-                    <div class="text-xs font-bold text-amber-950">ملحق دبلوماسي</div>
-                    <div class="text-[10px] text-amber-900/70">نقطة الانطلاق للعضو</div>
+                    <div class="text-xs font-bold text-amber-950" data-i18n="s6_r1_t">ملحق دبلوماسي</div>
+                    <div class="text-[10px] text-amber-900/70" data-i18n="s6_r1_d">نقطة الانطلاق للعضو</div>
                   </div>
                 </div>
 
@@ -1518,13 +1557,13 @@
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">٧</div>
+            <div class="gold-numeral-seal"><span class="badge-num">٧</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="calendar" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">الأجندة الأكاديمية: ١٦ أسبوعاً</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s7_badge">الأجندة الأكاديمية: ١٦ أسبوعاً</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s7_title">
                 ٧. منظومة تدريبية خماسية المسارات
               </h3>
             </div>
@@ -1532,13 +1571,13 @@
 
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="git-commit" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE VII: 5-TRACK SYSTEM</span>
+            <span data-i18n="s7_article">ARTICLE VII: 5-TRACK SYSTEM</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s7_body">
             تمتد أجندتنا الأكاديمية على مدار <strong>16 أسبوعاً تدريبياً</strong> خلال العام الجامعي، وتعمل عبر <strong>خمسة مسارات متوازية</strong>: مسار عام يبني القاعدة المعرفية المشتركة لكل الأعضاء، ومسار تخصصي يتعمق في ملفات كل قطاع، ومسار للتأهيل القيادي لشاغلي المناصب الإدارية، ومسار للتأهيل الأكاديمي والبحثي لضمان جودة المناهج، بالإضافة إلى <em>مسار استثنائي تفاعلي يستضيف السفراء والخبراء</em> في لقاءات حوارية مفتوحة.
           </p>
         </div>
@@ -1549,8 +1588,8 @@
           <div class="parchment-card flex items-start gap-3 border-r-4 border-r-amber-500">
             <div class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-900 font-bold flex items-center justify-center shrink-0">١</div>
             <div>
-              <h4 class="font-amiri font-bold text-base text-amber-950">المسار العام (القاعدة المعرفية المشتركة)</h4>
-              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5">
+              <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="s7_tr1_t">المسار العام (القاعدة المعرفية المشتركة)</h4>
+              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5" data-i18n="s7_tr1_d">
                 تأسيس شامل لكافة الأعضاء في مبادئ القانون الدولي العام، تاريخ السياسة الخارجية المصرية، وأسس الدبلوماسية المعاصرة.
               </p>
             </div>
@@ -1559,8 +1598,8 @@
           <div class="parchment-card flex items-start gap-3 border-r-4 border-r-amber-700">
             <div class="w-8 h-8 rounded-full bg-amber-600/20 text-amber-900 font-bold flex items-center justify-center shrink-0">٢</div>
             <div>
-              <h4 class="font-amiri font-bold text-base text-amber-950">المسار التخصصي (التعمق القطاعي)</h4>
-              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5">
+              <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="s7_tr2_t">المسار التخصصي (التعمق القطاعي)</h4>
+              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5" data-i18n="s7_tr2_d">
                 دراسة متعمقة للملفات الخاصة بكل قطاع من القطاعات الاثني عشر بما يعزز الاحتراف التخصصي وجودة التحليل.
               </p>
             </div>
@@ -1569,8 +1608,8 @@
           <div class="parchment-card flex items-start gap-3 border-r-4 border-r-amber-800">
             <div class="w-8 h-8 rounded-full bg-amber-700/20 text-amber-900 font-bold flex items-center justify-center shrink-0">٣</div>
             <div>
-              <h4 class="font-amiri font-bold text-base text-amber-950">مسار التأهيل القيادي</h4>
-              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5">
+              <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="s7_tr3_t">مسار التأهيل القيادي</h4>
+              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5" data-i18n="s7_tr3_d">
                 موجه لرؤساء اللجان ونوابهم لصقل مهارات إدارة فرق العمل، التفاوض، وإدارة الوقت والضغوط التنظيمية.
               </p>
             </div>
@@ -1579,8 +1618,8 @@
           <div class="parchment-card flex items-start gap-3 border-r-4 border-r-emerald-700">
             <div class="w-8 h-8 rounded-full bg-emerald-600/20 text-emerald-900 font-bold flex items-center justify-center shrink-0">٤</div>
             <div>
-              <h4 class="font-amiri font-bold text-base text-amber-950">مسار التأهيل الأكاديمي والبحثي</h4>
-              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5">
+              <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="s7_tr4_t">مسار التأهيل الأكاديمي والبحثي</h4>
+              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5" data-i18n="s7_tr4_d">
                 تدريب متقدم على منهجيات التفكير النقدي، مراجعة الأدبيات الدولية، وتدقيق المحتوى وضمان جودة المناهج.
               </p>
             </div>
@@ -1589,8 +1628,8 @@
           <div class="parchment-card flex items-start gap-3 border-r-4 border-r-red-700 bg-gradient-to-r from-amber-50 to-white">
             <div class="w-8 h-8 rounded-full bg-red-600/20 text-red-900 font-bold flex items-center justify-center shrink-0">٥</div>
             <div>
-              <h4 class="font-amiri font-bold text-base text-amber-950">المسار الاستثنائي التفاعلي (لقاءات السفراء)</h4>
-              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5">
+              <h4 class="font-amiri font-bold text-base text-amber-950" data-i18n="s7_tr5_t">المسار الاستثنائي التفاعلي (لقاءات السفراء)</h4>
+              <p class="text-xs text-amber-900/80 leading-relaxed mt-0.5" data-i18n="s7_tr5_d">
                 صالونات دبلوماسية ولقاءات حوارية مفتوحة تجمع الطلاب بسفراء مصر السابقين والحاليين وخبراء السياسة الخارجية لنقل الخبرات الحية.
               </p>
             </div>
@@ -1611,13 +1650,13 @@
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">٨</div>
+            <div class="gold-numeral-seal"><span class="badge-num">٨</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="cpu" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">من المعرفة إلى التحليل ثم الممارسة الحية</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s8_badge">من المعرفة إلى التحليل ثم الممارسة الحية</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s8_title">
                 ٨. منهجية الأسبوع التدريبي والتطبيق العملي
               </h3>
             </div>
@@ -1625,13 +1664,13 @@
 
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE VIII: WEEKLY METHODOLOGY</span>
+            <span data-i18n="s8_article">ARTICLE VIII: WEEKLY METHODOLOGY</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s8_body">
             لا نقدم في نموذجنا محاضرات تلقينية جامدة، بل <strong>يُصمم كل أسبوع كوحدة تعليمية متكاملة</strong> تنتقل بالعضو من <em>المعرفة إلى التحليل ثم التطبيق العملي</em>. سواء كنا نناقش <strong>ملف الأمن المائي المصري وحوض النيل</strong>، أو <strong>أمن البحر الأحمر</strong>، أو <strong>آليات التصويت في مجلس الأمن</strong>، ينتهي كل محور بتمرين تفاوضي حي أو تكليف بصياغة <em>مذكرة تقدير موقف (Policy Brief)</em> أو إدارة غرفة أزمات عاجلة.
           </p>
         </div>
@@ -1641,9 +1680,9 @@
           <div class="parchment-card bg-amber-100/50 border border-amber-400/60">
             <div class="flex items-center gap-2 text-amber-950 font-amiri font-bold text-sm mb-2">
               <i data-lucide="droplets" class="w-4 h-4 text-amber-800"></i>
-              <span>الأمن المائي وحوض النيل</span>
+              <span data-i18n="s8_c1_t">الأمن المائي وحوض النيل</span>
             </div>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s8_c1_d">
               تطبيق على مفاوضات السدود، مبادئ القانون الدولي للمجاري المائية، وصياغة بدائل استراتيجية لحماية الحصة التاريخية.
             </p>
           </div>
@@ -1651,9 +1690,9 @@
           <div class="parchment-card bg-amber-100/50 border border-amber-400/60">
             <div class="flex items-center gap-2 text-rose-950 font-amiri font-bold text-sm mb-2">
               <i data-lucide="navigation" class="w-4 h-4 text-rose-800"></i>
-              <span>أمن البحر الأحمر والممرات الملاحية</span>
+              <span data-i18n="s8_c2_t">أمن البحر الأحمر والممرات الملاحية</span>
             </div>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s8_c2_d">
               محاكاة لحرية الملاحة، مضيق باب المندب وقناة السويس، والتنسيق الأمني بين الدول المشاطئة للبحر الأحمر.
             </p>
           </div>
@@ -1661,9 +1700,9 @@
           <div class="parchment-card bg-amber-100/50 border border-amber-400/60">
             <div class="flex items-center gap-2 text-amber-950 font-amiri font-bold text-sm mb-2">
               <i data-lucide="file-check" class="w-4 h-4 text-amber-800"></i>
-              <span>مذكرة تقدير موقف (Policy Brief)</span>
+              <span data-i18n="s8_c3_t">مذكرة تقدير موقف (Policy Brief)</span>
             </div>
-            <p class="text-xs text-amber-900/80 leading-relaxed">
+            <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s8_c3_d">
               مخرج أسبوعي يلزم العضو بتقديم تشخيص تنفيذي موجز، وسيناريوهات محتملة، وتوصيات محددة لصانع القرار.
             </p>
           </div>
@@ -1677,19 +1716,18 @@
 
       <!-- =====================================================================
            SECTION 9: دراسات الحالة وإدارة الأزمات المعقدة
-           (TRANSFORMED 100% INTO AUTHENTIC PARCHMENT / HISTORIC DIPLOMATIC BRIEF)
            ===================================================================== -->
       <section id="section-9" class="parchment-section scroll-mt-28" data-index="9">
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">٩</div>
+            <div class="gold-numeral-seal"><span class="badge-num">٩</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">غرفة إدارة الأزمات الإقليمية الكبرى</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s9_badge">غرفة إدارة الأزمات الإقليمية الكبرى</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s9_title">
                 ٩. دراسات الحالة وإدارة الأزمات المعقدة
               </h3>
             </div>
@@ -1697,25 +1735,25 @@
 
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE IX: CRISIS MANAGEMENT</span>
+            <span data-i18n="s9_article">ARTICLE IX: CRISIS MANAGEMENT</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s9_body">
             ينفرد برنامجنا التدريبي بتوظيف الأزمات الدولية المعاصرة—وعلى رأسها <strong>"الحرب الإيرانية وتداعياتها الإقليمية"</strong>—كحالة تطبيقية محورية عابرة للقطاعات. يتناول كل قطاع هذه الأزمة من زاويته؛ فيدرس <em>القطاع العربي أثرها الإقليمي</em>، ويحلل <em>القطاع الاقتصادي تداعياتها على الطاقة والممرات البحرية</em>، ويدير <em>قطاع التخطيط غرفة الأزمة</em>، ليتوج ذلك بتمرين دبلوماسي مشترك يصيغ موقفاً خارجياً متكاملاً يحمي المصالح المصرية.
           </p>
         </div>
 
-        <!-- Cross-Sectoral Crisis Simulation Matrix (100% Parchment Identity - NO DARK NAVY) -->
+        <!-- Cross-Sectoral Crisis Simulation Matrix -->
         <div class="parchment-card p-6 bg-gradient-to-br from-amber-100/50 via-amber-50 to-amber-100/60 rounded-2xl border-2 border-amber-600/50 shadow-md">
           <div class="flex items-center justify-between mb-4 border-b border-amber-600/30 pb-3 flex-wrap gap-2">
             <div class="flex items-center gap-2 text-amber-950 font-amiri font-bold text-base sm:text-lg">
               <i data-lucide="radio" class="w-5 h-5 text-red-600 animate-pulse"></i>
-              <span>مصفوفة المحاكاة التطبيقية لغرفة الأزمة (Crisis Operations Matrix)</span>
+              <span data-i18n="s9_matrix_h">مصفوفة المحاكاة التطبيقية لغرفة الأزمة (Crisis Operations Matrix)</span>
             </div>
-            <span class="text-xs px-2.5 py-0.5 rounded-full bg-red-100 text-red-900 border border-red-300 font-mono font-bold">
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-red-100 text-red-900 border border-red-300 font-mono font-bold" data-i18n="s9_matrix_b">
               ● LIVE SIMULATION
             </span>
           </div>
@@ -1725,9 +1763,9 @@
             <div class="p-3.5 rounded-xl bg-white border border-amber-400 shadow-sm">
               <div class="text-amber-950 font-bold font-amiri text-sm mb-1.5 flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-amber-600"></span>
-                <span>١. زاوية القطاع العربي</span>
+                <span data-i18n="s9_c1_t">١. زاوية القطاع العربي</span>
               </div>
-              <p class="text-xs text-amber-900/80 leading-relaxed">
+              <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s9_c1_d">
                 رصد التداعيات على استقرار دول الخليج والشرق الأوسط، وتنسيق الموقف العربي المشترك لمنع اتساع رقعة الصراع.
               </p>
             </div>
@@ -1735,9 +1773,9 @@
             <div class="p-3.5 rounded-xl bg-white border border-amber-400 shadow-sm">
               <div class="text-amber-950 font-bold font-amiri text-sm mb-1.5 flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-amber-600"></span>
-                <span>٢. زاوية القطاع الاقتصادي</span>
+                <span data-i18n="s9_c2_t">٢. زاوية القطاع الاقتصادي</span>
               </div>
-              <p class="text-xs text-amber-900/80 leading-relaxed">
+              <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s9_c2_d">
                 تحليل تقلبات أسواق النفط والغاز، تأثير الإغلاقات البحرية على حركة التجارة وسلاسل الإمداد ومضيق هرمز.
               </p>
             </div>
@@ -1745,9 +1783,9 @@
             <div class="p-3.5 rounded-xl bg-white border border-amber-400 shadow-sm">
               <div class="text-amber-950 font-bold font-amiri text-sm mb-1.5 flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-amber-600"></span>
-                <span>٣. قطاع التخطيط وإدارة الأزمات</span>
+                <span data-i18n="s9_c3_t">٣. قطاع التخطيط وإدارة الأزمات</span>
               </div>
-              <p class="text-xs text-amber-900/80 leading-relaxed">
+              <p class="text-xs text-amber-900/80 leading-relaxed" data-i18n="s9_c3_d">
                 تشغيل غرفة العمليات، تفعيل آليات الإنذار الدبلوماسي المبكر، ومحاكاة الاتصالات العاجلة والتفاوض تحت النار.
               </p>
             </div>
@@ -1756,8 +1794,8 @@
 
           <!-- Culmination Output in Warm Parchment Banner -->
           <div class="p-3.5 rounded-xl bg-amber-200/50 border border-amber-500/70 text-center">
-            <span class="text-xs font-bold text-amber-950 font-kufi">المخرج الختامي المشترك:</span>
-            <p class="text-xs text-amber-900 font-semibold mt-1 max-w-xl mx-auto">
+            <span class="text-xs font-bold text-amber-950 font-kufi" data-i18n="s9_out_h">المخرج الختامي المشترك:</span>
+            <p class="text-xs text-amber-900 font-semibold mt-1 max-w-xl mx-auto" data-i18n="s9_out_d">
               صياغة ورقة موقف موحدة وإصدار بيان رسمي لوزارة الخارجية يوازن بين المبادئ القومية وحماية المصالح الاستراتيجية العليا لمصر.
             </p>
           </div>
@@ -1777,13 +1815,13 @@
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-3">
-            <div class="gold-numeral-seal">١٠</div>
+            <div class="gold-numeral-seal"><span class="badge-num">١٠</span></div>
             <div>
               <div class="section-cartouche">
                 <i data-lucide="sparkles" class="w-4 h-4 text-amber-700"></i>
-                <span class="font-kufi text-xs sm:text-sm font-bold">الشفافية المطلقة ومد الجسور مع الدولة</span>
+                <span class="font-kufi text-xs sm:text-sm font-bold" data-i18n="s10_badge">الشفافية المطلقة ومد الجسور مع الدولة</span>
               </div>
-              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight">
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-amber-950 leading-tight" data-i18n="s10_title">
                 ١٠. الحوكمة والانفتاح والشراكة المؤسسية
               </h3>
             </div>
@@ -1791,38 +1829,38 @@
 
           <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
             <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
-            <span>ARTICLE X: GOVERNANCE & PARTNERSHIP</span>
+            <span data-i18n="s10_article">ARTICLE X: GOVERNANCE & PARTNERSHIP</span>
           </div>
         </div>
 
         <!-- Official Verbatim Content -->
         <div class="parchment-card my-6">
-          <p class="ink-lead">
+          <p class="ink-lead" data-i18n="s10_body">
             نعمل وفق مبادئ <strong>الشفافية المطلقة وتكافؤ الفرص</strong>، ونفتح أبوابنا للطلاب المتميزين من مختلف التخصصات والجامعات المصرية وفق معايير اختيار دقيقة تشمل المقابلات واختبارات تحديد القدرات. وانطلاقاً من إيماننا بالتكامل بين الجامعة والمؤسسات الوطنية، نمد أيدينا لبناء <strong>شراكات مؤسسية رفيعة—وفي مقدمتها التطلع للرعاية الرسمية من وزارة الخارجية المصرية</strong>—لنبني جسراً مستداماً ينقل خبرات الدبلوماسية المصرية العريقة إلى جيل جديد من قادة المستقبل.
           </p>
         </div>
 
-        <!-- Governance Highlights & Call to Actions (Warm Parchment) -->
+        <!-- Governance Highlights & Call to Actions -->
         <div class="parchment-card p-6 bg-gradient-to-br from-amber-100/70 to-white border-2 border-amber-600/40 mt-6">
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             
             <div>
-              <h4 class="font-amiri font-bold text-xl text-amber-950 mb-2">
+              <h4 class="font-amiri font-bold text-xl text-amber-950 mb-2" data-i18n="s10_charter_h">
                 ميثاق الشفافية وتكافؤ الفرص لعام 2026
               </h4>
               <ul class="space-y-2 text-xs sm:text-sm text-amber-900/85">
                 <li class="flex items-center gap-2">
                   <i data-lucide="check" class="w-4 h-4 text-amber-700 shrink-0"></i>
-                  <span>لجان تقييم محايدة ومقابلات شفهية واختبارات قدرات موحدة.</span>
+                  <span data-i18n="s10_ch1">لجان تقييم محايدة ومقابلات شفهية واختبارات قدرات موحدة.</span>
                 </li>
                 <li class="flex items-center gap-2">
                   <i data-lucide="check" class="w-4 h-4 text-amber-700 shrink-0"></i>
-                  <span>نظام تقييم ومتابعة رقمي مؤتمت يضمن العدالة التامة لكافة المتقدمين.</span>
+                  <span data-i18n="s10_ch2">نظام تقييم ومتابعة رقمي مؤتمت يضمن العدالة التامة لكافة المتقدمين.</span>
                 </li>
                 <li class="flex items-center gap-2">
                   <i data-lucide="check" class="w-4 h-4 text-amber-700 shrink-0"></i>
-                  <span>سعي دؤوب لشراكة ورعاية رسمية من وزارة الخارجية ومعهد الدراسات الدبلوماسية.</span>
+                  <span data-i18n="s10_ch3">سعي دؤوب لشراكة ورعاية رسمية من وزارة الخارجية ومعهد الدراسات الدبلوماسية.</span>
                 </li>
               </ul>
             </div>
@@ -1836,33 +1874,33 @@
                   <span class="text-[8px] font-mono">RATIFIED</span>
                 </div>
               </div>
-              <span class="font-amiri font-bold text-sm text-amber-950">صُدّق بموجب لائحة النموذج الرسمية</span>
-              <span class="text-[11px] text-amber-800 font-ruqaa mt-0.5">جامعة السويس • كلية السياسة والاقتصاد</span>
+              <span class="font-amiri font-bold text-sm text-amber-950" data-i18n="s10_seal_h">صُدّق بموجب لائحة النموذج الرسمية</span>
+              <span class="text-[11px] text-amber-800 font-ruqaa mt-0.5" data-i18n="s10_seal_sub">جامعة السويس • كلية السياسة والاقتصاد</span>
             </div>
 
           </div>
 
-          <!-- CTAs Hub (Warm Parchment & Gold) -->
+          <!-- CTAs Hub -->
           <div class="mt-8 pt-6 border-t border-amber-600/30 flex flex-wrap items-center justify-center gap-4">
             
             <a href="/book" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-700 hover:to-amber-600 text-amber-950 font-black text-sm shadow-lg shadow-amber-600/30 transition-all hover:scale-105">
               <i data-lucide="calendar-check" class="w-4 h-4"></i>
-              <span>الانضمام وحجز موعد المقابلة الشخصية</span>
+              <span data-i18n="s10_btn_book">الانضمام وحجز موعد المقابلة الشخصية</span>
             </a>
 
             <a href="/login" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-600/60 font-bold text-sm shadow-md transition-all">
               <i data-lucide="shield" class="w-4 h-4 text-amber-700"></i>
-              <span>بوابة المقيمين ومديري اللجان</span>
+              <span data-i18n="s10_btn_login">بوابة المقيمين ومديري اللجان</span>
             </a>
 
             <a href="/verify" class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-400 font-semibold text-xs sm:text-sm transition-all">
               <i data-lucide="qr-code" class="w-4 h-4 text-amber-700"></i>
-              <span>التحقق من الشهادات الرسمية</span>
+              <span data-i18n="s10_btn_verify">التحقق من الشهادات الرسمية</span>
             </a>
 
             <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white hover:bg-amber-50 text-amber-950 border border-amber-300 font-semibold text-xs sm:text-sm transition-all shadow-sm">
               <i data-lucide="printer" class="w-4 h-4 text-amber-700"></i>
-              <span>طباعة الوثيقة الرسمية</span>
+              <span data-i18n="s10_btn_print">طباعة الوثيقة الرسمية</span>
             </button>
 
           </div>
@@ -1878,29 +1916,29 @@
         
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-amber-950 font-amiri">
           <div class="border-b sm:border-b-0 sm:border-l border-amber-600/30 pb-4 sm:pb-0">
-            <div class="text-xs text-amber-800 font-bold font-kufi">الإشراف الأكاديمي</div>
-            <div class="text-base font-bold mt-1">كلية السياسة والاقتصاد</div>
-            <div class="text-xs text-amber-900/70 font-ruqaa">جامعة السويس</div>
+            <div class="text-xs text-amber-800 font-bold font-kufi" data-i18n="col_c1_t">الإشراف الأكاديمي</div>
+            <div class="text-base font-bold mt-1" data-i18n="col_c1_v">كلية السياسة والاقتصاد</div>
+            <div class="text-xs text-amber-900/70 font-ruqaa" data-i18n="col_c1_s">جامعة السويس</div>
           </div>
 
           <div class="border-b sm:border-b-0 sm:border-l border-amber-600/30 pb-4 sm:pb-0">
-            <div class="text-xs text-amber-800 font-bold font-kufi">الاعتماد والتنظيم</div>
-            <div class="text-base font-bold mt-1">الهيئة العليا لإدارة النموذج</div>
-            <div class="text-xs text-amber-900/70 font-ruqaa">دورة عام 2026 الدبلوماسية</div>
+            <div class="text-xs text-amber-800 font-bold font-kufi" data-i18n="col_c2_t">الاعتماد والتنظيم</div>
+            <div class="text-base font-bold mt-1" data-i18n="col_c2_v">الهيئة العليا لإدارة النموذج</div>
+            <div class="text-xs text-amber-900/70 font-ruqaa" data-i18n="col_c2_s">دورة عام 2026 الدبلوماسية</div>
           </div>
 
           <div>
-            <div class="text-xs text-amber-800 font-bold font-kufi">رقم التسجيل الدبلوماسي</div>
+            <div class="text-xs text-amber-800 font-bold font-kufi" data-i18n="col_c3_t">رقم التسجيل الدبلوماسي</div>
             <div class="text-base font-bold mt-1 font-mono text-amber-950">MFA-SU/DOC-2026</div>
-            <div class="text-xs text-amber-900/70 font-ruqaa">وثيقة إلكترونية موثقة</div>
+            <div class="text-xs text-amber-900/70 font-ruqaa" data-i18n="col_c3_s">وثيقة إلكترونية موثقة</div>
           </div>
         </div>
 
-        <div class="font-ruqaa text-xs sm:text-sm text-amber-950/75 max-w-xl mx-auto leading-relaxed">
+        <div class="font-ruqaa text-xs sm:text-sm text-amber-950/75 max-w-xl mx-auto leading-relaxed" data-i18n="col_closing">
           حررت هذه الوثيقة التاريخية بجمهورية مصر العربية، جامعة السويس، لنقل التقاليد الدبلوماسية المصرية الراسخة وتأهيل أجيال الغد لقيادة المشهد الدولي.
         </div>
 
-        <div class="mt-4 text-[11px] text-amber-800/60 font-mono">
+        <div class="mt-4 text-[11px] text-amber-800/60 font-mono" data-i18n="col_copy">
           © 2026 Suez University MFA Simulation Model • All Institutional Rights Reserved
         </div>
 
@@ -1913,7 +1951,7 @@
       <div class="finial-brass-ring"></div>
       <div class="finial-center-seal">
         <i data-lucide="feather" class="w-4 h-4 text-amber-700"></i>
-        <span>ختام الوثيقة التأسيسية • حماية المصلحة الوطنية العليا</span>
+        <span data-i18n="finial_bottom">ختام الوثيقة التأسيسية • حماية المصلحة الوطنية العليا</span>
       </div>
       <div class="finial-brass-ring"></div>
     </div>
@@ -1922,24 +1960,576 @@
 
 
   <!-- =========================================================================
-       CINEMATIC ENGINE SCRIPT (Scroll spy, Auto-glide, Web Audio synth)
+       BILINGUAL DICTIONARY & CINEMATIC SCRIPT ENGINE
        ========================================================================= -->
   <script>
+    // =========================================================================
+    // COMPLETE BILINGUAL TRANSLATION DICTIONARY (Arabic & English)
+    // =========================================================================
+    const translations = {
+      ar: {
+        page_title: "الوثيقة الرسمية والبيان التأسيسي | نموذج محاكاة وزارة الخارجية - جامعة السويس",
+        hud_brand_title: "نموذج محاكاة وزارة الخارجية المصرية",
+        hud_brand_sub: "MFA SUEZ 2026",
+        hud_official_badge: "الوثيقة الرسمية",
+        hud_book_btn: "حجز مقابلة",
+        hud_login_btn: "دخول اللجان",
+        hud_glide_btn: "العرض السينمائي",
+        hud_glide_pause: "إيقاف مؤقت",
+        astrolabe_label: "البنود",
+        finial_top: "وثيقة دبلوماسية معتمدة • جامعة السويس • 2026",
+        finial_bottom: "ختام الوثيقة التأسيسية • حماية المصلحة الوطنية العليا",
+        watermark_ar: "وزارة الخارجية المصرية",
+        doc_invocation: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+        doc_republic: "جمهورية مصر العربية • وزارة التعليم العالي والبحث العلمي",
+        doc_faculty: "جامعة السويس • كلية السياسة والاقتصاد",
+        doc_entity: "نموذج محاكاة وزارة الخارجية المصرية (MFA SM)",
+        doc_medallion_title: "وثيقة التأسيس والبيان الاستراتيجي الشامل للدبلوماسية المصرية الشبابية",
+        doc_main_title: "المرسوم التأسيسي والإطار المفاهيمي العام",
+        doc_lead_desc: "وثيقة رسمية جامعة تشرح الهيكل، الرؤية، الأهداف الوطنية، والمنظومة التدريبية لنموذج محاكاة وزارة الخارجية بجامعة السويس.",
+        
+        // Section 1
+        s1_badge: "وثيقة التأسيس والمنطلق المؤسسي",
+        s1_article: "ARTICLE I: IDENTITY & ORIGIN",
+        s1_title: "١. الهوية والمنطلق المؤسسي",
+        s1_body: "نحن <strong>\"نموذج محاكاة وزارة الخارجية بجامعة السويس\" (MFA SM)</strong>، مبادرة أكاديمية طلابية رائدة تنطلق من رحم <em>كلية السياسة والاقتصاد بجامعة السويس</em>. يمثل نموذجنا منصة تعليمية تطبيقية معتمدة تهدف إلى كسر الحاجز التقليدي بين قاعات المحاضرات النظرية والواقع العملي للسياسة الدولية، لنقدم تجربة تحاكي بدقة بيئة العمل الدبلوماسي والمؤسسي المصري بكل ما تحمله من ضغوط وتحديات.",
+        s1_c1_t: "المنبت الأكاديمي",
+        s1_c1_d: "كلية السياسة والاقتصاد بجامعة السويس — معقل الفكر السياسي والتحليل الجيواقتصادي في إقليم قناة السويس.",
+        s1_c2_t: "منصة تطبيقية معتمدة",
+        s1_c2_d: "كسر رتابة التلقين النظري والانتقال إلى الصياغات الميدانية وصناعة القرار السياسي في البيئات الواقعية.",
+        s1_c3_t: "بيئة الدبلوماسية المصرية",
+        s1_c3_d: "محاكاة كاملة لكافة ضغوطات الدبلوماسية المصرية العريقة ومقتضيات حفظ توازنات الدولة والمصالح الحيوية.",
+
+        // Section 2
+        s2_badge: "المثلث الاستراتيجي للدبلوماسية",
+        s2_article: "ARTICLE II: GOVERNING PHILOSOPHY",
+        s2_title: "٢. الرؤية والفلسفة الحاكمة",
+        s2_body: "تتأسس فلسفتنا على ثلاثة محاور متكاملة هي: <strong>المعرفة، والمحاكاة، والخبرة</strong>؛ حيث نتحرك مع الطالب في مسار منهجي يبدأ بالتعلم، ثم المحاكاة، فالتطبيق، وصولاً إلى التقييم والتطوير. نحن لا نكتفي بدراسة نظريات العلاقات الدولية، بل نضع العضو في قلب مواقف وسيناريوهات افتراضية تتطلب منه تحليل القضايا، وتقدير المصالح، وصياغة أوراق السياسات، وإدارة المفاوضات تحت ضغط المتغيرات المتسارعة.",
+        s2_triad_h: "المحاور الثلاثة المتكاملة للتأهيل الدبلوماسي",
+        s2_triad_sub: "اضغط على المحور لاستعراض مساره العملي داخل النموذج",
+        s2_p1_t: "المعرفة",
+        s2_p1_d: "القاعدة النظرية وفقه السياسة الدولية ومحددات الأمن القومي.",
+        s2_p2_t: "المحاكاة",
+        s2_p2_d: "السيناريوهات الافتراضية وتمثيل الدول وجلسات التفاوض الحي.",
+        s2_p3_t: "الخبرة",
+        s2_p3_d: "صياغة أوراق السياسات وإدارة الأزمات تحت ضغط المتغيرات.",
+        s2_f1: "١. التعلم",
+        s2_f2: "٢. المحاكاة",
+        s2_f3: "٣. التطبيق",
+        s2_f4: "٤. التقييم والتطوير",
+
+        // Section 3
+        s3_badge: "الرباعية الاستراتيجية المتناغمة",
+        s3_article: "ARTICLE III: STRATEGIC QUAD",
+        s3_title: "٣. الأهداف الوطنية والمهنية",
+        s3_body: "نسعى من خلال هذا الكيان إلى تحقيق رباعية متناغمة من الأهداف <strong>الأكاديمية والمهنية والقيادية والوطنية</strong>. فإلى جانب إتقان فنون الكتابة الدبلوماسية وقواعد البروتوكول والمراسم، نركز بعمق على تعزيز وعي الشباب المصري بمحددات الأمن القومي ومكانة مصر المحورية في محيطها الإقليمي والدولي، وإعداد كوادر شابة تدرك كيف تُصاغ المواقف الخارجية انطلاقاً من المصلحة الوطنية العليا.",
+        s3_p1_t: "الركن الوطني",
+        s3_p1_d: "تعزيز وعي الشباب المصري بمحددات الأمن القومي، وإدراك مكانة مصر المركزية ودورها التاريخي في حماية التوازنات الإقليمية.",
+        s3_p2_t: "الركن المهني",
+        s3_p2_d: "إتقان فنون التحرير الدبلوماسي وصياغة المذكرات الرسمية، واستيعاب قواعد المراسم (Protocol & Etiquette) الدولية.",
+        s3_p3_t: "الركن القيادي",
+        s3_p3_d: "بناء شخصية مفاوضة متزنة، قادرة على العمل تحت الضغط، وفهم آليات اتخاذ القرار وصياغة المواقف المحكمة.",
+        s3_p4_t: "الركن الأكاديمي",
+        s3_p4_d: "تأصيل أدوات البحث العلمي الجيوسياسي، ومقاربة القضايا الدولية من منظور منهجي محايد ورصين.",
+
+        // Section 4
+        s4_badge: "التراتبية الإدارية والانضباط المؤسسي",
+        s4_article: "ARTICLE IV: STATE HIERARCHY",
+        s4_title: "٤. هيكل تنظيمي يحاكي الدولة",
+        s4_body: "نُدار من خلال لائحة تنظيمية صارمة تحاكي التراتبية الإدارية لوزارة الخارجية المصرية؛ إذ يقود النموذج <strong>\"رئيس النموذج\" (بمثابة وزير الخارجية)</strong>، ويعاونه <strong>ثلاثة نواب متخصصون</strong> يشرفون على اللجان الأكاديمية والتنظيمية والشؤون العامة، إلى جانب <strong>متحدث إعلامي رسمي</strong> يدير فريقاً للإعلام واللغات، و<strong>مساعدين للوزير</strong> يترأسون القطاعات التخصصية، مما يرسخ الانضباط المؤسسي ويمنع تضارب الاختصاصات.",
+        s4_chart_badge: "المخطط الهيكلي الرسمي لإدارة النموذج",
+        s4_pres_t: "رئيس النموذج",
+        s4_pres_role: "(بمثابة وزير الخارجية المصري)",
+        s4_pres_d: "القيادة الاستراتيجية العليا وإقرار المخرجات والسياسات",
+        s4_dep1_t: "نائب الشؤون الأكاديمية",
+        s4_dep1_d: "الإشراف على المناهج والبحوث والتدريب التخصصي",
+        s4_dep2_t: "نائب الشؤون التنظيمية",
+        s4_dep2_d: "إدارة اللوجستيات والمراسم وقاعات المحاكاة",
+        s4_dep3_t: "نائب الشؤون العامة",
+        s4_dep3_d: "المتابعة والتنسيق الداخلي والرقابة الإدارية",
+        s4_spok_t: "المتحدث الإعلامي الرسمي",
+        s4_spok_d: "إدارة فريق الإعلام واللغات الأجنبية الحية والبيانات الصحفية",
+        s4_asst_t: "مساعدو الوزير — رؤساء القطاعات التخصصية",
+        s4_asst_d: "قيادة القطاعات الجغرافية والوظيفية، وإدارة فرق العمل الأكاديمية والتنظيمية والإعلامية داخل كل قطاع.",
+
+        // Section 5
+        s5_badge: "دوائر وقطاعات الدبلوماسية الرسمية",
+        s5_article: "ARTICLE V: ALL DIPLOMATIC SECTORS",
+        s5_title: "٥. القطاعات التخصصية ودوائر العمل",
+        s5_body: "يتوزع عملنا الأكاديمي والتطبيقي عبر قطاعات تخصصية تعكس دوائر اهتمام السياسة الخارجية، وتشمل: <strong>قطاع الشؤون العربية، وقطاع الشؤون الأمريكية، وقطاع الشؤون متعددة الأطراف والأمن الدولي، وقطاع الشؤون الاقتصادية، وقطاع البحوث والتخطيط وإدارة الأزمات</strong> (مع امتداد الدائرة الأكاديمية لتشمل <em>الشؤون الأفريقية والأوروبية والآسيوية والقانونية</em>). ويضم كل قطاع مزيجاً متناغماً من الكوادر الأكاديمية والتنظيمية والإعلامية لضمان تكامل الأداء.",
+        s5_grid_t: "القطاعات واللجان الرسمية المعتمدة بالنموذج (١٢ قطاعاً ودائرة عمل):",
+        s5_grid_b: "تكامل دبلوماسي شامل",
+        sec_arab_t: "قطاع الشؤون العربية",
+        sec_arab_d: "الدائرة الحيوية المركزية: متابعة قضايا الشرق الأوسط، العمل العربي المشترك، جامعة الدول العربية، وملفات الأمن القومي بالمنطقة.",
+        sec_arab_tag: "ID: arab • الدائرة المركزية",
+        sec_pal_t: "قطاع فلسطين والقضايا العادلة",
+        sec_pal_d: "القضية الفلسطينية، القانون الدولي الإنساني، توثيق الانتهاكات، والمساعي الدبلوماسية لدعم الحقوق الوطنية المشروعة وإقامة الدولة المستقلة.",
+        sec_pal_tag: "ID: palestine • قضية الأمة",
+        sec_afr_t: "قطاع شؤون أفريقيا وحوض النيل",
+        sec_afr_d: "العمق الاستراتيجي المصري: ملف الأمن المائي وحوض النيل، الاتحاد الأفريقي، الشراكات التنموية ودول الساحل والصحراء والقرن الأفريقي.",
+        sec_afr_tag: "ID: africa • العمق الاستراتيجي",
+        sec_sec_t: "شؤون متعددة الأطراف والأمن الدولي",
+        sec_sec_d: "المنظمات الدولية، الأمم المتحدة، مجلس الأمن الدولي، معاهدات نزع السلاح ومكافحة الإرهاب وقضايا حفظ وبناء السلام الدولي.",
+        sec_sec_tag: "ID: security • الشرعية الدولية",
+        sec_usa_t: "قطاع الشؤون الأمريكية",
+        sec_usa_d: "العلاقات الاستراتيجية الثنائية مع الولايات المتحدة الأمريكية، توازنات القوى الكبرى، والسياسة الخارجية لدول الأمريكيتين.",
+        sec_usa_tag: "ID: american • القوى الكبرى",
+        sec_eco_t: "التعاون الاقتصادي والتنمية",
+        sec_eco_d: "الدبلوماسية الاقتصادية، جذب الاستثمارات، تجمعات البريكس (BRICS)، التجارة الدولية وممرات الطاقة العالمية والتنمية المستدامة.",
+        sec_eco_tag: "ID: economic • الدبلوماسية التنموية",
+        sec_crs_t: "البحث والتخطيط وإدارة الأزمات",
+        sec_crs_d: "خلية التفكير الاستراتيجي والإنذار المبكر، محاكاة غرف الطوارئ، استشراف السيناريوهات ورسم استجابات دبلوماسية عاجلة.",
+        sec_crs_tag: "ID: crises • التفكير الاستراتيجي",
+        sec_clm_t: "المناخ والبيئة والتنمية المستدامة",
+        sec_clm_d: "دبلوماسية المناخ العالمية، مفاوضات قمم المناخ (COP)، اتفاقيات التحول الأخضر، العدالة المناخية، والتمويل البيئي الدولي.",
+        sec_clm_tag: "ID: climate • الدبلوماسية الخضراء",
+        sec_dig_t: "الاتصالات والتحول الرقمي",
+        sec_dig_d: "الدبلوماسية الرقمية، حوكمة الذكاء الاصطناعي، الأمن السيبراني الدولي، وحملات الاتصال الاستراتيجي وبناء الصورة الذهنية للدولة.",
+        sec_dig_tag: "ID: digital • فضاء المستقبل",
+        sec_eur_t: "قطاع الشؤون الأوروبية",
+        sec_eur_d: "العلاقات مع الاتحاد الأوروبي، الشراكة الأورومتوسطية، قضايا الهجرة وتأمين البحر المتوسط ومسارات الحوار الجيوسياسي المشترك.",
+        sec_eur_tag: "دائرة ممتدة • الجوار المتوسطي",
+        sec_asi_t: "قطاع الشؤون الآسيوية",
+        sec_asi_d: "التوجه شرقاً: العلاقات مع قوى آسيا الفاعلة (الصين، الهند، اليابان، دول الآسيان)، ومبادرات الحزام والطريق والشراكات الشرقية.",
+        sec_asi_tag: "دائرة ممتدة • الشرق الصاعد",
+        sec_leg_t: "الشؤون القانونية والمعاهدات",
+        sec_leg_d: "فقه القانون الدولي العام، صياغة الاتفاقيات والمعاهدات الثنائية والمتعددة، تسوية المنازعات سلمياً وآليات التحكيم الدولي.",
+        sec_leg_tag: "دائرة ممتدة • الحصن القانوني",
+
+        // Section 6
+        s6_badge: "مراتب السلك الدبلوماسي الرفيع",
+        s6_article: "ARTICLE VI: CAREER SYSTEM",
+        s6_title: "٦. نظام التدرج الوظيفي الدبلوماسي",
+        s6_body: "ابتكرنا نظاماً تقييمياً فريداً يحاكي السلك الدبلوماسي الحقيقي، حيث يبدأ العضو مسيرته برتبة <strong>\"ملحق دبلوماسي\"</strong>، ويتدرج بناءً على كفاءته والتزامه وجودة مخرجاته البحثية عبر رتب <strong>(سكرتير ثالث، وسكرتير ثانٍ، وسكرتير أول)</strong> في فئة الأعضاء العاديين، وصولاً إلى فئة الأعضاء المتميزين برتب <strong>\"مستشار، ووزير مفوض، وسفير\"</strong>، وهي الرتب الرفيعة التي يؤهل بلوغها للمشاركة في المحاكاة الختامية الكبرى وتمثيل النموذج في الوفود الخارجية.",
+        s6_scale_t: "سلم الرتب الدبلوماسية الرسمية (Diplomatic Cadre Ranks)",
+        s6_scale_b: "٧ رتب محاكاة",
+        s6_t2_h: "★ فئة الأعضاء المتميزين (حق التمثيل الخارجي والمحاكاة الختامية الكبرى)",
+        s6_r7_t: "سفير فوق العادة",
+        s6_r7_d: "رتبة قيادية رفيعة",
+        s6_r6_t: "وزير مفوض",
+        s6_r6_d: "إدارة الملفات الكبرى",
+        s6_r5_t: "مستشار دبلوماسي",
+        s6_r5_d: "الاستشارات والتقديرات",
+        s6_t1_h: "● فئة الأعضاء العاملين (التدرج المبني على الكفاءة والالتزام والبحوث)",
+        s6_r4_t: "سكرتير أول",
+        s6_r4_d: "جودة بحثية متقدمة",
+        s6_r3_t: "سكرتير ثانٍ",
+        s6_r3_d: "صياغة المذكرات",
+        s6_r2_t: "سكرتير ثالث",
+        s6_r2_d: "المشاركة التحليلية",
+        s6_r1_t: "ملحق دبلوماسي",
+        s6_r1_d: "نقطة الانطلاق للعضو",
+
+        // Section 7
+        s7_badge: "الأجندة الأكاديمية: ١٦ أسبوعاً",
+        s7_article: "ARTICLE VII: 5-TRACK SYSTEM",
+        s7_title: "٧. منظومة تدريبية خماسية المسارات",
+        s7_body: "تمتد أجندتنا الأكاديمية على مدار <strong>16 أسبوعاً تدريبياً</strong> خلال العام الجامعي، وتعمل عبر <strong>خمسة مسارات متوازية</strong>: مسار عام يبني القاعدة المعرفية المشتركة لكل الأعضاء، ومسار تخصصي يتعمق في ملفات كل قطاع، ومسار للتأهيل القيادي لشاغلي المناصب الإدارية، ومسار للتأهيل الأكاديمي والبحثي لضمان جودة المناهج، بالإضافة إلى <em>مسار استثنائي تفاعلي يستضيف السفراء والخبراء</em> في لقاءات حوارية مفتوحة.",
+        s7_tr1_t: "المسار العام (القاعدة المعرفية المشتركة)",
+        s7_tr1_d: "تأسيس شامل لكافة الأعضاء في مبادئ القانون الدولي العام، تاريخ السياسة الخارجية المصرية، وأسس الدبلوماسية المعاصرة.",
+        s7_tr2_t: "المسار التخصصي (التعمق القطاعي)",
+        s7_tr2_d: "دراسة متعمقة للملفات الخاصة بكل قطاع من القطاعات الاثني عشر بما يعزز الاحتراف التخصصي وجودة التحليل.",
+        s7_tr3_t: "مسار التأهيل القيادي",
+        s7_tr3_d: "موجه لرؤساء اللجان ونوابهم لصقل مهارات إدارة فرق العمل، التفاوض، وإدارة الوقت والضغوط التنظيمية.",
+        s7_tr4_t: "مسار التأهيل الأكاديمي والبحثي",
+        s7_tr4_d: "تدريب متقدم على منهجيات التفكير النقدي، مراجعة الأدبيات الدولية، وتدقيق المحتوى وضمان جودة المناهج.",
+        s7_tr5_t: "المسار الاستثنائي التفاعلي (لقاءات السفراء)",
+        s7_tr5_d: "صالونات دبلوماسية ولقاءات حوارية مفتوحة تجمع الطلاب بسفراء مصر السابقين والحاليين وخبراء السياسة الخارجية لنقل الخبرات الحية.",
+
+        // Section 8
+        s8_badge: "من المعرفة إلى التحليل ثم الممارسة الحية",
+        s8_article: "ARTICLE VIII: WEEKLY METHODOLOGY",
+        s8_title: "٨. منهجية الأسبوع التدريبي والتطبيق العملي",
+        s8_body: "لا نقدم في نموذجنا محاضرات تلقينية جامدة، بل <strong>يُصمم كل أسبوع كوحدة تعليمية متكاملة</strong> تنتقل بالعضو من <em>المعرفة إلى التحليل ثم التطبيق العملي</em>. سواء كنا نناقش <strong>ملف الأمن المائي المصري وحوض النيل</strong>، أو <strong>أمن البحر الأحمر</strong>، أو <strong>آليات التصويت في مجلس الأمن</strong>، ينتهي كل محور بتمرين تفاوضي حي أو تكليف بصياغة <em>مذكرة تقدير موقف (Policy Brief)</em> أو إدارة غرفة أزمات عاجلة.",
+        s8_c1_t: "الأمن المائي وحوض النيل",
+        s8_c1_d: "تطبيق على مفاوضات السدود، مبادئ القانون الدولي للمجاري المائية، وصياغة بدائل استراتيجية لحماية الحصة التاريخية.",
+        s8_c2_t: "أمن البحر الأحمر والممرات الملاحية",
+        s8_c2_d: "محاكاة لحرية الملاحة، مضيق باب المندب وقناة السويس، والتنسيق الأمني بين الدول المشاطئة للبحر الأحمر.",
+        s8_c3_t: "مذكرة تقدير موقف (Policy Brief)",
+        s8_c3_d: "مخرج أسبوعي يلزم العضو بتقديم تشخيص تنفيذي موجز، وسيناريوهات محتملة، وتوصيات محددة لصانع القرار.",
+
+        // Section 9
+        s9_badge: "غرفة إدارة الأزمات الإقليمية الكبرى",
+        s9_article: "ARTICLE IX: CRISIS MANAGEMENT",
+        s9_title: "٩. دراسات الحالة وإدارة الأزمات المعقدة",
+        s9_body: "ينفرد برنامجنا التدريبي بتوظيف الأزمات الدولية المعاصرة—وعلى رأسها <strong>\"الحرب الإيرانية وتداعياتها الإقليمية\"</strong>—كحالة تطبيقية محورية عابرة للقطاعات. يتناول كل قطاع هذه الأزمة من زاويته؛ فيدرس <em>القطاع العربي أثرها الإقليمي</em>، ويحلل <em>القطاع الاقتصادي تداعياتها على الطاقة والممرات البحرية</em>، ويدير <em>قطاع التخطيط غرفة الأزمة</em>، ليتوج ذلك بتمرين دبلوماسي مشترك يصيغ موقفاً خارجياً متكاملاً يحمي المصالح المصرية.",
+        s9_matrix_h: "مصفوفة المحاكاة التطبيقية لغرفة الأزمة (Crisis Operations Matrix)",
+        s9_matrix_b: "● LIVE SIMULATION",
+        s9_c1_t: "١. زاوية القطاع العربي",
+        s9_c1_d: "رصد التداعيات على استقرار دول الخليج والشرق الأوسط، وتنسيق الموقف العربي المشترك لمنع اتساع رقعة الصراع.",
+        s9_c2_t: "٢. زاوية القطاع الاقتصادي",
+        s9_c2_d: "تحليل تقلبات أسواق النفط والغاز، تأثير الإغلاقات البحرية على حركة التجارة وسلاسل الإمداد ومضيق هرمز.",
+        s9_c3_t: "٣. قطاع التخطيط وإدارة الأزمات",
+        s9_c3_d: "تشغيل غرفة العمليات، تفعيل آليات الإنذار الدبلوماسي المبكر، ومحاكاة الاتصالات العاجلة والتفاوض تحت النار.",
+        s9_out_h: "المخرج الختامي المشترك:",
+        s9_out_d: "صياغة ورقة موقف موحدة وإصدار بيان رسمي لوزارة الخارجية يوازن بين المبادئ القومية وحماية المصالح الاستراتيجية العليا لمصر.",
+
+        // Section 10
+        s10_badge: "الشفافية المطلقة ومد الجسور مع الدولة",
+        s10_article: "ARTICLE X: GOVERNANCE & PARTNERSHIP",
+        s10_title: "١٠. الحوكمة والانفتاح والشراكة المؤسسية",
+        s10_body: "نعمل وفق مبادئ <strong>الشفافية المطلقة وتكافؤ الفرص</strong>، ونفتح أبوابنا للطلاب المتميزين من مختلف التخصصات والجامعات المصرية وفق معايير اختيار دقيقة تشمل المقابلات واختبارات تحديد القدرات. وانطلاقاً من إيماننا بالتكامل بين الجامعة والمؤسسات الوطنية، نمد أيدينا لبناء <strong>شراكات مؤسسية رفيعة—وفي مقدمتها التطلع للرعاية الرسمية من وزارة الخارجية المصرية</strong>—لنبني جسراً مستداماً ينقل خبرات الدبلوماسية المصرية العريقة إلى جيل جديد من قادة المستقبل.",
+        s10_charter_h: "ميثاق الشفافية وتكافؤ الفرص لعام 2026",
+        s10_ch1: "لجان تقييم محايدة ومقابلات شفهية واختبارات قدرات موحدة.",
+        s10_ch2: "نظام تقييم ومتابعة رقمي مؤتمت يضمن العدالة التامة لكافة المتقدمين.",
+        s10_ch3: "سعي دؤوب لشراكة ورعاية رسمية من وزارة الخارجية ومعهد الدراسات الدبلوماسية.",
+        s10_seal_h: "صُدّق بموجب لائحة النموذج الرسمية",
+        s10_seal_sub: "جامعة السويس • كلية السياسة والاقتصاد",
+        s10_btn_book: "الانضمام وحجز موعد المقابلة الشخصية",
+        s10_btn_login: "بوابة المقيمين ومديري اللجان",
+        s10_btn_verify: "التحقق من الشهادات الرسمية",
+        s10_btn_print: "طباعة الوثيقة الرسمية",
+
+        // Colophon
+        col_c1_t: "الإشراف الأكاديمي",
+        col_c1_v: "كلية السياسة والاقتصاد",
+        col_c1_s: "جامعة السويس",
+        col_c2_t: "الاعتماد والتنظيم",
+        col_c2_v: "الهيئة العليا لإدارة النموذج",
+        col_c2_s: "دورة عام 2026 الدبلوماسية",
+        col_c3_t: "رقم التسجيل الدبلوماسي",
+        col_c3_s: "وثيقة إلكترونية موثقة",
+        col_closing: "حررت هذه الوثيقة التاريخية بجمهورية مصر العربية، جامعة السويس، لنقل التقاليد الدبلوماسية المصرية الراسخة وتأهيل أجيال الغد لقيادة المشهد الدولي.",
+        col_copy: "© 2026 Suez University MFA Simulation Model • All Institutional Rights Reserved",
+
+        // Tooltips
+        tooltip_1: "١. الهوية والمنطلق المؤسسي",
+        tooltip_2: "٢. الرؤية والفلسفة الحاكمة",
+        tooltip_3: "٣. الأهداف الوطنية والمهنية",
+        tooltip_4: "٤. هيكل تنظيمي يحاكي الدولة",
+        tooltip_5: "٥. القطاعات التخصصية ودوائر العمل",
+        tooltip_6: "٦. نظام التدرج الوظيفي الدبلوماسي",
+        tooltip_7: "٧. منظومة تدريبية خماسية المسارات",
+        tooltip_8: "٨. منهجية الأسبوع التدريبي والتطبيق",
+        tooltip_9: "٩. دراسات الحالة وإدارة الأزمات",
+        tooltip_10: "١٠. الحوكمة والانفتاح والشراكة"
+      },
+      en: {
+        page_title: "Official Founding Manifesto | Simulation Model of the Egyptian Ministry of Foreign Affairs - Suez University",
+        hud_brand_title: "Simulation Model of Egyptian Ministry of Foreign Affairs",
+        hud_brand_sub: "MFA SUEZ 2026",
+        hud_official_badge: "Official Charter",
+        hud_book_btn: "Book Interview",
+        hud_login_btn: "Committee Login",
+        hud_glide_btn: "Cinematic Scroll",
+        hud_glide_pause: "Pause Scroll",
+        astrolabe_label: "ARTICLES",
+        finial_top: "Accredited Diplomatic Charter • Suez University • 2026",
+        finial_bottom: "Colophon of Founding Charter • Safeguarding Supreme National Interests",
+        watermark_ar: "MINISTRY OF FOREIGN AFFAIRS",
+        doc_invocation: "IN THE NAME OF GOD, THE MOST GRACIOUS, THE MOST MERCIFUL",
+        doc_republic: "Arab Republic of Egypt • Ministry of Higher Education & Scientific Research",
+        doc_faculty: "Suez University • Faculty of Politics and Economics",
+        doc_entity: "Simulation Model of the Egyptian Ministry of Foreign Affairs (MFA SM)",
+        doc_medallion_title: "Founding Manifesto & Comprehensive Strategic Declaration for Egyptian Youth Diplomacy",
+        doc_main_title: "The Founding Decree & General Conceptual Framework",
+        doc_lead_desc: "An authoritative manifesto detailing the administrative hierarchy, vision, national objectives, and academic training architecture of the Ministry of Foreign Affairs Simulation Model at Suez University.",
+        
+        // Section 1
+        s1_badge: "Founding Charter & Institutional Origin",
+        s1_article: "ARTICLE I: IDENTITY & ORIGIN",
+        s1_title: "1. Institutional Origin & Identity",
+        s1_body: "We are the <strong>\"Simulation Model of the Ministry of Foreign Affairs at Suez University\" (MFA SM)</strong>, a pioneering student academic initiative emerging from the <em>Faculty of Politics and Economics at Suez University</em>. Our model represents an accredited practical educational platform aiming to break the traditional barrier between theoretical lecture halls and the practical reality of international politics, offering an experience that precisely simulates the Egyptian diplomatic and institutional working environment with all its pressures and challenges.",
+        s1_c1_t: "Academic Origin",
+        s1_c1_d: "Faculty of Politics and Economics at Suez University — citadel of political thought and geoeconomic analysis in the Suez Canal region.",
+        s1_c2_t: "Accredited Applied Platform",
+        s1_c2_d: "Bridging theoretical lectures and field practice to simulate real-world political decision-making and diplomatic craft.",
+        s1_c3_t: "Egyptian Diplomatic Environment",
+        s1_c3_d: "Faithful simulation of Egyptian diplomacy, statecraft, and national interest preservation under intense geopolitical pressure.",
+
+        // Section 2
+        s2_badge: "The Diplomatic Strategic Triad",
+        s2_article: "ARTICLE II: GOVERNING PHILOSOPHY",
+        s2_title: "2. Governing Philosophy & Strategic Vision",
+        s2_body: "Our philosophy is founded upon three integrated pillars: <strong>Knowledge, Simulation, and Experience</strong>; moving with the student through a systematic trajectory starting with learning, then simulation, followed by practical implementation, culminating in evaluation and continuous development. We do not stop at studying theories of international relations, but rather place the member at the core of simulated scenarios requiring deep issue analysis, interest estimation, policy paper drafting, and high-pressure negotiations under volatile shifts.",
+        s2_triad_h: "The Three Integrated Pillars of Diplomatic Qualification",
+        s2_triad_sub: "Click a pillar to inspect its applied trajectory within the model",
+        s2_p1_t: "Knowledge",
+        s2_p1_d: "Theoretical foundations, international politics, and national security determinants.",
+        s2_p2_t: "Simulation",
+        s2_p2_d: "Simulated scenarios, country representation, and live negotiation chambers.",
+        s2_p3_t: "Experience",
+        s2_p3_d: "Drafting policy briefs and crisis decision-making under fast-moving shifts.",
+        s2_f1: "1. Learning",
+        s2_f2: "2. Simulation",
+        s2_f3: "3. Application",
+        s2_f4: "4. Evaluation & Growth",
+
+        // Section 3
+        s3_badge: "The Harmonious Strategic Quadruple",
+        s3_article: "ARTICLE III: STRATEGIC QUAD",
+        s3_title: "3. National & Professional Strategic Goals",
+        s3_body: "Through this institution, we strive to achieve a harmonious quadruple of <strong>academic, professional, leadership, and national</strong> objectives. Alongside mastering diplomatic drafting techniques, international etiquette, and protocol, we focus deeply on strengthening Egyptian youth awareness regarding national security determinants and Egypt's pivotal role in its regional and global sphere, cultivating young leaders who understand how foreign policy stances are formulated from supreme national interests.",
+        s3_p1_t: "National Pillar",
+        s3_p1_d: "Strengthening youth awareness of national security determinants and Egypt's pivotal historical role in safeguarding regional stability.",
+        s3_p2_t: "Professional Pillar",
+        s3_p2_d: "Mastering diplomatic drafting, official memoranda, international protocol, and diplomatic etiquette.",
+        s3_p3_t: "Leadership Pillar",
+        s3_p3_d: "Cultivating composed negotiators capable of strategic decision-making and protecting supreme national interests.",
+        s3_p4_t: "Academic Pillar",
+        s3_p4_d: "Rooting geopolitical research methodologies to address international affairs with rigor and depth.",
+
+        // Section 4
+        s4_badge: "Administrative Hierarchy & Institutional Discipline",
+        s4_article: "ARTICLE IV: STATE HIERARCHY",
+        s4_title: "4. State-Simulated Organizational Hierarchy",
+        s4_body: "We are governed by a rigorous organizational charter that simulates the administrative hierarchy of the Egyptian Ministry of Foreign Affairs; led by the <strong>\"Model President\" (simulating the Minister of Foreign Affairs)</strong>, assisted by <strong>three specialized deputies</strong> overseeing academic, organizational, and general affairs, alongside an <strong>Official Spokesperson</strong> managing media and foreign languages teams, and <strong>Assistant Ministers</strong> heading specialized sectors, anchoring institutional discipline and preventing conflict of competence.",
+        s4_chart_badge: "Official Organizational Chart of Model Governance",
+        s4_pres_t: "Model President",
+        s4_pres_role: "(Simulating the Egyptian Minister of Foreign Affairs)",
+        s4_pres_d: "Supreme strategic leadership, endorsing policies, and ratifying official positions.",
+        s4_dep1_t: "Deputy for Academic Affairs",
+        s4_dep1_d: "Supervising curricula, academic research, and specialized training programs.",
+        s4_dep2_t: "Deputy for Organizing Affairs",
+        s4_dep2_d: "Managing operations, protocol, logistics, and simulation chambers.",
+        s4_dep3_t: "Deputy for General Affairs",
+        s4_dep3_d: "Internal oversight, administrative coordination, and inter-committee synergy.",
+        s4_spok_t: "Official Spokesperson",
+        s4_spok_d: "Leading media coverage, foreign languages delegations, and official communiqués.",
+        s4_asst_t: "Assistant Ministers — Sector Chiefs",
+        s4_asst_d: "Heading geographic and functional sectors, orchestrating academic, logistics, and media teams within each division.",
+
+        // Section 5
+        s5_badge: "Official Diplomatic Spheres & Sectors",
+        s5_article: "ARTICLE V: ALL DIPLOMATIC SECTORS",
+        s5_title: "5. Specialized Sectors & Working Spheres",
+        s5_body: "Our academic and practical work spans specialized sectors reflecting the diplomatic spheres of foreign policy: <strong>Arab Affairs, American Affairs, Multilateral Affairs & International Security, Economic Affairs, and Political Research, Planning & Crisis Management</strong> (with academic circles extending to <em>African, European, Asian, and Legal affairs</em>). Each sector comprises a harmonious blend of academic, organizational, and media cadres to ensure comprehensive performance.",
+        s5_grid_t: "Accredited Sectors & Committees of the Model (12 Working Spheres):",
+        s5_grid_b: "Comprehensive Diplomatic Synergy",
+        sec_arab_t: "Arab Affairs Sector",
+        sec_arab_d: "Central geopolitical circle: Arab League affairs, regional security, and Middle Eastern diplomatic files.",
+        sec_arab_tag: "ID: arab • Central Circle",
+        sec_pal_t: "Palestine & Just Causes Sector",
+        sec_pal_d: "Palestinian cause, international humanitarian law, legal documentation, and diplomatic advocacy for sovereign statehood.",
+        sec_pal_tag: "ID: palestine • Core National Cause",
+        sec_afr_t: "African Affairs & Nile Basin",
+        sec_afr_d: "Egypt's strategic depth: Nile Basin water security, African Union integration, and developmental partnerships.",
+        sec_afr_tag: "ID: africa • Strategic Depth",
+        sec_sec_t: "Multilateral & International Security",
+        sec_sec_d: "International organizations, UN General Assembly, Security Council, disarmament treaties, and international peacebuilding.",
+        sec_sec_tag: "ID: security • International Law",
+        sec_usa_t: "American Affairs Sector",
+        sec_usa_d: "Bilateral strategic relations with the United States, superpower balance, and foreign policy of the Americas.",
+        sec_usa_tag: "ID: american • Superpower Relations",
+        sec_eco_t: "Economic Cooperation & Development",
+        sec_eco_d: "Economic diplomacy, foreign investment attraction, BRICS cooperation, energy corridors, and international trade.",
+        sec_eco_tag: "ID: economic • Development Diplomacy",
+        sec_crs_t: "Research, Planning & Crisis Management",
+        sec_crs_d: "Strategic foresight cell, early warning operations, simulation of crisis rooms, and emergency diplomatic response.",
+        sec_crs_tag: "ID: crises • Strategic Foresight",
+        sec_clm_t: "Climate, Environment & Sustainability",
+        sec_clm_d: "Global climate diplomacy, COP negotiations, green transition treaties, climate justice, and international financing.",
+        sec_clm_tag: "ID: climate • Green Diplomacy",
+        sec_dig_t: "Communications & Digital Transformation",
+        sec_dig_d: "Digital diplomacy, artificial intelligence governance, international cybersecurity, and strategic communication.",
+        sec_dig_tag: "ID: digital • Future Frontiers",
+        sec_eur_t: "European Affairs Sector",
+        sec_eur_d: "European Union partnerships, Euro-Mediterranean cooperation, migration diplomacy, and regional security dialogues.",
+        sec_eur_tag: "Extended Circle • Mediterranean Sphere",
+        sec_asi_t: "Asian Affairs Sector",
+        sec_asi_d: "Eastern pivot: Relations with emerging Asian powers (China, India, Japan, ASEAN), Belt and Road initiatives, and trade routes.",
+        sec_asi_tag: "Extended Circle • Rising East",
+        sec_leg_t: "Legal Affairs & Treaties",
+        sec_leg_d: "Public international law, drafting bilateral and multilateral treaties, peaceful dispute resolution, and international arbitration.",
+        sec_leg_tag: "Extended Circle • Legal Shield",
+
+        // Section 6
+        s6_badge: "Cadres of the Diplomatic Service",
+        s6_article: "ARTICLE VI: CAREER SYSTEM",
+        s6_title: "6. Diplomatic Career Progression Cadre",
+        s6_body: "We devised a unique evaluation system simulating the authentic diplomatic service, where a member begins as a <strong>\"Diplomatic Attaché\"</strong>, progressing according to competence, commitment, and research output across the ranks of <strong>(Third Secretary, Second Secretary, and First Secretary)</strong> in the core member tier, culminating in the distinguished tier ranks of <strong>\"Counsellor, Minister Plenipotentiary, and Ambassador\"</strong>—elevated ranks that qualify members to participate in the Grand Final Simulation and represent the model in external delegations.",
+        s6_scale_t: "Official Diplomatic Service Rank Scale",
+        s6_scale_b: "7 Simulation Ranks",
+        s6_t2_h: "★ Distinguished Cadre Tier (Qualifying for External Delegations & Grand Simulation)",
+        s6_r7_t: "Ambassador Extraordinary",
+        s6_r7_d: "Supreme Leadership Rank",
+        s6_r6_t: "Minister Plenipotentiary",
+        s6_r6_d: "Major Strategic Portfolios",
+        s6_r5_t: "Diplomatic Counsellor",
+        s6_r5_d: "Advisory & Assessment",
+        s6_t1_h: "● Core Officer Tier (Merit-Based Progression via Research, Discipline & Performance)",
+        s6_r4_t: "First Secretary",
+        s6_r4_d: "Advanced Research Output",
+        s6_r3_t: "Second Secretary",
+        s6_r3_d: "Diplomatic Drafting",
+        s6_r2_t: "Third Secretary",
+        s6_r2_d: "Analytical Participation",
+        s6_r1_t: "Diplomatic Attaché",
+        s6_r1_d: "Career Entry Point",
+
+        // Section 7
+        s7_badge: "Academic Curriculum: 16 Weeks",
+        s7_article: "ARTICLE VII: 5-TRACK SYSTEM",
+        s7_title: "7. Five-Track Academic Training Architecture",
+        s7_body: "Our academic agenda extends over <strong>16 training weeks</strong> during the academic year, operating across <strong>five parallel tracks</strong>: a general foundation track building shared knowledge for all members, a specialized sector-focused track delving into sector portfolios, a leadership qualification track for administrative executives, an academic and research track ensuring curriculum rigor, and an <em>exceptional interactive track hosting distinguished ambassadors and experts</em> in open dialogue salons.",
+        s7_tr1_t: "General Foundation Track",
+        s7_tr1_d: "Comprehensive grounding for all members in public international law, history of Egyptian diplomacy, and contemporary world politics.",
+        s7_tr2_t: "Specialized Track (Sector Depth)",
+        s7_tr2_d: "In-depth study of portfolios across all twelve sectors, cultivating domain expertise and analytical precision.",
+        s7_tr3_t: "Leadership Qualification Track",
+        s7_tr3_d: "Tailored for committee heads and deputies to hone team leadership, negotiation strategies, and organizational pressure management.",
+        s7_tr4_t: "Academic & Research Track",
+        s7_tr4_d: "Advanced training in critical thinking, literature review, fact-checking, and ensuring scholarly curriculum rigor.",
+        s7_tr5_t: "Ambassadorial Dialogue Track",
+        s7_tr5_d: "Open salons connecting students directly with former and active Egyptian ambassadors to transmit live diplomatic wisdom.",
+
+        // Section 8
+        s8_badge: "From Knowledge to Analysis to Applied Practice",
+        s8_article: "ARTICLE VIII: WEEKLY METHODOLOGY",
+        s8_title: "8. Weekly Methodology & Applied Drills",
+        s8_body: "We do not offer passive theoretical lectures; rather, <strong>each week is designed as an integrated learning module</strong> transitioning members from <em>knowledge to analysis, then practical application</em>. Whether addressing <strong>Egyptian water security and the Nile Basin</strong>, <strong>Red Sea security</strong>, or <strong>voting mechanisms in the UN Security Council</strong>, every theme culminates in a live negotiating drill, a <em>Policy Brief assignment</em>, or managing an urgent crisis room.",
+        s8_c1_t: "Water Security & Nile Basin",
+        s8_c1_d: "Drills on river basin treaties, international water law, and formulating strategic policy options to secure vital quotas.",
+        s8_c2_t: "Red Sea & Maritime Chokepoints",
+        s8_c2_d: "Simulations on freedom of navigation, Bab el-Mandeb, Suez Canal transit, and littoral state security cooperation.",
+        s8_c3_t: "Policy Brief Formulation",
+        s8_c3_d: "Weekly operational brief requiring an executive diagnosis, likely scenarios, and actionable recommendations for policymakers.",
+
+        // Section 9
+        s9_badge: "Regional Crisis Management Chamber",
+        s9_article: "ARTICLE IX: CRISIS MANAGEMENT",
+        s9_title: "9. Complex Crisis Studies & Strategic Simulation",
+        s9_body: "Our training curriculum is distinguished by examining contemporary international crises—chiefly <strong>\"The Iranian Conflict and Regional Repercussions\"</strong>—as a pivotal cross-sectoral case study. Each sector approaches this crisis from its perspective: the <em>Arab sector investigates regional impacts</em>, the <em>economic sector analyzes energy and maritime chokepoints</em>, and the <em>planning sector operates the emergency war room</em>, culminating in a joint diplomatic drill drafting a unified foreign policy stance that protects Egyptian interests.",
+        s9_matrix_h: "Applied Crisis War Room Simulation Matrix",
+        s9_matrix_b: "● LIVE SIMULATION",
+        s9_c1_t: "1. Arab Sector Perspective",
+        s9_c1_d: "Monitoring impacts on Middle East and Gulf stability, orchestrating joint Arab positions to prevent conflict escalation.",
+        s9_c2_t: "2. Economic Sector Perspective",
+        s9_c2_d: "Analyzing oil and gas price shocks, maritime chokepoint closures, supply chains, and Strait of Hormuz dynamics.",
+        s9_c3_t: "3. Planning & Crisis Management Sector",
+        s9_c3_d: "Operating the emergency room, triggering early warning protocols, and simulating rapid diplomatic crisis diplomacy.",
+        s9_out_h: "Unified Diplomatic Declaration:",
+        s9_out_d: "Drafting a cohesive policy paper and official MFA communiqué balancing national principles with the supreme strategic interests of Egypt.",
+
+        // Section 10
+        s10_badge: "Absolute Governance & State Partnerships",
+        s10_article: "ARTICLE X: GOVERNANCE & PARTNERSHIP",
+        s10_title: "10. Governance, Openness & Institutional Partnership",
+        s10_body: "We operate under principles of <strong>absolute transparency and equal opportunity</strong>, opening our doors to distinguished students across Egyptian universities through meticulous selection criteria including standardized interviews and cognitive aptitude assessments. Believing in the synergy between universities and state institutions, we extend our hands toward <strong>high-level institutional partnerships—chief among them aspiring to official auspices from the Egyptian Ministry of Foreign Affairs</strong>—building a sustainable bridge that transmits Egypt's venerable diplomatic heritage to the next generation of future leaders.",
+        s10_charter_h: "Transparency & Equal Opportunity Charter 2026",
+        s10_ch1: "Impartial evaluation committees, standardized oral interviews, and aptitude benchmarks.",
+        s10_ch2: "Automated digital scoring and evaluation architecture ensuring absolute meritocracy for all applicants.",
+        s10_ch3: "Steadfast pursuit of official auspices from the Ministry of Foreign Affairs and the Institute for Diplomatic Studies.",
+        s10_seal_h: "Ratified by Supreme Governance Charter",
+        s10_seal_sub: "Suez University • Faculty of Politics and Economics",
+        s10_btn_book: "Join & Book Interview Appointment",
+        s10_btn_login: "Committee Evaluators Portal",
+        s10_btn_verify: "Verify Official Certificates",
+        s10_btn_print: "Print Official Document",
+
+        // Colophon
+        col_c1_t: "Academic Oversight",
+        col_c1_v: "Faculty of Politics and Economics",
+        col_c1_s: "Suez University",
+        col_c2_t: "Accreditation & Governance",
+        col_c2_v: "High Steering Committee",
+        col_c2_s: "Diplomatic Session 2026",
+        col_c3_t: "Diplomatic Registration Ref",
+        col_c3_s: "Authenticated Digital Record",
+        col_closing: "Enacted in the Arab Republic of Egypt, Suez University, transmitting Egypt's venerated diplomatic traditions and cultivating tomorrow's leaders for the international arena.",
+        col_copy: "© 2026 Suez University MFA Simulation Model • All Institutional Rights Reserved",
+
+        // Tooltips
+        tooltip_1: "I. Institutional Identity & Origin",
+        tooltip_2: "II. Governing Strategic Philosophy",
+        tooltip_3: "III. National & Professional Goals",
+        tooltip_4: "IV. State-Simulated Hierarchy",
+        tooltip_5: "V. Specialized Sectors & Spheres",
+        tooltip_6: "VI. Diplomatic Career Progression",
+        tooltip_7: "VII. Five-Track Training System",
+        tooltip_8: "VIII. Weekly Module & Live Drills",
+        tooltip_9: "IX. Complex Crisis Management",
+        tooltip_10: "X. Governance & State Partnerships"
+      }
+    };
+
+    // Current Active Language (Default from localStorage or 'ar')
+    let currentLang = localStorage.getItem('mfa_landing_lang') || 'ar';
+
+    // Roman / Eastern Arabic Numeral mappings for astrolabe & section badges
+    const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+    const arabicNumerals = ['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠'];
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('mfa_landing_lang', lang);
+
+      const html = document.documentElement;
+      const isAr = lang === 'ar';
+
+      // Set lang and dir
+      html.lang = lang;
+      html.dir = isAr ? 'rtl' : 'ltr';
+
+      // Update Page Title
+      document.title = translations[lang].page_title;
+
+      // Update Language Switcher Button Label
+      const langBtnLabel = document.getElementById('langBtnLabel');
+      if (langBtnLabel) {
+        langBtnLabel.textContent = isAr ? 'English' : 'العربية';
+      }
+
+      // Update All Translatable Elements by [data-i18n]
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key] !== undefined) {
+          el.innerHTML = translations[lang][key];
+        }
+      });
+
+      // Update Astrolabe & Numeral Badges
+      const astrolabeDots = document.querySelectorAll('.astrolabe-dot .dot-num');
+      astrolabeDots.forEach((el, index) => {
+        el.textContent = isAr ? arabicNumerals[index] : romanNumerals[index];
+      });
+
+      const sectionBadges = document.querySelectorAll('.gold-numeral-seal .badge-num');
+      sectionBadges.forEach((el, index) => {
+        el.textContent = isAr ? arabicNumerals[index] : romanNumerals[index];
+      });
+
+      // Re-create lucide icons if needed
+      lucide.createIcons();
+
+      // Update live scroll tracker with new language
+      updateScrollState();
+    }
+
+    function toggleLanguage() {
+      const nextLang = currentLang === 'ar' ? 'en' : 'ar';
+      applyLanguage(nextLang);
+    }
+
     // Initialize Lucide Icons
     lucide.createIcons();
 
     // Section Titles Map for the HUD
     const sectionNames = {
-      1: "البند الأول: الهوية والمنطلق المؤسسي",
-      2: "البند الثاني: الرؤية والفلسفة الحاكمة",
-      3: "البند الثالث: الأهداف الوطنية والمهنية",
-      4: "البند الرابع: هيكل تنظيمي يحاكي الدولة",
-      5: "البند الخامس: القطاعات التخصصية ودوائر العمل",
-      6: "البند السادس: نظام التدرج الوظيفي الدبلوماسي",
-      7: "البند السابع: منظومة تدريبية خماسية المسارات",
-      8: "البند الثامن: منهجية الأسبوع التدريبي والتطبيق العملي",
-      9: "البند التاسع: دراسات الحالة وإدارة الأزمات المعقدة",
-      10: "البند العاشر: الحوكمة والانفتاح والشراكة المؤسسية"
+      ar: {
+        1: "البند الأول: الهوية والمنطلق المؤسسي",
+        2: "البند الثاني: الرؤية والفلسفة الحاكمة",
+        3: "البند الثالث: الأهداف الوطنية والمهنية",
+        4: "البند الرابع: هيكل تنظيمي يحاكي الدولة",
+        5: "البند الخامس: القطاعات التخصصية ودوائر العمل",
+        6: "البند السادس: نظام التدرج الوظيفي الدبلوماسي",
+        7: "البند السابع: منظومة تدريبية خماسية المسارات",
+        8: "البند الثامن: منهجية الأسبوع التدريبي والتطبيق العملي",
+        9: "البند التاسع: دراسات الحالة وإدارة الأزمات المعقدة",
+        10: "البند العاشر: الحوكمة والانفتاح والشراكة المؤسسية"
+      },
+      en: {
+        1: "Article I: Institutional Identity & Origin",
+        2: "Article II: Governing Strategic Philosophy",
+        3: "Article III: National & Professional Goals",
+        4: "Article IV: State-Simulated Hierarchy",
+        5: "Article V: Specialized Sectors & Spheres",
+        6: "Article VI: Diplomatic Career Progression",
+        7: "Article VII: Five-Track Training System",
+        8: "Article VIII: Weekly Module & Live Drills",
+        9: "Article IX: Complex Crisis Management",
+        10: "Article X: Governance & State Partnerships"
+      }
     };
 
     // Smooth Scroll to Section Function
@@ -1976,8 +2566,8 @@
         }
       });
 
-      if (badge && sectionNames[activeIndex]) {
-        badge.textContent = sectionNames[activeIndex];
+      if (badge && sectionNames[currentLang] && sectionNames[currentLang][activeIndex]) {
+        badge.textContent = sectionNames[currentLang][activeIndex];
       }
 
       // Update Lateral Astrolabe
@@ -1992,7 +2582,6 @@
     }
 
     window.addEventListener('scroll', updateScrollState, { passive: true });
-    updateScrollState();
 
     // =========================================================================
     // SILENT CINEMATIC AUTO-GLIDE ENGINE
@@ -2012,7 +2601,7 @@
         btn.classList.add('bg-amber-600', 'text-amber-950');
         btn.classList.remove('bg-amber-100', 'text-amber-950');
         icon.setAttribute('data-lucide', 'pause');
-        label.textContent = 'إيقاف مؤقت';
+        label.textContent = translations[currentLang].hud_glide_pause;
         if (speedBtn) speedBtn.classList.remove('hidden');
         lucide.createIcons();
         runGlide();
@@ -2035,7 +2624,7 @@
       if (icon) {
         icon.setAttribute('data-lucide', 'play');
       }
-      if (label) label.textContent = 'العرض السينمائي';
+      if (label) label.textContent = translations[currentLang].hud_glide_btn;
       if (speedBtn) speedBtn.classList.add('hidden');
       if (glideReqId) cancelAnimationFrame(glideReqId);
       lucide.createIcons();
@@ -2045,10 +2634,10 @@
       const speedBtn = document.getElementById('glideSpeedBtn');
       if (glideSpeed === 1.0) {
         glideSpeed = 2.0;
-        speedBtn.textContent = '2x سرعة';
+        speedBtn.textContent = currentLang === 'ar' ? '2x سريع' : '2x Swift';
       } else {
         glideSpeed = 1.0;
-        speedBtn.textContent = '1x هادئ';
+        speedBtn.textContent = currentLang === 'ar' ? '1x هادئ' : '1x Gentle';
       }
     }
 
@@ -2179,6 +2768,9 @@
         }, 400);
       }
     }
+
+    // On Load: Apply Saved or Default Language
+    applyLanguage(currentLang);
   </script>
 </body>
 </html>
