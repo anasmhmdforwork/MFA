@@ -773,6 +773,7 @@
       border-bottom: 2px solid rgba(197, 160, 89, 0.55);
       box-shadow: 0 6px 25px rgba(60, 30, 10, 0.12);
       transition: all 0.3s ease;
+      direction: ltr !important;
     }
 
     /* Scroll progress line */
@@ -859,10 +860,10 @@
   <!-- =========================================================================
        FLOATING TOP CINEMATIC HEADS-UP DISPLAY (HUD) IN ROYAL PARCHMENT
        ========================================================================= -->
-  <header class="cinematic-hud">
+  <header class="cinematic-hud" dir="ltr">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
       
-      <!-- Right/Leading: Crest and Title -->
+      <!-- Left/Leading: Crest and Title -->
       <div class="flex items-center gap-3">
         <a href="/" class="flex items-center gap-3 group">
           <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform">
