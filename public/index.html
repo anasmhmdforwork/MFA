@@ -762,33 +762,67 @@
     }
 
     /* Floating Diplomatic Contact Widget (Direct Speed Dial) */
+    #diplomaticContactWidget {
+      position: fixed !important;
+      bottom: 24px;
+      right: 28px;
+      z-index: 99999 !important;
+    }
+    @media (max-width: 640px) {
+      #diplomaticContactWidget {
+        bottom: max(18px, env(safe-area-inset-bottom, 18px)) !important;
+        right: 16px !important;
+      }
+    }
+
     .diplomatic-contact-popup {
       opacity: 0;
       transform: translateY(16px) scale(0.96);
       pointer-events: none;
       transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      width: calc(100vw - 32px);
+      max-width: 320px;
+    }
+    @media (min-width: 641px) {
+      .diplomatic-contact-popup {
+        width: 330px;
+      }
     }
     .diplomatic-contact-popup.active {
       opacity: 1 !important;
       transform: translateY(0) scale(1) !important;
       pointer-events: auto !important;
     }
+
+    /* Radiant High-Contrast Yellow Diplomatic FAB Button */
+    .contact-fab-btn {
+      background: linear-gradient(135deg, #fde047 0%, #facc15 45%, #eab308 100%) !important;
+      color: #1a0f00 !important;
+      border: 2px solid #b45309 !important;
+      box-shadow: 0 8px 25px rgba(234, 179, 8, 0.45), 0 0 16px rgba(250, 204, 21, 0.55), 0 4px 10px rgba(0, 0, 0, 0.25) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      cursor: pointer;
+    }
+    .contact-fab-btn:hover {
+      background: linear-gradient(135deg, #fef08a 0%, #fde047 50%, #facc15 100%) !important;
+      transform: translateY(-2px) scale(1.05) !important;
+      box-shadow: 0 12px 30px rgba(234, 179, 8, 0.65), 0 0 25px rgba(253, 224, 71, 0.8), 0 6px 14px rgba(0, 0, 0, 0.3) !important;
+      border-color: #78350f !important;
+    }
+    .contact-fab-btn:active {
+      transform: translateY(0) scale(0.97) !important;
+    }
+
     .contact-item-card {
       transition: all 0.22s ease;
-      background: rgba(22, 16, 12, 0.94);
-      border: 1px solid rgba(197, 160, 89, 0.35);
+      background: rgba(20, 14, 10, 0.96);
+      border: 1.5px solid rgba(234, 179, 8, 0.45);
     }
     .contact-item-card:hover {
-      background: rgba(38, 28, 20, 0.98);
-      border-color: rgba(212, 175, 55, 0.8);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(212, 175, 55, 0.2);
+      background: rgba(38, 26, 16, 0.98);
+      border-color: #facc15;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.55), 0 0 15px rgba(250, 204, 21, 0.25);
       transform: translateY(-2px);
-    }
-    .contact-btn-glow {
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(197, 160, 89, 0.25);
-    }
-    .contact-btn-glow:hover {
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(212, 175, 55, 0.45);
     }
 
     /* Floating Cinematic HUD in Royal Parchment Tone */
@@ -2035,22 +2069,22 @@
        FLOATING DIPLOMATIC CONTACT WIDGET (Facebook, WhatsApp, Phone, Email)
        Direct channels as found on official MFA SM Facebook page
        ========================================================================= -->
-  <aside id="diplomaticContactWidget" class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-[120] flex flex-col items-end pointer-events-auto">
+  <aside id="diplomaticContactWidget" class="pointer-events-auto flex flex-col items-end">
     
     <!-- Pop-up Menu of Contact Cards (Direct Links) -->
     <div id="contactMenu" 
-         class="diplomatic-contact-popup mb-3 w-72 sm:w-80 flex flex-col gap-2.5 origin-bottom-right"
+         class="diplomatic-contact-popup mb-3 flex flex-col gap-2.5 origin-bottom-right"
          role="menu"
          aria-label="قنوات التواصل الرسمية">
       
       <!-- Status Header -->
-      <div class="px-3.5 py-2.5 rounded-xl bg-stone-950/95 backdrop-blur-md border border-amber-600/40 shadow-lg">
-        <div class="flex items-center justify-between text-xs font-bold text-amber-200">
+      <div class="px-3.5 py-2.5 rounded-xl bg-stone-950/95 backdrop-blur-md border border-amber-500/50 shadow-lg">
+        <div class="flex items-center justify-between text-xs font-bold text-amber-300">
           <span class="flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
             <span data-i18n="contact_status">متاح للتواصل المباشر</span>
           </span>
-          <span class="text-[10px] text-amber-400/80 font-mono">MFA SUEZ 2026</span>
+          <span class="text-[10px] text-amber-400 font-mono tracking-wider">MFA SUEZ 2026</span>
         </div>
       </div>
 
@@ -2140,9 +2174,9 @@
 
     </div>
 
-    <!-- Floating Toggle Button (Identical to Image 2 pattern) -->
+    <!-- Floating Toggle Button (Radiant Yellow Contrast - Perfectly visible on Phone & Desktop) -->
     <button id="contactToggleBtn" onclick="toggleContactMenu()" 
-            class="contact-btn-glow flex items-center gap-2.5 px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl bg-stone-950/95 hover:bg-stone-900 text-amber-100 border border-amber-500/50 hover:border-amber-400 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 group focus:outline-none"
+            class="contact-fab-btn flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-2xl select-none group focus:outline-none"
             aria-expanded="false"
             aria-haspopup="true"
             aria-label="تواصل معنا">
@@ -2150,16 +2184,16 @@
       <!-- State: Closed -->
       <div id="contactIconClosed" class="flex items-center gap-2">
         <div class="relative flex items-center">
-          <i data-lucide="message-circle" class="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors"></i>
-          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-stone-950 animate-pulse"></span>
+          <i data-lucide="message-circle" class="w-5 h-5 text-stone-950 shrink-0 stroke-[2.5]"></i>
+          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-600 border border-stone-950 animate-pulse"></span>
         </div>
-        <span class="font-amiri font-bold text-sm sm:text-base text-amber-200 group-hover:text-white transition-colors" data-i18n="contact_btn">تواصل معنا</span>
+        <span class="font-amiri font-black text-sm sm:text-base text-stone-950 tracking-wide" data-i18n="contact_btn">تواصل معنا</span>
       </div>
 
       <!-- State: Open -->
       <div id="contactIconOpen" class="hidden items-center gap-2">
-        <i data-lucide="x" class="w-5 h-5 text-amber-400 group-hover:text-red-400 transition-colors"></i>
-        <span class="font-amiri font-bold text-sm sm:text-base text-amber-200 group-hover:text-white transition-colors" data-i18n="contact_btn_close">تواصل معنا</span>
+        <i data-lucide="x" class="w-5 h-5 text-stone-950 shrink-0 stroke-[3]"></i>
+        <span class="font-amiri font-black text-sm sm:text-base text-stone-950 tracking-wide" data-i18n="contact_btn_close">تواصل معنا</span>
       </div>
 
     </button>
@@ -3196,7 +3230,7 @@
         }
         if (btn) {
           btn.setAttribute('aria-expanded', 'true');
-          btn.classList.add('border-amber-400', 'ring-2', 'ring-amber-400/30');
+          btn.classList.add('ring-4', 'ring-amber-400/50');
         }
       } else {
         menu.classList.remove('active');
@@ -3210,7 +3244,7 @@
         }
         if (btn) {
           btn.setAttribute('aria-expanded', 'false');
-          btn.classList.remove('border-amber-400', 'ring-2', 'ring-amber-400/30');
+          btn.classList.remove('ring-4', 'ring-amber-400/50');
         }
       }
       if (typeof lucide !== 'undefined') lucide.createIcons();
