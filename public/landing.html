@@ -690,16 +690,6 @@
         </a>
       </div>
 
-      <!-- Center: Live Section Tracker -->
-      <div class="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-amber-100/80 border border-amber-500/40 shadow-inner">
-        <span class="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></span>
-        <span id="hudSectionBadge" class="text-xs font-bold text-amber-950">
-          البند الأول: الهوية والمنطلق المؤسسي
-        </span>
-        <span class="text-amber-400 text-xs">|</span>
-        <span id="hudProgressPercent" class="text-xs font-bold text-amber-800 font-mono">0%</span>
-      </div>
-
       <!-- Left/Trailing: ONLY Language Switcher & Login Buttons -->
       <div class="flex items-center gap-2 sm:gap-3">
         <!-- BILINGUAL LANGUAGE SWITCHER BUTTON (AR / EN) -->
@@ -720,55 +710,6 @@
     <!-- Live Gold Scroll Progress Line -->
     <div id="hudProgressBar" class="hud-progress-line"></div>
   </header>
-
-
-  <!-- =========================================================================
-       FLOATING LATERAL GOLDEN ASTROLABE (Quick Jump Navigation 1-10)
-       ========================================================================= -->
-  <nav class="diplomatic-astrolabe-nav" aria-label="فهرس بنود الوثيقة">
-    <div class="text-[10px] font-bold text-amber-900 uppercase tracking-widest mb-1 font-kufi" data-i18n="astrolabe_label">البنود</div>
-    
-    <button class="astrolabe-dot active" data-target="section-1" onclick="scrollToSection('section-1')">
-      <span class="dot-num">١</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_1">١. الهوية والمنطلق المؤسسي</span>
-    </button>
-    <button class="astrolabe-dot" data-target="section-2" onclick="scrollToSection('section-2')">
-      <span class="dot-num">٢</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_2">٢. الرؤية والفلسفة الحاكمة</span>
-    </button>
-    <button class="astrolabe-dot" data-target="section-3" onclick="scrollToSection('section-3')">
-      <span class="dot-num">٣</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_3">٣. الأهداف الوطنية والمهنية</span>
-    </button>
-    <button class="astrolabe-dot" data-target="section-4" onclick="scrollToSection('section-4')">
-      <span class="dot-num">٤</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_4">٤. هيكل تنظيمي يحاكي الدولة</span>
-    </button>
-    <button class="astrolabe-dot" data-target="section-5" onclick="scrollToSection('section-5')">
-      <span class="dot-num">٥</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_5">٥. القطاعات التخصصية ودوائر العمل</span>
-    </button>
-    <button class="astrolabe-dot" data-target="section-6" onclick="scrollToSection('section-6')">
-      <span class="dot-num">٦</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_6">٦. نظام التدرج الوظيفي الدبلوماسي</span>
-    </button>
-    <button class="astrolabe-dot" data-target="section-7" onclick="scrollToSection('section-7')">
-      <span class="dot-num">٧</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_7">٧. منظومة تدريبية خماسية المسارات</span>
-    </button>
-    <button class="astrolabe-dot" data-target="section-8" onclick="scrollToSection('section-8')">
-      <span class="dot-num">٨</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_8">٨. منهجية الأسبوع التدريبي والتطبيق</span>
-    </button>
-    <button class="astrolabe-dot" data-target="section-9" onclick="scrollToSection('section-9')">
-      <span class="dot-num">٩</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_9">٩. دراسات الحالة وإدارة الأزمات</span>
-    </button>
-    <button class="astrolabe-dot" data-target="section-10" onclick="scrollToSection('section-10')">
-      <span class="dot-num">١٠</span>
-      <span class="astrolabe-tooltip" data-i18n="tooltip_10">١٠. الحوكمة والانفتاح والشراكة</span>
-    </button>
-  </nav>
 
 
   <!-- =========================================================================
