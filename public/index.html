@@ -16,10 +16,10 @@
     })();
   </script>
 
-  <!-- Google Fonts: Arabic (Amiri, Aref Ruqaa, Reem Kufi, Cairo) + English Royal Serif (Cinzel, Cormorant Garamond) -->
+  <!-- Google Fonts: Arabic (Amiri, Aref Ruqaa, Reem Kufi, Cairo) + 1670s Vintage English (IM Fell English SC, IM Fell English, Cardo) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Cinzel:wght@600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Cardo:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@600;700;800;900&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -154,9 +154,14 @@
       font-family: 'Aref Ruqaa', serif !important;
     }
 
-    /* English LTR Mode Styling Overrides */
+    /* =========================================================================
+       ENGLISH LTR MODE: AUTHENTIC 17TH-CENTURY DIPLOMATIC PRESS (1670s)
+       Titles & Monumental Headings: IM Fell English SC (Oxford Press 1670)
+       Preamble Leads & Ceremonial Quotes: IM Fell English
+       Body, Articles & Card Explanations: Cardo
+       ========================================================================= */
     html[lang="en"] body {
-      font-family: 'Cairo', 'Cormorant Garamond', sans-serif;
+      font-family: 'Cardo', serif;
     }
     html[lang="en"] .gold-gradient-title,
     html[lang="en"] h1,
@@ -164,18 +169,31 @@
     html[lang="en"] h3,
     html[lang="en"] h4,
     html[lang="en"] h5,
+    html[lang="en"] h6,
     html[lang="en"] .font-amiri,
-    html[lang="en"] .font-kufi {
-      font-family: 'Cinzel', serif !important;
-      letter-spacing: 0.03em;
+    html[lang="en"] .font-kufi,
+    html[lang="en"] .section-title,
+    html[lang="en"] .btn-gold,
+    html[lang="en"] .wax-lock-badge,
+    html[lang="en"] .diplomatic-badge,
+    html[lang="en"] #hudBrandTitle,
+    html[lang="en"] [data-i18n="hud_brand_title"] {
+      font-family: 'IM Fell English SC', serif !important;
+      letter-spacing: 0.04em;
     }
     html[lang="en"] .ink-lead,
     html[lang="en"] .font-ruqaa,
-    html[lang="en"] [data-i18n="doc_lead_desc"] {
-      font-family: 'Cormorant Garamond', serif !important;
+    html[lang="en"] [data-i18n="doc_lead_desc"],
+    html[lang="en"] .parchment-lead {
+      font-family: 'IM Fell English', serif !important;
       font-size: 1.25rem !important;
       line-height: 1.85 !important;
-      font-weight: 600 !important;
+    }
+    html[lang="en"] p,
+    html[lang="en"] li,
+    html[lang="en"] .parchment-sheet p {
+      font-family: 'Cardo', serif;
+      line-height: 1.75;
     }
     html[lang="en"] .diplomatic-astrolabe-nav {
       left: 20px;
