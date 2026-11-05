@@ -69,6 +69,103 @@
         border: 1px solid rgba(71, 85, 105, 0.8) !important;
       }
     }
+
+    /* =========================================================================
+       THE KITCHEN SKEUOMORPHIC TICKET PRINTER & TACTILE COMPONENTS
+       ========================================================================= */
+    .kitchen-printer-chassis {
+      background: linear-gradient(160deg, #182030 0%, #0d121c 100%);
+      box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.9),
+        inset 0 1px 1px rgba(255, 255, 255, 0.15),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(197, 160, 89, 0.35);
+    }
+    .kitchen-paper-slot > div {
+      background: #04070c;
+      box-shadow: 
+        inset 0 5px 10px rgba(0, 0, 0, 0.95),
+        0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .kitchen-printed-ticket {
+      animation: ticketFeedOut 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transform-origin: top center;
+    }
+    @keyframes ticketFeedOut {
+      0% {
+        transform: translateY(-90px) scale(0.96);
+        opacity: 0;
+        clip-path: inset(90px 0 0 0);
+      }
+      30% {
+        opacity: 0.95;
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+      }
+    }
+    #kitchenTicketToPrint {
+      background-color: #fdfaf2 !important;
+      color: #1e1b18 !important;
+    }
+    #kitchenTicketToPrint * {
+      color: inherit;
+    }
+    #kitchenTicketToPrint .text-slate-900,
+    #kitchenTicketToPrint .text-slate-800,
+    #kitchenTicketToPrint .text-slate-700,
+    #kitchenTicketToPrint .text-amber-950,
+    #kitchenTicketToPrint .text-amber-900 {
+      color: #1a1612 !important;
+    }
+    #kitchenTicketToPrint .text-slate-500,
+    #kitchenTicketToPrint .text-slate-600 {
+      color: #57534e !important;
+    }
+    #kitchenTicketToPrint .bg-white {
+      background-color: rgba(255, 255, 255, 0.92) !important;
+      color: #1a1612 !important;
+      backdrop-filter: none !important;
+      border-color: rgba(180, 83, 9, 0.25) !important;
+    }
+    #kitchenTicketToPrint .bg-amber-50 {
+      background-color: #fefce8 !important;
+    }
+    #kitchenTicketToPrint .bg-emerald-50 {
+      background-color: #ecfdf5 !important;
+    }
+    #kitchenTicketToPrint .text-emerald-700,
+    #kitchenTicketToPrint .text-emerald-800 {
+      color: #065f46 !important;
+    }
+    .tactile-hold-btn {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .tactile-hold-btn:active {
+      transform: scale(0.98);
+    }
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #kitchenTicketToPrint, #kitchenTicketToPrint * {
+        visibility: visible !important;
+      }
+      #kitchenTicketToPrint {
+        position: fixed !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 100% !important;
+        max-width: 480px !important;
+        box-shadow: none !important;
+        border: 1px solid #c5a059 !important;
+        background: #ffffff !important;
+      }
+    }
     
     /* Prevent auto-zoom on iOS when tapping inputs */
     @media (max-width: 640px) {
@@ -442,73 +539,138 @@
         </div>
       </section>
 
-      <!-- Confirmation / Success Modal -->
-      <div v-if="bookingSuccessData" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-8 border border-slate-200 shadow-2xl relative text-center max-h-[92vh] overflow-y-auto">
+      <!-- The Kitchen Skeuomorphic Ticket Printer Success Modal -->
+      <div v-if="bookingSuccessData" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="relative w-full max-w-md my-auto">
           
-          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 sm:mb-4 text-2xl sm:text-3xl">
-            <i data-lucide="check-circle" class="w-8 h-8 sm:w-10 sm:h-10"></i>
-          </div>
-
-          <h3 class="text-lg sm:text-2xl font-black text-slate-900 mb-1.5 sm:mb-2">تم تأكيد حجز موعدك بنجاح!</h3>
-          <p class="text-xs sm:text-sm text-slate-500 mb-4 sm:mb-6">
-            تم تسجيل موعد مقابلتك الشخصية في كشوفات لجنة {{ bookingSuccessData.committeeName }}.
-          </p>
-
-          <!-- Appointment Ticket -->
-          <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-4 sm:p-6 text-right mb-4 sm:mb-6 shadow-inner relative overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-amber-500/10 rounded-full blur-xl"></div>
+          <!-- Tactile Printer Terminal Hardware Body -->
+          <div class="kitchen-printer-chassis rounded-3xl p-4 sm:p-5 shadow-[0_30px_70px_rgba(0,0,0,0.85)] border border-slate-700/80 relative text-right">
             
-            <div class="flex items-center justify-between border-b border-slate-700/80 pb-2.5 mb-2.5">
-              <span class="text-xs text-amber-400 font-bold">بطاقة حضور المقابلة الشخصية</span>
-              <span class="text-[10px] sm:text-[11px] text-slate-400 font-mono">2026-MOFA</span>
+            <!-- Terminal Top Bezel & Status Readout -->
+            <div class="flex items-center justify-between pb-3 mb-2 border-b border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_#10b981]"></span>
+                <span class="text-[11px] font-mono tracking-wider font-bold text-slate-300">MOFA-TERM-PRINTER // OK</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-slate-500">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                <span class="text-[10px] font-mono text-amber-400/90 font-bold">READY</span>
+              </div>
             </div>
 
-            <div class="space-y-1.5 sm:space-y-2 text-xs">
-              <div class="flex justify-between">
-                <span class="text-slate-400">المرشح:</span>
-                <span class="font-bold text-white text-xs sm:text-sm">{{ bookingSuccessData.candidateName }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-slate-400">اللجنة:</span>
-                <span class="font-bold text-amber-300">{{ bookingSuccessData.committeeName }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-slate-400">اليوم والتاريخ:</span>
-                <span class="font-bold text-white">{{ bookingSuccessData.dateDisplay }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-slate-400">توقيت المقابلة:</span>
-                <span class="font-bold text-emerald-400 text-xs sm:text-sm">{{ bookingSuccessData.timeDisplay }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-slate-400">نوع المقابلة:</span>
-                <span class="font-bold text-white">{{ bookingSuccessData.type }}</span>
-              </div>
-              <div class="pt-2 border-t border-slate-700/80 text-[10px] sm:text-[11px] text-slate-300 leading-relaxed">
-                <b>المقر / الرابط:</b> {{ bookingSuccessData.locationOrLink }}
-              </div>
+            <!-- Printer Paper Feeder Slot -->
+            <div class="kitchen-paper-slot mb-[-10px] relative z-20 mx-2">
+              <div class="h-3 bg-slate-950 rounded-full border-t border-b border-slate-900 shadow-[inset_0_4px_8px_rgba(0,0,0,0.95)]"></div>
             </div>
+
+            <!-- Ejecting Tactile Ticket (The Pass) -->
+            <div id="kitchenTicketToPrint" class="kitchen-printed-ticket relative z-10 bg-[#fcf9f0] text-slate-900 rounded-b-2xl p-5 shadow-2xl border-x border-b border-amber-900/20 font-sans mx-1">
+              
+              <!-- Perforated Tear Line At Top -->
+              <div class="perforated-tear-top text-center text-[10px] text-amber-900/60 font-mono select-none pb-2.5 border-b-2 border-dashed border-amber-900/20">
+                ✂ ----------------- تصريح دخول المقابلة الرسمية ----------------- ✂
+              </div>
+
+              <!-- Ticket Header -->
+              <div class="text-center pt-2.5 pb-2 border-b border-amber-900/10">
+                <div class="flex items-center justify-center gap-2 mb-1">
+                  <img src="/logo.jpg" alt="MFA" class="w-8 h-8 rounded-full border border-amber-700/40 object-cover">
+                  <div>
+                    <h4 class="font-extrabold text-xs text-amber-950 tracking-tight leading-tight">جمهورية مصر العربية • وزارة الخارجية</h4>
+                    <p class="text-[10px] text-amber-800 font-bold">نموذج محاكاة جامعة السويس • 2026</p>
+                  </div>
+                </div>
+                <div class="inline-block px-3 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-bold border border-amber-300">
+                  DIPLOMATIC BOARDING PASS // بطاقة الحضور
+                </div>
+              </div>
+
+              <!-- Barcode Visual Component -->
+              <div class="py-2 my-2 border-y border-amber-900/15 flex flex-col items-center justify-center bg-amber-50/50 rounded-lg">
+                <div class="font-mono text-xs tracking-[5px] text-slate-800 font-black h-7 flex items-center select-none">
+                  ||| | | |||| ||| || |||| | ||| | ||
+                </div>
+                <div class="text-[9px] font-mono text-slate-600 tracking-wider font-semibold">
+                  REF: EGY-MOFA-2026-{{ bookingSuccessData.slotId ? bookingSuccessData.slotId.slice(0, 8) : 'RATIFIED' }}
+                </div>
+              </div>
+
+              <!-- Candidate Details List -->
+              <div class="space-y-1.5 text-xs text-right py-1">
+                <div class="flex justify-between items-center bg-white/70 px-2 py-1 rounded border border-amber-900/10">
+                  <span class="text-slate-500 text-[11px] font-medium">المرشح الدبلوماسي:</span>
+                  <span class="font-bold text-slate-900 text-xs sm:text-sm">{{ bookingSuccessData.candidateName }}</span>
+                </div>
+                <div class="flex justify-between items-center bg-white/70 px-2 py-1 rounded border border-amber-900/10">
+                  <span class="text-slate-500 text-[11px] font-medium">اللجنة الدبلوماسية:</span>
+                  <span class="font-bold text-amber-900 text-xs">{{ bookingSuccessData.committeeName }}</span>
+                </div>
+                <div class="flex justify-between items-center bg-white/70 px-2 py-1 rounded border border-amber-900/10">
+                  <span class="text-slate-500 text-[11px] font-medium">تاريخ المقابلة:</span>
+                  <span class="font-bold text-slate-900">{{ bookingSuccessData.dateDisplay }}</span>
+                </div>
+                <div class="flex justify-between items-center bg-emerald-50 px-2 py-1 rounded border border-emerald-300">
+                  <span class="text-emerald-800 text-[11px] font-bold">توقيت الحضور:</span>
+                  <span class="font-extrabold text-emerald-700 text-xs sm:text-sm">{{ bookingSuccessData.timeDisplay }}</span>
+                </div>
+                <div class="flex justify-between items-center bg-white/70 px-2 py-1 rounded border border-amber-900/10">
+                  <span class="text-slate-500 text-[11px] font-medium">صيغة المقابلة:</span>
+                  <span class="font-bold text-slate-900">{{ bookingSuccessData.type }}</span>
+                </div>
+                <div class="p-2 bg-amber-50/80 rounded border border-amber-200 text-[10px] text-amber-950 leading-relaxed">
+                  <b>المقر / الرابط:</b> {{ bookingSuccessData.locationOrLink }}
+                </div>
+              </div>
+
+              <!-- Embossed Carmine Wax Seal Stamp -->
+              <div class="mt-2.5 pt-2 border-t border-dashed border-amber-900/20 flex items-center justify-between">
+                <div class="text-[9px] text-slate-500 font-mono leading-tight">
+                  OFFICIAL DECREE<br>ISSUED & RATIFIED
+                </div>
+                <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-800 text-amber-200 text-[10px] font-bold shadow-md border border-amber-400">
+                  <span>★</span>
+                  <span>معتمد وموثق رسمياً</span>
+                  <span>★</span>
+                </div>
+              </div>
+
+              <!-- Bottom Perforation -->
+              <div class="perforated-tear-bottom text-center text-[9px] text-amber-900/50 font-mono select-none pt-2.5 mt-2 border-t border-dashed border-amber-900/20">
+                ✂ ------------------- اقطع التذكرة واحتفظ بها ------------------- ✂
+              </div>
+
+            </div>
+
+            <!-- Terminal Physical Hardware Control Buttons -->
+            <div class="mt-4 pt-3 border-t border-slate-800 space-y-2 relative z-20">
+              <button 
+                @click="printTicket"
+                class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg active:translate-y-0.5 transition"
+              >
+                <i data-lucide="printer" class="w-4 h-4"></i>
+                <span>طباعة وتنزيل التذكرة الدبلوماسية (Print Pass)</span>
+              </button>
+
+              <a 
+                :href="whatsappShareLink" 
+                target="_blank"
+                class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md active:translate-y-0.5 transition"
+              >
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                <span>إرسال تفاصيل الموعد لنفسي عبر واتساب</span>
+              </a>
+
+              <button 
+                @click="closeSuccessModal"
+                class="w-full py-2 px-4 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-xs transition text-center active:translate-y-0.5"
+              >
+                إغلاق الطابعة والعودة
+              </button>
+            </div>
+
           </div>
 
-          <!-- Action Buttons -->
-          <div class="space-y-2">
-            <a 
-              :href="whatsappShareLink" 
-              target="_blank"
-              class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md"
-            >
-              <i data-lucide="message-circle" class="w-4 h-4"></i>
-              <span>إرسال تفاصيل الموعد لنفسي عبر واتساب</span>
-            </a>
-            
-            <button 
-              @click="closeSuccessModal"
-              class="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
-            >
-              تم، العودة للصفحة
-            </button>
-          </div>
         </div>
       </div>
 
@@ -568,17 +730,32 @@
 
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
             <button 
-              @click="confirmBooking" 
+              @pointerdown="startHoldConfirm"
+              @pointerup="endHoldConfirm"
+              @pointerleave="endHoldConfirm"
+              @click="handleHoldClick"
               :disabled="isSubmitting"
-              class="w-full sm:flex-1 py-3 px-4 rounded-xl text-white font-bold text-xs shadow-md transition disabled:opacity-50 text-center"
-              :class="selectedCandidate.slotInfo ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'"
+              class="tactile-hold-btn relative overflow-hidden w-full sm:flex-1 py-3 px-4 rounded-xl text-white font-extrabold text-xs shadow-lg transition select-none text-center cursor-pointer disabled:opacity-50"
+              :class="selectedCandidate.slotInfo ? 'bg-amber-800 hover:bg-amber-700' : 'bg-emerald-800 hover:bg-emerald-700'"
             >
-              <span v-if="isSubmitting">جاري التأكيد...</span>
-              <span v-else>{{ selectedCandidate.slotInfo ? 'تأكيد تغيير الموعد إلى الموعد الجديد' : 'تأكيد الحجز الآن' }}</span>
+              <!-- Animated Fill Layer -->
+              <span 
+                class="absolute inset-y-0 right-0 pointer-events-none transition-all duration-75"
+                :class="selectedCandidate.slotInfo ? 'bg-gradient-to-l from-amber-500 to-amber-400' : 'bg-gradient-to-l from-emerald-500 to-emerald-400'"
+                :style="{ width: holdProgress + '%' }"
+              ></span>
+
+              <!-- Content Layer -->
+              <span class="relative z-10 flex items-center justify-center gap-2">
+                <i data-lucide="shield-check" class="w-4 h-4 flex-shrink-0" :class="{ 'animate-spin': isHolding || isSubmitting }"></i>
+                <span v-if="isSubmitting">جاري الاعتماد الدبلوماسي وتجهيز التذكرة...</span>
+                <span v-else-if="holdProgress > 0">استمر بالضغط للاعتماد... ({{ Math.round(holdProgress) }}%)</span>
+                <span v-else>{{ selectedCandidate.slotInfo ? 'اضغط مطولاً لاعتماد تغيير الموعد' : 'اضغط مطولاً لاعتماد الحجز وتوليد التصريح' }}</span>
+              </span>
             </button>
             <button 
               @click="slotToBook = null"
-              class="w-full sm:w-auto px-4 py-2.5 sm:py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition text-center"
+              class="w-full sm:w-auto px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-xs transition text-center active:translate-y-0.5"
             >
               إلغاء
             </button>
@@ -604,6 +781,72 @@
   <script>
     const { createApp, ref, computed, onMounted, nextTick } = Vue;
 
+    // Procedural Web Audio Synthesizer for tactile feedback
+    const tactileAudio = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+      },
+      click() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(500, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 0.04);
+          gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.04);
+        } catch(e) {}
+      },
+      printTick() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          for (let i = 0; i < 7; i++) {
+            setTimeout(() => {
+              if (!this.ctx) return;
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(1200 + Math.random() * 400, this.ctx.currentTime);
+              gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.025);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start();
+              osc.stop(this.ctx.currentTime + 0.025);
+            }, i * 90);
+          }
+        } catch(e) {}
+      },
+      stamp() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(45, this.ctx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.12);
+        } catch(e) {}
+      }
+    };
+
     createApp({
       setup() {
         const allCommittees = ref([]);
@@ -618,6 +861,55 @@
         const slotToBook = ref(null);
         const isSubmitting = ref(false);
         const bookingSuccessData = ref(null);
+        const holdProgress = ref(0);
+        const isHolding = ref(false);
+        let holdAnimFrame = null;
+
+        function startHoldConfirm(e) {
+          if (isSubmitting.value) return;
+          isHolding.value = true;
+          holdProgress.value = 0;
+          tactileAudio.click();
+          const startTime = Date.now();
+          const duration = 750;
+
+          if (holdAnimFrame) cancelAnimationFrame(holdAnimFrame);
+
+          function tick() {
+            if (!isHolding.value) return;
+            const elapsed = Date.now() - startTime;
+            const p = Math.min(100, (elapsed / duration) * 100);
+            holdProgress.value = p;
+
+            if (p >= 100) {
+              isHolding.value = false;
+              if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+              tactileAudio.stamp();
+              confirmBooking();
+            } else {
+              holdAnimFrame = requestAnimationFrame(tick);
+            }
+          }
+          holdAnimFrame = requestAnimationFrame(tick);
+        }
+
+        function endHoldConfirm() {
+          if (isSubmitting.value) return;
+          isHolding.value = false;
+          if (holdProgress.value < 100) {
+            holdProgress.value = 0;
+          }
+        }
+
+        function handleHoldClick() {
+          if (isSubmitting.value || holdProgress.value >= 100) return;
+          startHoldConfirm();
+        }
+
+        function printTicket() {
+          tactileAudio.click();
+          window.print();
+        }
 
         function onSearchInput() {
           // Reactive local search is handled strictly within current committee candidates
@@ -797,6 +1089,7 @@
               bookingSuccessData.value = data.bookingDetails;
               isRescheduling.value = false;
               slotToBook.value = null;
+              tactileAudio.printTick();
               await loadCommitteeData(selectedCommitteeSlug.value);
               selectedCandidate.value.bookingStatus = 'booked';
               selectedCandidate.value.slotId = data.bookingDetails.slotId || null;
@@ -858,6 +1151,7 @@
         });
 
         function closeSuccessModal() {
+          tactileAudio.click();
           bookingSuccessData.value = null;
         }
 
@@ -879,6 +1173,12 @@
           slotToBook,
           isSubmitting,
           bookingSuccessData,
+          holdProgress,
+          isHolding,
+          startHoldConfirm,
+          endHoldConfirm,
+          handleHoldClick,
+          printTicket,
           onSearchInput,
           totalSlotsCount,
           filteredDays,
