@@ -85,16 +85,40 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Disable client-side caching during active development/customization so browser always loads fresh UI
+// High-Performance Smart Caching Middleware:
+// 1. Static images & media (.jpg, .png, .webp, .svg, .ico, .woff2) -> Aggressive immutable 1-year cache
+// 2. HTML pages -> Instant revalidation with ETag
+// 3. Dynamic API routes -> No-store, always fresh data
 app.use((req, res, next) => {
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  res.setHeader('Surrogate-Control', 'no-store');
+  const p = req.path.toLowerCase();
+  if (/\.(jpg|jpeg|png|webp|gif|svg|ico|woff|woff2|ttf|eot)$/i.test(p)) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.removeHeader('Pragma');
+    res.removeHeader('Expires');
+  } else if (p.startsWith('/api/')) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  } else {
+    res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+    res.removeHeader('Pragma');
+    res.removeHeader('Expires');
+  }
   next();
 });
 
-app.use(express.static(path.join(__dirname, 'public'), { index: false }));
+app.use(express.static(path.join(__dirname, 'public'), {
+  index: false,
+  maxAge: '1y',
+  immutable: true,
+  setHeaders: (res, filePath) => {
+    if (/\.(jpg|jpeg|png|webp|gif|svg|ico|woff|woff2)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+    }
+  }
+}));
 
 // Arabic Day Names mapping
 

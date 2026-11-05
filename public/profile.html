@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>الملف التعريفي وسجل الأداء | نموذج محاكاة وزارة الخارجية</title>
+  <link rel="icon" type="image/jpeg" href="/logo.jpg">
+  <link rel="preload" as="image" href="/logo.jpg" type="image/jpeg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Cinzel:wght@600;700;800;900&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,6 +17,26 @@
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
+    /* Instant Touch Response & Anti-lag System */
+    html, body {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button, a, input, select, textarea, [role="button"], .cursor-pointer {
+      touch-action: manipulation !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+    button > svg, button > i, button > span, a > svg, a > i, a > span {
+      pointer-events: none;
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .hover\:scale-105:hover,
+      .hover\:scale-110:hover,
+      .hover\:scale-102:hover {
+        transform: none !important;
+      }
+    }
+
     body {
       font-family: 'Cairo', sans-serif;
       background-color: #0d0703;
@@ -1720,6 +1742,17 @@
         };
       }
     }).mount('#app');
+
+    // Register Service Worker and Background Asset Preload
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+    (function preloadAssets() {
+      const img = new Image();
+      img.src = '/logo.jpg';
+    })();
   </script>
 </body>
 </html>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>لوحة تحكم مدير القطاع | نموذج محاكاة وزارة الخارجية</title>
   <link rel="icon" type="image/jpeg" href="/logo.jpg">
+  <link rel="preload" as="image" href="/logo.jpg" type="image/jpeg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,6 +17,26 @@
   <script src="/js/chart.umd.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <style>
+    /* Instant Touch Response & Anti-lag System */
+    html, body {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button, a, input, select, textarea, [role="button"], .cursor-pointer {
+      touch-action: manipulation !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+    button > svg, button > i, button > span, a > svg, a > i, a > span {
+      pointer-events: none;
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .hover\:scale-105:hover,
+      .hover\:scale-110:hover,
+      .hover\:scale-102:hover {
+        transform: none !important;
+      }
+    }
+
     body { 
       font-family: 'Cairo', sans-serif;
       -webkit-text-size-adjust: 100%;
@@ -2166,7 +2187,7 @@
               </thead>
               <tbody class="divide-y divide-slate-100 font-medium">
                 <tr 
-                  v-for="(cand, idx) in filteredCandidates" 
+                  v-for="(cand, idx) in displayedCandidates" 
                   :key="cand.id" 
                   class="hover:bg-amber-950/20 transition-colors"
                 >
@@ -2354,7 +2375,7 @@
           <!-- Mobile Candidate Cards View (Visible on mobile < md) -->
           <div class="block md:hidden divide-y divide-slate-100">
             <div 
-              v-for="(cand, idx) in filteredCandidates" 
+              v-for="(cand, idx) in displayedCandidates" 
               :key="cand.id" 
               class="p-4 bg-[#180d05]/95 hover:bg-[#221207] border-b border-amber-600/20 transition-colors space-y-3 text-amber-100"
             >
@@ -2492,6 +2513,17 @@
 
             <div v-if="filteredCandidates.length === 0" class="py-12 text-center text-slate-400 text-xs">
               لا توجد بيانات مطابقة للبحث أو الفلتر المختار
+            </div>
+
+            <!-- Load More Pagination Button -->
+            <div v-if="filteredCandidates.length > displayedCandidates.length" class="py-5 text-center bg-[#150a04]/90 border-t border-amber-600/30">
+              <button 
+                @click="candidateDisplayLimit += 50; scheduleLucide();"
+                class="px-6 py-3 rounded-2xl btn-gold text-xs font-kufi font-black inline-flex items-center gap-2 shadow-lg transition active:scale-95 cursor-pointer"
+              >
+                <i data-lucide="chevron-down" class="w-4 h-4 text-amber-950"></i>
+                <span>عرض المزيد من الكشوف (معروض {{ displayedCandidates.length }} من إجمالي {{ filteredCandidates.length }})</span>
+              </button>
             </div>
           </div>
 
@@ -8358,6 +8390,17 @@
         const activeTab = ref('candidates');
         const copySuccess = ref(false);
 
+        // Debounced & Guarded Icon Hydration (Prevents DOM churn & click drops)
+        let iconScheduleTimer = null;
+        function scheduleLucide() {
+          if (iconScheduleTimer) clearTimeout(iconScheduleTimer);
+          iconScheduleTimer = setTimeout(() => {
+            if (window.lucide && document.querySelector('[data-lucide]')) {
+              window.lucide.createIcons();
+            }
+          }, 16);
+        }
+
         // ==========================================
         // OPERATIONS CALENDAR & TASKS MATRIX STATE
         // ==========================================
@@ -9855,6 +9898,17 @@
           }
 
           return list;
+        });
+
+        // Smart Render Windowing: Reduces initial DOM from 20,000+ nodes to ~1,000 for instantaneous tap response
+        const candidateDisplayLimit = ref(50);
+        const displayedCandidates = computed(() => {
+          return filteredCandidates.value.slice(0, candidateDisplayLimit.value);
+        });
+
+        watch(() => [filters.value.search, filters.value.status, filters.value.decision, filters.value.university, filters.value.track, selectedCommitteeId.value], () => {
+          candidateDisplayLimit.value = 50;
+          scheduleLucide();
         });
 
         function countByStatus(st) {
@@ -11996,10 +12050,24 @@
           openDelegateProfileFromRow,
           getDelegateQuizRecord,
           saveDelegateEvaluation,
-          exportSingleLectureCSV
+          exportSingleLectureCSV,
+          candidateDisplayLimit,
+          displayedCandidates,
+          scheduleLucide
         };
       }
     }).mount('#app');
+
+    // Register Service Worker and Background Asset Preload
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+    (function preloadAssets() {
+      const img = new Image();
+      img.src = '/logo.jpg';
+    })();
   </script>
 </body>
 </html>
