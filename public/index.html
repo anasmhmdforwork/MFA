@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title id="pageTitle">Official Document & Founding Declaration | MFA Simulation Model - Suez University</title>
-  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="icon" type="image/jpeg" href="/logo.jpg">
   <!-- Preload Critical Visual Assets for Instant Cache -->
-  <link rel="preload" as="image" href="/logo.png" type="image/png">
+  <link rel="preload" as="image" href="/logo.jpg" type="image/jpeg">
 
   <script>
     (function() {
@@ -16,10 +16,10 @@
     })();
   </script>
 
-  <!-- Google Fonts: Arabic (Amiri, Aref Ruqaa, Reem Kufi, Cairo) + 1670s Vintage English (IM Fell English SC, IM Fell English, Cardo) -->
+  <!-- Google Fonts: Arabic (Amiri, Aref Ruqaa, Reem Kufi, Cairo) + English Royal Serif (Cinzel, Cormorant Garamond) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Cardo:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@600;700;800;900&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Cinzel:wght@600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,700&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -136,87 +136,46 @@
        Descriptive Content & Preambles: Aref Ruqaa
        Functional Data & Fields: Cairo
        ========================================================================= */
-    /* =========================================================================
-       ARABIC TYPOGRAPHY (When NOT in English mode)
-       ========================================================================= */
-    html:not([lang="en"]) h1,
-    html:not([lang="en"]) h2,
-    html:not([lang="en"]) h3,
-    html:not([lang="en"]) h4,
-    html:not([lang="en"]) h5,
-    html:not([lang="en"]) h6,
-    html:not([lang="en"]) .font-amiri,
-    html:not([lang="en"]) .gold-gradient-title,
-    html:not([lang="en"]) .section-title,
-    html:not([lang="en"]) .font-kufi,
-    html:not([lang="en"]) .btn-gold,
-    html:not([lang="en"]) .wax-lock-badge,
-    html:not([lang="en"]) .diplomatic-badge {
+    h1, h2, h3, h4, h5, h6,
+    .font-amiri,
+    .gold-gradient-title,
+    .section-title,
+    .font-kufi,
+    .btn-gold,
+    .wax-lock-badge,
+    .diplomatic-badge {
       font-family: 'Reem Kufi', sans-serif !important;
     }
 
-    html:not([lang="en"]) .font-ruqaa,
-    html:not([lang="en"]) .ink-lead,
-    html:not([lang="en"]) [data-i18n="doc_lead_desc"],
-    html:not([lang="en"]) .parchment-lead {
+    .font-ruqaa,
+    .ink-lead,
+    [data-i18n="doc_lead_desc"],
+    .parchment-lead {
       font-family: 'Aref Ruqaa', serif !important;
     }
 
-    /* =========================================================================
-       ENGLISH LTR MODE: AUTHENTIC 17TH-CENTURY DIPLOMATIC PRESS (1670s)
-       Titles & Monumental Headings: IM Fell English SC (Oxford Press 1670)
-       Preamble Leads, Articles, Cards & Text: IM Fell English (Visible & Deeply Vintage)
-       ========================================================================= */
-    html[lang="en"],
-    html[lang="en"] body,
-    html[lang="en"] .parchment-continuous-scroll,
-    html[lang="en"] .parchment-sheet,
-    html[lang="en"] .parchment-card,
-    html[lang="en"] p,
-    html[lang="en"] span:not([class*="lucide"]):not(.lucide),
-    html[lang="en"] div,
-    html[lang="en"] li,
-    html[lang="en"] blockquote,
-    html[lang="en"] strong,
-    html[lang="en"] em,
-    html[lang="en"] b,
-    html[lang="en"] .font-ruqaa,
-    html[lang="en"] .font-cairo,
-    html[lang="en"] .ink-lead,
-    html[lang="en"] [data-i18n="doc_lead_desc"],
-    html[lang="en"] .parchment-lead {
-      font-family: 'IM Fell English', 'Cardo', serif !important;
-      letter-spacing: 0.015em;
+    /* English LTR Mode Styling Overrides */
+    html[lang="en"] body {
+      font-family: 'Cairo', 'Cormorant Garamond', sans-serif;
     }
-
-    /* Monumental Titles, Headings & Action Seals: IM Fell English SC */
+    html[lang="en"] .gold-gradient-title,
     html[lang="en"] h1,
     html[lang="en"] h2,
     html[lang="en"] h3,
     html[lang="en"] h4,
     html[lang="en"] h5,
-    html[lang="en"] h6,
-    html[lang="en"] .gold-gradient-title,
     html[lang="en"] .font-amiri,
-    html[lang="en"] .font-kufi,
-    html[lang="en"] .section-title,
-    html[lang="en"] .btn-gold,
-    html[lang="en"] .wax-lock-badge,
-    html[lang="en"] .diplomatic-badge,
-    html[lang="en"] .finial-center-seal,
-    html[lang="en"] #topScrollFinial,
-    html[lang="en"] #bottomScrollFinial,
-    html[lang="en"] #hudBrandTitle,
-    html[lang="en"] [data-i18n="hud_brand_title"] {
-      font-family: 'IM Fell English SC', serif !important;
-      letter-spacing: 0.04em !important;
+    html[lang="en"] .font-kufi {
+      font-family: 'Cinzel', serif !important;
+      letter-spacing: 0.03em;
     }
-
     html[lang="en"] .ink-lead,
-    html[lang="en"] [data-i18n="doc_lead_desc"],
-    html[lang="en"] .parchment-lead {
+    html[lang="en"] .font-ruqaa,
+    html[lang="en"] [data-i18n="doc_lead_desc"] {
+      font-family: 'Cormorant Garamond', serif !important;
       font-size: 1.25rem !important;
       line-height: 1.85 !important;
+      font-weight: 600 !important;
     }
     html[lang="en"] .diplomatic-astrolabe-nav {
       left: 20px;
@@ -388,11 +347,9 @@
         margin-left: 0;
       }
       .finial-center-seal {
-        font-size: clamp(9px, 2.5vw, 12px);
-        padding: 2px 10px;
+        font-size: 11px;
+        padding: 2px 8px;
         gap: 6px;
-        max-width: 95%;
-        white-space: nowrap;
       }
       .parchment-continuous-scroll {
         padding: 36px 18px;
@@ -1023,13 +980,13 @@
       }
 
       .finial-center-seal {
-        font-size: clamp(8px, 2.3vw, 11px) !important;
-        padding: 2px 8px !important;
+        font-size: 10px !important;
+        padding: 2px 6px !important;
         gap: 4px !important;
-        max-width: 95% !important;
+        max-width: 75% !important;
         white-space: nowrap !important;
-        overflow: visible !important;
-        letter-spacing: 0.02em !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
       }
 
       .finial-brass-ring {
@@ -1171,10 +1128,10 @@
       <div class="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
         <a href="/" class="flex items-center gap-1.5 sm:gap-2.5 min-w-0 group">
           <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-md shadow-amber-600/20 group-hover:scale-105 transition-transform shrink-0">
-            <img src="/logo.png" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-lg sm:rounded-xl">
+            <img src="/logo.jpg" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-lg sm:rounded-xl">
           </div>
           <div class="min-w-0 text-start">
-            <span class="block text-amber-800 font-bold font-kufi text-[9px] sm:text-xs tracking-wider shrink-0 whitespace-nowrap" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
+            <span class="block text-amber-800 font-bold font-kufi text-[9px] sm:text-xs tracking-wider truncate" data-i18n="hud_brand_sub">MFA SUEZ 2026</span>
             <h1 class="text-amber-950 font-black text-xs sm:text-sm md:text-base font-amiri tracking-tight leading-tight truncate" data-i18n="hud_brand_title">
               <span class="block sm:inline">نموذج محاكاة</span> <span class="block sm:inline">وزارة الخارجية المصرية</span>
             </h1>
@@ -1218,7 +1175,7 @@
       </div>
       <!-- Royal Carmine Wax Seal Medallion -->
       <div class="wax-lock-medallion">
-        <img src="/logo.png" alt="MFA Crest" class="w-14 h-14 rounded-full border-2 border-amber-300 object-cover shadow-inner">
+        <img src="/logo.jpg" alt="MFA Crest" class="w-14 h-14 rounded-full border-2 border-amber-300 object-cover shadow-inner">
       </div>
       <!-- Official Badge -->
       <div class="wax-lock-badge font-amiri" data-i18n="hero_seal_badge">المرسوم التأسيسي • معتمد رسمي</div>
@@ -1258,7 +1215,7 @@
             <div class="absolute -inset-1.5 bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 rounded-full blur-sm opacity-60"></div>
             <!-- Large Crest Container -->
             <div class="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-amber-100 via-amber-200 to-amber-300 border-4 border-amber-600/80 p-1.5 shadow-xl shadow-amber-950/20">
-              <img src="/logo.png" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-full shadow-inner">
+              <img src="/logo.jpg" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-full shadow-inner">
             </div>
           </div>
         </div>
@@ -1883,7 +1840,7 @@
 
               <!-- Pass Main Identity -->
               <div class="flex items-center gap-3 mb-3">
-                <img src="/logo.png" alt="Seal" class="w-12 h-12 rounded-full border-2 border-amber-600 shadow-md object-cover flex-shrink-0">
+                <img src="/logo.jpg" alt="Seal" class="w-12 h-12 rounded-full border-2 border-amber-600 shadow-md object-cover flex-shrink-0">
                 <div class="flex-1 min-w-0">
                   <div class="text-[10px] text-amber-800 font-bold font-kufi">جمهورية مصر العربية • نموذج المحاكاة</div>
                   <h4 class="font-extrabold text-sm sm:text-base font-amiri text-amber-950 truncate" data-i18n="s6_pass_title">بطاقة تمثيل السلك الدبلوماسي</h4>
@@ -2407,7 +2364,7 @@
     // Background Asset Preloader (Immediate memory cache)
     (function preloadPlatformAssets() {
       const img = new Image();
-      img.src = '/logo.png';
+      img.src = '/logo.jpg';
     })();
 
     // =========================================================================
@@ -3346,18 +3303,13 @@
 
     // =========================================================================
     // DIPLOMATIC SCROLL MECHANICAL UNROLL ENGINE
-    // (Top & Bottom Finials Move Apart to Unroll Parchment after 3.0s or On Click)
+    // (Top & Bottom Finials Move Apart to Unroll Parchment after 0.7s)
     // =========================================================================
     let isScrollUnrolled = false;
-    let autoUnrollTimer = null;
 
     function unrollDiplomaticScroll() {
       if (isScrollUnrolled) return;
       isScrollUnrolled = true;
-      if (autoUnrollTimer) {
-        clearTimeout(autoUnrollTimer);
-        autoUnrollTimer = null;
-      }
 
       const wrapper = document.getElementById('parchmentScrollWrapper');
       const sheet = document.getElementById('parchmentContinuousScroll');
@@ -3394,8 +3346,8 @@
     // Ensure page starts at top so the closed scroll is visible
     if (window.scrollY > 0) window.scrollTo(0, 0);
 
-    // Automatically open after exactly 3.0s (3000ms) on page load unless clicked earlier
-    autoUnrollTimer = setTimeout(unrollDiplomaticScroll, 3000);
+    // Automatically open after exactly 0.7s (700ms) on page load
+    setTimeout(unrollDiplomaticScroll, 700);
 
     // =========================================================================
     // FLOATING DIPLOMATIC CONTACT WIDGET INTERACTION ENGINE

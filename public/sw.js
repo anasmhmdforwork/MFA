@@ -1,8 +1,6 @@
 // MFA Suez Diplomatic Portal - High Speed Asset Cache Service Worker
-const CACHE_NAME = 'mfa-assets-v2';
+const CACHE_NAME = 'mfa-assets-v1';
 const PRECACHE_ASSETS = [
-  '/logo.png',
-  '/logo.webp',
   '/logo.jpg',
   '/favicon.ico'
 ];
