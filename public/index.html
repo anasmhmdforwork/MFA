@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="scroll-smooth">
+<html lang="en" dir="ltr" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title id="pageTitle">الوثيقة الرسمية والبيان التأسيسي | نموذج محاكاة وزارة الخارجية - جامعة السويس</title>
+  <title id="pageTitle">Official Document & Founding Declaration | MFA Simulation Model - Suez University</title>
   <link rel="icon" type="image/jpeg" href="/logo.jpg">
+
+  <script>
+    (function() {
+      var saved = localStorage.getItem('mfa_user_chosen_lang') || 'en';
+      document.documentElement.lang = saved;
+      document.documentElement.dir = (saved === 'ar') ? 'rtl' : 'ltr';
+    })();
+  </script>
 
   <!-- Google Fonts: Arabic (Amiri, Aref Ruqaa, Reem Kufi, Cairo) + English Royal Serif (Cinzel, Cormorant Garamond) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -956,7 +964,7 @@
         <!-- BILINGUAL LANGUAGE SWITCHER BUTTON (AR / EN) -->
         <button id="langToggleBtn" onclick="toggleLanguage()" class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-amber-200/90 hover:bg-amber-300 text-amber-950 border border-amber-600 font-bold text-xs sm:text-sm shadow-sm transition-all hover:scale-105" title="Switch Language / تغيير اللغة">
           <i data-lucide="languages" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-800"></i>
-          <span id="langBtnLabel">English</span>
+          <span id="langBtnLabel">العربية</span>
         </button>
 
         <!-- LOGIN BUTTON ONLY -->
@@ -2732,8 +2740,8 @@
       }
     };
 
-    // Current Active Language (Default from localStorage or 'ar')
-    let currentLang = localStorage.getItem('mfa_landing_lang') || 'ar';
+    // Current Active Language (Default is English 'en' for first-time visitors)
+    let currentLang = localStorage.getItem('mfa_user_chosen_lang') || 'en';
 
     // Roman / Eastern Arabic Numeral mappings for astrolabe & section badges
     const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
@@ -2741,7 +2749,6 @@
 
     function applyLanguage(lang) {
       currentLang = lang;
-      localStorage.setItem('mfa_landing_lang', lang);
 
       const html = document.documentElement;
       const isAr = lang === 'ar';
@@ -2787,6 +2794,7 @@
     function toggleLanguage() {
       tactileAudio.click();
       const nextLang = currentLang === 'ar' ? 'en' : 'ar';
+      localStorage.setItem('mfa_user_chosen_lang', nextLang);
       applyLanguage(nextLang);
     }
 
