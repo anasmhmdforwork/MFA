@@ -317,10 +317,10 @@ function logActivity(req, action, details, target) {
 // ==========================================
 
 app.post('/api/auth/login', (req, res) => {
-  const { username, password, committeeId, role } = req.body;
+  const { username, identifier, email, phone, password, committeeId, role } = req.body;
   const db = getDB();
 
-  const cleanInput = String(username || '').trim();
+  const cleanInput = String(username || identifier || email || phone || '').trim();
   const cleanPass = String(password || '').trim();
   const cleanPassNorm = normalizeDigits(cleanPass);
 
