@@ -1,321 +1,2009 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=/login">
-  <script>window.location.href = '/login';</script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>بوابة المقابلات الشخصية | نموذج محاكاة وزارة الخارجية</title>
-  <!-- Google Fonts: Cairo -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>الوثيقة الرسمية والبيان التأسيسي | نموذج محاكاة وزارة الخارجية - جامعة السويس</title>
+  <link rel="icon" type="image/jpeg" href="/logo.jpg">
+
+  <!-- Google Fonts: Amiri, Aref Ruqaa, Reem Kufi, Cairo -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Tailwind CSS CDN -->
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Reem+Kufi:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Cairo', 'sans-serif'],
+            amiri: ['Amiri', 'serif'],
+            ruqaa: ['"Aref Ruqaa"', 'serif'],
+            kufi: ['"Reem Kufi"', 'sans-serif'],
+            cairo: ['Cairo', 'sans-serif'],
           },
           colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#16a34a',
-              600: '#15803d',
-              700: '#166534',
-              800: '#14532d',
-              900: '#052e16',
-            },
-            mofa: {
+            diplomatic: {
+              ink: '#0a1728',
+              navy: '#06101e',
+              deepnavy: '#040914',
+              parchment: '#fcf8ee',
+              parchmentDark: '#f2e6cb',
               gold: '#c5a059',
-              darkgold: '#9b7b38',
-              navy: '#0f172a',
-              dark: '#090d16'
+              goldBright: '#e5be4a',
+              goldDark: '#8c6b27',
+              waxRed: '#8b1a1a',
+              waxRedDark: '#5f0f0f',
             }
           }
         }
       }
     }
   </script>
+
   <style>
+    /* ==========================================================================
+       DIPLOMATIC HISTORICAL PARCHMENT & MACRO TOP-DOWN PERSPECTIVE STYLING
+       ========================================================================== */
+    
+    :root {
+      --desk-dark: #070d18;
+      --desk-wood: #0d1624;
+      --parchment-base: #fdfaf2;
+      --parchment-shadow: #e2d1b0;
+      --gold-primary: #c5a059;
+      --gold-light: #f5e4ab;
+      --gold-dark: #8c6b27;
+      --ink-navy: #091729;
+      --ink-dark: #050d18;
+      --wax-red: #8b1818;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Cairo', sans-serif;
+      background-color: var(--desk-dark);
+      color: var(--ink-navy);
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      position: relative;
     }
-    .hero-gradient {
-      background: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e293b 100%);
+
+    /* Desk background with macro top-down lighting */
+    .diplomatic-desk-environment {
+      background: 
+        radial-gradient(circle at 50% 20%, rgba(26, 42, 68, 0.45) 0%, rgba(7, 13, 24, 0.95) 60%, #03070f 100%),
+        repeating-linear-gradient(45deg, rgba(197, 160, 89, 0.015) 0px, rgba(197, 160, 89, 0.015) 2px, transparent 2px, transparent 8px),
+        #060c16;
+      background-attachment: fixed;
+      min-height: 100vh;
+      position: relative;
     }
-    .gold-gradient-text {
-      background: linear-gradient(135deg, #fef08a 0%, #c5a059 50%, #d97706 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+
+    /* Ambient desk stationery elements (Macro Top-Down Props) */
+    .desk-prop {
+      position: fixed;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.75;
+      transition: opacity 0.4s ease;
+      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.7));
     }
-  </style>
-</head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
 
-  <!-- Top Navbar -->
-  <header class="bg-mofa-navy border-b border-slate-700/60 sticky top-0 z-50 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-900 shadow-lg shadow-amber-500/20 font-black text-xl">
-          <i data-lucide="landmark" class="w-7 h-7 text-white"></i>
-        </div>
-        <div>
-          <h1 class="text-white font-black text-lg tracking-wide leading-tight">نموذج محاكاة وزارة الخارجية</h1>
-          <p class="text-xs text-amber-400 font-medium">جامعة السويس • نظام إدارة المقابلات الشخصية 2026</p>
-        </div>
-      </div>
+    @media (max-width: 1200px) {
+      .desk-prop { display: none; }
+    }
 
-      <div class="flex items-center gap-3">
-        <a href="/book" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-sm font-semibold transition-all">
-          <i data-lucide="calendar-check" class="w-4 h-4"></i>
-          <span>حجز موعد مقابلة</span>
-        </a>
-        <a href="/login" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-sm font-bold shadow-md shadow-amber-500/20 transition-all">
-          <i data-lucide="lock" class="w-4 h-4"></i>
-          <span>دخول مديري اللجان</span>
-        </a>
-      </div>
-    </div>
-  </header>
+    /* Continuous Single Aged Parchment Scroll */
+    .parchment-scroll-wrapper {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 60px 16px 100px;
+      position: relative;
+      z-index: 20;
+    }
 
-  <!-- Hero Section -->
-  <section class="hero-gradient text-white py-16 px-4 relative overflow-hidden border-b border-slate-800">
-    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#c5a059_1px,transparent_1px)] [background-size:16px_16px]"></div>
-    
-    <div class="max-w-5xl mx-auto text-center relative z-10">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold mb-6">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        منصة تنظيم ومتابعة المقابلات الشخصية الرسمية
-      </div>
-      <h2 class="text-3xl sm:text-5xl font-black mb-6 leading-tight">
-        مرحباً بكم في منصة مقابلات <br>
-        <span class="gold-gradient-text">نموذج محاكاة وزارة الخارجية المصرية</span>
-      </h2>
-      <p class="text-slate-300 text-base sm:text-lg max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-        نظام متكامل يتيح لمرشحي اللجان اختيار مواعيد المقابلات (أونلاين وحضورياً)، ويمكن مديري القطاعات من جدولة المواعيد وتقسيمها آلياً، ومتابعة الحضور، وتسجيل التقييمات والتحويل بين اللجان بكل سهولة.
-      </p>
+    /* Top and bottom antique wooden and brass rollers */
+    .scroll-finial {
+      position: relative;
+      height: 48px;
+      width: 104%;
+      margin-left: -2%;
+      background: linear-gradient(180deg, #3d2314 0%, #1a0e08 45%, #2a180e 65%, #4a2d1a 100%);
+      border-radius: 24px;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.8),
+        inset 0 2px 4px rgba(255, 255, 255, 0.25),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      z-index: 30;
+      border: 1px solid rgba(197, 160, 89, 0.4);
+    }
 
-      <!-- Key Action Buttons -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="/book" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold text-lg shadow-xl shadow-emerald-500/25 transition-all transform hover:-translate-y-0.5">
-          <i data-lucide="calendar" class="w-6 h-6"></i>
-          <span>حجز موعد المقابلة الآن (للمتقدمين)</span>
-        </a>
-        <a href="/dashboard" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-lg transition-all">
-          <i data-lucide="layout-dashboard" class="w-6 h-6 text-amber-400"></i>
-          <span>لوحة تحكم مديري القطاعات</span>
-        </a>
-      </div>
+    .scroll-finial::before,
+    .scroll-finial::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 60px;
+      background: radial-gradient(circle, #f7e099 0%, #c5a059 40%, #7d591b 80%, #3e2808 100%);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      border: 1px solid #ffe8a3;
+    }
+    .scroll-finial::before { left: -16px; border-radius: 12px 4px 4px 12px; }
+    .scroll-finial::after { right: -16px; border-radius: 4px 12px 12px 4px; }
 
-      <!-- Quick Metrics Bar -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto mt-14 text-right">
-        <div class="bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-2xl p-4">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-slate-400 text-xs font-semibold">إجمالي المتقدمين</span>
-            <i data-lucide="users" class="w-5 h-5 text-amber-400"></i>
-          </div>
-          <div class="text-3xl font-black text-white" id="stat-total-candidates">438</div>
-          <p class="text-xs text-slate-400 mt-1">مرشح مسجل بالنموذج</p>
-        </div>
+    .finial-brass-ring {
+      width: 18px;
+      height: 52px;
+      background: linear-gradient(90deg, #7d591b, #f7e099, #c5a059, #593d0f);
+      border-radius: 3px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
 
-        <div class="bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-2xl p-4">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-slate-400 text-xs font-semibold">عدد اللجان والقطاعات</span>
-            <i data-lucide="layers" class="w-5 h-5 text-blue-400"></i>
-          </div>
-          <div class="text-3xl font-black text-white" id="stat-total-committees">9</div>
-          <p class="text-xs text-slate-400 mt-1">قطاعات تخصصية</p>
-        </div>
+    .finial-center-seal {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 20px;
+      background: rgba(10, 16, 26, 0.85);
+      border: 1px solid rgba(197, 160, 89, 0.6);
+      border-radius: 9999px;
+      color: #f7e099;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      box-shadow: 0 0 15px rgba(197, 160, 89, 0.25);
+    }
 
-        <div class="bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-2xl p-4">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-slate-400 text-xs font-semibold">المواعيد المتاحة</span>
-            <i data-lucide="clock" class="w-5 h-5 text-emerald-400"></i>
-          </div>
-          <div class="text-3xl font-black text-emerald-400" id="stat-total-slots">--</div>
-          <p class="text-xs text-slate-400 mt-1">مقسمة أونلاين وحضورياً</p>
-        </div>
+    /* THE CONTINUOUS PARCHMENT BODY */
+    .parchment-continuous-scroll {
+      position: relative;
+      background-color: var(--parchment-base);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(197, 160, 89, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 0% 50%, rgba(180, 140, 70, 0.06) 0%, transparent 30%),
+        radial-gradient(circle at 100% 50%, rgba(180, 140, 70, 0.06) 0%, transparent 30%),
+        linear-gradient(180deg, #fbf5e6 0%, #f6ebce 25%, #f9f0d8 50%, #f4e8c6 75%, #faedd0 100%);
+      box-shadow: 
+        0 30px 90px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(197, 160, 89, 0.35),
+        inset 0 0 100px rgba(168, 126, 50, 0.15),
+        inset 0 0 30px rgba(120, 80, 20, 0.08);
+      border-left: 2px solid rgba(180, 140, 70, 0.4);
+      border-right: 2px solid rgba(180, 140, 70, 0.4);
+      padding: 60px 48px;
+      color: var(--ink-navy);
+      overflow: hidden;
+    }
 
-        <div class="bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-2xl p-4">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-slate-400 text-xs font-semibold">المقابلات المنجزة</span>
-            <i data-lucide="award" class="w-5 h-5 text-purple-400"></i>
-          </div>
-          <div class="text-3xl font-black text-purple-400" id="stat-completed-interviews">--</div>
-          <p class="text-xs text-slate-400 mt-1">تم تقييمهم حتى الآن</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Committees Section -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1">
-    <div class="text-center max-w-3xl mx-auto mb-12">
-      <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mb-3">قطاعات ولجان نموذج وزارة الخارجية</h3>
-      <p class="text-slate-600 text-sm sm:text-base">
-        يمكن للمرشحين اختيار لجنتهم أدناه لحجز موعد المقابلة مباشرة، كما يمكن لرؤساء اللجان تسجيل الدخول لإدارة مواعيدهم.
-      </p>
-    </div>
-
-    <!-- Committees Grid -->
-    <div id="committees-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Loading skeletons -->
-      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm animate-pulse h-64"></div>
-      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm animate-pulse h-64"></div>
-      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm animate-pulse h-64"></div>
-    </div>
-
-    <!-- Instructions & Flow Card -->
-    <section class="mt-16 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-      <h4 class="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
-        <i data-lucide="help-circle" class="w-6 h-6 text-amber-500"></i>
-        <span>كيف تتم عملية حجز وإجراء المقابلات؟</span>
-      </h4>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-slate-700 text-sm leading-relaxed">
-        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-700 font-black flex items-center justify-center text-lg mb-3">1</div>
-          <h5 class="font-bold text-slate-900 mb-2 text-base">اختيار اللجنة والبحث عن اسمك</h5>
-          <p class="text-slate-600">
-            يدخل المتقدم على رابط حجز القطاع الخاص به، ثم يختار اسمه ورقم هاتفه المسجل للتأكد من بياناته في قاعدة بيانات المقابلات.
-          </p>
-        </div>
-
-        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-700 font-black flex items-center justify-center text-lg mb-3">2</div>
-          <h5 class="font-bold text-slate-900 mb-2 text-base">تحديد اليوم والموعد المناسب</h5>
-          <p class="text-slate-600">
-            يختار المتقدم بين المواعيد المتاحة (أونلاين عبر Google Meet أو حضورياً بالكلية)، ويحدد اليوم والساعة المناسبة لظروفه.
-          </p>
-        </div>
-
-        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
-          <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-700 font-black flex items-center justify-center text-lg mb-3">3</div>
-          <h5 class="font-bold text-slate-900 mb-2 text-base">إجراء المقابلة والتقييم</h5>
-          <p class="text-slate-600">
-            يتم حجز الموعد باسم المرشح، ويقوم رئيس القطاع بإجراء المقابلة ورصد التقييم والملاحظات والقرار النهائي أو تحويل المرشح للجنة أنسب.
-          </p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-mofa-dark text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <i data-lucide="shield-check" class="w-4 h-4 text-amber-500"></i>
-        <span>نموذج محاكاة وزارة الخارجية المصرية - جامعة السويس • جميع الحقوق محفوظة 2026</span>
-      </div>
-      <div class="flex items-center gap-4 text-slate-400">
-        <a href="/login" class="hover:text-amber-400 transition-colors">بوابة مديري اللجان</a>
-        <span>•</span>
-        <a href="/book" class="hover:text-amber-400 transition-colors">بوابة حجز الطلاب</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // Initialize icons
-    lucide.createIcons();
-
-    // Fetch live committees data & stats
-    async function loadData() {
-      try {
-        const [commRes, statsRes] = await Promise.all([
-          fetch('/api/committees').then(r => r.json()),
-          fetch('/api/stats/overview').then(r => r.json())
-        ]);
-
-        if (statsRes.success) {
-          const s = statsRes.stats;
-          document.getElementById('stat-total-candidates').innerText = s.totalCandidates || 438;
-          document.getElementById('stat-total-slots').innerText = s.availableSlots || 0;
-          document.getElementById('stat-completed-interviews').innerText = s.completedInterviews || 0;
-        }
-
-        if (commRes.success) {
-          renderCommittees(commRes.committees);
-        }
-      } catch (err) {
-        console.error('Error loading data:', err);
+    @media (max-width: 768px) {
+      .parchment-continuous-scroll {
+        padding: 36px 18px;
+      }
+      .parchment-scroll-wrapper {
+        padding: 40px 8px 80px;
       }
     }
 
-    function renderCommittees(committees) {
-      const container = document.getElementById('committees-grid');
-      container.innerHTML = '';
+    /* Historical Diplomatic Gilded Lateral Margins */
+    .parchment-continuous-scroll::before,
+    .parchment-continuous-scroll::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 14px;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(197, 160, 89, 0.6) 0px,
+        rgba(197, 160, 89, 0.6) 24px,
+        transparent 24px,
+        transparent 32px
+      );
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .parchment-continuous-scroll::before { left: 16px; border-right: 1px double rgba(197, 160, 89, 0.6); }
+    .parchment-continuous-scroll::after { right: 16px; border-left: 1px double rgba(197, 160, 89, 0.6); }
 
-      committees.forEach(comm => {
-        const st = comm.stats || {};
-        const bookedPercent = st.total > 0 ? Math.round((st.booked / st.total) * 100) : 0;
-        const completedPercent = st.total > 0 ? Math.round((st.completed / st.total) * 100) : 0;
+    /* Watermark background on parchment */
+    .parchment-watermark {
+      position: absolute;
+      top: 25%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg);
+      font-family: 'Amiri', serif;
+      font-size: clamp(60px, 12vw, 150px);
+      font-weight: 700;
+      color: rgba(197, 160, 89, 0.045);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+    }
 
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-slate-300';
+    .parchment-watermark-secondary {
+      position: absolute;
+      top: 72%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(12deg);
+      font-family: 'Amiri', serif;
+      font-size: clamp(50px, 10vw, 130px);
+      font-weight: 700;
+      color: rgba(197, 160, 89, 0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+    }
+
+    /* Section Parchment Frames */
+    .parchment-section {
+      position: relative;
+      z-index: 5;
+      padding: 48px 0;
+      border-bottom: 1px dashed rgba(197, 160, 89, 0.35);
+      transition: all 0.4s ease;
+    }
+
+    .parchment-section:last-of-type {
+      border-bottom: none;
+      padding-bottom: 24px;
+    }
+
+    /* Illuminated section header cartouche */
+    .section-cartouche {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 20px;
+      background: linear-gradient(135deg, rgba(10, 23, 40, 0.95) 0%, rgba(18, 38, 64, 0.95) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.7);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(10, 23, 40, 0.25), inset 0 0 10px rgba(212, 175, 55, 0.2);
+      color: #f7e099;
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .section-cartouche::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #c5a059, transparent);
+    }
+
+    /* Calligraphic drop-cap & numeral badges */
+    .gold-numeral-seal {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fbf0c7 0%, #d4af37 55%, #8c6b27 100%);
+      border: 2px solid #fff2bf;
+      box-shadow: 0 4px 12px rgba(140, 107, 39, 0.4), inset 0 2px 4px rgba(255,255,255,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Amiri', serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: #06111f;
+      flex-shrink: 0;
+    }
+
+    /* Typography styles */
+    .ink-navy-text {
+      color: #0a1829;
+      text-shadow: 0 0 1px rgba(10, 24, 41, 0.15);
+    }
+
+    .ink-lead {
+      font-size: 1.14rem;
+      line-height: 2.1;
+      font-weight: 500;
+      color: #112239;
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+    @media (max-width: 640px) {
+      .ink-lead {
+        font-size: 1.02rem;
+        line-height: 1.95;
+      }
+    }
+
+    .gold-gradient-title {
+      background: linear-gradient(135deg, #10243d 0%, #1f426e 50%, #0a192b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+    }
+
+    .ornamental-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 36px 0;
+      opacity: 0.85;
+    }
+    .ornamental-divider::before,
+    .ornamental-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.6), transparent);
+    }
+
+    /* Realistic Red Carmine Wax Seal */
+    .wax-seal-official {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 35% 35%, #b32727 0%, #801313 50%, #4a0909 100%);
+      border-radius: 50%;
+      box-shadow: 
+        0 10px 25px rgba(74, 9, 9, 0.6),
+        inset 0 3px 6px rgba(255, 255, 255, 0.4),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border: 3px solid #6b1010;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .wax-seal-official:hover {
+      transform: scale(1.06) rotate(4deg);
+    }
+    .wax-seal-inner {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 220, 180, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffe6d4;
+      font-size: 10px;
+      font-weight: 700;
+      text-align: center;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+
+    /* Diplomatic Content Cards placed onto parchment */
+    .parchment-card {
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(197, 160, 89, 0.35);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(10, 24, 41, 0.04), inset 0 0 15px rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .parchment-card:hover {
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(197, 160, 89, 0.65);
+      box-shadow: 0 8px 25px rgba(10, 24, 41, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* Floating Side Navigation Spine (Golden Timeline Astrolabe) */
+    .diplomatic-astrolabe-nav {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      background: rgba(6, 14, 26, 0.88);
+      backdrop-filter: blur(8px);
+      padding: 14px 8px;
+      border-radius: 30px;
+      border: 1px solid rgba(197, 160, 89, 0.4);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    }
+
+    @media (max-width: 1024px) {
+      .diplomatic-astrolabe-nav {
+        display: none;
+      }
+    }
+
+    .astrolabe-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Amiri', serif;
+      color: #c5a059;
+      background: rgba(15, 27, 45, 0.8);
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .astrolabe-dot:hover {
+      background: #c5a059;
+      color: #06101e;
+      border-color: #fce8a9;
+      transform: scale(1.15);
+    }
+
+    .astrolabe-dot.active {
+      background: radial-gradient(circle, #fde9a6 0%, #c5a059 70%, #8f6e29 100%);
+      color: #050d18;
+      border-color: #ffffff;
+      box-shadow: 0 0 12px rgba(229, 190, 74, 0.8);
+      transform: scale(1.2);
+    }
+
+    .astrolabe-tooltip {
+      position: absolute;
+      right: 42px;
+      background: #081424;
+      color: #f7e099;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(197, 160, 89, 0.5);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    .astrolabe-dot:hover .astrolabe-tooltip {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Floating Cinematic HUD (Top Bar) */
+    .cinematic-hud {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(5, 12, 22, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(197, 160, 89, 0.35);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s ease;
+    }
+
+    /* Scroll progress line */
+    .hud-progress-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #8c6b27, #f7e099, #c5a059, #ffffff);
+      box-shadow: 0 0 10px rgba(247, 224, 153, 0.8);
+      width: 0%;
+      transition: width 0.1s ease-out;
+    }
+
+    /* Print styles for authentic treaty download */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .cinematic-hud, .diplomatic-astrolabe-nav, .desk-prop, #autoGlideBtn, #audioToggleBtn {
+        display: none !important;
+      }
+      .parchment-scroll-wrapper {
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .parchment-continuous-scroll {
+        box-shadow: none !important;
+        border: none !important;
+        background: #ffffff !important;
+      }
+      .scroll-finial {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="diplomatic-desk-environment antialiased selection:bg-amber-900 selection:text-amber-100">
+
+  <!-- =========================================================================
+       MACRO TOP-DOWN DESK PROPS (Atmospheric visual stationery)
+       ========================================================================= -->
+  
+  <!-- Top Left: Antique Brass Astrolabe / Navigational Compass -->
+  <div class="desk-prop top-8 left-8" style="transform: rotate(-15deg);">
+    <svg width="140" height="140" viewBox="0 0 100 100" fill="none" class="opacity-80">
+      <circle cx="50" cy="50" r="46" stroke="#c5a059" stroke-width="2" stroke-dasharray="2 3"/>
+      <circle cx="50" cy="50" r="40" stroke="#8c6b27" stroke-width="1.5"/>
+      <circle cx="50" cy="50" r="32" stroke="#f5e4ab" stroke-width="0.8" opacity="0.6"/>
+      <line x1="50" y1="6" x2="50" y2="94" stroke="#c5a059" stroke-width="1.2"/>
+      <line x1="6" y1="50" x2="94" y2="50" stroke="#c5a059" stroke-width="1.2"/>
+      <polygon points="50,15 54,46 50,42 46,46" fill="#c5a059"/>
+      <polygon points="50,85 54,54 50,58 46,54" fill="#7a5a1e"/>
+      <circle cx="50" cy="50" r="4" fill="#f5e4ab"/>
+    </svg>
+  </div>
+
+  <!-- Bottom Right: Diplomatic Inkpot & Golden Quill Nib -->
+  <div class="desk-prop bottom-12 right-12" style="transform: rotate(25deg);">
+    <div class="relative w-28 h-28 flex items-center justify-center">
+      <!-- Inkpot base -->
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-black border-2 border-amber-600/60 shadow-2xl flex items-center justify-center">
+        <div class="w-8 h-8 rounded-full bg-slate-950 border border-amber-400/40 shadow-inner flex items-center justify-center">
+          <div class="w-4 h-4 rounded-full bg-blue-950/90 shadow-inner"></div>
+        </div>
+      </div>
+      <!-- Feather Quill resting across -->
+      <div class="absolute -top-12 -right-4 w-3 h-36 origin-bottom transform rotate-45">
+        <div class="w-full h-full bg-gradient-to-t from-amber-400 via-amber-100 to-amber-700/80 rounded-full shadow-lg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Left Center: Official Carmine Wax Stamp Matrix -->
+  <div class="desk-prop top-1/2 left-6 transform -translate-y-1/2 -rotate-12">
+    <div class="w-20 h-28 flex flex-col items-center">
+      <div class="w-7 h-16 bg-gradient-to-r from-amber-900 via-amber-700 to-amber-950 rounded-t-full shadow-lg border border-amber-600/40"></div>
+      <div class="w-16 h-8 bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-700 rounded-lg shadow-xl border border-yellow-200/50 flex items-center justify-center">
+        <span class="text-[9px] font-black tracking-widest text-slate-950">MFA SM</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       FLOATING TOP CINEMATIC HEADS-UP DISPLAY (HUD)
+       ========================================================================= -->
+  <header class="cinematic-hud">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+      
+      <!-- Right: Crest and Title -->
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            <img src="/logo.jpg" alt="شعار نموذج محاكاة الخارجية" class="w-full h-full object-cover rounded-xl">
+          </div>
+          <div class="text-right">
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 font-bold font-kufi text-xs tracking-wider">MFA SUEZ 2026</span>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">الوثيقة الرسمية</span>
+            </div>
+            <h1 class="text-white font-black text-sm sm:text-base font-amiri tracking-wide leading-tight">
+              نموذج محاكاة وزارة الخارجية المصرية
+            </h1>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center: Live Section Tracker -->
+      <div class="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-slate-900/80 border border-amber-500/30 shadow-inner">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span id="hudSectionBadge" class="text-xs font-semibold text-amber-200">
+          البند الأول: الهوية والمنطلق المؤسسي
+        </span>
+        <span class="text-slate-600 text-xs">|</span>
+        <span id="hudProgressPercent" class="text-xs font-bold text-amber-400 font-mono">0%</span>
+      </div>
+
+      <!-- Left: Interactive Controls & Portal Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Silent Cinematic Auto-Glide Toggle -->
+        <button id="autoGlideBtn" onclick="toggleAutoGlide()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold transition-all shadow-sm" title="تمرير سينمائي تلقائي صامت">
+          <i data-lucide="play" id="glideIcon" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span id="glideLabel">العرض السينمائي</span>
+        </button>
+
+        <!-- Speed switch (hidden until auto-glide active) -->
+        <button id="glideSpeedBtn" onclick="toggleGlideSpeed()" class="hidden sm:inline-flex items-center px-2 py-1.5 rounded-lg bg-slate-800 text-amber-400 text-xs font-bold border border-slate-700" title="سرعة التمرير">
+          1x
+        </button>
+
+        <!-- Audio ambience toggle (Silent by default) -->
+        <button id="audioToggleBtn" onclick="toggleAmbientSound()" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400/80 hover:text-amber-300 border border-slate-700 text-xs transition-all" title="مؤثر صوتي للمخطوطة (صامت افتراضياً)">
+          <i data-lucide="volume-x" id="audioIcon" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Direct Portal Pathways -->
+        <a href="/book" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs sm:text-sm shadow-md shadow-amber-500/25 transition-all">
+          <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
+          <span>حجز مقابلة</span>
+        </a>
+
+        <a href="/login" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 text-xs font-semibold transition-all">
+          <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="hidden sm:inline">دخول اللجان</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Live Gold Scroll Progress Line -->
+    <div id="hudProgressBar" class="hud-progress-line"></div>
+  </header>
+
+
+  <!-- =========================================================================
+       FLOATING LATERAL GOLDEN ASTROLABE (Quick Jump Navigation 1-10)
+       ========================================================================= -->
+  <nav class="diplomatic-astrolabe-nav" aria-label="فهرس بنود الوثيقة">
+    <div class="text-[10px] font-bold text-amber-400/80 uppercase tracking-widest mb-1 font-kufi">البنود</div>
+    
+    <button class="astrolabe-dot active" data-target="section-1" onclick="scrollToSection('section-1')">
+      ١
+      <span class="astrolabe-tooltip">١. الهوية والمنطلق المؤسسي</span>
+    </button>
+    <button class="astrolabe-dot" data-target="section-2" onclick="scrollToSection('section-2')">
+      ٢
+      <span class="astrolabe-tooltip">٢. الرؤية والفلسفة الحاكمة</span>
+    </button>
+    <button class="astrolabe-dot" data-target="section-3" onclick="scrollToSection('section-3')">
+      ٣
+      <span class="astrolabe-tooltip">٣. الأهداف الوطنية والمهنية</span>
+    </button>
+    <button class="astrolabe-dot" data-target="section-4" onclick="scrollToSection('section-4')">
+      ٤
+      <span class="astrolabe-tooltip">٤. هيكل تنظيمي يحاكي الدولة</span>
+    </button>
+    <button class="astrolabe-dot" data-target="section-5" onclick="scrollToSection('section-5')">
+      ٥
+      <span class="astrolabe-tooltip">٥. القطاعات التخصصية ودوائر العمل</span>
+    </button>
+    <button class="astrolabe-dot" data-target="section-6" onclick="scrollToSection('section-6')">
+      ٦
+      <span class="astrolabe-tooltip">٦. نظام التدرج الوظيفي الدبلوماسي</span>
+    </button>
+    <button class="astrolabe-dot" data-target="section-7" onclick="scrollToSection('section-7')">
+      ٧
+      <span class="astrolabe-tooltip">٧. منظومة تدريبية خماسية المسارات</span>
+    </button>
+    <button class="astrolabe-dot" data-target="section-8" onclick="scrollToSection('section-8')">
+      ٨
+      <span class="astrolabe-tooltip">٨. منهجية الأسبوع التدريبي والتطبيق</span>
+    </button>
+    <button class="astrolabe-dot" data-target="section-9" onclick="scrollToSection('section-9')">
+      ٩
+      <span class="astrolabe-tooltip">٩. دراسات الحالة وإدارة الأزمات</span>
+    </button>
+    <button class="astrolabe-dot" data-target="section-10" onclick="scrollToSection('section-10')">
+      ١٠
+      <span class="astrolabe-tooltip">١٠. الحوكمة والانفتاح والشراكة</span>
+    </button>
+  </nav>
+
+
+  <!-- =========================================================================
+       THE CONTINUOUS PARCHMENT SCROLL CONTAINER (Macro Top-Down View)
+       ========================================================================= -->
+  <main class="parchment-scroll-wrapper">
+
+    <!-- TOP WOODEN & BRASS SCROLL ROLLER FINIAL -->
+    <div class="scroll-finial">
+      <div class="finial-brass-ring"></div>
+      <div class="finial-center-seal">
+        <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
+        <span>وثيقة دبلوماسية معتمدة • جامعة السويس • 2026</span>
+      </div>
+      <div class="finial-brass-ring"></div>
+    </div>
+
+    <!-- THE CONTINUOUS SINGLE AGED PARCHMENT SHEET -->
+    <article class="parchment-continuous-scroll">
+      
+      <!-- Watermark Backgrounds -->
+      <div class="parchment-watermark">وزارة الخارجية المصرية</div>
+      <div class="parchment-watermark-secondary">MFA SIMULATION MODEL</div>
+
+      <!-- =====================================================================
+           DOCUMENT PREAMBLE / MASTHEAD (Historical Diplomatic Decree Format)
+           ===================================================================== -->
+      <header class="text-center pb-12 pt-4 relative z-10 border-b-2 border-amber-700/30">
         
-        card.innerHTML = `
-          <div>
-            <!-- Header -->
-            <div class="flex items-start justify-between gap-3 mb-4">
-              <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-md shadow-slate-200" style="background-color: ${comm.color}">
-                <i data-lucide="${comm.icon || 'landmark'}" class="w-6 h-6"></i>
-              </div>
-              <span class="text-xs font-bold px-3 py-1 rounded-full ${comm.badge}">
-                ${st.total} مرشح
-              </span>
-            </div>
+        <!-- Sacred Invocation in Classical Calligraphy -->
+        <div class="font-amiri text-2xl sm:text-3xl text-amber-900/90 font-bold mb-4 tracking-wider">
+          بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+        </div>
 
-            <h4 class="text-lg font-black text-slate-900 mb-2 leading-snug group-hover:text-amber-600 transition-colors">
-              ${comm.name}
-            </h4>
-            <p class="text-xs text-slate-500 mb-5 leading-relaxed line-clamp-2">
-              ${comm.description}
+        <!-- Official Republic & University Heading -->
+        <div class="flex flex-col items-center justify-center gap-1.5 mb-6 text-slate-800">
+          <span class="font-kufi text-xs sm:text-sm font-semibold tracking-widest text-amber-950 uppercase">
+            جمهورية مصر العربية • وزارة التعليم العالي والبحث العلمي
+          </span>
+          <span class="font-amiri text-base sm:text-xl font-bold text-slate-900">
+            جامعة السويس • كلية السياسة والاقتصاد
+          </span>
+          <span class="font-ruqaa text-sm text-amber-900 font-semibold">
+            نموذج محاكاة وزارة الخارجية المصرية (MFA SM)
+          </span>
+        </div>
+
+        <!-- Official Central Medallion -->
+        <div class="inline-flex flex-col items-center justify-center p-4 rounded-2xl bg-amber-900/5 border border-amber-600/30 shadow-inner mb-6">
+          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 border-2 border-amber-600/60 p-1 shadow-md mb-2">
+            <img src="/logo.jpg" alt="ختم النسر والنموذج" class="w-full h-full object-cover rounded-full">
+          </div>
+          <div class="font-amiri text-xs font-bold text-amber-950">
+            وثيقة التأسيس والبيان الاستراتيجي الشامل للدبلوماسية المصرية الشبابية
+          </div>
+          <div class="text-[11px] text-slate-600 font-mono mt-0.5">
+            Ref: MFA-SU/DECREE-2026/01 • Macro Official Protocol
+          </div>
+        </div>
+
+        <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black font-amiri gold-gradient-title leading-tight mb-4">
+          المرسوم التأسيسي والإطار المفاهيمي العام
+        </h2>
+        
+        <p class="max-w-2xl mx-auto font-ruqaa text-base sm:text-lg text-amber-950/80 leading-relaxed">
+          وثيقة رسمية جامعة تشرح الهيكل، الرؤية، الأهداف الوطنية، والمنظومة التدريبية لنموذج محاكاة وزارة الخارجية بجامعة السويس.
+        </p>
+
+        <!-- Ornate Calligraphic Separator -->
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-xl font-bold">❦ ❖ ❦</span>
+        </div>
+      </header>
+
+
+      <!-- =====================================================================
+           SECTION 1: الهوية والمنطلق المؤسسي
+           ===================================================================== -->
+      <section id="section-1" class="parchment-section scroll-mt-28" data-index="1">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">١</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="landmark" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">وثيقة التأسيس والمنطلق المؤسسي</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ١. الهوية والمنطلق المؤسسي
+              </h3>
+            </div>
+          </div>
+          
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="stamp" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE I: IDENTITY & ORIGIN</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            نحن <strong>"نموذج محاكاة وزارة الخارجية بجامعة السويس" (MFA SM)</strong>، مبادرة أكاديمية طلابية رائدة تنطلق من رحم <em>كلية السياسة والاقتصاد بجامعة السويس</em>. يمثل نموذجنا منصة تعليمية تطبيقية معتمدة تهدف إلى كسر الحاجز التقليدي بين قاعات المحاضرات النظرية والواقع العملي للسياسة الدولية، لنقدم تجربة تحاكي بدقة بيئة العمل الدبلوماسي والمؤسسي المصري بكل ما تحمله من ضغوط وتحديات.
+          </p>
+        </div>
+
+        <!-- Accompanying Visual Diplomatic Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="parchment-card text-center border-t-2 border-t-amber-600">
+            <div class="w-10 h-10 mx-auto rounded-full bg-amber-500/15 flex items-center justify-center text-amber-800 mb-2">
+              <i data-lucide="building-2" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-amiri font-bold text-base text-slate-900 mb-1">المنبت الأكاديمي</h4>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              كلية السياسة والاقتصاد بجامعة السويس — معقل الفكر السياسي والتحليل الجيواقتصادي في إقليم قناة السويس.
             </p>
+          </div>
 
-            <!-- Progress Bar -->
-            <div class="bg-slate-100 rounded-xl p-3 mb-5 border border-slate-100">
-              <div class="flex justify-between items-center text-xs mb-1.5 font-bold">
-                <span class="text-slate-600">نسبة الحجز</span>
-                <span class="text-slate-900">${st.booked} من ${st.total} (${bookedPercent}%)</span>
+          <div class="parchment-card text-center border-t-2 border-t-blue-700">
+            <div class="w-10 h-10 mx-auto rounded-full bg-blue-500/15 flex items-center justify-center text-blue-900 mb-2">
+              <i data-lucide="scale" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-amiri font-bold text-base text-slate-900 mb-1">منصة تطبيقية معتمدة</h4>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              كسر رتابة التلقين النظري والانتقال إلى الصياغات الميدانية وصناعة القرار السياسي في البيئات الواقعية.
+            </p>
+          </div>
+
+          <div class="parchment-card text-center border-t-2 border-t-amber-800">
+            <div class="w-10 h-10 mx-auto rounded-full bg-amber-800/15 flex items-center justify-center text-amber-950 mb-2">
+              <i data-lucide="flag" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-amiri font-bold text-base text-slate-900 mb-1">بيئة الدبلوماسية المصرية</h4>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              محاكاة كاملة لكافة ضغوطات الدبلوماسية المصرية العريقة ومقتضيات حفظ توازنات الدولة والمصالح الحيوية.
+            </p>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-sm font-semibold">◈ ◈ ◈</span>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           SECTION 2: الرؤية والفلسفة الحاكمة
+           ===================================================================== -->
+      <section id="section-2" class="parchment-section scroll-mt-28" data-index="2">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">٢</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="compass" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">المثلث الاستراتيجي للدبلوماسية</span>
               </div>
-              <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                <div class="h-full rounded-full transition-all duration-500" style="width: ${bookedPercent}%; background-color: ${comm.color}"></div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ٢. الرؤية والفلسفة الحاكمة
+              </h3>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE II: GOVERNING PHILOSOPHY</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            تتأسس فلسفتنا على ثلاثة محاور متكاملة هي: <strong>المعرفة، والمحاكاة، والخبرة</strong>؛ حيث نتحرك مع الطالب في مسار منهجي يبدأ بالتعلم، ثم المحاكاة، فالتطبيق، وصولاً إلى التقييم والتطوير. نحن لا نكتفي بدراسة نظريات العلاقات الدولية، بل نضع العضو في قلب مواقف وسيناريوهات افتراضية تتطلب منه تحليل القضايا، وتقدير المصالح، وصياغة أوراق السياسات، وإدارة المفاوضات تحت ضغط المتغيرات المتسارعة.
+          </p>
+        </div>
+
+        <!-- Interactive Diplomatic Triad Diagram -->
+        <div class="parchment-card p-6 bg-gradient-to-br from-amber-50/70 to-slate-50/80 border-2 border-amber-600/30">
+          <div class="text-center mb-4">
+            <h4 class="font-amiri font-bold text-lg text-slate-900">المحاور الثلاثة المتكاملة للتأهيل الدبلوماسي</h4>
+            <p class="text-xs text-slate-600 font-ruqaa">اضغط على المحور لاستعراض مساره العملي داخل النموذج</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div onclick="selectTriad(1)" id="triad-btn-1" class="cursor-pointer p-4 rounded-xl border-2 border-amber-500 bg-white shadow-md text-center transition-all">
+              <div class="w-12 h-12 mx-auto rounded-full bg-amber-100 border border-amber-400 flex items-center justify-center text-amber-800 font-bold text-lg font-amiri mb-2">
+                ١
               </div>
-              <div class="flex justify-between items-center text-[11px] text-slate-500 mt-2 font-medium">
-                <span>المواعيد المتاحة: <b class="text-emerald-600">${st.availableSlots}</b></span>
-                <span>المقابلات المنجزة: <b class="text-blue-600">${st.completed}</b></span>
+              <h5 class="font-amiri font-bold text-base text-slate-900">المعرفة</h5>
+              <p class="text-xs text-slate-600 mt-1">القاعدة النظرية وفقه السياسة الدولية ومحددات الأمن القومي.</p>
+            </div>
+
+            <div onclick="selectTriad(2)" id="triad-btn-2" class="cursor-pointer p-4 rounded-xl border border-amber-300/60 bg-amber-50/50 hover:bg-white text-center transition-all">
+              <div class="w-12 h-12 mx-auto rounded-full bg-amber-100/60 border border-amber-300 flex items-center justify-center text-amber-800 font-bold text-lg font-amiri mb-2">
+                ٢
+              </div>
+              <h5 class="font-amiri font-bold text-base text-slate-900">المحاكاة</h5>
+              <p class="text-xs text-slate-600 mt-1">السيناريوهات الافتراضية وتمثيل الدول وجلسات التفاوض الحي.</p>
+            </div>
+
+            <div onclick="selectTriad(3)" id="triad-btn-3" class="cursor-pointer p-4 rounded-xl border border-amber-300/60 bg-amber-50/50 hover:bg-white text-center transition-all">
+              <div class="w-12 h-12 mx-auto rounded-full bg-amber-100/60 border border-amber-300 flex items-center justify-center text-amber-800 font-bold text-lg font-amiri mb-2">
+                ٣
+              </div>
+              <h5 class="font-amiri font-bold text-base text-slate-900">الخبرة</h5>
+              <p class="text-xs text-slate-600 mt-1">صياغة أوراق السياسات وإدارة الأزمات تحت ضغط المتغيرات.</p>
+            </div>
+          </div>
+
+          <!-- Flow Progression Step Banner -->
+          <div class="mt-6 pt-4 border-t border-amber-600/20 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs font-bold text-amber-950 font-kufi">
+            <span class="px-3 py-1 bg-amber-200/50 rounded-full border border-amber-400">١. التعلم</span>
+            <span class="text-amber-600">➔</span>
+            <span class="px-3 py-1 bg-amber-200/50 rounded-full border border-amber-400">٢. المحاكاة</span>
+            <span class="text-amber-600">➔</span>
+            <span class="px-3 py-1 bg-amber-200/50 rounded-full border border-amber-400">٣. التطبيق</span>
+            <span class="text-amber-600">➔</span>
+            <span class="px-3 py-1 bg-amber-500 text-slate-950 rounded-full shadow-sm">٤. التقييم والتطوير</span>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-sm font-semibold">◈ ◈ ◈</span>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           SECTION 3: الأهداف الوطنية والمهنية
+           ===================================================================== -->
+      <section id="section-3" class="parchment-section scroll-mt-28" data-index="3">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">٣</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="target" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">الرباعية الاستراتيجية المتناغمة</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ٣. الأهداف الوطنية والمهنية
+              </h3>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="award" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE III: STRATEGIC QUAD</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            نسعى من خلال هذا الكيان إلى تحقيق رباعية متناغمة من الأهداف <strong>الأكاديمية والمهنية والقيادية والوطنية</strong>. فإلى جانب إتقان فنون الكتابة الدبلوماسية وقواعد البروتوكول والمراسم، نركز بعمق على تعزيز وعي الشباب المصري بمحددات الأمن القومي ومكانة مصر المحورية في محيطها الإقليمي والدولي، وإعداد كوادر شابة تدرك كيف تُصاغ المواقف الخارجية انطلاقاً من المصلحة الوطنية العليا.
+          </p>
+        </div>
+
+        <!-- Four Sovereign Pillars Matrix -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          <!-- Pillar 1: National -->
+          <div class="parchment-card border-r-4 border-r-red-700">
+            <div class="flex items-center gap-2 mb-2 text-red-900">
+              <i data-lucide="shield" class="w-5 h-5"></i>
+              <h4 class="font-amiri font-bold text-lg">الركن الوطني</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              تعزيز وعي الشباب المصري بمحددات الأمن القومي، وإدراك مكانة مصر المركزية ودورها التاريخي في حماية التوازنات الإقليمية.
+            </p>
+          </div>
+
+          <!-- Pillar 2: Professional -->
+          <div class="parchment-card border-r-4 border-r-amber-600">
+            <div class="flex items-center gap-2 mb-2 text-amber-900">
+              <i data-lucide="feather" class="w-5 h-5"></i>
+              <h4 class="font-amiri font-bold text-lg">الركن المهني</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              إتقان فنون التحرير الدبلوماسي وصياغة المذكرات الرسمية، واستيعاب قواعد المراسم (Protocol & Etiquette) الدولية.
+            </p>
+          </div>
+
+          <!-- Pillar 3: Leadership -->
+          <div class="parchment-card border-r-4 border-r-blue-700">
+            <div class="flex items-center gap-2 mb-2 text-blue-900">
+              <i data-lucide="crown" class="w-5 h-5"></i>
+              <h4 class="font-amiri font-bold text-lg">الركن القيادي</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              بناء شخصية مفاوضة متزنة، قادرة على العمل تحت الضغط، وفهم آليات اتخاذ القرار وصياغة المواقف المحكمة.
+            </p>
+          </div>
+
+          <!-- Pillar 4: Academic -->
+          <div class="parchment-card border-r-4 border-r-emerald-700">
+            <div class="flex items-center gap-2 mb-2 text-emerald-900">
+              <i data-lucide="book-marked" class="w-5 h-5"></i>
+              <h4 class="font-amiri font-bold text-lg">الركن الأكاديمي</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              تأصيل أدوات البحث العلمي الجيوسياسي، ومقاربة القضايا الدولية من منظور منهجي محايد ورصين.
+            </p>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-sm font-semibold">◈ ◈ ◈</span>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           SECTION 4: هيكل تنظيمي يحاكي الدولة
+           ===================================================================== -->
+      <section id="section-4" class="parchment-section scroll-mt-28" data-index="4">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">٤</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="network" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">التراتبية الإدارية والانضباط المؤسسي</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ٤. هيكل تنظيمي يحاكي الدولة
+              </h3>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="git-branch" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE IV: STATE HIERARCHY</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            نُدار من خلال لائحة تنظيمية صارمة تحاكي التراتبية الإدارية لوزارة الخارجية المصرية؛ إذ يقود النموذج <strong>"رئيس النموذج" (بمثابة وزير الخارجية)</strong>، ويعاونه <strong>ثلاثة نواب متخصصون</strong> يشرفون على اللجان الأكاديمية والتنظيمية والشؤون العامة، إلى جانب <strong>متحدث إعلامي رسمي</strong> يدير فريقاً للإعلام واللغات، و<strong>مساعدين للوزير</strong> يترأسون القطاعات التخصصية، مما يرسخ الانضباط المؤسسي ويمنع تضارب الاختصاصات.
+          </p>
+        </div>
+
+        <!-- Visual Hierarchy Organogram Tree -->
+        <div class="parchment-card p-6 bg-amber-50/50 border border-amber-600/40">
+          <div class="text-center mb-6">
+            <span class="px-3 py-1 rounded-full bg-slate-900 text-amber-300 font-bold text-xs font-kufi border border-amber-500/40">
+              المخطط الهيكلي الرسمي لإدارة النموذج
+            </span>
+          </div>
+
+          <!-- Top Level: President / Minister -->
+          <div class="flex justify-center mb-6">
+            <div class="p-4 rounded-xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-2 border-amber-500 shadow-lg text-center max-w-sm w-full">
+              <div class="inline-flex p-2 rounded-full bg-amber-500/20 text-amber-400 mb-1">
+                <i data-lucide="crown" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-amiri font-bold text-lg text-white">رئيس النموذج</h4>
+              <p class="text-xs text-amber-300 font-semibold">(بمثابة وزير الخارجية المصري)</p>
+              <div class="mt-2 text-[11px] text-slate-300 border-t border-slate-700/80 pt-1">
+                القيادة الاستراتيجية العليا وإقرار المخرجات والسياسات
               </div>
             </div>
           </div>
 
-          <!-- Actions -->
-          <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100">
-            <a href="/book/${comm.slug}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition-all">
-              <i data-lucide="calendar" class="w-4 h-4"></i>
-              <span>حجز موعد</span>
-            </a>
-            <a href="/login?comm=${comm.slug}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all">
-              <i data-lucide="log-in" class="w-4 h-4 text-slate-500"></i>
-              <span>دخول الإدارة</span>
-            </a>
-          </div>
-        `;
+          <!-- Connecting line down -->
+          <div class="w-0.5 h-6 bg-amber-600 mx-auto -mt-6 mb-6"></div>
 
-        container.appendChild(card);
+          <!-- Second Level: 3 Specialized Deputies + Official Spokesperson -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+            <!-- Deputy Academic -->
+            <div class="p-3 rounded-lg bg-white border border-amber-500/50 shadow-sm text-center">
+              <div class="text-amber-800 font-bold text-sm font-amiri">نائب الشؤون الأكاديمية</div>
+              <div class="text-[11px] text-slate-600 mt-1">الإشراف على المناهج والبحوث والتدريب التخصصي</div>
+            </div>
+
+            <!-- Deputy Organizing -->
+            <div class="p-3 rounded-lg bg-white border border-amber-500/50 shadow-sm text-center">
+              <div class="text-amber-800 font-bold text-sm font-amiri">نائب الشؤون التنظيمية</div>
+              <div class="text-[11px] text-slate-600 mt-1">إدارة اللوجستيات والمراسم وقاعات المحاكاة</div>
+            </div>
+
+            <!-- Deputy General Affairs -->
+            <div class="p-3 rounded-lg bg-white border border-amber-500/50 shadow-sm text-center">
+              <div class="text-amber-800 font-bold text-sm font-amiri">نائب الشؤون العامة</div>
+              <div class="text-[11px] text-slate-600 mt-1">المتابعة والتنسيق الداخلي والرقابة الإدارية</div>
+            </div>
+
+            <!-- Official Spokesperson -->
+            <div class="p-3 rounded-lg bg-gradient-to-br from-amber-100 to-amber-50 border border-amber-500 shadow-sm text-center">
+              <div class="text-slate-900 font-bold text-sm font-amiri">المتحدث الإعلامي الرسمي</div>
+              <div class="text-[11px] text-slate-700 mt-1">إدارة فريق الإعلام واللغات الأجنبية الحية والبيانات الصحفية</div>
+            </div>
+          </div>
+
+          <!-- Third Level: Assistant Ministers (Sectors Chiefs) -->
+          <div class="p-3 rounded-xl bg-slate-900 text-amber-200 border border-amber-500/30 text-center">
+            <div class="flex items-center justify-center gap-2 font-amiri font-bold text-sm text-amber-400">
+              <i data-lucide="layers" class="w-4 h-4"></i>
+              <span>مساعدو الوزير — رؤساء القطاعات التخصصية</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-1">
+              قيادة القطاعات الجغرافية والوظيفية، وإدارة فرق العمل الأكاديمية والتنظيمية والإعلامية داخل كل قطاع.
+            </p>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-sm font-semibold">◈ ◈ ◈</span>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           SECTION 5: القطاعات التخصصية ودوائر العمل
+           ===================================================================== -->
+      <section id="section-5" class="parchment-section scroll-mt-28" data-index="5">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">٥</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="globe" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">دوائر الدبلوماسية المصرية</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ٥. القطاعات التخصصية ودوائر العمل
+              </h3>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE V: DIPLOMATIC CIRCLES</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            يتوزع عملنا الأكاديمي والتطبيقي عبر قطاعات تخصصية تعكس دوائر اهتمام السياسة الخارجية، وتشمل: <strong>قطاع الشؤون العربية، وقطاع الشؤون الأمريكية، وقطاع الشؤون متعددة الأطراف والأمن الدولي، وقطاع الشؤون الاقتصادية، وقطاع البحوث والتخطيط وإدارة الأزمات</strong> (مع امتداد الدائرة الأكاديمية لتشمل <em>الشؤون الأفريقية والأوروبية والآسيوية والقانونية</em>). ويضم كل قطاع مزيجاً متناغماً من الكوادر الأكاديمية والتنظيمية والإعلامية لضمان تكامل الأداء.
+          </p>
+        </div>
+
+        <!-- Interactive Diplomatic Circles Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+          
+          <div class="parchment-card border-r-4 border-r-emerald-600">
+            <div class="flex items-center gap-2 text-emerald-900 mb-1">
+              <i data-lucide="map-pin" class="w-4 h-4"></i>
+              <h4 class="font-amiri font-bold text-base">قطاع الشؤون العربية</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              الدائرة الحيوية المركزية: متابعة قضايا الشرق الأوسط، العمل العربي المشترك، والأمن القومي العربي.
+            </p>
+          </div>
+
+          <div class="parchment-card border-r-4 border-r-blue-600">
+            <div class="flex items-center gap-2 text-blue-900 mb-1">
+              <i data-lucide="anchor" class="w-4 h-4"></i>
+              <h4 class="font-amiri font-bold text-base">قطاع الشؤون الأمريكية</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              العلاقات الثنائية الاستراتيجية، توازنات القوى الكبرى، والسياسة الخارجية للولايات المتحدة ودول الأمريكيتين.
+            </p>
+          </div>
+
+          <div class="parchment-card border-r-4 border-r-indigo-700">
+            <div class="flex items-center gap-2 text-indigo-950 mb-1">
+              <i data-lucide="landmark" class="w-4 h-4"></i>
+              <h4 class="font-amiri font-bold text-base">شؤون متعددة الأطراف والأمن الدولي</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              أروقة الأمم المتحدة، مجلس الأمن الدولي، معاهدات نزع السلاح، والمنظمات والتحالفات الدولية.
+            </p>
+          </div>
+
+          <div class="parchment-card border-r-4 border-r-amber-600">
+            <div class="flex items-center gap-2 text-amber-900 mb-1">
+              <i data-lucide="trending-up" class="w-4 h-4"></i>
+              <h4 class="font-amiri font-bold text-base">قطاع الشؤون الاقتصادية</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              الدبلوماسية الاقتصادية، جذب الاستثمارات، تجمعات البريكس، والتجارة الدولية وممرات الطاقة والتنمية.
+            </p>
+          </div>
+
+          <div class="parchment-card border-r-4 border-r-rose-700">
+            <div class="flex items-center gap-2 text-rose-950 mb-1">
+              <i data-lucide="activity" class="w-4 h-4"></i>
+              <h4 class="font-amiri font-bold text-base">البحوث والتخطيط وإدارة الأزمات</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              خلية التفكير الاستراتيجي والإنذار المبكر، محاكاة غرف الطوارئ، ورسم سيناريوهات الاستجابة الدبلوماسية العاجلة.
+            </p>
+          </div>
+
+          <div class="parchment-card border-r-4 border-r-slate-800 bg-amber-100/40">
+            <div class="flex items-center gap-2 text-slate-900 mb-1">
+              <i data-lucide="compass" class="w-4 h-4 text-amber-700"></i>
+              <h4 class="font-amiri font-bold text-base">الدوائر الممتدة التخصصية</h4>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              الشؤون الأفريقية (حوض النيل والاتحاد الأفريقي) • الشؤون الأوروبية • الشؤون الآسيوية • الشؤون القانونية والمعاهدات.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-sm font-semibold">◈ ◈ ◈</span>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           SECTION 6: نظام التدرج الوظيفي الدبلوماسي
+           ===================================================================== -->
+      <section id="section-6" class="parchment-section scroll-mt-28" data-index="6">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">٦</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">مراتب السلك الدبلوماسي الرفيع</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ٦. نظام التدرج الوظيفي الدبلوماسي
+              </h3>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE VI: CAREER SYSTEM</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            ابتكرنا نظاماً تقييمياً فريداً يحاكي السلك الدبلوماسي الحقيقي، حيث يبدأ العضو مسيرته برتبة <strong>"ملحق دبلوماسي"</strong>، ويتدرج بناءً على كفاءته والتزامه وجودة مخرجاته البحثية عبر رتب <strong>(سكرتير ثالث، وسكرتير ثانٍ، وسكرتير أول)</strong> في فئة الأعضاء العاديين، وصولاً إلى فئة الأعضاء المتميزين برتب <strong>"مستشار، ووزير مفوض، وسفير"</strong>، وهي الرتب الرفيعة التي يؤهل بلوغها للمشاركة في المحاكاة الختامية الكبرى وتمثيل النموذج في الوفود الخارجية.
+          </p>
+        </div>
+
+        <!-- Career Ladder Visualization -->
+        <div class="parchment-card p-6 bg-gradient-to-b from-white to-amber-50/60 border-2 border-amber-600/30">
+          
+          <div class="flex items-center justify-between border-b border-amber-600/20 pb-3 mb-4">
+            <span class="font-amiri font-bold text-slate-900 text-base">سلم الرتب الدبلوماسية الرسمية (Diplomatic Cadre Ranks)</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-900 font-bold font-kufi">٧ رتب محاكاة</span>
+          </div>
+
+          <!-- Ranks Grid -->
+          <div class="space-y-2.5">
+            
+            <!-- Tier 2: Distinguished Category (Top) -->
+            <div class="p-3 rounded-xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-amber-500/60 shadow-md">
+              <div class="text-[11px] font-bold text-amber-400 font-kufi mb-2">★ فئة الأعضاء المتميزين (حق التمثيل الخارجي والمحاكاة الختامية الكبرى)</div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-xs">٧</div>
+                  <div>
+                    <div class="text-xs font-bold text-amber-300">سفير فوق العادة</div>
+                    <div class="text-[10px] text-slate-300">رتبة قيادية رفيعة</div>
+                  </div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-amber-500/80 text-slate-950 flex items-center justify-center font-bold text-xs">٦</div>
+                  <div>
+                    <div class="text-xs font-bold text-amber-300">وزير مفوض</div>
+                    <div class="text-[10px] text-slate-300">إدارة الملفات الكبرى</div>
+                  </div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-amber-500/60 text-slate-950 flex items-center justify-center font-bold text-xs">٥</div>
+                  <div>
+                    <div class="text-xs font-bold text-amber-300">مستشار دبلوماسي</div>
+                    <div class="text-[10px] text-slate-300">الاستشارات والتقديرات</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tier 1: Core Diplomatic Officers (Base to Senior) -->
+            <div class="p-3 rounded-xl bg-white/90 border border-amber-400/50 shadow-sm">
+              <div class="text-[11px] font-bold text-slate-700 font-kufi mb-2">● فئة الأعضاء العاملين (التدرج المبني على الكفاءة والالتزام والبحوث)</div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                
+                <div class="p-2 rounded-lg bg-amber-50 border border-amber-300 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-amber-700 text-white flex items-center justify-center font-bold text-xs">٤</div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-900">سكرتير أول</div>
+                    <div class="text-[10px] text-slate-600">جودة بحثية متقدمة</div>
+                  </div>
+                </div>
+
+                <div class="p-2 rounded-lg bg-amber-50 border border-amber-300 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-amber-700 text-white flex items-center justify-center font-bold text-xs">٣</div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-900">سكرتير ثانٍ</div>
+                    <div class="text-[10px] text-slate-600">صياغة المذكرات</div>
+                  </div>
+                </div>
+
+                <div class="p-2 rounded-lg bg-amber-50 border border-amber-300 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-amber-700 text-white flex items-center justify-center font-bold text-xs">٢</div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-900">سكرتير ثالث</div>
+                    <div class="text-[10px] text-slate-600">المشاركة التحليلية</div>
+                  </div>
+                </div>
+
+                <div class="p-2 rounded-lg bg-amber-100/70 border border-amber-400 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-slate-900 text-amber-300 flex items-center justify-center font-bold text-xs">١</div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-900">ملحق دبلوماسي</div>
+                    <div class="text-[10px] text-slate-600">نقطة الانطلاق للعضو</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-sm font-semibold">◈ ◈ ◈</span>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           SECTION 7: منظومة تدريبية خماسية المسارات
+           ===================================================================== -->
+      <section id="section-7" class="parchment-section scroll-mt-28" data-index="7">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">٧</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">الأجندة الأكاديمية: ١٦ أسبوعاً</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ٧. منظومة تدريبية خماسية المسارات
+              </h3>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="git-commit" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE VII: 5-TRACK SYSTEM</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            تمتد أجندتنا الأكاديمية على مدار <strong>16 أسبوعاً تدريبياً</strong> خلال العام الجامعي، وتعمل عبر <strong>خمسة مسارات متوازية</strong>: مسار عام يبني القاعدة المعرفية المشتركة لكل الأعضاء، ومسار تخصصي يتعمق في ملفات كل قطاع، ومسار للتأهيل القيادي لشاغلي المناصب الإدارية، ومسار للتأهيل الأكاديمي والبحثي لضمان جودة المناهج، بالإضافة إلى <em>مسار استثنائي تفاعلي يستضيف السفراء والخبراء</em> في لقاءات حوارية مفتوحة.
+          </p>
+        </div>
+
+        <!-- The 5 Tracks Breakdown -->
+        <div class="space-y-3 mt-6">
+          
+          <div class="parchment-card flex items-start gap-3 border-r-4 border-r-amber-500">
+            <div class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-900 font-bold flex items-center justify-center shrink-0">١</div>
+            <div>
+              <h4 class="font-amiri font-bold text-base text-slate-900">المسار العام (القاعدة المعرفية المشتركة)</h4>
+              <p class="text-xs text-slate-700 leading-relaxed mt-0.5">
+                تأسيس شامل لكافة الأعضاء في مبادئ القانون الدولي العام، تاريخ السياسة الخارجية المصرية، وأسس الدبلوماسية المعاصرة.
+              </p>
+            </div>
+          </div>
+
+          <div class="parchment-card flex items-start gap-3 border-r-4 border-r-blue-600">
+            <div class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-900 font-bold flex items-center justify-center shrink-0">٢</div>
+            <div>
+              <h4 class="font-amiri font-bold text-base text-slate-900">المسار التخصصي (التعمق القطاعي)</h4>
+              <p class="text-xs text-slate-700 leading-relaxed mt-0.5">
+                دراسة متعمقة للملفات الخاصة بكل قطاع (العربي، الأمريكي، المتعدد، الاقتصادي، الأزمات) بما يعزز الاحتراف التخصصي.
+              </p>
+            </div>
+          </div>
+
+          <div class="parchment-card flex items-start gap-3 border-r-4 border-r-purple-600">
+            <div class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-900 font-bold flex items-center justify-center shrink-0">٣</div>
+            <div>
+              <h4 class="font-amiri font-bold text-base text-slate-900">مسار التأهيل القيادي</h4>
+              <p class="text-xs text-slate-700 leading-relaxed mt-0.5">
+                موجه لرؤساء اللجان ونوابهم لصقل مهارات إدارة فرق العمل، التفاوض، وإدارة الوقت والضغوط التنظيمية.
+              </p>
+            </div>
+          </div>
+
+          <div class="parchment-card flex items-start gap-3 border-r-4 border-r-emerald-600">
+            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-900 font-bold flex items-center justify-center shrink-0">٤</div>
+            <div>
+              <h4 class="font-amiri font-bold text-base text-slate-900">مسار التأهيل الأكاديمي والبحثي</h4>
+              <p class="text-xs text-slate-700 leading-relaxed mt-0.5">
+                تدريب متقدم على منهجيات التفكير النقدي، مراجعة الأدبيات الدولية، وتدقيق المحتوى وضمان جودة المناهج.
+              </p>
+            </div>
+          </div>
+
+          <div class="parchment-card flex items-start gap-3 border-r-4 border-r-red-600 bg-gradient-to-r from-amber-50 to-white">
+            <div class="w-8 h-8 rounded-full bg-red-500/20 text-red-900 font-bold flex items-center justify-center shrink-0">٥</div>
+            <div>
+              <h4 class="font-amiri font-bold text-base text-slate-900">المسار الاستثنائي التفاعلي (لقاءات السفراء)</h4>
+              <p class="text-xs text-slate-700 leading-relaxed mt-0.5">
+                صالونات دبلوماسية ولقاءات حوارية مفتوحة تجمع الطلاب بسفراء مصر السابقين والحاليين وخبراء السياسة الخارجية لنقل الخبرات الحية.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-sm font-semibold">◈ ◈ ◈</span>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           SECTION 8: منهجية الأسبوع التدريبي والتطبيق العملي
+           ===================================================================== -->
+      <section id="section-8" class="parchment-section scroll-mt-28" data-index="8">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">٨</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="cpu" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">من المعرفة إلى التحليل ثم الممارسة الحية</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ٨. منهجية الأسبوع التدريبي والتطبيق العملي
+              </h3>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE VIII: WEEKLY METHODOLOGY</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            لا نقدم في نموذجنا محاضرات تلقينية جامدة، بل <strong>يُصمم كل أسبوع كوحدة تعليمية متكاملة</strong> تنتقل بالعضو من <em>المعرفة إلى التحليل ثم التطبيق العملي</em>. سواء كنا نناقش <strong>ملف الأمن المائي المصري وحوض النيل</strong>، أو <strong>أمن البحر الأحمر</strong>، أو <strong>آليات التصويت في مجلس الأمن</strong>، ينتهي كل محور بتمرين تفاوضي حي أو تكليف بصياغة <em>مذكرة تقدير موقف (Policy Brief)</em> أو إدارة غرفة أزمات عاجلة.
+          </p>
+        </div>
+
+        <!-- Case Exercises Highlight Boxes -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="parchment-card bg-amber-100/40">
+            <div class="flex items-center gap-2 text-blue-900 font-amiri font-bold text-sm mb-2">
+              <i data-lucide="droplets" class="w-4 h-4 text-blue-700"></i>
+              <span>الأمن المائي وحوض النيل</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              تطبيق على مفاوضات السدود، مبادئ القانون الدولي للمجاري المائية، وصياغة بدائل استراتيجية لحماية الحصة التاريخية.
+            </p>
+          </div>
+
+          <div class="parchment-card bg-amber-100/40">
+            <div class="flex items-center gap-2 text-rose-900 font-amiri font-bold text-sm mb-2">
+              <i data-lucide="navigation" class="w-4 h-4 text-rose-700"></i>
+              <span>أمن البحر الأحمر والممرات الملاحية</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              محاكاة لحرية الملاحة، مضيق باب المندب وقناة السويس، والتنسيق الأمني بين الدول المشاطئة للبحر الأحمر.
+            </p>
+          </div>
+
+          <div class="parchment-card bg-amber-100/40">
+            <div class="flex items-center gap-2 text-amber-950 font-amiri font-bold text-sm mb-2">
+              <i data-lucide="file-check" class="w-4 h-4 text-amber-800"></i>
+              <span>مذكرة تقدير موقف (Policy Brief)</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              مخرج أسبوعي يلزم العضو بتقديم تشخيص تنفيذي موجز، وسيناريوهات محتملة، وتوصيات محددة لصانع القرار.
+            </p>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-sm font-semibold">◈ ◈ ◈</span>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           SECTION 9: دراسات الحالة وإدارة الأزمات المعقدة
+           ===================================================================== -->
+      <section id="section-9" class="parchment-section scroll-mt-28" data-index="9">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">٩</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">غرفة إدارة الأزمات الإقليمية الكبرى</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ٩. دراسات الحالة وإدارة الأزمات المعقدة
+              </h3>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE IX: CRISIS MANAGEMENT</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            ينفرد برنامجنا التدريبي بتوظيف الأزمات الدولية المعاصرة—وعلى رأسها <strong>"الحرب الإيرانية وتداعياتها الإقليمية"</strong>—كحالة تطبيقية محورية عابرة للقطاعات. يتناول كل قطاع هذه الأزمة من زاويته؛ فيدرس <em>القطاع العربي أثرها الإقليمي</em>، ويحلل <em>القطاع الاقتصادي تداعياتها على الطاقة والممرات البحرية</em>، ويدير <em>قطاع التخطيط غرفة الأزمة</em>، ليتوج ذلك بتمرين دبلوماسي مشترك يصيغ موقفاً خارجياً متكاملاً يحمي المصالح المصرية.
+          </p>
+        </div>
+
+        <!-- Cross-Sectoral Crisis Simulation Matrix -->
+        <div class="parchment-card p-6 bg-slate-900 text-white rounded-2xl border-2 border-amber-500/50 shadow-xl">
+          <div class="flex items-center justify-between mb-4 border-b border-slate-700 pb-3">
+            <div class="flex items-center gap-2 text-amber-400 font-amiri font-bold text-base sm:text-lg">
+              <i data-lucide="radio" class="w-5 h-5 text-red-500 animate-pulse"></i>
+              <span>نموذج محاكاة غرفة عمليات الأزمة (Crisis Operations Matrix)</span>
+            </div>
+            <span class="text-xs px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-800 font-mono">LIVE SIMULATION</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+            
+            <div class="p-3 rounded-xl bg-slate-800/90 border border-slate-700">
+              <div class="text-amber-400 font-bold font-amiri text-sm mb-1">١. زاوية القطاع العربي</div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                رصد التداعيات على استقرار دول الخليج والشرق الأوسط، وتنسيق الموقف العربي المشترك لمنع اتساع رقعة الصراع.
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-800/90 border border-slate-700">
+              <div class="text-amber-400 font-bold font-amiri text-sm mb-1">٢. زاوية القطاع الاقتصادي</div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                تحليل تقلبات أسواق النفط والغاز، تأثير الإغلاقات البحرية على حركة التجارة وسلاسل الإمداد ومضيق هرمز.
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-800/90 border border-slate-700">
+              <div class="text-amber-400 font-bold font-amiri text-sm mb-1">٣. قطاع التخطيط وإدارة الأزمات</div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                تشغيل غرفة العمليات، تفعيل آليات الإنذار الدبلوماسي المبكر، ومحاكاة الاتصالات العاجلة والتفاوض تحت النار.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Culmination Output -->
+          <div class="p-3 rounded-xl bg-gradient-to-r from-amber-950 via-slate-900 to-amber-950 border border-amber-500/60 text-center">
+            <span class="text-xs font-bold text-amber-300 font-kufi">المخرج الختامي المشترك:</span>
+            <p class="text-xs text-slate-200 mt-1">
+              صياغة ورقة موقف موحدة وإصدار بيان رسمي لوزارة الخارجية يوازن بين المبادئ القومية وحماية المصالح الاستراتيجية العليا لمصر.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-sm font-semibold">◈ ◈ ◈</span>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           SECTION 10: الحوكمة والانفتاح والشراكة المؤسسية
+           ===================================================================== -->
+      <section id="section-10" class="parchment-section scroll-mt-28" data-index="10">
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="gold-numeral-seal">١٠</div>
+            <div>
+              <div class="section-cartouche">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+                <span class="font-kufi text-xs sm:text-sm font-bold">الشفافية المطلقة ومد الجسور مع الدولة</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-black font-amiri text-slate-900 leading-tight">
+                ١٠. الحوكمة والانفتاح والشراكة المؤسسية
+              </h3>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-900/10 border border-amber-700/30 text-amber-900 text-xs font-mono font-bold">
+            <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+            <span>ARTICLE X: GOVERNANCE & PARTNERSHIP</span>
+          </div>
+        </div>
+
+        <!-- Official Verbatim Content -->
+        <div class="parchment-card my-6">
+          <p class="ink-lead">
+            نعمل وفق مبادئ <strong>الشفافية المطلقة وتكافؤ الفرص</strong>، ونفتح أبوابنا للطلاب المتميزين من مختلف التخصصات والجامعات المصرية وفق معايير اختيار دقيقة تشمل المقابلات واختبارات تحديد القدرات. وانطلاقاً من إيماننا بالتكامل بين الجامعة والمؤسسات الوطنية، نمد أيدينا لبناء <strong>شراكات مؤسسية رفيعة—وفي مقدمتها التطلع للرعاية الرسمية من وزارة الخارجية المصرية</strong>—لنبني جسراً مستداماً ينقل خبرات الدبلوماسية المصرية العريقة إلى جيل جديد من قادة المستقبل.
+          </p>
+        </div>
+
+        <!-- Governance Highlights & Call to Actions -->
+        <div class="parchment-card p-6 bg-gradient-to-br from-amber-100/60 to-white border-2 border-amber-600/40 mt-6">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            
+            <div>
+              <h4 class="font-amiri font-bold text-xl text-slate-900 mb-2">
+                ميثاق الشفافية وتكافؤ الفرص لعام 2026
+              </h4>
+              <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-700 shrink-0"></i>
+                  <span>لجان تقييم محايدة ومقابلات شفهية واختبارات قدرات موحدة.</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-700 shrink-0"></i>
+                  <span>نظام تقييم ومتابعة رقمي مؤتمت يضمن العدالة التامة لكافة المتقدمين.</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-700 shrink-0"></i>
+                  <span>سعي دؤوب لشراكة ورعاية رسمية من وزارة الخارجية ومعهد الدراسات الدبلوماسية.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Official Carmine Red Wax Ratification Seal -->
+            <div class="flex flex-col items-center justify-center text-center p-4 rounded-xl bg-amber-50 border border-amber-300">
+              <div class="wax-seal-official mb-3" onclick="celebrateSeal()" title="ختم التصديق الرسمي">
+                <div class="wax-seal-inner">
+                  <i data-lucide="award" class="w-5 h-5 mb-0.5 text-amber-300"></i>
+                  <span class="tracking-tighter font-serif">MFA SUEZ</span>
+                  <span class="text-[8px] font-mono">RATIFIED</span>
+                </div>
+              </div>
+              <span class="font-amiri font-bold text-sm text-amber-950">صُدّق بموجب لائحة النموذج الرسمية</span>
+              <span class="text-[11px] text-slate-600 font-ruqaa mt-0.5">جامعة السويس • كلية السياسة والاقتصاد</span>
+            </div>
+
+          </div>
+
+          <!-- CTAs Hub -->
+          <div class="mt-8 pt-6 border-t border-amber-600/30 flex flex-wrap items-center justify-center gap-4">
+            
+            <a href="/book" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/30 transition-all hover:scale-105">
+              <i data-lucide="calendar-check" class="w-4 h-4"></i>
+              <span>الانضمام وحجز موعد المقابلة الشخصية</span>
+            </a>
+
+            <a href="/login" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold text-sm shadow-md transition-all">
+              <i data-lucide="shield" class="w-4 h-4 text-amber-400"></i>
+              <span>بوابة المقيمين ومديري اللجان</span>
+            </a>
+
+            <a href="/verify" class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-400/60 font-semibold text-xs sm:text-sm transition-all">
+              <i data-lucide="qr-code" class="w-4 h-4"></i>
+              <span>التحقق من الشهادات الرسمية</span>
+            </a>
+
+            <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold text-xs sm:text-sm transition-all shadow-sm">
+              <i data-lucide="printer" class="w-4 h-4"></i>
+              <span>طباعة الوثيقة الرسمية</span>
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- =====================================================================
+           PARCHMENT COLOPHON & OFFICIAL SIGNATURE BLOCK
+           ===================================================================== -->
+      <footer class="mt-16 pt-8 border-t-2 border-amber-700/40 text-center relative z-10">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-slate-800 font-amiri">
+          <div class="border-b sm:border-b-0 sm:border-l border-amber-600/30 pb-4 sm:pb-0">
+            <div class="text-xs text-amber-900 font-bold font-kufi">الإشراف الأكاديمي</div>
+            <div class="text-base font-bold mt-1">كلية السياسة والاقتصاد</div>
+            <div class="text-xs text-slate-600 font-ruqaa">جامعة السويس</div>
+          </div>
+
+          <div class="border-b sm:border-b-0 sm:border-l border-amber-600/30 pb-4 sm:pb-0">
+            <div class="text-xs text-amber-900 font-bold font-kufi">الاعتماد والتنظيم</div>
+            <div class="text-base font-bold mt-1">الهيئة العليا لإدارة النموذج</div>
+            <div class="text-xs text-slate-600 font-ruqaa">دورة عام 2026 الدبلوماسية</div>
+          </div>
+
+          <div>
+            <div class="text-xs text-amber-900 font-bold font-kufi">رقم التسجيل الدبلوماسي</div>
+            <div class="text-base font-bold mt-1 font-mono text-amber-950">MFA-SU/DOC-2026</div>
+            <div class="text-xs text-slate-600 font-ruqaa">وثيقة إلكترونية موثقة</div>
+          </div>
+        </div>
+
+        <div class="font-ruqaa text-xs sm:text-sm text-amber-950/70 max-w-xl mx-auto leading-relaxed">
+          حررت هذه الوثيقة التاريخية بجمهورية مصر العربية، جامعة السويس، لنقل التقاليد الدبلوماسية المصرية الراسخة وتأهيل أجيال الغد لقيادة المشهد الدولي.
+        </div>
+
+        <div class="mt-4 text-[11px] text-slate-500 font-mono">
+          © 2026 Suez University MFA Simulation Model • All Institutional Rights Reserved
+        </div>
+
+      </footer>
+
+    </article>
+
+    <!-- BOTTOM WOODEN & BRASS SCROLL ROLLER FINIAL -->
+    <div class="scroll-finial">
+      <div class="finial-brass-ring"></div>
+      <div class="finial-center-seal">
+        <i data-lucide="feather" class="w-4 h-4 text-amber-400"></i>
+        <span>ختام الوثيقة التأسيسية • حماية المصلحة الوطنية العليا</span>
+      </div>
+      <div class="finial-brass-ring"></div>
+    </div>
+
+  </main>
+
+
+  <!-- =========================================================================
+       CINEMATIC ENGINE SCRIPT (Scroll spy, Auto-glide, Web Audio synth)
+       ========================================================================= -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Section Titles Map for the HUD
+    const sectionNames = {
+      1: "البند الأول: الهوية والمنطلق المؤسسي",
+      2: "البند الثاني: الرؤية والفلسفة الحاكمة",
+      3: "البند الثالث: الأهداف الوطنية والمهنية",
+      4: "البند الرابع: هيكل تنظيمي يحاكي الدولة",
+      5: "البند الخامس: القطاعات التخصصية ودوائر العمل",
+      6: "البند السادس: نظام التدرج الوظيفي الدبلوماسي",
+      7: "البند السابع: منظومة تدريبية خماسية المسارات",
+      8: "البند الثامن: منهجية الأسبوع التدريبي والتطبيق العملي",
+      9: "البند التاسع: دراسات الحالة وإدارة الأزمات المعقدة",
+      10: "البند العاشر: الحوكمة والانفتاح والشراكة المؤسسية"
+    };
+
+    // Smooth Scroll to Section Function
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        const yOffset = -90;
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+
+    // Scroll Progress & Section Spy
+    const progressBar = document.getElementById('hudProgressBar');
+    const badge = document.getElementById('hudSectionBadge');
+    const percentLabel = document.getElementById('hudProgressPercent');
+    const sections = document.querySelectorAll('.parchment-section');
+    const astrolabeDots = document.querySelectorAll('.astrolabe-dot');
+
+    function updateScrollState() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      
+      if (progressBar) progressBar.style.width = `${progress}%`;
+      if (percentLabel) percentLabel.textContent = `${Math.round(progress)}%`;
+
+      // Determine active section
+      let activeIndex = 1;
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.4) {
+          activeIndex = parseInt(sec.getAttribute('data-index') || '1', 10);
+        }
       });
 
+      if (badge && sectionNames[activeIndex]) {
+        badge.textContent = sectionNames[activeIndex];
+      }
+
+      // Update Lateral Astrolabe
+      astrolabeDots.forEach(dot => {
+        const target = dot.getAttribute('data-target');
+        if (target === `section-${activeIndex}`) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+    updateScrollState();
+
+    // =========================================================================
+    // SILENT CINEMATIC AUTO-GLIDE ENGINE
+    // =========================================================================
+    let isAutoGliding = false;
+    let glideSpeed = 1.0; // 1.0 = standard cinematic reading speed
+    let glideReqId = null;
+
+    function toggleAutoGlide() {
+      isAutoGliding = !isAutoGliding;
+      const btn = document.getElementById('autoGlideBtn');
+      const icon = document.getElementById('glideIcon');
+      const label = document.getElementById('glideLabel');
+      const speedBtn = document.getElementById('glideSpeedBtn');
+
+      if (isAutoGliding) {
+        btn.classList.add('bg-amber-500', 'text-slate-950');
+        btn.classList.remove('bg-amber-500/10', 'text-amber-300');
+        icon.classList.remove('text-amber-400');
+        icon.classList.add('text-slate-950');
+        icon.setAttribute('data-lucide', 'pause');
+        label.textContent = 'إيقاف مؤقت';
+        if (speedBtn) speedBtn.classList.remove('hidden');
+        lucide.createIcons();
+        runGlide();
+      } else {
+        stopGlide();
+      }
+    }
+
+    function stopGlide() {
+      isAutoGliding = false;
+      const btn = document.getElementById('autoGlideBtn');
+      const icon = document.getElementById('glideIcon');
+      const label = document.getElementById('glideLabel');
+      const speedBtn = document.getElementById('glideSpeedBtn');
+
+      if (btn) {
+        btn.classList.remove('bg-amber-500', 'text-slate-950');
+        btn.classList.add('bg-amber-500/10', 'text-amber-300');
+      }
+      if (icon) {
+        icon.classList.add('text-amber-400');
+        icon.classList.remove('text-slate-950');
+        icon.setAttribute('data-lucide', 'play');
+      }
+      if (label) label.textContent = 'العرض السينمائي';
+      if (speedBtn) speedBtn.classList.add('hidden');
+      if (glideReqId) cancelAnimationFrame(glideReqId);
       lucide.createIcons();
     }
 
-    document.addEventListener('DOMContentLoaded', loadData);
+    function toggleGlideSpeed() {
+      const speedBtn = document.getElementById('glideSpeedBtn');
+      if (glideSpeed === 1.0) {
+        glideSpeed = 2.0;
+        speedBtn.textContent = '2x سرعة';
+      } else {
+        glideSpeed = 1.0;
+        speedBtn.textContent = '1x هادئ';
+      }
+    }
+
+    function runGlide() {
+      if (!isAutoGliding) return;
+      
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (window.scrollY >= maxScroll - 5) {
+        stopGlide();
+        return;
+      }
+
+      window.scrollBy({ top: 1.2 * glideSpeed, behavior: 'instant' });
+      glideReqId = requestAnimationFrame(runGlide);
+    }
+
+    // Stop auto glide if user manually touches or scrolls strongly
+    window.addEventListener('wheel', (e) => {
+      if (isAutoGliding && Math.abs(e.deltaY) > 25) {
+        stopGlide();
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchstart', () => {
+      if (isAutoGliding) stopGlide();
+    }, { passive: true });
+
+
+    // =========================================================================
+    // OPTIONAL AMBIENT PARCHMENT AUDIO SYNTHESIZER (Web Audio API - Silent by default)
+    // =========================================================================
+    let audioCtx = null;
+    let isAudioPlaying = false;
+    let noiseNode = null;
+    let gainNode = null;
+
+    function toggleAmbientSound() {
+      const audioBtn = document.getElementById('audioToggleBtn');
+      const audioIcon = document.getElementById('audioIcon');
+
+      if (!isAudioPlaying) {
+        startParchmentAmbience();
+        isAudioPlaying = true;
+        audioBtn.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-400');
+        audioIcon.setAttribute('data-lucide', 'volume-2');
+      } else {
+        stopParchmentAmbience();
+        isAudioPlaying = false;
+        audioBtn.classList.remove('bg-amber-500/20', 'text-amber-300', 'border-amber-400');
+        audioIcon.setAttribute('data-lucide', 'volume-x');
+      }
+      lucide.createIcons();
+    }
+
+    function startParchmentAmbience() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        audioCtx = new AudioContext();
+
+        // Generate warm subtle parchment paper rustle (filtered pink noise)
+        const bufferSize = audioCtx.sampleRate * 2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          data[i] = (b0 + b1 + b2) * 0.04;
+        }
+
+        noiseNode = audioCtx.createBufferSource();
+        noiseNode.buffer = buffer;
+        noiseNode.loop = true;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 650;
+
+        gainNode = audioCtx.createGain();
+        gainNode.gain.setValueAtTime(0.015, audioCtx.currentTime);
+
+        noiseNode.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        noiseNode.start();
+      } catch (e) {
+        console.warn('Audio ambience unavailable:', e);
+      }
+    }
+
+    function stopParchmentAmbience() {
+      if (gainNode && audioCtx) {
+        try {
+          gainNode.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+          setTimeout(() => {
+            if (noiseNode) noiseNode.stop();
+            if (audioCtx) audioCtx.close();
+          }, 350);
+        } catch (e) {}
+      }
+    }
+
+    // Interactive Triad clicker
+    function selectTriad(num) {
+      for (let i = 1; i <= 3; i++) {
+        const el = document.getElementById(`triad-btn-${i}`);
+        if (!el) continue;
+        if (i === num) {
+          el.classList.add('border-amber-500', 'bg-white', 'shadow-md');
+          el.classList.remove('border-amber-300/60', 'bg-amber-50/50');
+        } else {
+          el.classList.remove('border-amber-500', 'bg-white', 'shadow-md');
+          el.classList.add('border-amber-300/60', 'bg-amber-50/50');
+        }
+      }
+    }
+
+    // Seal Click Celebration
+    function celebrateSeal() {
+      const seal = document.querySelector('.wax-seal-official');
+      if (seal) {
+        seal.classList.add('scale-125', 'rotate-12');
+        setTimeout(() => {
+          seal.classList.remove('scale-125', 'rotate-12');
+        }, 400);
+      }
+    }
   </script>
 </body>
 </html>

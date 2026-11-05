@@ -3491,9 +3491,13 @@ app.get('/api/verify/:code', (req, res) => {
 
 const PUBLIC_DIR = path.resolve(__dirname, 'public');
 
-// Root redirects directly to login (user requested no landing page)
+// Cinematic Landing Page & Root Route
 app.get('/', (req, res) => {
-  res.redirect('/login');
+  res.sendFile('landing.html', { root: PUBLIC_DIR });
+});
+
+app.get('/landing', (req, res) => {
+  res.sendFile('landing.html', { root: PUBLIC_DIR });
 });
 
 // Fallback direct routes to HTML files
