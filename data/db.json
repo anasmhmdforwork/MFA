@@ -9852,7 +9852,7 @@
     },
     {
       "id": "u_dir_hr",
-      "name": "إدارة التنظيم والموارد البشرية المركزية",
+      "name": "رئيس قطاع الموارد البشرية (Head of HR)",
       "role": "directorate",
       "password": "mofa1234",
       "username": "hr",
@@ -9862,13 +9862,13 @@
     },
     {
       "id": "u_dir_org_alias",
-      "name": "إدارة التنظيم والموارد البشرية المركزية",
+      "name": "رئيس قطاع التنظيم واللوجستيات",
       "role": "directorate",
       "password": "mofa1234",
       "username": "organization",
       "committeeId": null,
       "committeeName": "إدارة التنظيم والموارد البشرية (كافة القطاعات)",
-      "directorateType": "hr"
+      "directorateType": "organization"
     },
     {
       "id": "u_dir_media",
@@ -9888,6 +9888,54 @@
       "username": "academic",
       "committeeId": null,
       "committeeName": "إدارة اللجان والشؤون الأكاديمية (كافة القطاعات)",
+      "directorateType": "academic"
+    },
+    {
+      "name": "رئيس قطاع الموارد البشرية (Head of HR)",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "hr_head",
+      "committeeId": null,
+      "directorateType": "hr"
+    },
+    {
+      "name": "رئيس قطاع التنظيم واللوجستيات",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "org_head",
+      "committeeId": null,
+      "directorateType": "organization"
+    },
+    {
+      "name": "مدير إدارة التشغيل والتقويم الشهري العام",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "operations",
+      "committeeId": null,
+      "directorateType": "operations"
+    },
+    {
+      "name": "مدير إدارة التشغيل والتقويم الشهري العام",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "operations_head",
+      "committeeId": null,
+      "directorateType": "operations"
+    },
+    {
+      "name": "إدارة الميديا والإعلام المركزية",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "media_head",
+      "committeeId": null,
+      "directorateType": "media"
+    },
+    {
+      "name": "إدارة الشؤون الأكاديمية والتدريب المركزية",
+      "role": "directorate",
+      "password": "mofa1234",
+      "username": "academic_head",
+      "committeeId": null,
       "directorateType": "academic"
     }
   ],

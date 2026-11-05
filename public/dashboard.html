@@ -450,14 +450,14 @@
                 رئيس النموذج
               </span>
               <span v-else-if="currentUser && currentUser.role === 'directorate'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-[11px] font-kufi font-bold border border-amber-400/40 whitespace-nowrap">
-                {{ currentUser.directorateType === 'hr' ? 'مسؤول التنظيم والموارد البشرية' : (currentUser.directorateType === 'media' ? 'مسؤول الميديا والإعلام' : 'مسؤول الشؤون الأكاديمية') }}
+                {{ currentUser.directorateType === 'hr' ? 'رئيس قطاع الموارد البشرية (Head of HR)' : (currentUser.directorateType === 'organization' ? 'رئيس قطاع التنظيم واللوجستيات' : (currentUser.directorateType === 'operations' ? 'مدير إدارة التشغيل العام' : (currentUser.directorateType === 'media' ? 'مسؤول الميديا والإعلام' : 'مسؤول الشؤون الأكاديمية'))) }}
               </span>
               <span v-else-if="currentUser && currentUser.role === 'head'" class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] sm:text-[11px] font-kufi font-bold border border-amber-400/40 whitespace-nowrap">
                 رئيس اللجنة
               </span>
             </div>
             <p class="hidden sm:block text-xs font-kufi text-amber-300/80 font-medium mt-0.5 truncate">
-              {{ currentUser && currentUser.role === 'directorate' ? 'إدارة ومتابعة وتقييم الكوادر التابعة لك في مختلف اللجان' : ((currentUser ? currentUser.name : 'مدير اللجنة') + ' • لوحة إدارة وتقييم المقابلات والأنشطة') }}
+              {{ currentUser && currentUser.role === 'directorate' ? (currentUser.directorateType === 'hr' ? 'الإدارة المركزية للموارد البشرية • متابعة الكوادر، التقييم، وجداول التشغيل والمهام' : (currentUser.directorateType === 'operations' ? 'إدارة منظومة التشغيل والتقويم الشهري الميداني للموسم الدبلوماسي' : (currentUser.directorateType === 'organization' ? 'إدارة التنظيم واللوجستيات والمتابعة الميدانية' : 'إدارة ومتابعة وتقييم الكوادر التابعة لك في مختلف اللجان'))) : ((currentUser ? currentUser.name : 'مدير اللجنة') + ' • لوحة إدارة وتقييم المقابلات والأنشطة') }}
             </p>
           </div>
         </div>
@@ -582,42 +582,42 @@
             <!-- Tab 1: Directorate Overview -->
             <button 
               @click="activeTab = 'directorate_overview'" 
-              :class="activeTab === 'directorate_overview' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
+              :class="activeTab === 'directorate_overview' ? 'border-amber-400 text-amber-300 bg-amber-950/40 shadow-inner' : 'border-transparent text-amber-200/60 hover:text-amber-100 hover:bg-amber-950/20'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
             >
-              <i :data-lucide="currentUser.directorateType === 'hr' ? 'users' : (currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')" class="w-4 h-4 text-amber-500"></i>
-              <span>{{ currentUser.directorateType === 'hr' ? 'لوحة متابعة التنظيم (كافة القطاعات)' : (currentUser.directorateType === 'media' ? 'لوحة متابعة الميديا والإعلام (كافة القطاعات)' : 'المتابعة الأكاديمية والتدريبية (كافة القطاعات)') }}</span>
+              <i :data-lucide="currentUser.directorateType === 'hr' ? 'user-check' : (currentUser.directorateType === 'organization' ? 'clipboard-check' : (currentUser.directorateType === 'operations' ? 'layout-dashboard' : (currentUser.directorateType === 'media' ? 'video' : 'graduation-cap')))" class="w-4 h-4 text-amber-500"></i>
+              <span>{{ currentUser.directorateType === 'hr' ? 'لوحة متابعة الموارد البشرية (كافة القطاعات)' : (currentUser.directorateType === 'organization' ? 'لوحة متابعة التنظيم (كافة القطاعات)' : (currentUser.directorateType === 'operations' ? 'لوحة متابعة التشغيل العام' : (currentUser.directorateType === 'media' ? 'لوحة متابعة الميديا والإعلام (كافة القطاعات)' : 'المتابعة الأكاديمية والتدريبية (كافة القطاعات)'))) }}</span>
             </button>
 
-            <!-- Tab 3: Events & Visits (HR Only) -->
-            <button 
-              v-if="currentUser.directorateType === 'hr'"
-              @click="activeTab = 'directorate_events'; fetchDashboardEvents();" 
-              :class="activeTab === 'directorate_events' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-            >
-              <i data-lucide="compass" class="w-4 h-4 text-pink-600"></i>
-              <span>إدارة الفعاليات والزيارات ({{ dashboardEvents.length }})</span>
-            </button>
-
-            <!-- Tab 2: Directorate Members & Evaluations -->
-            <button 
-              @click="activeTab = 'directorate_members'" 
-              :class="activeTab === 'directorate_members' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
-              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
-            >
-              <i data-lucide="star" class="w-4 h-4 text-amber-500"></i>
-              <span>{{ currentUser.directorateType === 'hr' ? 'كوادر التنظيم وتقييم الأداء (' + directorateMembersList.length + ')' : (currentUser.directorateType === 'media' ? 'فريق الميديا وتقييم التغطيات (' + directorateMembersList.length + ')' : 'المناديب واللجان الأكاديمية (' + directorateMembersList.length + ')') }}</span>
-            </button>
-
-            <!-- Tab: Monthly Operations Calendar & Sector Matrix -->
+            <!-- Tab 2: Monthly Operations Calendar (For HR, Operations, Media, Academic, Org) -->
             <button 
               @click="activeTab = 'operations'; loadOperationsCalendar();" 
-              :class="activeTab === 'operations' ? 'border-amber-500 text-amber-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'"
+              :class="activeTab === 'operations' ? 'border-amber-400 text-amber-300 bg-amber-950/40 shadow-inner' : 'border-transparent text-amber-200/60 hover:text-amber-100 hover:bg-amber-950/20'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
             >
               <i data-lucide="calendar-days" class="w-4 h-4 text-amber-500"></i>
-              <span>التشغيل والتقويم الشهري للقطاع ({{ operationsSessions.length }})</span>
+              <span>التشغيل والتقويم الشهري ({{ operationsSessions.length }})</span>
+            </button>
+
+            <!-- Tab 3: Directorate Members & Evaluations -->
+            <button 
+              @click="activeTab = 'directorate_members'" 
+              :class="activeTab === 'directorate_members' ? 'border-amber-400 text-amber-300 bg-amber-950/40 shadow-inner' : 'border-transparent text-amber-200/60 hover:text-amber-100 hover:bg-amber-950/20'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="star" class="w-4 h-4 text-amber-500"></i>
+              <span>{{ currentUser.directorateType === 'hr' ? 'كوادر الموارد البشرية والتنظيم (' + directorateMembersList.length + ')' : (currentUser.directorateType === 'organization' ? 'كوادر التنظيم واللوجستيات (' + directorateMembersList.length + ')' : (currentUser.directorateType === 'operations' ? 'كوادر التشغيل الميداني (' + directorateMembersList.length + ')' : (currentUser.directorateType === 'media' ? 'فريق الميديا وتقييم التغطيات (' + directorateMembersList.length + ')' : 'المناديب واللجان الأكاديمية (' + directorateMembersList.length + ')'))) }}</span>
+            </button>
+
+            <!-- Tab 4: Events & Visits (HR, Org, Operations) -->
+            <button 
+              v-if="['hr', 'organization', 'operations'].includes(currentUser.directorateType)"
+              @click="activeTab = 'directorate_events'; fetchDashboardEvents();" 
+              :class="activeTab === 'directorate_events' ? 'border-amber-400 text-amber-300 bg-amber-950/40 shadow-inner' : 'border-transparent text-amber-200/60 hover:text-amber-100 hover:bg-amber-950/20'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="compass" class="w-4 h-4 text-amber-500"></i>
+              <span>إدارة الفعاليات والزيارات ({{ dashboardEvents.length }})</span>
             </button>
 
             <!-- Tab 3 & 4 (Academic Directorate Only) -->
@@ -807,13 +807,13 @@
               </div>
               <div>
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold mb-1 border border-amber-400/30">
-                  {{ currentUser && currentUser.directorateType === 'hr' ? 'الإدارة المركزية للتنظيم والموارد البشرية' : (currentUser && currentUser.directorateType === 'media' ? 'الإدارة المركزية للميديا والإعلام' : 'الإدارة المركزية للشؤون الأكاديمية والتدريب') }}
+                  {{ currentUser && currentUser.directorateType === 'hr' ? 'الإدارة المركزية للموارد البشرية (Head of HR)' : (currentUser && currentUser.directorateType === 'organization' ? 'الإدارة المركزية للتنظيم واللوجستيات' : (currentUser && currentUser.directorateType === 'operations' ? 'الإدارة المركزية للتشغيل والتقويم الشهري العام' : (currentUser && currentUser.directorateType === 'media' ? 'الإدارة المركزية للميديا والإعلام' : 'الإدارة المركزية للشؤون الأكاديمية والتدريب'))) }}
                 </div>
                 <h3 class="text-xl sm:text-2xl font-black text-white">
                   {{ currentUser ? currentUser.name : '' }}
                 </h3>
                 <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                  {{ currentUser && currentUser.directorateType === 'hr' ? 'متابعة وإدارة مسؤولي وكوادر التنظيم والموارد البشرية وتوزيعهم على اللجان والقطاعات الـ 9 وتقييم انضباطهم الميداني.' : (currentUser && currentUser.directorateType === 'media' ? 'متابعة وإدارة فريق الميديا، التصوير، المونتاج، والتغطيات الإعلامية الميدانية لكافة فعاليات ولجان النموذج.' : 'متابعة المناديب الأكاديميين، نسب حضور المحاضرات، وتطوير المهارات الدبلوماسية وسجلات الاختبارات عبر اللجان.') }}
+                  {{ currentUser && currentUser.directorateType === 'hr' ? 'متابعة وإدارة كوادر الموارد البشرية، خطط التشغيل الشهري، التكليفات الميدانية، وتوزيع الكوادر وتقييم الأداء عبر القطاعات واللجان الـ 9.' : (currentUser && currentUser.directorateType === 'organization' ? 'متابعة وإدارة مسؤولي وكوادر التنظيم واللوجستيات، التنظيم الميداني للقاعات والفعاليات، والانضباط التنظيمي لكافة لجان النموذج.' : (currentUser && currentUser.directorateType === 'operations' ? 'التخطيط والإشراف العام على التقويم الشهري للمحاضرات، جداول التشغيل، إسناد التكليفات الميدانية للكوادر، ونسب إنجاز المهام.' : (currentUser && currentUser.directorateType === 'media' ? 'متابعة وإدارة فريق الميديا، التصوير، المونتاج، والتغطيات الإعلامية الميدانية لكافة فعاليات ولجان النموذج.' : 'متابعة المناديب الأكاديميين، نسب حضور المحاضرات، وتطوير المهارات الدبلوماسية وسجلات الاختبارات عبر اللجان.'))) }}
                 </p>
               </div>
             </div>
@@ -3658,7 +3658,7 @@
               <span>منظومة الحوكمة والتشغيل الميداني للموسم الدبلوماسي 2026</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black text-white">
-              {{ currentUser && currentUser.role === 'directorate' ? ('خطة التشغيل والتقويم الشهري لقطاع ' + (currentUser.directorateType === 'hr' ? 'التنظيم' : (currentUser.directorateType === 'media' ? 'الميديا' : 'الشؤون الأكاديمية'))) : ('جدول التشغيل والتقويم الشهري - ' + (currentCommittee ? currentCommittee.name : 'اللجنة')) }}
+              {{ currentUser && currentUser.role === 'directorate' ? ('خطة التشغيل والتقويم الشهري لقطاع ' + (currentUser.directorateType === 'hr' ? 'الموارد البشرية' : (currentUser.directorateType === 'organization' ? 'التنظيم' : (currentUser.directorateType === 'operations' ? 'التشغيل العام' : (currentUser.directorateType === 'media' ? 'الميديا' : 'الشؤون الأكاديمية'))))) : ('جدول التشغيل والتقويم الشهري - ' + (currentCommittee ? currentCommittee.name : 'اللجنة')) }}
             </h2>
             <p class="text-xs text-slate-400 max-w-2xl leading-relaxed">
               تخطيط وتوزيع أيام المحاضرات الشهرية، احتساب احتياج الكوادر، وإسناد التكليفات التشغيلية للأعضاء مع المتابعة الفورية لنسب الإنجاز وتحديث تقييمات الأداء آلياً.
@@ -8767,7 +8767,11 @@
           let list = acceptedMembersList.value || [];
           
           if (type === 'hr') {
-            list = list.filter(c => c.roleType === 'member' && c.subDepartment === 'hr');
+            list = list.filter(c => c.roleType === 'member' && (c.subDepartment === 'hr' || c.subDepartment === 'organization'));
+          } else if (type === 'organization') {
+            list = list.filter(c => c.roleType === 'member' && (c.subDepartment === 'organization' || c.subDepartment === 'hr'));
+          } else if (type === 'operations') {
+            list = list.filter(c => c.roleType === 'member');
           } else if (type === 'media') {
             list = list.filter(c => c.roleType === 'member' && c.subDepartment === 'media');
           } else if (type === 'academic') {
