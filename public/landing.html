@@ -491,203 +491,184 @@
     }
 
     /* =========================================================================
-       HERO SCROLL UNROLLING ANIMATION (Closed from both ends, opens after 0.7s)
+       DIPLOMATIC LETTER COVER (Closed from both ends, opens after 0.7s)
        ========================================================================= */
-    .hero-scroll-wrapper {
-      position: relative;
-      transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Closed Scroll State */
-    .hero-scroll-wrapper.hero-scroll-closed .unrolled-hero-content {
-      opacity: 0;
-      max-height: 0;
-      transform: scaleY(0.04);
-      transform-origin: top center;
-      overflow: hidden;
-      pointer-events: none;
-      transition: opacity 0.6s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), max-height 1.1s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .hero-scroll-wrapper.hero-scroll-closed .closed-scroll-display {
+    .diplomatic-letter-cover {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 30px 0 45px;
-      cursor: pointer;
-      position: relative;
-      z-index: 20;
-      transition: all 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Unrolling / Opened State */
-    .hero-scroll-wrapper.hero-scroll-unrolling .closed-scroll-display {
-      opacity: 0;
-      max-height: 0;
-      transform: scale(0.9);
-      pointer-events: none;
-      overflow: hidden;
-      padding: 0;
-      margin: 0;
-    }
-
-    .hero-scroll-wrapper.hero-scroll-unrolling .roller-end-top {
-      transform: translateY(-60px);
-      opacity: 0;
-    }
-    .hero-scroll-wrapper.hero-scroll-unrolling .roller-end-bottom {
-      transform: translateY(140px);
-      opacity: 0;
-    }
-    .hero-scroll-wrapper.hero-scroll-unrolling .closed-wax-medallion {
-      transform: scale(1.25) rotate(15deg);
-      opacity: 0;
-    }
-
-    .hero-scroll-wrapper.hero-scroll-open .closed-scroll-display {
-      display: none !important;
-    }
-
-    .hero-scroll-wrapper.hero-scroll-open .unrolled-hero-content {
-      opacity: 1;
-      max-height: 2500px;
-      transform: scaleY(1);
-      overflow: visible;
-      pointer-events: auto;
-    }
-
-    /* Visual Styling of the Closed Scroll Ends */
-    .closed-roller-bar {
-      width: 96%;
-      max-width: 540px;
-      height: 38px;
-      background: linear-gradient(180deg, #442614 0%, #201107 45%, #351c0e 65%, #522e16 100%);
-      border-radius: 20px;
-      box-shadow: 
-        0 10px 25px rgba(0, 0, 0, 0.75),
-        inset 0 2px 3px rgba(255, 255, 255, 0.3),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.8);
-      display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 10px;
-      border: 1px solid rgba(197, 160, 89, 0.6);
+      cursor: pointer;
+      pointer-events: auto;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    /* The Top Flap / End */
+    .letter-flap {
+      width: 100%;
+      height: 50%;
       position: relative;
-      z-index: 10;
-      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
-    }
-
-    .finial-brass-ring-mini {
-      width: 14px;
-      height: 42px;
-      background: linear-gradient(90deg, #7d591b, #fae5a0, #c5a059, #593d0f);
-      border-radius: 3px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    }
-
-    .roller-wood-strip {
-      flex: 1;
-      height: 100%;
-    }
-
-    .closed-cylinder-body {
-      width: 90%;
-      max-width: 490px;
-      height: 115px;
-      background: linear-gradient(180deg, #dfcaa0 0%, #f7eed7 25%, #faf3e2 50%, #f5e8cc 75%, #dfcaa0 100%);
+      background: linear-gradient(180deg, #fbf4e2 0%, #f4e8cc 60%, #eeddb8 100%);
       box-shadow: 
-        inset 0 10px 20px rgba(70, 45, 15, 0.35),
-        inset 0 -10px 20px rgba(70, 45, 15, 0.35),
-        0 10px 30px rgba(0, 0, 0, 0.45);
-      border-left: 2px solid rgba(180, 140, 70, 0.6);
-      border-right: 2px solid rgba(180, 140, 70, 0.6);
-      position: relative;
-      margin: -6px 0;
-      z-index: 5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.75s ease;
+        inset 0 0 40px rgba(180, 130, 50, 0.2),
+        0 10px 25px rgba(0, 0, 0, 0.4);
+      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease;
+      will-change: transform, opacity;
+      overflow: hidden;
     }
 
-    .closed-ribbon-gold {
+    .flap-top {
+      border-bottom: 2px solid rgba(197, 160, 89, 0.8);
+      transform-origin: top center;
+    }
+
+    .flap-bottom {
+      border-top: 2px solid rgba(197, 160, 89, 0.8);
+      transform-origin: bottom center;
+    }
+
+    /* Flap Patterns & Deckled Gilded Hems */
+    .flap-parchment-pattern {
       position: absolute;
-      top: 50%;
+      inset: 0;
+      background-image: radial-gradient(rgba(197, 160, 89, 0.15) 1px, transparent 1px);
+      background-size: 16px 16px;
+      opacity: 0.5;
+    }
+
+    .flap-gilded-hem {
+      position: absolute;
       left: 0;
       right: 0;
-      height: 18px;
-      transform: translateY(-50%);
-      background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 50%, #991b1b 100%);
-      border-top: 1px solid #d4af37;
-      border-bottom: 1px solid #d4af37;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      height: 24px;
+      background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.5) 20%, rgba(197, 160, 89, 0.5) 80%, transparent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #92400e;
+      font-size: 11px;
+      letter-spacing: 4px;
     }
 
-    .closed-wax-medallion {
-      position: relative;
-      z-index: 15;
-      width: 78px;
-      height: 78px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #b91c1c 0%, #881337 55%, #4c0519 100%);
-      box-shadow: 
-        0 8px 24px rgba(0,0,0,0.65),
-        inset 0 2px 4px rgba(255,255,255,0.4),
-        inset 0 -3px 6px rgba(0,0,0,0.7);
-      border: 2px solid #fef08a;
+    .hem-top { bottom: 8px; }
+    .hem-bottom { top: 8px; }
+
+    .hem-brass-corner {
+      width: 10px;
+      height: 10px;
+      background: #c5a059;
+      border-radius: 2px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+    .hem-brass-corner.left { position: absolute; left: 20px; }
+    .hem-brass-corner.right { position: absolute; right: 20px; }
+
+    /* Central Seam & Wax Seal */
+    .letter-center-seam {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 50;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
-      cursor: pointer;
+      will-change: transform, opacity;
     }
 
-    .wax-medallion-stamp {
+    .seam-gold-thread {
+      position: absolute;
+      width: 100vw;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #c5a059 30%, #fae5a0 50%, #c5a059 70%, transparent);
+      box-shadow: 0 0 6px rgba(197, 160, 89, 0.7);
+    }
+
+    .wax-seal-medallion {
+      position: relative;
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #b91c1c 0%, #881337 55%, #4c0519 100%);
+      border: 2.5px solid #fde68a;
+      box-shadow: 
+        0 12px 30px rgba(0, 0, 0, 0.6),
+        inset 0 3px 5px rgba(255, 255, 255, 0.4),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.7);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      transition: transform 0.2s ease;
     }
 
-    .seal-inscription {
+    .wax-seal-caption {
       position: absolute;
-      bottom: -18px;
+      bottom: -22px;
       white-space: nowrap;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 800;
       font-family: 'Amiri', serif;
       color: #78350f;
-      background: rgba(254, 243, 199, 0.95);
-      padding: 1px 12px;
-      border-radius: 9999px;
+      background: #fef3c7;
       border: 1px solid #c5a059;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      padding: 1px 14px;
+      border-radius: 9999px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
     }
 
-    .closed-unroll-hint {
+    .letter-open-prompt {
       position: absolute;
-      bottom: 6px;
+      bottom: -50px;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 700;
+      color: #92400e;
+      background: rgba(254, 243, 199, 0.95);
+      padding: 2px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(197, 160, 89, 0.4);
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 10px;
-      color: rgba(120, 53, 15, 0.85);
-      font-weight: 700;
-      font-family: 'Cairo', sans-serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
-    .unroll-pulse-dot {
+    .prompt-dot {
       width: 6px;
       height: 6px;
-      border-radius: 50%;
       background: #b91c1c;
-      animation: pulseDot 1s infinite;
+      border-radius: 50%;
+      animation: promptPulse 1s infinite;
     }
-    @keyframes pulseDot {
+    @keyframes promptPulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.7); }
+      50% { opacity: 0.3; transform: scale(0.6); }
+    }
+
+    /* Unrolling / Opening Animation Transitions */
+    .diplomatic-letter-cover.is-opening .flap-top {
+      transform: translateY(-105%);
+      opacity: 0;
+    }
+
+    .diplomatic-letter-cover.is-opening .flap-bottom {
+      transform: translateY(105%);
+      opacity: 0;
+    }
+
+    .diplomatic-letter-cover.is-opening .letter-center-seam {
+      transform: translate(-50%, -50%) scale(1.25) rotate(12deg);
+      opacity: 0;
+    }
+
+    .diplomatic-letter-cover.is-opened {
+      display: none !important;
     }
 
     /* Floating Cinematic HUD in Royal Parchment Tone */
@@ -853,96 +834,96 @@
       <div class="parchment-watermark-secondary">MFA SIMULATION MODEL</div>
 
       <!-- =====================================================================
-           HERO SCROLL BANNER (Closed from both ends, unrolls after 0.7s)
+           DOCUMENT PREAMBLE / MASTHEAD (Historical Diplomatic Decree Format)
            ===================================================================== -->
-      <div id="heroScrollBanner" class="hero-scroll-wrapper hero-scroll-closed">
+      <header id="diplomaticHeroHeader" class="text-center pb-12 pt-4 relative z-10 border-b-2 border-amber-700/30 overflow-hidden">
         
-        <!-- CLOSED SCROLL PRESENTATION (Shows the message closed from both ends) -->
-        <div id="closedScrollDisplay" class="closed-scroll-display" onclick="unrollHeroScroll()">
+        <!-- CLOSED DIPLOMATIC LETTER COVER (Closed from both ends, opens after 0.7s) -->
+        <div id="diplomaticLetterCover" class="diplomatic-letter-cover" onclick="openDiplomaticLetter()">
           
-          <!-- Top Roller End -->
-          <div class="closed-roller-bar roller-end-top">
-            <div class="finial-brass-ring-mini"></div>
-            <div class="roller-wood-strip"></div>
-            <div class="finial-brass-ring-mini"></div>
+          <!-- Top End / Flap of the sealed missive -->
+          <div class="letter-flap flap-top">
+            <div class="flap-parchment-pattern"></div>
+            <div class="flap-gilded-hem hem-top">
+              <span class="hem-brass-corner left"></span>
+              <span class="hem-ornament">❖ ❖ ❖</span>
+              <span class="hem-brass-corner right"></span>
+            </div>
           </div>
 
-          <!-- Rolled Parchment Cylinder & Wax Seal Binding -->
-          <div class="closed-cylinder-body">
-            <div class="closed-ribbon-gold"></div>
-
-            <!-- Royal Carmine Wax Seal Medallion Locking the Scroll -->
-            <div class="closed-wax-medallion shadow-2xl">
-              <div class="wax-medallion-stamp">
-                <img src="/logo.jpg" alt="MFA Crest" class="w-12 h-12 rounded-full border-2 border-amber-300 object-cover shadow-inner">
-                <div class="seal-inscription" data-i18n="hero_seal_badge">المرسوم التأسيسي • 2026</div>
+          <!-- Central Seam & Royal Carmine Wax Seal Locking Both Ends -->
+          <div class="letter-center-seam">
+            <div class="seam-gold-thread"></div>
+            
+            <div class="wax-seal-medallion shadow-2xl">
+              <div class="wax-seal-crest">
+                <img src="/logo.jpg" alt="MFA Crest" class="w-14 h-14 rounded-full border-2 border-amber-300 object-cover shadow-inner">
               </div>
+              <div class="wax-seal-caption">المرسوم التأسيسي • معتمد رسمي</div>
             </div>
 
-            <div class="closed-unroll-hint">
-              <span class="unroll-pulse-dot"></span>
-              <span data-i18n="hero_unroll_hint">انقر لفتح الوثيقة أو سيتم الفتح تلقائياً...</span>
+            <div class="letter-open-prompt">
+              <span class="prompt-dot"></span>
+              <span>انقر لفتح الوثيقة أو سيتم الفتح تلقائياً...</span>
             </div>
           </div>
 
-          <!-- Bottom Roller End -->
-          <div class="closed-roller-bar roller-end-bottom">
-            <div class="finial-brass-ring-mini"></div>
-            <div class="roller-wood-strip"></div>
-            <div class="finial-brass-ring-mini"></div>
+          <!-- Bottom End / Flap of the sealed missive -->
+          <div class="letter-flap flap-bottom">
+            <div class="flap-gilded-hem hem-bottom">
+              <span class="hem-brass-corner left"></span>
+              <span class="hem-ornament">❖ ❖ ❖</span>
+              <span class="hem-brass-corner right"></span>
+            </div>
+            <div class="flap-parchment-pattern"></div>
           </div>
 
         </div>
 
-        <!-- THE UNROLLED MESSAGE CONTENT -->
-        <header id="unrolledHeroHeader" class="unrolled-hero-content text-center pb-12 pt-4 relative z-10 border-b-2 border-amber-700/30">
-          
-          <!-- Sacred Invocation in Classical Calligraphy -->
-          <div class="font-amiri text-3xl sm:text-4xl text-amber-950 font-black mb-3 tracking-wider" style="color: #241305;" data-i18n="doc_invocation">
-            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+        <!-- Sacred Invocation in Classical Calligraphy -->
+        <div class="font-amiri text-3xl sm:text-4xl text-amber-950 font-black mb-3 tracking-wider" style="color: #241305;" data-i18n="doc_invocation">
+          بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+        </div>
+
+        <!-- Official Republic & University Heading -->
+        <div class="flex flex-col items-center justify-center gap-1.5 mb-6 text-amber-950">
+          <span class="font-kufi text-xs sm:text-sm font-bold tracking-widest text-amber-900 uppercase" data-i18n="doc_republic">
+            جمهورية مصر العربية • وزارة التعليم العالي والبحث العلمي
+          </span>
+          <span class="font-amiri text-2xl sm:text-3xl font-black text-amber-950 mt-1" style="color: #201004;" data-i18n="doc_faculty">
+            جامعة السويس • كلية السياسة والاقتصاد
+          </span>
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-200/80 border border-amber-600/50 text-amber-950 font-bold font-amiri text-base sm:text-lg shadow-sm mt-2" data-i18n="doc_entity">
+            نموذج محاكاة وزارة الخارجية المصرية (MFA SM)
           </div>
+        </div>
 
-          <!-- Official Republic & University Heading -->
-          <div class="flex flex-col items-center justify-center gap-1.5 mb-6 text-amber-950">
-            <span class="font-kufi text-xs sm:text-sm font-bold tracking-widest text-amber-900 uppercase" data-i18n="doc_republic">
-              جمهورية مصر العربية • وزارة التعليم العالي والبحث العلمي
-            </span>
-            <span class="font-amiri text-2xl sm:text-3xl font-black text-amber-950 mt-1" style="color: #201004;" data-i18n="doc_faculty">
-              جامعة السويس • كلية السياسة والاقتصاد
-            </span>
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-200/80 border border-amber-600/50 text-amber-950 font-bold font-amiri text-base sm:text-lg shadow-sm mt-2" data-i18n="doc_entity">
-              نموذج محاكاة وزارة الخارجية المصرية (MFA SM)
-            </div>
+        <!-- Official Central Medallion -->
+        <div class="inline-flex flex-col items-center justify-center p-5 rounded-2xl bg-amber-100/60 border-2 border-amber-600/40 shadow-sm mb-6 max-w-md mx-auto">
+          <div class="w-24 h-24 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 border-2 border-amber-600 p-1 shadow-md mb-3">
+            <img src="/logo.jpg" alt="ختم النسر والنموذج" class="w-full h-full object-cover rounded-full">
           </div>
-
-          <!-- Official Central Medallion -->
-          <div class="inline-flex flex-col items-center justify-center p-5 rounded-2xl bg-amber-100/60 border-2 border-amber-600/40 shadow-sm mb-6 max-w-md mx-auto">
-            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 border-2 border-amber-600 p-1 shadow-md mb-3">
-              <img src="/logo.jpg" alt="ختم النسر والنموذج" class="w-full h-full object-cover rounded-full">
-            </div>
-            <div class="font-amiri text-base sm:text-lg font-bold text-amber-950 text-center leading-snug" data-i18n="doc_medallion_title">
-              وثيقة التأسيس والبيان الاستراتيجي الشامل للدبلوماسية المصرية الشبابية
-            </div>
-            <div class="text-xs text-amber-900 font-mono font-bold mt-1.5 bg-amber-200/70 px-3 py-0.5 rounded-full border border-amber-400">
-              Ref: MFA-SU/DECREE-2026/01 • Macro Official Protocol
-            </div>
+          <div class="font-amiri text-base sm:text-lg font-bold text-amber-950 text-center leading-snug" data-i18n="doc_medallion_title">
+            وثيقة التأسيس والبيان الاستراتيجي الشامل للدبلوماسية المصرية الشبابية
           </div>
-
-          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black font-amiri text-amber-950 leading-tight mb-4" style="color: #241305; text-shadow: 0 1px 1px rgba(197, 160, 89, 0.4);" data-i18n="doc_main_title">
-            المرسوم التأسيسي والإطار المفاهيمي العام
-          </h2>
-          
-          <p class="max-w-2xl mx-auto font-cairo text-base sm:text-lg font-bold text-amber-950 leading-relaxed" style="color: #2c1707;" data-i18n="doc_lead_desc">
-            وثيقة رسمية جامعة تشرح الهيكل، الرؤية، الأهداف الوطنية، والمنظومة التدريبية لنموذج محاكاة وزارة الخارجية بجامعة السويس.
-          </p>
-
-          <!-- Ornate Calligraphic Separator -->
-          <div class="ornamental-divider">
-            <span class="font-amiri text-amber-700 text-xl font-bold">❦ ❖ ❦</span>
+          <div class="text-xs text-amber-900 font-mono font-bold mt-1.5 bg-amber-200/70 px-3 py-0.5 rounded-full border border-amber-400">
+            Ref: MFA-SU/DECREE-2026/01 • Macro Official Protocol
           </div>
-        </header>
+        </div>
 
-      </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black font-amiri text-amber-950 leading-tight mb-4" style="color: #241305; text-shadow: 0 1px 1px rgba(197, 160, 89, 0.4);" data-i18n="doc_main_title">
+          المرسوم التأسيسي والإطار المفاهيمي العام
+        </h2>
+        
+        <p class="max-w-2xl mx-auto font-cairo text-base sm:text-lg font-bold text-amber-950 leading-relaxed" style="color: #2c1707;" data-i18n="doc_lead_desc">
+          وثيقة رسمية جامعة تشرح الهيكل، الرؤية، الأهداف الوطنية، والمنظومة التدريبية لنموذج محاكاة وزارة الخارجية بجامعة السويس.
+        </p>
+
+        <!-- Ornate Calligraphic Separator -->
+        <div class="ornamental-divider">
+          <span class="font-amiri text-amber-700 text-xl font-bold">❦ ❖ ❦</span>
+        </div>
+      </header>
 
 
       <!-- =====================================================================
@@ -3051,38 +3032,36 @@
     }
 
     // =========================================================================
-    // DIPLOMATIC SCROLL AUTO-UNROLL ENGINE (Opens automatically after 0.7s)
+    // DIPLOMATIC MISSIVE AUTO-UNFOLD ENGINE (Closed from both ends, opens after 0.7s)
     // =========================================================================
-    let isParchmentUnrolled = false;
+    let isLetterOpened = false;
 
-    function unrollHeroScroll() {
-      if (isParchmentUnrolled) return;
-      isParchmentUnrolled = true;
+    function openDiplomaticLetter() {
+      if (isLetterOpened) return;
+      isLetterOpened = true;
 
-      const banner = document.getElementById('heroScrollBanner');
-      if (!banner) return;
+      const cover = document.getElementById('diplomaticLetterCover');
+      if (!cover) return;
 
-      // Play authentic wax seal snap & unroll sound
+      // Play authentic wax seal snap sound & haptic vibration
       if (typeof tactileAudio !== 'undefined') {
         tactileAudio.stamp();
         setTimeout(() => tactileAudio.click(), 160);
       }
-      if (navigator.vibrate) navigator.vibrate([35, 20, 35]);
+      if (navigator.vibrate) navigator.vibrate([40, 25, 40]);
 
-      // Phase 1: Unrolling transition
-      banner.classList.remove('hero-scroll-closed');
-      banner.classList.add('hero-scroll-unrolling');
+      // Phase 1: Two ends slide apart smoothly
+      cover.classList.add('is-opening');
 
-      // Phase 2: Permanent open state
+      // Phase 2: Fully remove cover from DOM flow after animation finishes
       setTimeout(() => {
-        banner.classList.remove('hero-scroll-unrolling');
-        banner.classList.add('hero-scroll-open');
+        cover.classList.add('is-opened');
         lucide.createIcons();
-      }, 950);
+      }, 900);
     }
 
-    // Automatically trigger unroll after exactly 0.7s (700ms) on page load
-    setTimeout(unrollHeroScroll, 700);
+    // Automatically open after exactly 0.7s (700ms) on page load
+    setTimeout(openDiplomaticLetter, 700);
 
     // On Load: Apply Saved or Default Language & Setup Tactile Interactions
     applyLanguage(currentLang);
