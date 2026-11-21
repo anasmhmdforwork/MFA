@@ -3462,12 +3462,49 @@ app.get('/api/operations/calendar', (req, res) => {
   db.operationsSessions = db.operationsSessions || [];
   db.operationsTasks = db.operationsTasks || [];
   db.candidates = db.candidates || [];
+  db.committees = db.committees || [];
 
-  const { committeeId, sector } = req.query;
+  const { committeeId, sector, filterMode } = req.query;
 
-  // Filter sessions
-  let sessions = db.operationsSessions;
-  if (committeeId && committeeId !== 'all') {
+  // Enrich helper
+  const enrichSession = (s) => {
+    const comm = db.committees.find(c => c.id === s.committeeId);
+    const assignedTasks = (db.operationsTasks || []).filter(t => t.sessionId === s.id);
+    const membersPresent = (s.assignedMemberIds || []).map(memId => {
+      const cand = db.candidates.find(c => c.id === memId || c.diplomaticId === memId);
+      const task = assignedTasks.find(t => t.assignedToCandidateId === memId || t.assignedToDiplomaticId === memId);
+      const candComm = cand ? (cand.assignedCommitteeId || cand.originalCommitteeId) : s.committeeId;
+      return {
+        id: memId,
+        diplomaticId: cand ? cand.diplomaticId : '',
+        name: cand ? (cand.arabicName || cand.fullName) : 'عضو',
+        committeeId: candComm,
+        subDepartment: cand ? cand.subDepartment : 'general',
+        phone: cand ? cand.phone : '',
+        taskTitle: task ? task.title : 'مهمة تشغيلية',
+        taskStatus: task ? task.status : 'pending',
+        isExternal: candComm !== s.committeeId
+      };
+    });
+
+    return {
+      ...s,
+      committeeName: comm ? comm.name : 'الإدارة العامة',
+      committeeShortName: comm ? (comm.shortName || comm.name) : 'اللجنة',
+      committeeColor: comm ? comm.color : '#d97706',
+      assignedMembersDetails: membersPresent
+    };
+  };
+
+  // All sessions across all sectors enriched
+  const allSessionsEnriched = db.operationsSessions.map(enrichSession);
+
+  // Filtered sessions if requested (e.g. "my sector only")
+  let sessions = allSessionsEnriched;
+  if (filterMode === 'my_sector' && committeeId && committeeId !== 'all') {
+    sessions = sessions.filter(s => s.committeeId === committeeId || s.committeeId === 'all');
+  } else if (committeeId && committeeId !== 'all' && filterMode !== 'all_sectors') {
+    // If specific committee filter passed
     sessions = sessions.filter(s => s.committeeId === committeeId || s.committeeId === 'all');
   }
   if (sector && sector !== 'all') {
@@ -3483,8 +3520,19 @@ app.get('/api/operations/calendar', (req, res) => {
     tasks = tasks.filter(t => t.sector === sector || t.sector === 'all' || !t.sector);
   }
 
-  // Filter assignable members (structure members)
+  // Assignable members (within current committee or all)
+  const mapMember = m => ({
+    id: m.id,
+    diplomaticId: m.diplomaticId || generateDiplomaticId(m),
+    name: m.arabicName || m.fullName,
+    committeeId: m.assignedCommitteeId || m.originalCommitteeId,
+    subDepartment: m.subDepartment,
+    phone: m.phone
+  });
+
   let assignableMembers = db.candidates.filter(c => c.roleType === 'member');
+  const allAssignableMembers = assignableMembers.map(mapMember);
+
   if (committeeId && committeeId !== 'all') {
     assignableMembers = assignableMembers.filter(c => c.assignedCommitteeId === committeeId || c.originalCommitteeId === committeeId);
   }
@@ -3492,26 +3540,113 @@ app.get('/api/operations/calendar', (req, res) => {
     assignableMembers = assignableMembers.filter(c => c.subDepartment === sector);
   }
 
-  const mappedMembers = assignableMembers.map(m => ({
-    id: m.id,
-    diplomaticId: m.diplomaticId || generateDiplomaticId(m),
-    name: m.arabicName || m.fullName,
-    committeeId: m.assignedCommitteeId || m.originalCommitteeId,
-    subDepartment: m.subDepartment,
-    phone: m.phone
-  }));
-
   res.json({
     success: true,
     sessions,
+    allSessions: allSessionsEnriched,
     tasks,
-    assignableMembers: mappedMembers,
+    assignableMembers: assignableMembers.map(mapMember),
+    allAssignableMembers,
     stats: {
-      totalSessions: sessions.length,
+      totalSessions: allSessionsEnriched.length,
+      mySessions: committeeId && committeeId !== 'all' ? allSessionsEnriched.filter(s => s.committeeId === committeeId).length : allSessionsEnriched.length,
       totalTasks: tasks.length,
       completedTasks: tasks.filter(t => t.status === 'completed').length,
-      pendingTasks: tasks.filter(t => t.status !== 'completed').length
+      pendingTasks: tasks.filter(t => t.status !== 'completed').length,
+      pendingSupportRequests: allSessionsEnriched.filter(s => s.supportRequest && s.supportRequest.needed && s.supportRequest.status !== 'fulfilled').length
     }
+  });
+});
+
+// GET /api/operations/all-members - Fetch all structure members across all sectors for cross-sector assignments
+app.get('/api/operations/all-members', (req, res) => {
+  const db = getDB();
+  const { subDepartment, excludeCommitteeId } = req.query;
+
+  let members = (db.candidates || []).filter(c => c.roleType === 'member');
+  if (subDepartment && subDepartment !== 'all') {
+    members = members.filter(c => c.subDepartment === subDepartment);
+  }
+  if (excludeCommitteeId) {
+    members = members.filter(c => (c.assignedCommitteeId || c.originalCommitteeId) !== excludeCommitteeId);
+  }
+
+  const mapped = members.map(m => {
+    const commId = m.assignedCommitteeId || m.originalCommitteeId;
+    const comm = (db.committees || []).find(c => c.id === commId);
+    return {
+      id: m.id,
+      diplomaticId: m.diplomaticId || generateDiplomaticId(m),
+      name: m.arabicName || m.fullName,
+      committeeId: commId,
+      committeeName: comm ? (comm.shortName || comm.name) : commId,
+      subDepartment: m.subDepartment,
+      phone: m.phone
+    };
+  });
+
+  res.json({ success: true, members: mapped });
+});
+
+// GET /api/candidates/:id/sector-sessions - Fetch ONLY sector sessions for a member or delegate
+app.get('/api/candidates/:id/sector-sessions', (req, res) => {
+  const db = getDB();
+  const cand = (db.candidates || []).find(c => c.id === req.params.id || c.diplomaticId === req.params.id);
+  if (!cand) {
+    return res.status(404).json({ success: false, message: 'المرشح أو العضو غير موجود' });
+  }
+
+  const commId = cand.assignedCommitteeId || cand.originalCommitteeId;
+  const comm = (db.committees || []).find(c => c.id === commId);
+
+  // Filter ONLY sessions belonging to THIS candidate's sector/committee or where this candidate is assigned
+  const myAssignedSessionIds = (db.operationsTasks || [])
+    .filter(t => t.assignedToCandidateId === cand.id || t.assignedToDiplomaticId === cand.diplomaticId)
+    .map(t => t.sessionId);
+
+  const sectorSessions = (db.operationsSessions || []).filter(s => s.committeeId === commId || myAssignedSessionIds.includes(s.id));
+
+  // Enrich with attendees and tasks
+  const enriched = sectorSessions.map(s => {
+    const sComm = (db.committees || []).find(c => c.id === s.committeeId);
+    const tasks = (db.operationsTasks || []).filter(t => t.sessionId === s.id);
+    const myTask = tasks.find(t => t.assignedToCandidateId === cand.id || t.assignedToDiplomaticId === cand.diplomaticId);
+
+    const membersPresent = (s.assignedMemberIds || []).map(memId => {
+      const mCand = (db.candidates || []).find(c => c.id === memId || c.diplomaticId === memId);
+      const mTask = tasks.find(t => t.assignedToCandidateId === memId || t.assignedToDiplomaticId === memId);
+      const mCommId = mCand ? (mCand.assignedCommitteeId || mCand.originalCommitteeId) : s.committeeId;
+      const mComm = (db.committees || []).find(c => c.id === mCommId);
+      return {
+        id: memId,
+        name: mCand ? (mCand.arabicName || mCand.fullName) : 'عضو',
+        diplomaticId: mCand ? mCand.diplomaticId : '',
+        subDepartment: mCand ? mCand.subDepartment : 'general',
+        committeeId: mCommId,
+        committeeName: mComm ? (mComm.shortName || mComm.name) : mCommId,
+        taskTitle: mTask ? mTask.title : 'مهمة تشغيلية',
+        taskStatus: mTask ? mTask.status : 'pending',
+        isMe: memId === cand.id || memId === cand.diplomaticId,
+        isExternal: mCommId !== s.committeeId
+      };
+    });
+
+    return {
+      ...s,
+      committeeName: sComm ? sComm.name : 'اللجنة',
+      committeeShortName: sComm ? (sComm.shortName || sComm.name) : 'اللجنة',
+      committeeColor: sComm ? sComm.color : '#d97706',
+      membersPresent,
+      myTask: myTask || null
+    };
+  });
+
+  res.json({
+    success: true,
+    committee: comm,
+    candidateRole: cand.roleType || 'delegate',
+    candidateName: cand.arabicName || cand.fullName,
+    sessions: enriched
   });
 });
 
@@ -3521,6 +3656,7 @@ app.post('/api/operations/sessions', async (req, res) => {
   db.operationsSessions = db.operationsSessions || [];
   db.operationsTasks = db.operationsTasks || [];
   db.candidates = db.candidates || [];
+  db.committees = db.committees || [];
 
   const {
     date,
@@ -3533,7 +3669,8 @@ app.post('/api/operations/sessions', async (req, res) => {
     location,
     cadresPlan,
     cadresSource,
-    assignedMemberIds
+    assignedMemberIds,
+    supportRequest
   } = req.body;
 
   if (!date || !title) {
@@ -3545,11 +3682,16 @@ app.post('/api/operations/sessions', async (req, res) => {
   const mediaReq = parseInt(cadresPlan?.media, 10) || 0;
   const calculatedTotal = (academicReq + hrReq + mediaReq) || parseInt(requiredMembersCount, 10) || 3;
 
+  const comm = db.committees.find(c => c.id === committeeId);
+
   const newSession = {
     id: 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
     date,
     title: title.trim(),
     committeeId: committeeId || 'all',
+    committeeName: comm ? comm.name : 'الإدارة العامة',
+    committeeShortName: comm ? (comm.shortName || comm.name) : 'اللجنة',
+    committeeColor: comm ? comm.color : '#d97706',
     sector: sector || 'all',
     description: (description || '').trim(),
     requiredMembersCount: calculatedTotal,
@@ -3562,6 +3704,16 @@ app.post('/api/operations/sessions', async (req, res) => {
     assignedMemberIds: Array.isArray(assignedMemberIds) ? assignedMemberIds : [],
     time: time || '14:00',
     location: (location || 'مقر الجامعة / قاعة المحاكاة').trim(),
+    supportRequest: {
+      needed: Boolean(supportRequest && supportRequest.needed),
+      academicDeficit: parseInt(supportRequest?.academicDeficit, 10) || 0,
+      orgDeficit: parseInt(supportRequest?.orgDeficit, 10) || 0,
+      hrDeficit: parseInt(supportRequest?.hrDeficit, 10) || 0,
+      mediaDeficit: parseInt(supportRequest?.mediaDeficit, 10) || 0,
+      notes: (supportRequest?.notes || '').trim(),
+      status: (supportRequest && supportRequest.needed) ? 'pending' : 'none',
+      externalAssignedMemberIds: []
+    },
     createdAt: new Date().toISOString(),
     attendees: []
   };
@@ -3576,7 +3728,7 @@ app.post('/api/operations/sessions', async (req, res) => {
       if (cand) {
         let sectorArabic = 'تشغيل ميداني';
         if (cand.subDepartment === 'academic') sectorArabic = 'تنظيم أكاديمي وإدارة محتوى';
-        else if (cand.subDepartment === 'hr') sectorArabic = 'إدارة الحضور والتنظيم الميداني';
+        else if (cand.subDepartment === 'hr' || cand.subDepartment === 'organization') sectorArabic = 'إدارة الحضور والتنظيم الميداني';
         else if (cand.subDepartment === 'media') sectorArabic = 'توثيق وتغطية إعلامية';
 
         const newTask = {
@@ -3614,7 +3766,7 @@ app.post('/api/operations/sessions', async (req, res) => {
   logActivity(
     req,
     'إضافة يوم تشغيلي',
-    `إضافة محاضرة: "${newSession.title}" بتاريخ ${newSession.date} [المصدر: ${newSession.cadresSource === 'central' ? 'طلب دعم من اللجنة المركزية' : 'كوادر اللجنة الداخلية'}] مع إسناد ${createdTasksCount} تكليفات للأعضاء`,
+    `إضافة محاضرة: "${newSession.title}" بتاريخ ${newSession.date} [اللجنة: ${newSession.committeeShortName}] مع إسناد ${createdTasksCount} تكليفات للأعضاء`,
     newSession.id
   );
   await saveDB(db);
@@ -3626,6 +3778,100 @@ app.post('/api/operations/sessions', async (req, res) => {
       : 'تمت إضافة المحاضرة بنجاح إلى جدول التشغيل الشهري',
     session: newSession,
     createdTasksCount
+  });
+});
+
+// POST /api/operations/sessions/:id/assign-external-member - Cross-sector cadre assignment by Committee Head / Admin
+app.post('/api/operations/sessions/:id/assign-external-member', async (req, res) => {
+  const db = getDB();
+  db.operationsSessions = db.operationsSessions || [];
+  db.operationsTasks = db.operationsTasks || [];
+  db.candidates = db.candidates || [];
+  db.committees = db.committees || [];
+
+  const session = db.operationsSessions.find(s => s.id === req.params.id);
+  if (!session) {
+    return res.status(404).json({ success: false, message: 'الجلسة غير موجودة' });
+  }
+
+  const { memberId, taskTitle, sectorArabic } = req.body;
+  const cand = db.candidates.find(c => c.id === memberId || c.diplomaticId === memberId);
+  if (!cand) {
+    return res.status(404).json({ success: false, message: 'العضو المحدد غير موجود' });
+  }
+
+  session.assignedMemberIds = session.assignedMemberIds || [];
+  if (!session.assignedMemberIds.includes(cand.id)) {
+    session.assignedMemberIds.push(cand.id);
+  }
+
+  session.supportRequest = session.supportRequest || { needed: true, status: 'pending' };
+  session.supportRequest.externalAssignedMemberIds = session.supportRequest.externalAssignedMemberIds || [];
+  if (!session.supportRequest.externalAssignedMemberIds.includes(cand.id)) {
+    session.supportRequest.externalAssignedMemberIds.push(cand.id);
+  }
+
+  const candComm = cand.assignedCommitteeId || cand.originalCommitteeId;
+  const commObj = db.committees.find(c => c.id === candComm);
+  const commName = commObj ? (commObj.shortName || commObj.name) : 'قطاع آخر';
+
+  const roleText = sectorArabic || (cand.subDepartment === 'academic' ? 'تنظيم أكاديمي وإدارة محتوى' : (cand.subDepartment === 'media' ? 'توثيق وتغطية إعلامية' : 'إدارة الحضور والتنظيم الميداني'));
+
+  const newTask = {
+    id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+    sessionId: session.id,
+    title: taskTitle || `إسناد ودعم خارجي (${roleText}): ${session.title}`,
+    description: `تكليف رسمي صادر بقرار رئاسة اللجنة لسد عجز وتشغيل المحاضرة في ${session.location} (الساعة ${session.time}). قطاعك الأساسي: ${commName}. المطلوب: التواجد الميداني والدعم المشترك.`,
+    assignedToCandidateId: cand.id,
+    assignedToDiplomaticId: cand.diplomaticId || generateDiplomaticId(cand),
+    assignedToCandidateName: cand.arabicName || cand.fullName,
+    committeeId: session.committeeId,
+    sourceCommitteeId: candComm,
+    sector: cand.subDepartment || 'general',
+    dueDate: session.date,
+    status: 'pending',
+    isExternalSupport: true,
+    createdAt: new Date().toISOString(),
+    completedAt: null
+  };
+
+  db.operationsTasks.push(newTask);
+
+  // Check if all deficits met
+  const totalDeficit = (session.supportRequest.academicDeficit || 0) + 
+                       (session.supportRequest.orgDeficit || 0) + 
+                       (session.supportRequest.hrDeficit || 0) + 
+                       (session.supportRequest.mediaDeficit || 0);
+  const currentAssigned = session.supportRequest.externalAssignedMemberIds.length;
+  if (totalDeficit > 0 && currentAssigned >= totalDeficit) {
+    session.supportRequest.status = 'fulfilled';
+  }
+
+  // Update member continuous evaluation
+  if (!cand.memberEvaluation) {
+    cand.memberEvaluation = { notes: '', score: 8.5, commitment: 'متميز', tasks: 'منتظم' };
+  }
+  const memberTasks = db.operationsTasks.filter(t => t.assignedToCandidateId === cand.id);
+  const completedTasks = memberTasks.filter(t => t.status === 'completed').length;
+  cand.memberEvaluation.totalTasksCount = memberTasks.length;
+  cand.memberEvaluation.completedTasksCount = completedTasks;
+  cand.memberEvaluation.taskCompletionRate = memberTasks.length > 0 ? Math.round((completedTasks / memberTasks.length) * 100) : 100;
+  cand.memberEvaluation.updatedAt = new Date().toISOString();
+
+  logActivity(
+    req,
+    'تكليف عضو خارجي لسد العجز',
+    `إسناد العضو ${cand.arabicName || cand.fullName} من قطاع ${commName} للمحاضرة "${session.title}" لسد العجز التشغيلي`,
+    session.id
+  );
+
+  await saveDB(db);
+
+  res.json({
+    success: true,
+    message: `تم تكليف العضو ${cand.arabicName || cand.fullName} من قطاع ${commName} بنجاح وإرسال المهمة لحسابه`,
+    task: newTask,
+    session
   });
 });
 

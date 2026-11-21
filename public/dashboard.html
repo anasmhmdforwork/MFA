@@ -4071,7 +4071,29 @@
             </button>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- Cross-Sector View Scope Filter (All Sectors vs My Sector) -->
+            <div class="flex items-center gap-1 bg-[#0e0703] p-1 rounded-xl border border-amber-600/30">
+              <button 
+                type="button"
+                @click="calendarFilterScope = 'all'; loadOperationsCalendar();"
+                class="px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
+                :class="calendarFilterScope === 'all' ? 'btn-gold shadow-sm font-black' : 'text-amber-200/70 hover:text-white'"
+              >
+                جدول كافة القطاعات الـ 9
+              </button>
+              <button 
+                v-if="currentUser && currentUser.committeeId"
+                type="button"
+                @click="calendarFilterScope = 'my_sector'; loadOperationsCalendar();"
+                class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                :class="calendarFilterScope === 'my_sector' ? 'btn-gold shadow-sm font-black' : 'text-amber-200/70 hover:text-white'"
+              >
+                <i data-lucide="bookmark" class="w-3 h-3"></i>
+                <span>محاضرات قطاعي فقط</span>
+              </button>
+            </div>
+
             <select 
               v-if="currentUser && currentUser.role === 'admin'"
               v-model="selectedCommitteeId"
@@ -4116,15 +4138,17 @@
                 <span v-if="day.sessions.length > 0" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
               </div>
 
-              <!-- Sessions Pill in Day -->
+              <!-- Sessions Pill in Day with Committee Label & Colors -->
               <div class="space-y-1 my-1 overflow-hidden">
                 <div 
                   v-for="s in day.sessions" 
                   :key="s.id"
-                  class="text-[10px] p-1 rounded-lg bg-amber-500/20 text-amber-200 border border-amber-500/30 truncate font-bold"
-                  :title="s.title"
+                  class="text-[9px] p-1 rounded-lg border truncate font-bold flex items-center justify-between gap-1 shadow-sm"
+                  :style="{ backgroundColor: (s.committeeColor || '#d97706') + '25', borderColor: (s.committeeColor || '#d97706') + '60', color: s.committeeColor || '#fbbf24' }"
+                  :title="(s.committeeShortName || s.committeeName) + ': ' + s.title + ' (' + s.time + ')'"
                 >
-                  {{ s.title }}
+                  <span class="truncate">{{ (s.committeeShortName || s.committeeName) + ': ' + s.title }}</span>
+                  <span v-if="currentUser && s.committeeId === currentUser.committeeId" class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" title="قطاعك"></span>
                 </div>
               </div>
 
@@ -4171,6 +4195,19 @@
                 </div>
                 <div>
                   <div class="flex items-center gap-2 flex-wrap">
+                    <!-- Sector / Committee Badge -->
+                    <span 
+                      class="px-2.5 py-0.5 rounded-full text-[11px] font-black border flex items-center gap-1 shadow-sm"
+                      :style="{ backgroundColor: (sess.committeeColor || '#d97706') + '25', borderColor: (sess.committeeColor || '#d97706') + '60', color: sess.committeeColor || '#fbbf24' }"
+                    >
+                      <i data-lucide="layers" class="w-3 h-3"></i>
+                      <span>قطاع: {{ sess.committeeShortName || sess.committeeName }}</span>
+                    </span>
+
+                    <span v-if="currentUser && sess.committeeId === currentUser.committeeId" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                      ★ قطاعك
+                    </span>
+
                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">
                       {{ sess.date }} (الساعة {{ sess.time }})
                     </span>
@@ -4208,6 +4245,60 @@
                       (الإجمالي: {{ sess.requiredMembersCount }} كوادر)
                     </span>
                   </div>
+
+                  <!-- Deficit / Support Request Banner -->
+                  <div v-if="sess.supportRequest && sess.supportRequest.needed" class="mt-2.5 p-2.5 rounded-xl bg-[#0e0703] border border-amber-600/30 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 flex-wrap text-xs">
+                      <span v-if="sess.supportRequest.status === 'fulfilled'" class="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold flex items-center gap-1">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+                        <span>تم سد عجز الكوادر بنجاح</span>
+                      </span>
+                      <span v-else class="px-2.5 py-0.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold flex items-center gap-1 animate-pulse">
+                        <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-400"></i>
+                        <span>طلب دعم لسد العجز: مطلوب (أكاديمي: {{ sess.supportRequest.academicDeficit || 0 }}، تنظيم: {{ sess.supportRequest.orgDeficit || 0 }}، HR: {{ sess.supportRequest.hrDeficit || 0 }}، ميديا: {{ sess.supportRequest.mediaDeficit || 0 }})</span>
+                      </span>
+                      <span v-if="sess.supportRequest.notes" class="text-slate-400 text-[11px]">
+                        "{{ sess.supportRequest.notes }}"
+                      </span>
+                    </div>
+
+                    <button 
+                      @click="openCrossSectorAssignModal(sess)"
+                      class="px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                    >
+                      <i data-lucide="user-plus" class="w-3.5 h-3.5 text-amber-400"></i>
+                      <span>تكليف كوادر لسد العجز من قطاع آخر</span>
+                    </button>
+                  </div>
+
+                  <!-- Assigned Members Present & Tasks Details -->
+                  <div v-if="sess.assignedMembersDetails && sess.assignedMembersDetails.length > 0" class="mt-3 pt-3 border-t border-amber-600/20">
+                    <div class="text-[11px] font-bold text-slate-300 mb-2 flex items-center gap-1.5">
+                      <i data-lucide="users" class="w-3.5 h-3.5 text-amber-400"></i>
+                      <span>أعضاء اللجان الحاضرون والمكلفون بالتنظيم ({{ sess.assignedMembersDetails.length }}):</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                      <div 
+                        v-for="m in sess.assignedMembersDetails" 
+                        :key="m.id"
+                        class="p-2 rounded-xl bg-[#0e0703] border flex items-center justify-between gap-2 text-xs"
+                        :class="m.isExternal ? 'border-purple-500/40 bg-purple-950/20' : 'border-amber-600/30'"
+                      >
+                        <div class="min-w-0">
+                          <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-white truncate">{{ m.name }}</span>
+                            <span class="px-1.5 py-0.2 rounded text-[9px] font-bold" :class="m.isExternal ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'bg-amber-500/20 text-amber-300'">
+                              {{ m.isExternal ? 'دعم خارجي' : (m.subDepartment === 'academic' ? 'أكاديمي' : (m.subDepartment === 'media' ? 'ميديا' : 'تنظيم وHR')) }}
+                            </span>
+                          </div>
+                          <span class="text-[10px] text-amber-300/80 block truncate">{{ m.taskTitle }}</span>
+                        </div>
+                        <span class="text-[10px] px-2 py-0.5 rounded-lg font-bold shrink-0" :class="m.taskStatus === 'completed' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'">
+                          {{ m.taskStatus === 'completed' ? 'أنجز' : 'مكلف' }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -4221,6 +4312,7 @@
                   <span>تكليف عضو إضافي</span>
                 </button>
                 <button 
+                  v-if="!currentUser || currentUser.role === 'admin' || sess.committeeId === currentUser.committeeId"
                   @click="deleteOperationsSession(sess)"
                   class="p-2 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-500/30 transition cursor-pointer"
                   title="حذف الجلسة"
@@ -8387,6 +8479,98 @@
       </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- MODAL: CROSS-SECTOR CADRE ASSIGNMENT (سد العجز) -->
+    <!-- ============================================== -->
+    <div v-if="showCrossSectorAssignModal" class="fixed inset-0 z-50 bg-[#0e0703]/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 text-right">
+      <div class="bg-[#180d05] border border-amber-500/40 rounded-3xl p-5 sm:p-7 max-w-lg w-full max-h-[92vh] overflow-y-auto space-y-4 shadow-2xl text-slate-100">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-amber-600/30">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30 shadow-inner">
+              <i data-lucide="user-plus" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-black text-white">تكليف كوادر لسد العجز من قطاع آخر</h3>
+              <p class="text-xs text-amber-300 font-medium">إسناد رسمي لكوادر من قطاعات أخرى للمحاضرة</p>
+            </div>
+          </div>
+          <button @click="showCrossSectorAssignModal = false" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-[#241308] transition cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div v-if="crossSectorTargetSession" class="bg-[#0e0703] p-3.5 rounded-2xl border border-amber-600/30 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">{{ crossSectorTargetSession.title }}</span>
+            <span class="font-mono text-amber-400 font-bold">{{ crossSectorTargetSession.date }} • {{ crossSectorTargetSession.time }}</span>
+          </div>
+          <div class="text-[11px] text-slate-400">
+            <b>القطاع المنظم:</b> {{ crossSectorTargetSession.committeeName || crossSectorTargetSession.committeeShortName }} | <b>المقر:</b> {{ crossSectorTargetSession.location }}
+          </div>
+          <div v-if="crossSectorTargetSession.supportRequest && crossSectorTargetSession.supportRequest.needed" class="pt-2 border-t border-amber-600/20 text-[11px] text-rose-300 font-bold">
+            العجز المطلوب سده: 
+            أكاديمي ({{ crossSectorTargetSession.supportRequest.academicDeficit || 0 }}) • 
+            تنظيم ({{ crossSectorTargetSession.supportRequest.orgDeficit || 0 }}) • 
+            HR ({{ crossSectorTargetSession.supportRequest.hrDeficit || 0 }}) • 
+            ميديا ({{ crossSectorTargetSession.supportRequest.mediaDeficit || 0 }})
+          </div>
+        </div>
+
+        <form @submit.prevent="assignCrossSectorMember" class="space-y-4 text-xs">
+          <!-- Member Selection from other sectors -->
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">اختر العضو المراد تكليفه (من القطاعات الأخرى): *</label>
+            <select 
+              v-model="crossSectorForm.memberId" 
+              required
+              class="w-full bg-[#0e0703] border border-amber-600/30 focus:border-amber-400 rounded-xl px-3.5 py-2.5 text-white text-xs font-bold focus:outline-none transition cursor-pointer"
+            >
+              <option value="">-- اضغط لاختيار العضو من اللجان الأخرى --</option>
+              <option 
+                v-for="m in availableCrossSectorMembers" 
+                :key="m.id" 
+                :value="m.id"
+              >
+                {{ m.name }} — (قطاع {{ m.committeeName }} • {{ m.subDepartment === 'academic' ? 'أكاديمي' : (m.subDepartment === 'media' ? 'ميديا' : 'تنظيم وHR') }})
+              </option>
+            </select>
+          </div>
+
+          <!-- Specialization / Role in Session -->
+          <div>
+            <label class="block text-slate-300 font-bold mb-1.5">طبيعة المهمة والدور المسند للعضو:</label>
+            <input 
+              type="text" 
+              v-model="crossSectorForm.sectorArabic" 
+              placeholder="مثال: تنظيم أكاديمي، إدارة بوابات الـ QR، توثيق إعلامي..." 
+              class="w-full bg-[#0e0703] border border-amber-600/30 focus:border-amber-400 rounded-xl px-3.5 py-2 text-white text-xs focus:outline-none transition"
+            >
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center justify-between gap-3 pt-3 border-t border-amber-600/30">
+            <button 
+              type="submit" 
+              class="btn-gold flex-1 py-2.5 px-4 rounded-xl text-xs font-black inline-flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            >
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>تأكيد تكليف العضو وإرسال المهمة لحسابه</span>
+            </button>
+            <button 
+              type="button" 
+              @click="showCrossSectorAssignModal = false" 
+              class="px-5 py-2.5 rounded-xl bg-amber-950/40 hover:bg-amber-900/70 text-amber-200 border border-amber-600/30 hover:border-amber-400 text-slate-300 text-xs font-bold transition cursor-pointer"
+            >
+              إلغاء
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -8422,10 +8606,15 @@
         const operationsSessions = ref([]);
         const operationsTasks = ref([]);
         const assignableMembers = ref([]);
+        const allCrossSectorMembers = ref([]);
         const operationsStats = ref({ totalSessions: 0, totalTasks: 0, completedTasks: 0, pendingTasks: 0 });
         const auditLogs = ref([]);
         const operationsViewMode = ref('calendar'); // 'calendar' | 'list' | 'sector_matrix'
+        const calendarFilterScope = ref('all'); // 'all' | 'my_sector'
         const showCreateSessionModal = ref(false);
+        const showCrossSectorAssignModal = ref(false);
+        const crossSectorTargetSession = ref(null);
+        const crossSectorForm = ref({ memberId: '', sectorArabic: '' });
         const newSessionForm = ref({
           date: new Date().toISOString().split('T')[0],
           title: '',
@@ -8441,7 +8630,22 @@
             media: 1
           },
           cadresSource: 'internal',
-          assignedMemberIds: []
+          assignedMemberIds: [],
+          supportRequest: {
+            needed: false,
+            academicDeficit: 0,
+            orgDeficit: 0,
+            hrDeficit: 0,
+            mediaDeficit: 0,
+            notes: ''
+          }
+        });
+
+        const availableCrossSectorMembers = computed(() => {
+          if (!crossSectorTargetSession.value) return allCrossSectorMembers.value || [];
+          const targetComm = crossSectorTargetSession.value.committeeId;
+          const assigned = crossSectorTargetSession.value.assignedMemberIds || [];
+          return (allCrossSectorMembers.value || []).filter(m => m.committeeId !== targetComm && !assigned.includes(m.id));
         });
 
         const totalRequiredCadres = computed(() => {
@@ -11433,13 +11637,26 @@
 
         const loadOperationsCalendar = async () => {
           try {
-            const commParam = selectedCommitteeId.value && selectedCommitteeId.value !== 'all' ? `?committeeId=${selectedCommitteeId.value}` : '';
-            const res = await fetch(`/api/operations/calendar${commParam}`);
+            let url = '/api/operations/calendar';
+            const params = [];
+            if (calendarFilterScope.value === 'my_sector' && currentUser.value && currentUser.value.committeeId) {
+              params.push(`committeeId=${currentUser.value.committeeId}`);
+              params.push('filterMode=my_sector');
+            } else if (selectedCommitteeId.value && selectedCommitteeId.value !== 'all') {
+              params.push(`committeeId=${selectedCommitteeId.value}`);
+            } else {
+              params.push('filterMode=all_sectors');
+            }
+            if (params.length > 0) {
+              url += '?' + params.join('&');
+            }
+            const res = await fetch(url);
             const data = await res.json();
             if (data.success) {
               operationsSessions.value = data.sessions || [];
               operationsTasks.value = data.tasks || [];
               assignableMembers.value = data.assignableMembers || [];
+              allCrossSectorMembers.value = data.allAssignableMembers || [];
               operationsStats.value = data.stats || {
                 totalSessions: (data.sessions || []).length,
                 totalTasks: (data.tasks || []).length,
@@ -11454,6 +11671,37 @@
           }
         };
 
+        const openCrossSectorAssignModal = (session) => {
+          crossSectorTargetSession.value = session;
+          crossSectorForm.value = { memberId: '', sectorArabic: '' };
+          showCrossSectorAssignModal.value = true;
+          nextTick(() => { if (window.lucide) lucide.createIcons(); });
+        };
+
+        const assignCrossSectorMember = async () => {
+          if (!crossSectorTargetSession.value || !crossSectorForm.value.memberId) {
+            alert('يرجى اختيار العضو المراد تكليفه');
+            return;
+          }
+          try {
+            const res = await fetch(`/api/operations/sessions/${crossSectorTargetSession.value.id}/assign-external-member`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(crossSectorForm.value)
+            });
+            const data = await res.json();
+            if (data.success) {
+              showCrossSectorAssignModal.value = false;
+              alert(data.message || 'تم تكليف العضو بنجاح');
+              await loadOperationsCalendar();
+            } else {
+              alert(data.message || 'تعذر تكليف العضو');
+            }
+          } catch (e) {
+            alert('حدث خطأ أثناء الاتصال بالخادم');
+          }
+        };
+
         const handleDayClick = (day) => {
           if (!day || !day.dateStr) return;
           openCreateSessionModal(day.dateStr);
@@ -11463,10 +11711,13 @@
           const validDate = (typeof dateStr === 'string' && dateStr.length === 10) 
             ? dateStr 
             : new Date().toISOString().split('T')[0];
+          const commId = (currentUser.value && currentUser.value.committeeId) 
+            ? currentUser.value.committeeId 
+            : (selectedCommitteeId.value !== 'all' ? selectedCommitteeId.value : 'economic');
           newSessionForm.value = {
             date: validDate,
             title: '',
-            committeeId: selectedCommitteeId.value !== 'all' ? selectedCommitteeId.value : 'economic',
+            committeeId: commId,
             sector: 'all',
             description: '',
             requiredMembersCount: 7,
@@ -11478,7 +11729,15 @@
               media: 1
             },
             cadresSource: 'internal',
-            assignedMemberIds: []
+            assignedMemberIds: [],
+            supportRequest: {
+              needed: false,
+              academicDeficit: 0,
+              orgDeficit: 0,
+              hrDeficit: 0,
+              mediaDeficit: 0,
+              notes: ''
+            }
           };
           if (!assignableMembers.value || assignableMembers.value.length === 0) {
             await loadOperationsCalendar();
@@ -11812,6 +12071,14 @@
           operationsStats,
           auditLogs,
           operationsViewMode,
+          calendarFilterScope,
+          showCrossSectorAssignModal,
+          crossSectorTargetSession,
+          crossSectorForm,
+          allCrossSectorMembers,
+          availableCrossSectorMembers,
+          openCrossSectorAssignModal,
+          assignCrossSectorMember,
           showCreateSessionModal,
           newSessionForm,
           showAssignTaskModal,
