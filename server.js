@@ -470,12 +470,28 @@ app.post('/api/auth/login', (req, res) => {
     // Set candidate auth cookie
     res.cookie('mfa_delegate_id', cand.id, { httpOnly: false, path: '/', sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
 
-    const comm = (db.committees || []).find(c => c.id === (cand.assignedCommitteeId || cand.originalCommitteeId));
+    const isAcademicMember = (cand.roleType === 'member' && cand.subDepartment === 'academic');
+    const commId = cand.assignedCommitteeId || cand.originalCommitteeId;
+    const comm = (db.committees || []).find(c => c.id === commId);
+
+    // If candidate is an Academic Committee Member, also set mfa_user cookie so /dashboard recognizes their session immediately
+    if (isAcademicMember) {
+      res.cookie('mfa_user', JSON.stringify({
+        id: cand.id,
+        username: cand.email || cand.phone || cand.id,
+        name: cand.arabicName || cand.fullName,
+        role: 'academic_member',
+        roleType: 'member',
+        subDepartment: 'academic',
+        committeeId: commId,
+        committeeName: comm ? comm.name : 'اللجنة'
+      }), { httpOnly: false, path: '/', sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    }
 
     return res.json({
       success: true,
-      userType: 'delegate',
-      redirect: '/profile',
+      userType: isAcademicMember ? 'academic_member' : 'delegate',
+      redirect: isAcademicMember ? '/dashboard' : '/profile',
       user: {
         id: cand.id,
         username: cand.email || cand.phone,
@@ -484,10 +500,10 @@ app.post('/api/auth/login', (req, res) => {
         fullName: cand.fullName,
         email: cand.email,
         phone: cand.phone,
-        role: 'delegate',
+        role: isAcademicMember ? 'academic_member' : 'delegate',
         roleType: cand.roleType || 'delegate',
         subDepartment: cand.subDepartment,
-        committeeId: cand.assignedCommitteeId || cand.originalCommitteeId,
+        committeeId: commId,
         committeeName: comm ? comm.name : 'اللجنة'
       }
     });
@@ -2181,6 +2197,34 @@ app.get('/api/quizzes', (req, res) => {
   res.json({ success: true, quizzes: enriched });
 });
 
+// Helper to extract authenticated user (staff or candidate/academic member) from cookies
+function getAuthUserFromReq(req, db) {
+  if (req.cookies && req.cookies.mfa_user) {
+    try {
+      return JSON.parse(req.cookies.mfa_user);
+    } catch(e) {}
+  }
+  if (req.cookies && req.cookies.mfa_delegate_id) {
+    const cand = (db.candidates || []).find(c => c.id === req.cookies.mfa_delegate_id);
+    if (cand) {
+      const commId = cand.assignedCommitteeId || cand.originalCommitteeId;
+      const comm = (db.committees || []).find(c => c.id === commId);
+      const isAcademic = (cand.roleType === 'member' && cand.subDepartment === 'academic');
+      return {
+        id: cand.id,
+        username: cand.email || cand.phone || cand.id,
+        name: cand.arabicName || cand.fullName,
+        role: isAcademic ? 'academic_member' : (cand.roleType || 'delegate'),
+        roleType: cand.roleType || 'delegate',
+        subDepartment: cand.subDepartment,
+        committeeId: commId,
+        committeeName: comm ? comm.name : 'اللجنة'
+      };
+    }
+  }
+  return null;
+}
+
 // Create Quiz
 app.post('/api/quizzes', async (req, res) => {
   const db = getDB();
@@ -2198,6 +2242,18 @@ app.post('/api/quizzes', async (req, res) => {
     return res.status(400).json({ success: false, message: 'يرجى إدخال عنوان الاختبار والأسئلة واللجنة' });
   }
 
+  // Academic Committee Members can ONLY create quizzes for their own sector
+  const authUser = getAuthUserFromReq(req, db);
+  if (authUser && (authUser.role === 'academic_member' || (authUser.roleType === 'member' && authUser.subDepartment === 'academic'))) {
+    const allowedCommId = authUser.committeeId;
+    if (allowedCommId && committeeId !== allowedCommId) {
+      return res.status(403).json({
+        success: false,
+        message: 'غير مصرح لك بإنشاء اختبارات خارج نطاق قطاعك التابع له'
+      });
+    }
+  }
+
   const committee = db.committees.find(c => c.id === committeeId);
   const totalPoints = questions.reduce((sum, q) => sum + (parseFloat(q.points) || 1), 0);
 
@@ -2210,6 +2266,9 @@ app.post('/api/quizzes', async (req, res) => {
     durationMinutes: parseInt(durationMinutes) || 10,
     description: description || '',
     isOpen: true,
+    createdBy: authUser ? (authUser.name || authUser.username) : 'إدارة القطاع',
+    createdByRole: authUser ? (authUser.role || 'academic_member') : 'head',
+    createdById: authUser ? authUser.id : null,
     createdAt: new Date().toISOString(),
     totalPoints,
     questions: questions.map((q, idx) => ({
@@ -2233,6 +2292,18 @@ app.put('/api/quizzes/:id', async (req, res) => {
   if (!db.quizzes) db.quizzes = [];
   const quiz = db.quizzes.find(q => q.id === req.params.id);
   if (!quiz) return res.status(404).json({ success: false, message: 'الاختبار غير موجود' });
+
+  // Academic Committee Members can ONLY edit quizzes of their own sector
+  const authUser = getAuthUserFromReq(req, db);
+  if (authUser && (authUser.role === 'academic_member' || (authUser.roleType === 'member' && authUser.subDepartment === 'academic'))) {
+    const allowedCommId = authUser.committeeId;
+    if (allowedCommId && quiz.committeeId !== allowedCommId) {
+      return res.status(403).json({
+        success: false,
+        message: 'غير مصرح لك بتعديل اختبارات خارج نطاق قطاعك التابع له'
+      });
+    }
+  }
 
   const { title, lectureNumber, durationMinutes, description, isOpen, questions } = req.body;
   if (title !== undefined) quiz.title = title;
@@ -2263,6 +2334,18 @@ app.delete('/api/quizzes/:id', async (req, res) => {
   const idx = db.quizzes.findIndex(q => q.id === req.params.id);
   if (idx === -1) return res.status(404).json({ success: false, message: 'الاختبار غير موجود' });
 
+  // Academic Committee Members can ONLY delete quizzes of their own sector
+  const authUser = getAuthUserFromReq(req, db);
+  if (authUser && (authUser.role === 'academic_member' || (authUser.roleType === 'member' && authUser.subDepartment === 'academic'))) {
+    const allowedCommId = authUser.committeeId;
+    if (allowedCommId && db.quizzes[idx].committeeId !== allowedCommId) {
+      return res.status(403).json({
+        success: false,
+        message: 'غير مصرح لك بحذف اختبارات خارج نطاق قطاعك التابع له'
+      });
+    }
+  }
+
   db.quizzes.splice(idx, 1);
   if (db.quizSubmissions) {
     db.quizSubmissions = db.quizSubmissions.filter(s => s.quizId !== req.params.id);
@@ -2276,6 +2359,19 @@ app.get('/api/quizzes/:id/submissions', (req, res) => {
   const db = getDB();
   const quiz = (db.quizzes || []).find(q => q.id === req.params.id);
   if (!quiz) return res.status(404).json({ success: false, message: 'الاختبار غير موجود' });
+
+  // Academic Committee Members can ONLY view submissions of their own sector
+  const authUser = getAuthUserFromReq(req, db);
+  if (authUser && (authUser.role === 'academic_member' || (authUser.roleType === 'member' && authUser.subDepartment === 'academic'))) {
+    const allowedCommId = authUser.committeeId;
+    if (allowedCommId && quiz.committeeId !== allowedCommId && quiz.committeeId !== 'all') {
+      return res.status(403).json({
+        success: false,
+        message: 'غير مصرح لك بمشاهدة كشوف حضور أو اختبارات قطاع آخر'
+      });
+    }
+  }
+
   const rawSubmissions = (db.quizSubmissions || []).filter(s => s.quizId === req.params.id);
 
   // Enrich submissions with candidate details and lecture evaluations

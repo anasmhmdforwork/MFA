@@ -555,6 +555,17 @@
                 </span>
               </template>
 
+              <!-- Academic Committee Member Identity -->
+              <template v-else-if="currentUser && currentUser.role === 'academic_member'">
+                <h1 class="font-kufi font-black text-sm sm:text-lg text-amber-100 leading-tight truncate">
+                  {{ currentCommittee ? currentCommittee.name : (currentUser ? currentUser.name : 'القطاع الأكاديمي') }}
+                </h1>
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] sm:text-xs font-kufi font-bold border border-emerald-500/40 whitespace-nowrap shadow-sm">
+                  <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  <span>عضو اللجنة الأكاديمية</span>
+                </span>
+              </template>
+
               <!-- Committee Head Identity -->
               <template v-else>
                 <h1 class="font-kufi font-black text-sm sm:text-lg text-amber-100 leading-tight truncate">
@@ -573,6 +584,9 @@
               </template>
               <template v-else-if="currentUser && currentUser.role === 'directorate'">
                 {{ currentUser.directorateType === 'hr' ? 'الإدارة المركزية للموارد البشرية • متابعة الكوادر والتقييم' : (currentUser.directorateType === 'operations' ? 'منظومة التشغيل والتقويم الشهري الميداني للموسم الدبلوماسي' : (currentUser.directorateType === 'organization' ? 'إدارة التنظيم واللوجستيات والمتابعة الميدانية' : 'متابعة وتقييم الكوادر باللجان')) }}
+              </template>
+              <template v-else-if="currentUser && currentUser.role === 'academic_member'">
+                {{ (currentUser ? currentUser.name : 'عضو اللجنة الأكاديمية') + ' • إعداد وإدارة اختبارات المحاضرات ورموز الـ QR لقطاع ' + (currentCommittee ? currentCommittee.name : '') }}
               </template>
               <template v-else>
                 {{ (currentUser ? currentUser.name : 'مدير اللجنة') + ' • لوحة إدارة وتقييم المقابلات والأنشطة' }}
@@ -626,6 +640,17 @@
           >
             <i data-lucide="user-check" class="w-4 h-4 text-amber-400"></i>
             <span class="hidden md:inline">بروفايل أنس</span>
+          </a>
+
+          <!-- Personal Profile Link for Academic Member -->
+          <a 
+            v-if="currentUser && currentUser.role === 'academic_member'"
+            :href="'/profile' + (currentUser.id ? '?id=' + encodeURIComponent(currentUser.id) : '')"
+            class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-amber-900/40 hover:bg-amber-800/60 text-amber-200 border border-amber-600/40 text-xs font-kufi font-bold flex items-center gap-1.5 transition"
+            title="الانتقال إلى ملفي الشخصي بالهيكل والتكليفات"
+          >
+            <i data-lucide="user" class="w-4 h-4 text-amber-400"></i>
+            <span class="hidden md:inline">ملفي الشخصي</span>
           </a>
 
           <!-- Logout Button -->
@@ -808,7 +833,42 @@
           </template>
 
           <!-- ============================================== -->
-          <!-- 2. ADMIN & COMMITTEE HEAD TABS ONLY -->
+          <!-- 2. ACADEMIC MEMBERS DEDICATED TABS ONLY -->
+          <!-- ============================================== -->
+          <template v-else-if="currentUser && currentUser.role === 'academic_member'">
+            <!-- Tab 1: Quizzes & QR (Sector-scoped) -->
+            <button 
+              @click="activeTab = 'quizzes'" 
+              :class="activeTab === 'quizzes' ? 'border-amber-400 text-amber-300 bg-amber-950/40 shadow-inner' : 'border-transparent text-amber-200/60 hover:text-amber-100 hover:bg-amber-950/20'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="qr-code" class="w-4 h-4 text-amber-400"></i>
+              <span>الاختبارات والـ QR ({{ committeeQuizzes.length }})</span>
+            </button>
+
+            <!-- Tab 2: Gradebook & Attendance (Sector-scoped) -->
+            <button 
+              @click="activeTab = 'gradebook'; loadGradebook();" 
+              :class="activeTab === 'gradebook' ? 'border-amber-400 text-amber-300 bg-amber-950/40 shadow-inner' : 'border-transparent text-amber-200/60 hover:text-amber-100 hover:bg-amber-950/20'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-amber-400"></i>
+              <span>سجل درجات وغياب قطاعي (Excel)</span>
+            </button>
+
+            <!-- Tab 3: Sector Sessions & Calendar -->
+            <button 
+              @click="activeTab = 'operations'; loadOperationsCalendar();" 
+              :class="activeTab === 'operations' ? 'border-amber-400 text-amber-300 bg-amber-950/40 shadow-inner' : 'border-transparent text-amber-200/60 hover:text-amber-100 hover:bg-amber-950/20'"
+              class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="calendar-days" class="w-4 h-4 text-amber-500"></i>
+              <span>جدول ومواعيد محاضرات القطاع ({{ operationsSessions.length }})</span>
+            </button>
+          </template>
+
+          <!-- ============================================== -->
+          <!-- 3. ADMIN & COMMITTEE HEAD TABS ONLY -->
           <!-- ============================================== -->
           <template v-else>
             <!-- Admin Dashboard Tab (Admin only) -->
@@ -9199,6 +9259,10 @@
           }
           try {
             currentUser.value = JSON.parse(userStr);
+            // Normalize role for Academic Committee Members
+            if (currentUser.value.roleType === 'member' && currentUser.value.subDepartment === 'academic') {
+              currentUser.value.role = 'academic_member';
+            }
           } catch(e) {
             window.location.href = '/login';
             return;
@@ -9209,6 +9273,9 @@
             activeTab.value = 'minister';
           } else if (currentUser.value.role === 'directorate') {
             activeTab.value = 'directorate_overview';
+          } else if (currentUser.value.role === 'academic_member') {
+            activeTab.value = 'quizzes';
+            selectedCommitteeId.value = currentUser.value.committeeId;
           } else {
             activeTab.value = 'candidates';
           }
@@ -10580,6 +10647,12 @@
         }
 
         function openEditQuizModal(quiz) {
+          if (currentUser.value && (currentUser.value.role === 'academic_member' || (currentUser.value.roleType === 'member' && currentUser.value.subDepartment === 'academic'))) {
+            if (quiz.committeeId !== currentUser.value.committeeId) {
+              alert('غير مصرح لك بتعديل اختبارات خارج نطاق قطاعك التابع له');
+              return;
+            }
+          }
           editingQuizId.value = quiz.id;
           newQuizForm.value = {
             title: quiz.title,
@@ -10597,6 +10670,9 @@
 
         async function saveNewQuiz() {
           try {
+            if (currentUser.value && (currentUser.value.role === 'academic_member' || (currentUser.value.roleType === 'member' && currentUser.value.subDepartment === 'academic'))) {
+              newQuizForm.value.committeeId = currentUser.value.committeeId;
+            }
             const url = editingQuizId.value ? '/api/quizzes/' + editingQuizId.value : '/api/quizzes';
             const method = editingQuizId.value ? 'PUT' : 'POST';
             const res = await fetch(url, {
@@ -10690,6 +10766,12 @@
         }
 
         async function deleteQuiz(quiz) {
+          if (currentUser.value && (currentUser.value.role === 'academic_member' || (currentUser.value.roleType === 'member' && currentUser.value.subDepartment === 'academic'))) {
+            if (quiz.committeeId !== currentUser.value.committeeId) {
+              alert('غير مصرح لك بحذف اختبارات خارج نطاق قطاعك التابع له');
+              return;
+            }
+          }
           if (!confirm('هل أنت متأكد من حذف اختبار "' + quiz.title + '"؟ سيتم حذف درجات الحضور المرتبطة به.')) return;
           try {
             const res = await fetch('/api/quizzes/' + quiz.id, { method: 'DELETE' });
