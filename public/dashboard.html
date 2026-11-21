@@ -857,6 +857,7 @@
 
             <!-- 2. Slots Schedule -->
             <button 
+              v-if="currentUser && currentUser.role === 'admin'"
               @click="activeTab = 'slots'" 
               :class="activeTab === 'slots' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
@@ -867,6 +868,7 @@
 
             <!-- 3. Acceptance WhatsApp Notices -->
             <button 
+              v-if="currentUser && currentUser.role === 'admin'"
               @click="activeTab = 'notices'" 
               :class="activeTab === 'notices' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
@@ -2547,7 +2549,7 @@
       <!-- ============================================== -->
       <!-- TAB 2: INTERVIEW SCHEDULE & SLOTS -->
       <!-- ============================================== -->
-      <section v-show="activeTab === 'slots'" class="space-y-6">
+      <section v-if="currentUser && currentUser.role === 'admin'" v-show="activeTab === 'slots'" class="space-y-6">
         
         <!-- Slot Controls Header -->
         <div class="bg-[#180d05]/95 rounded-2xl p-5 border border-amber-600/30 text-amber-100 flex flex-wrap items-center justify-between gap-4 shadow-sm">
@@ -2683,7 +2685,7 @@
       <!-- ============================================== -->
       <!-- TAB: NOTIFY ACCEPTED CANDIDATES (إبلاغ المقبولين) -->
       <!-- ============================================== -->
-      <section v-show="activeTab === 'notices'" class="space-y-6">
+      <section v-if="currentUser && currentUser.role === 'admin'" v-show="activeTab === 'notices'" class="space-y-6">
 
         <!-- Top Header & Broadcast Controls -->
         <div class="bg-[#180d05]/95 rounded-3xl p-6 sm:p-8 border border-amber-600/30 text-amber-100 shadow-md">
@@ -5046,7 +5048,7 @@
     <!-- ============================================== -->
     <!-- MODAL 1: BATCH SLOT GENERATOR -->
     <!-- ============================================== -->
-    <div v-if="showBatchModal" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div v-if="currentUser && currentUser.role === 'admin' && showBatchModal" class="fixed inset-0 z-50 bg-[#180d05]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="bg-gradient-to-b from-[#24130a] via-[#180d05] to-[#0f0703] rounded-t-3xl sm:rounded-3xl max-w-xl w-full p-4 sm:p-8 border border-amber-600/40 shadow-2xl text-amber-100 max-h-[92vh] overflow-y-auto text-right max-h-[90vh] overflow-y-auto">
         
         <div class="flex items-center justify-between pb-4 border-b border-amber-600/30 mb-6">
@@ -11764,6 +11766,12 @@
         };
 
         watch(activeTab, (newTab) => {
+          if (currentUser.value && currentUser.value.role !== 'admin') {
+            if (newTab === 'slots' || newTab === 'notices') {
+              activeTab.value = 'candidates';
+              return;
+            }
+          }
           if (newTab === 'gradebook') {
             loadGradebook();
           } else if (newTab === 'quizzes') {
