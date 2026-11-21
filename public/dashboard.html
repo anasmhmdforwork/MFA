@@ -950,7 +950,7 @@
 
             <!-- 9. Secondary Preference Candidates -->
             <button 
-              v-if="currentCommittee && secondaryCandidates.length > 0"
+              v-if="currentUser && currentUser.role === 'admin' && currentCommittee && secondaryCandidates.length > 0"
               @click="activeTab = 'secondary'" 
               :class="activeTab === 'secondary' ? 'tab-active' : 'tab-inactive'"
               class="py-3 px-4 border-b-2 rounded-t-xl transition flex items-center gap-2"
@@ -3670,7 +3670,7 @@
       <!-- ============================================== -->
       <!-- TAB 5: SECONDARY PREFERENCES CANDIDATES -->
       <!-- ============================================== -->
-      <section v-show="activeTab === 'secondary'" class="space-y-6">
+      <section v-if="currentUser && currentUser.role === 'admin'" v-show="activeTab === 'secondary'" class="space-y-6">
         
         <div class="bg-[#180d05]/95 rounded-3xl p-6 border border-amber-600/30 shadow-md text-amber-100">
           <div class="flex items-center justify-between mb-4">
@@ -12026,7 +12026,7 @@
 
         watch(activeTab, (newTab) => {
           if (currentUser.value && currentUser.value.role !== 'admin') {
-            if (newTab === 'slots' || newTab === 'notices') {
+            if (newTab === 'slots' || newTab === 'notices' || newTab === 'secondary') {
               activeTab.value = 'candidates';
               return;
             }
